@@ -1,0 +1,97 @@
+<!--
+Copyright 2022 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div fxLayout="row" fxLayoutAlign="start center">
+  <div class="sp-icon">
+    <mat-icon
+      fontIcon="mdi-focus-field"
+      [ngStyle]="{'color': topbarColor, 'font-size': '35px'}"
+    ></mat-icon>
+  </div>
+  <mat-icon
+    style="margin-left: 20px; transform: scale(0.85); margin-right: 5px;"
+    class="icon-color"
+    svgIcon="ic_magnify_search"
+  ></mat-icon>
+  <mat-form-field style="width: 300px;">
+    <input matInput [formControl]="filterControl" placeholder="Search" />
+  </mat-form-field>
+  <div style="width: 30px;">
+    <button
+      mat-icon-button
+      (click)="applyFilter('')"
+      style="outline: none;"
+      title="Clear Search"
+    >
+      <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+    </button>
+  </div>
+  <div class="button-margins">
+    <span *ngIf="!addingNewCollection">
+      <button mat-stroked-button (click)="addOrEditCollection(null)">Add Collection</button>
+    </span>
+  </div>
+  <div>
+    <mat-paginator
+      #paginator
+      [length]="collectionList?.length"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
+      (page)="paginatorEvent($event)"
+    ></mat-paginator>
+  </div>
+</div>
+
+<mat-accordion displayMode="flat">
+  <section
+    matSort
+    (matSortChange)="sortChanged($event)"
+    class="mat-elevation-z2 mat-header-row"
+  >
+    <span class="mat-header-cell three-cell" mat-sort-header="name">Name</span>
+    <span class="mat-header-cell five-cell" mat-sort-header="description">Description</span>
+  </section>
+
+  <mat-expansion-panel
+    *ngFor="let collection of paginateCollections(filteredCollectionList, pageIndex, pageSize)"
+    disabled
+  >
+    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(collection); $event.stopPropagation()">
+      <div class="mat-cell three-cell">
+        <div class="panel-div">
+          <button
+            mat-icon-button
+            (click)="addOrEditCollection(collection); $event.stopPropagation()"
+            style="outline: none;"
+            title="Edit {{ collection.name }}"
+          >
+            <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            (click)="deleteCollection(collection); $event.stopPropagation()"
+            style="outline: none;"
+            title="Delete {{ collection.name }}"
+          >
+            <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
+          </button>
+          {{ collection.name }}
+        </div>
+      </div>
+      <div class="mat-cell five-cell center-self">
+        {{ collection.description }}
+      </div>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<mat-collection
+  *ngIf="isLoading"
+  style="display: flex; justify-content: center; align-items: center;"
+>
+  <mat-progress-spinner color="primary" mode="indeterminate">
+  </mat-progress-spinner>
+</mat-collection>

@@ -1,0 +1,29 @@
+<!--
+Copyright 2022 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div mat-dialog-title>
+  {{ data.article.name }}
+  <button
+    mat-icon-button
+    (click)="handleMoreIsComplete(false)"
+    title="Cancel"
+    class="close-button"
+    tabindex="-1"
+  >
+    <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    (click)="handleMoreIsComplete(true)"
+    title="Open in new tab"
+    class="close-button"
+    tabindex="1"
+  >
+    <mat-icon class="mdi-24px self-center" fontIcon="mdi-open-in-new"></mat-icon>
+  </button>
+</div>
+<div mat-dialog-content class="container" *ngIf="!!data && data.article !== undefined && data.article !== null">
+  <iframe [src]="safeUrl" class="responsive-iframe"></iframe>
+</div>

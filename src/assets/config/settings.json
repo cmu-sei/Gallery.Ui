@@ -1,0 +1,20 @@
+{
+    "ApiUrl": "http://localhost:4722",
+    "OIDCSettings": {
+        "authority": "http://localhost:5000/",
+        "client_id": "gallery.ui",
+        "redirect_uri": "http://localhost:4723/auth-callback",
+        "post_logout_redirect_uri": "http://localhost:4723",
+        "response_type": "code",
+        "scope": "openid profile gallery-api steamfitter-api",
+        "automaticSilentRenew": true,
+        "silent_redirect_uri": "http://localhost:4723/auth-callback-silent"
+    },
+    "AppTitle": "Gallery",
+    "AppTopBarHexColor": "#2d69b4",
+    "AppTopBarHexTextColor": "#FFFFFF",
+    "AppTopBarText": "Gallery  -  Keeping you in the know!",
+    "AppTopBarImage": "/assets/img/monitor-dashboard-white.png",
+    "UseLocalAuthStorage": false,
+    "IsEmailActive": true
+}

@@ -1,0 +1,217 @@
+// Copyright 2022 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
+.gallery-icon {
+  transform: scale(0.8);
+  width: 60px;
+  margin-bottom: 10px;
+}
+
+.archive {
+  display: flex;
+  flex: 100;
+  flex-direction: "row";
+}
+
+.panel-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+  margin-left: 10%;
+}
+
+.panel-div {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+}
+
+.max-width {
+  flex: 1;
+  width: 100%;
+}
+
+.mat-header-row {
+  height: 20px;
+}
+
+.mat-row {
+  height: 36px;
+}
+
+.mat-row, .mat-header-row {
+  display: flex;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  align-items: center;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.mat-cell, .mat-header-cell {
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.article-text {
+  margin-top: 8px;
+  font-size: 16px;
+  white-space: pre-wrap;
+}
+
+.four-cell {
+  flex: 4;
+}
+
+.three-cell {
+  flex: 3;
+}
+
+.two-cell {
+  flex: 2;
+}
+
+.one-cell {
+  flex: 1;
+}
+
+.last-cell {
+  text-align: right;
+}
+
+.mat-accordion .mat-header-row {
+  padding-left: 1.5rem;
+  padding-right: 2rem;
+  border-bottom: none;
+}
+
+.mat-expansion-panel-header.mat-row {
+  border-bottom: none;
+}
+
+.mat-placeholder {
+  font-size: 10px;
+}
+
+.mat-select {
+  font-size: 10px;
+}
+
+.tiny {
+  font-size: 10px;
+}
+
+.button-margins {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.mat-stroked-button.tiny, .mat-flat-button.tiny {
+  font-size: 10px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.top-row {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  width: 100%;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  align-items: center;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.search-cell {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.mat-icon.point {
+  cursor: pointer;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.source-icon {
+  margin-top: 8px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.article-title {
+  margin-top: 8px;
+  font-size: 16pt;
+  font-weight: bold;
+}
+
+.article-subtitle {
+  font-size: 14pt;
+  font-weight: bold;
+  color: inherit;
+  margin-bottom: 8px;
+  min-height: 12px;
+}
+
+.img-article {
+    height: 350px;
+}
+
+.action-buttons {
+    text-align: center;
+}
+
+.app-header-container {
+  min-height: 99vh;
+}
+
+.cards {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  flex: 1 0 500px;
+  box-sizing: border-box;
+  margin: 1rem .25em;
+}
+
+@media screen and (min-width: 40em) {
+  .card {
+     max-width: calc(50% -  1em);
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .card {
+      max-width: calc(33.3% - 1em);
+  }
+}
+
+@media screen and (min-width: 80em) {
+  .card {
+      max-width: calc(25% - 1em);
+  }
+}
+
+.centered {
+  margin: 0 auto;
+  padding: 0 1em;
+}
+
+

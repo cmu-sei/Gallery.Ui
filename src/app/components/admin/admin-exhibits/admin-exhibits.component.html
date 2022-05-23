@@ -1,0 +1,105 @@
+<!--
+Copyright 2022 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div fxLayout="row" fxLayoutAlign="start center">
+  <div class="sp-icon">
+    <mat-icon
+      fontIcon="mdi-monitor-dashboard"
+      [ngStyle]="{'color': topbarColor, 'font-size': '35px'}"
+    ></mat-icon>
+  </div>
+  <mat-form-field class="button-margins">
+    <mat-label>Collection</mat-label>
+    <mat-select placeholder="Collection" [value]="selectedCollectionId" (selectionChange)="selectCollection($event.value)">
+      <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
+        {{ collection.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="button-margins" *ngIf="selectedCollectionId">
+    <span>
+      <button mat-stroked-button (click)="addOrEditExhibit(null)">Add Exhibit</button>
+    </span>
+  </div>
+  <div *ngIf="selectedCollectionId">
+    <mat-paginator
+      #paginator
+      [length]="exhibitList?.length"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
+      (page)="paginatorEvent($event)"
+    ></mat-paginator>
+  </div>
+</div>
+
+<mat-accordion displayMode="flat">
+  <section
+    matSort
+    (matSortChange)="sortChanged($event)"
+    class="mat-elevation-z2 mat-header-row"
+  >
+  <span class="mat-header-cell three-cell" mat-sort-header="dateCreated">Date Created</span>
+  <span class="mat-header-cell three-cell" mat-sort-header="createdBy">User</span>
+  <span class="mat-header-cell two-cell" mat-sort-header="scenarioId">Scenario ID</span>
+  <span class="mat-header-cell one-cell" mat-sort-header="currentMove">Current Move</span>
+    <span class="mat-header-cell one-cell" mat-sort-header="currentInject">Current Inject</span>
+  </section>
+
+  <mat-expansion-panel
+    *ngFor="let exhibit of paginateExhibits(exhibitList, pageIndex, pageSize)"
+    [expanded]="editExhibit.id === exhibit.id"
+  >
+    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(exhibit); $event.stopPropagation()">
+      <span class="mat-cell three-cell">
+        <button
+          mat-icon-button
+          (click)="addOrEditExhibit(exhibit); $event.stopPropagation()"
+          style="outline: none;"
+          title="Edit Exhibit"
+        >
+          <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          (click)="deleteExhibit(exhibit); $event.stopPropagation()"
+          style="outline: none;"
+          title="Delete Exhibit"
+        >
+          <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
+        </button>
+        {{ exhibit.dateCreated | date: "yyyy-MM-dd HH:mm" }}
+      </span>
+      <span class="mat-cell three-cell">
+        {{ getUserName(exhibit.createdBy) }}
+      </span>
+      <span class="mat-cell three-cell">
+        {{ exhibit.scenarioId }}
+      </span>
+      <span class="mat-cell one-cell">
+        {{ exhibit.currentMove }}
+      </span>
+      <span class="mat-cell one-cell">
+        {{ exhibit.currentInject }}
+      </span>
+    </mat-expansion-panel-header>
+    <div class="panel-container" *ngIf="editExhibit.id === exhibit.id">
+      <div class="team-div">
+        <app-admin-exhibit-teams
+          [exhibitId]="exhibit.id"
+          [teamList]="teamList"
+        ></app-admin-exhibit-teams>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<mat-exhibit
+  *ngIf="isLoading"
+  style="display: flex; justify-content: center; align-items: center;"
+>
+  <mat-progress-spinner color="primary" mode="indeterminate">
+  </mat-progress-spinner>
+</mat-exhibit>

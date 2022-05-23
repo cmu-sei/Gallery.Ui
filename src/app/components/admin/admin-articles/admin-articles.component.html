@@ -1,0 +1,187 @@
+<!--
+Copyright 2022 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div fxLayout="row" fxLayoutAlign="start center">
+  <div class="sp-icon">
+    <mat-icon
+      fontIcon="mdi-format-list-bulleted-type"
+      [ngStyle]="{'color': topbarColor, 'font-size': '35px'}"
+    ></mat-icon>
+  </div>
+  <div class="panel-div"
+    *ngIf="collectionList && collectionList.length > 0">
+    <mat-form-field class="button-margins">
+      <mat-label>Collection</mat-label>
+      <mat-select placeholder="Collection" [value]="selectedCollectionId" (selectionChange)="selectCollection($event.value)">
+        <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
+          {{ collection.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="cardList && cardList.length > 0">
+      <mat-label>Card</mat-label>
+      <mat-select placeholder="Card" [value]="selectedCard.id" (selectionChange)="selectCard($event.value)">
+        <mat-option [value]="''">All Cards</mat-option>
+        <mat-option *ngFor="let card of cardList" [value]="card.id">
+          {{ card.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="button-margins" style="width: 90px;" *ngIf="moveList && moveList.length > 0">
+      <mat-label>Move</mat-label>
+      <mat-select placeholder="Move" [value]="selectedMove" (selectionChange)="selectMove($event.value)">
+        <mat-option [value]="-1">All Moves</mat-option>
+        <mat-option *ngFor="let move of moveList" [value]="move">
+          {{ move }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <mat-icon
+    style="margin-left: 20px; transform: scale(0.85); margin-right: 5px;"
+    class="icon-color"
+    svgIcon="ic_magnify_search"
+    *ngIf="selectedCollectionId"
+  ></mat-icon>
+  <mat-form-field style="width: 150px;" *ngIf="selectedCollectionId">
+    <input matInput [formControl]="filterControl" placeholder="Search" />
+  </mat-form-field>
+  <div style="width: 30px;" *ngIf="selectedCollectionId">
+    <button
+      mat-icon-button
+      (click)="applyFilter('')"
+      style="outline: none;"
+      title="Clear Search"
+    >
+      <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+    </button>
+  </div>
+  <div class="button-margins" *ngIf="selectedCollectionId">
+    <button mat-stroked-button (click)="addOrEditArticle(null)">Add Article</button>
+  </div>
+  <div *ngIf="selectedCollectionId">
+    <mat-paginator
+      #paginator
+      [length]="filteredArticleList?.length"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
+      (page)="paginatorEvent($event)"
+    ></mat-paginator>
+  </div>
+</div>
+
+<mat-accordion displayMode="flat">
+  <section
+    matSort
+    (matSortChange)="sortChanged($event)"
+    class="mat-elevation-z2 mat-header-row"
+  >
+    <div class="mat-header-cell three-cell" mat-sort-header="name"><span style="margin-left: 80px;">Title</span></div>
+    <div class="mat-header-cell two-cell" mat-sort-header="cardId">Card</div>
+    <div class="mat-header-cell two-cell" mat-sort-header="sourceName">Source Name</div>
+    <div class="mat-header-cell one-cell" mat-sort-header="move">Move</div>
+    <div class="mat-header-cell one-cell" mat-sort-header="inject">Inject</div>
+</section>
+
+  <mat-expansion-panel
+    *ngFor="let article of paginateArticles(filteredArticleList, pageIndex, pageSize)"
+    [expanded]="editArticle.id === article.id"
+  >
+    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(article); $event.stopPropagation()">
+      <div class="mat-cell three-cell">
+        <div class="panel-div">
+          <button
+            mat-icon-button
+            (click)="addOrEditArticle(article); $event.stopPropagation()"
+            style="outline: none;"
+            title="Edit {{ article.name }}"
+          >
+            <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            (click)="deleteArticle(article); $event.stopPropagation()"
+            style="outline: none;"
+            title="Delete {{ article.name }}"
+          >
+            <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
+          </button>
+          {{ article.name }}
+        </div>
+      </div>
+      <div class="mat-cell two-cell center-self">
+        {{ getCardName(article.cardId) }}
+      </div>
+      <div class="mat-cell two-cell center-self">
+        {{ article.sourceName }}
+      </div>
+      <div class="mat-cell one-cell center-self">
+        {{ article.move }}
+      </div>
+      <div class="mat-cell one-cell center-self">
+        {{ article.inject }}
+      </div>
+    </mat-expansion-panel-header>
+    <div class="panel-container" *ngIf="editArticle.id === article.id">
+      <div class="panel-div">
+        <mat-form-field class="name-width">
+          <mat-label>Name</mat-label>
+          <input matInput [(ngModel)]="editArticle.name" disabled />
+        </mat-form-field>
+      </div>
+      <div class="panel-div">
+        <mat-form-field class="name-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput [(ngModel)]="editArticle.description" rows="5" disabled></textarea>
+        </mat-form-field>
+      </div>
+      <div class="panel-div">
+        <mat-form-field>
+          <mat-label>Card</mat-label>
+          <input matInput [value]="getCardName(editArticle.cardId)" disabled />
+        </mat-form-field>
+      </div>
+      <div class="panel-div">
+        <mat-form-field class="short-width">
+          <mat-label>Move</mat-label>
+          <input matInput [(ngModel)]="editArticle.move" disabled />
+        </mat-form-field>
+      </div>
+      <div class="panel-div">
+        <mat-form-field class="short-width">
+          <mat-label>Inject</mat-label>
+          <input matInput [(ngModel)]="editArticle.inject" disabled />
+        </mat-form-field>
+      </div>
+      <div class="panel-div">
+        <mat-form-field>
+          <mat-label>Change Card Status to</mat-label>
+          <input matInput placeholder="Status" [(ngModel)]="editArticle.status" disabled />
+        </mat-form-field>
+      </div>
+      <div class="panel-div">
+        <mat-form-field>
+          <mat-label>Source Type</mat-label>
+          <input matInput placeholder="Source Type" [(ngModel)]="editArticle.sourceType" disabled />
+        </mat-form-field>
+      </div>
+      <div class="panel-div">
+        <mat-form-field class="name-width">
+          <mat-label>Source Name</mat-label>
+          <input matInput [(ngModel)]="editArticle.sourceName" disabled />
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<mat-card
+  *ngIf="isLoading"
+  style="display: flex; justify-content: center; align-items: center;"
+>
+  <mat-progress-spinner color="primary" mode="indeterminate">
+  </mat-progress-spinner>
+</mat-card>

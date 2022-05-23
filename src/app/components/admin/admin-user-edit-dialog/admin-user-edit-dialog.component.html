@@ -1,0 +1,68 @@
+<!--
+Copyright 2022 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div mat-dialog-title>
+  &nbsp;
+  <button
+    mat-icon-button
+    (click)="handleEditComplete(false)"
+    title="Cancel"
+    class="close-button"
+    tabindex="-1"
+  >
+    <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+  </button>
+</div>
+<div mat-dialog-content *ngIf="!!data && !!data.user">
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field class="full-width">
+        <input type="text" matInput [formControl]="userNameFormControl" placeholder="Name (required)" (blur)="saveUser('name')"
+          value="{{data.user.name}}" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="userNameFormControl.hasError('minlength') && !userNameFormControl.hasError('required')">
+          Must contain {{ MIN_NAME_LENGTH }} or more characters
+        </mat-error>
+        <mat-error *ngIf="userNameFormControl.hasError('required')">
+          Name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="ID (required)" [formControl]="idFormControl"
+          (blur)="saveUser('id')" value="{{data.user.id}}" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="idFormControl.hasError('required')">
+          ID is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Email" [formControl]="emailFormControl"
+          (blur)="saveUser('email')" value="{{data.user.email}}" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="emailFormControl.hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="bottom-button">
+    <div fxFlex fxLayoutAlign="left" class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
+    </div>
+    <div fxFlex fxLayoutAlign="end" class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
+    </div>
+  </div>
+
+</div>

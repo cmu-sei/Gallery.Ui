@@ -1,0 +1,114 @@
+// Copyright 2022 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
+.wall-container {
+  display: flex;
+  flex-flow: column;
+  min-height: 99vh;
+}
+
+.top-row {
+  width: 100%;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  padding: 0 24px;
+  box-sizing: border-box;
+  height: 66px;
+  display: flex;
+  align-items: center;
+}
+
+.one-cell {
+  flex: 1;
+}
+
+.last-cell {
+  text-align: right;
+}
+
+.cards {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  flex: 1 0 500px;
+  box-sizing: border-box;
+  margin: 1rem .25em;
+}
+
+@media screen and (min-width: 40em) {
+  .card {
+     max-width: calc(50% -  1em);
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .card {
+      max-width: calc(33.3% - 1em);
+  }
+}
+
+@media screen and (min-width: 80em) {
+  .card {
+      max-width: calc(25% - 1em);
+  }
+}
+
+.centered {
+  margin: 0 auto;
+  padding: 0 1em;
+}
+
+.mat-card::ng-deep.mat-card-header-text {
+  width: 100%;
+}
+
+.mat-stroked-button {
+  border-color: black !important;
+}
+
+.gallery-icon {
+  transform: scale(0.8);
+  width: 60px;
+  margin-bottom: 10px;
+}
+
+.closed-status {
+  background-color: #ff3333;
+  color: black;
+}
+
+.critical-status {
+  background-color: rgb(250, 163, 2);
+  color: black;
+}
+
+.affected-status {
+  background-color: rgb(250, 235, 100);
+  color: black;
+}
+
+.open-status {
+  background-color: rgb(163, 235, 163);
+  color: black;
+}
+
+.notapplicable-status {
+  background-color: #b5b5b5;
+  color: black;
+}
+
+.card-title-text {
+  font-weight: bold;
+}
+
+.card-subtitle-text {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}

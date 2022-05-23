@@ -1,0 +1,164 @@
+<!--
+Copyright 2022 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div mat-dialog-title>
+  &nbsp;
+  <button
+    mat-icon-button
+    (click)="handleEditComplete(false)"
+    title="Cancel"
+    class="close-button"
+    tabindex="-1"
+  >
+    <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+  </button>
+</div>
+<div mat-dialog-content *ngIf="!!data && data.article !== undefined && data.article !== null">
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field class="full-width">
+        <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)" (blur)="saveArticle('name')"
+          value="{{data.article.name}}" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="articleNameFormControl.hasError('minlength') && !articleNameFormControl.hasError('required')">
+          Must contain {{ MIN_NAME_LENGTH }} or more characters
+        </mat-error>
+        <mat-error *ngIf="articleNameFormControl.hasError('required')">
+          Name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin left">
+    <div fxFlex fxFlexOffset="10">
+      <p style="font-size: 13px; font-weight: 400; line-height: 1.125; font-family: Open Sans, sans-serif; letter-spacing: normal;">
+        Description
+      </p>
+        <div id="quill">
+          <quill-editor [styles]="editorStyle" placeholder="Enter Text" [modules]="config"
+             placeholder="Description" [formControl]="descriptionFormControl"
+             (blur)="saveArticle('description')" value="{{data.article.description}}" [errorStateMatcher]="matcher">
+          </quill-editor>
+          <mat-error *ngIf="descriptionFormControl.hasError('required')">
+            Description is <strong>required</strong>
+          </mat-error>
+        </div>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field>
+        <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
+          <mat-option>None</mat-option>
+          <mat-option *ngFor="let card of data.cardList" [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
+            {{card.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field>
+        <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
+          <mat-option *ngFor="let itemStatusOption of itemStatusList" [value]="itemStatusOption" >
+            {{ itemStatusOption }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field>
+        <mat-select placeholder="Source Type" [formControl]="sourceTypeFormControl" (selectionChange)="saveArticle('sourceType')">
+          <mat-option *ngFor="let sourceTypeOption of data.sourceTypeList" [value]="sourceTypeOption" >
+            {{ sourceTypeOption }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Source Name" [formControl]="sourceNameFormControl"
+          (blur)="saveArticle('sourceName')" value="{{data.article.sourceName}}" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="URL for more info" [formControl]="urlFormControl"
+          (blur)="saveArticle('url')" value="{{data.article.url}}" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10" class="full-width">
+      <mat-checkbox
+        [(ngModel)]="data.article.openInNewTab"
+      >
+        Open URL in new tab
+      </mat-checkbox>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Move" [formControl]="moveFormControl"
+          (blur)="saveArticle('move')" value="{{data.article.move}}" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Inject" [formControl]="injectFormControl"
+          (blur)="saveArticle('inject')" value="{{data.article.inject}}" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex fxFlexOffset="10">
+      <mat-form-field>
+        <input matInput [matDatepicker]="postedDatePicker" placeholder="Posted Date / Time" (inputChange)="saveArticle('datePosted')" (dateChange)="saveArticle('datePosted')"
+          [formControl]="datePostedFormControl">
+        <mat-datepicker-toggle matSuffix [for]="postedDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #postedDatePicker [startAt]="data.article.datePosted.toLocaleDateString()"></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field fxFlexOffset="5" style="margin-top: -15px;">
+        <input matInput hidden>
+        <ngx-timepicker-field
+          [formControl]="timePostedFormControl"
+          [format]=24
+          [defaultTime]="timePostedFormControl.value"
+          (timeChanged)="saveArticle('timePosted')">
+        </ngx-timepicker-field>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="bottom-button">
+    <div fxFlex fxLayoutAlign="left" class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
+    </div>
+    <div fxFlex fxLayoutAlign="end" class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
+    </div>
+  </div>
+
+</div>
