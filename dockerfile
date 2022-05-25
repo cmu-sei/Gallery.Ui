@@ -24,7 +24,7 @@ RUN chown -R nginx:nginx /usr/share/nginx/html && \
   chmod +x /docker-entrypoint.d/90-basehref.sh
 USER nginx
 
-EXPOSE 8080
+EXPOSE 80
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
