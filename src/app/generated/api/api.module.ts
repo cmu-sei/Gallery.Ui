@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Carnegie Mellon University. All Rights Reserved. 
+Copyright 2022 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
@@ -16,6 +16,7 @@ import { ExhibitTeamService } from './api/exhibitTeam.service';
 import { HealthService } from './api/health.service';
 import { PermissionService } from './api/permission.service';
 import { TeamService } from './api/team.service';
+import { TeamArticleService } from './api/teamArticle.service';
 import { TeamCardService } from './api/teamCard.service';
 import { TeamUserService } from './api/teamUser.service';
 import { UserService } from './api/user.service';
@@ -35,6 +36,7 @@ import { UserPermissionService } from './api/userPermission.service';
     HealthService,
     PermissionService,
     TeamService,
+    TeamArticleService,
     TeamCardService,
     TeamUserService,
     UserService,

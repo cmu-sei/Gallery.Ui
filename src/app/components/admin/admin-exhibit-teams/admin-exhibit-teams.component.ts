@@ -12,7 +12,7 @@ import {
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Team, Exhibit } from 'src/app/generated/api';
+import { Team } from 'src/app/generated/api';
 import { ExhibitTeamDataService } from 'src/app/data/team/exhibit-team-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { Subject } from 'rxjs';
@@ -58,10 +58,10 @@ export class AdminExhibitTeamsComponent implements OnDestroy, OnInit {
       const teams: Team[] = [];
       exhibitTeams.filter(et => et.exhibitId === this.exhibitId).forEach(et => {
         teams.push(this.teamList.find(t => t.id === et.teamId));
-      })
+      });
       this.setDataSources(teams);
     });
-    this.exhibitTeamDataService.getExhibitTeamsFromApi();
+    this.exhibitTeamDataService.getExhibitTeamsFromApi(this.exhibitId);
   }
 
   applyFilter(filterValue: string) {

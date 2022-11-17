@@ -37,9 +37,9 @@ export class ExhibitTeamDataService implements OnDestroy {
     this.exhibitTeams.next(this._exhibitTeams);
   }
 
-  getExhibitTeamsFromApi() {
+  getExhibitTeamsFromApi(exhibitId: string) {
     return this.exhibitTeamService
-      .getExhibitTeams()
+      .getExhibitTeamsByExhibit(exhibitId)
       .pipe(take(1))
       .subscribe(
         (teams) => {

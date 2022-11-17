@@ -1,0 +1,82 @@
+<!--
+Copyright 2022 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div fxLayout="row" fxLayoutAlign="center">
+  <div class="exhibit-list-container mat-elevation-z8">
+    <div class="sp-icon">
+      <img height="35" src="./assets/svg-icons/account-multiple.svg" alt="Teams" />
+      <span style="margin-left: 30px;">Exhibit Teams</span>
+    </div>
+    <hr />
+
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <mat-table
+        class="mat-table-exhibit-teams"
+        #table
+        [dataSource]="exhibitTeamDataSource"
+        matSort
+      >
+        <ng-container matColumnDef="name">
+          <mat-cell *matCellDef="let element">
+            <div *ngIf="element.name !== null">{{ element.name }}</div>
+            <div *ngIf="element.name === null">{{ element.id }}</div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="id">
+          <mat-cell *matCellDef="let element">
+            <div class="push-right">
+              <button mat-stroked-button (click)="addTeamToArticle(element.id)">
+                Add
+              </button>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-row *matRowDef="let row; columns: displayedTeamColumns"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+
+  <div style="margin-left: 20px;">
+    <div class="article-list-container mat-elevation-z8">
+      <div class="sp-icon">
+        <img
+          height="35"
+          src="./assets/svg-icons/account-group.svg"
+          alt="Teams"
+        />
+        <span style="margin-left: 30px;">Article Teams</span>
+      </div>
+      <hr />
+      <mat-table
+        class="mat-table-article-teams"
+        #table
+        [dataSource]="articleTeamDataSource"
+        matSort
+      >
+        <ng-container matColumnDef="name">
+          <mat-cell *matCellDef="let element">
+            <div *ngIf="element.name !== null">{{ element.name }}</div>
+            <div *ngIf="element.name === null">{{ element.id }}</div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="id">
+          <mat-cell *matCellDef="let element">
+            <div class="push-right">
+              <button mat-stroked-button (click)="removeTeamFromArticle(element.id)">
+                Remove
+              </button>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-row *matRowDef="let row; columns: displayedTeamColumns"></mat-row>
+      </mat-table>
+
+    </div>
+  </div>
+</div>

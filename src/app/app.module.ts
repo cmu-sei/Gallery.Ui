@@ -62,6 +62,8 @@ import { AdminCardEditDialogComponent } from './components/admin/admin-card-edit
 import { AdminCardsComponent } from './components/admin/admin-cards/admin-cards.component';
 import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
 import { AdminCollectionsComponent } from 'src/app/components/admin/admin-collections/admin-collections.component';
+import { AdminExhibitArticlesComponent } from './components/admin/admin-exhibit-articles/admin-exhibit-articles.component';
+import { AdminExhibitArticleTeamsComponent } from './components/admin/admin-exhibit-article-teams/admin-exhibit-article-teams.component';
 import { AdminExhibitsComponent } from './components/admin/admin-exhibits/admin-exhibits.component';
 import { AdminExhibitEditDialogComponent } from './components/admin/admin-exhibit-edit-dialog/admin-exhibit-edit-dialog.component';
 import { AdminExhibitTeamsComponent } from './components/admin/admin-exhibit-teams/admin-exhibit-teams.component';
@@ -87,7 +89,7 @@ import { ApiModule as SwaggerCodegenApiModule } from './generated/api/api.module
 import { DisplayOrderPipe, SortByPipe } from 'src/app/utilities/sort-by-pipe';
 import { ArchiveComponent } from './components/archive/archive.component';
 import { WallComponent } from './components/wall/wall.component';
-import { QuillModule } from 'ngx-quill'
+import { QuillModule } from 'ngx-quill';
 
 
 const settings: ComnSettingsConfig = {
@@ -112,6 +114,8 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AdminCardsComponent,
     AdminCollectionEditDialogComponent,
     AdminCollectionsComponent,
+    AdminExhibitArticlesComponent,
+    AdminExhibitArticleTeamsComponent,
     AdminExhibitsComponent,
     AdminExhibitEditDialogComponent,
     AdminExhibitTeamsComponent,
@@ -188,23 +192,23 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
         toolbar: [
           ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
           ['blockquote', 'code-block'],
-      
+
           [{ 'header': 1 }, { 'header': 2 }],               // custom button values
           [{ 'list': 'ordered'}, { 'list': 'bullet' }],
           [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
           [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
           [{ 'direction': 'rtl' }],                         // text direction
-      
+
           [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
           [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      
-          [{ 'color': ['#b5b5b5', 'rgb(163, 235, 163)', 'rgb(250, 235, 100)', 'rgb(250, 163, 2)', '#ff3333', '#ff3838', '#ebb3b3', '#e00', '#d00', '#c00', '#b00', '#a00', '#900', '#800', '#700', '#a60', '#067', '#247', '#085', '#2d69b4', '#336fba', '#2d69b4', '#242526', '#373739', '#306cb7', '#4e8ad5'] }, 
+
+          [{ 'color': ['#b5b5b5', 'rgb(163, 235, 163)', 'rgb(250, 235, 100)', 'rgb(250, 163, 2)', '#ff3333', '#ff3838', '#ebb3b3', '#e00', '#d00', '#c00', '#b00', '#a00', '#900', '#800', '#700', '#a60', '#067', '#247', '#085', '#2d69b4', '#336fba', '#2d69b4', '#242526', '#373739', '#306cb7', '#4e8ad5'] },
            { 'background': [] }],          // dropdown with defaults from theme
           [{ 'font': [] }],
           [{ 'align': [] }],
-      
+
           ['clean'],                                         // remove formatting button
-      
+
           ['link', 'image', 'video']                         // link and image, video
         ]
       }

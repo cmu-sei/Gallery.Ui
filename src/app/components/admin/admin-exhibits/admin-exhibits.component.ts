@@ -11,7 +11,7 @@ import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,6 +39,8 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   filterControl = new FormControl();
   filterString = '';
   sort: Sort = {active: 'dateCreated', direction: 'desc'};
+  showTeams = false;
+  showArticles = false;
   private unsubscribe$ = new Subject();
 
   constructor(
