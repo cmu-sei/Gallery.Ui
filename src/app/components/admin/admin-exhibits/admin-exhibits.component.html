@@ -103,6 +103,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         *ngIf="showTeams"
         [exhibitId]="exhibit.id"
         [teamList]="teamList"
+        class="full-width"
       ></app-admin-exhibit-teams>
       <div class="team-div">
         <h3>Articles</h3>
@@ -121,7 +122,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         *ngIf="showArticles"
         [exhibit]="exhibit"
         [teamList]="teamList"
-        style="width: 100%;"
+        class="full-width"
       >
       </app-admin-exhibit-articles>
     </div>
