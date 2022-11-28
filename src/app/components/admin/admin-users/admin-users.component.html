@@ -44,49 +44,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 </div>
 
 <mat-accordion displayMode="flat" class="mat-table">
-  <mat-expansion-panel *ngIf="addingNewUser" [disabled]="true">
-    <mat-expansion-panel-header class="mat-row">
-      <span class="mat-cell new-user-cell">
-        <label>Add New User:</label>
-        <mat-form-field class="new-user-spacing">
-          <input
-            matInput
-            placeholder="User ID"
-            [(ngModel)]="newUser.id"
-            matTooltip="Must be a valid Guid"
-          />
-        </mat-form-field>
-        <mat-form-field class="new-user-spacing">
-          <input
-            matInput
-            placeholder="User Name"
-            [(ngModel)]="newUser.name"
-            matTooltip="Must have a minimum of 4 characters"
-          />
-        </mat-form-field>
-        <button
-          mat-icon-button
-          class="new-user-spacing"
-          (click)="addUserRequest(true)"
-          [disabled]="!newUser.id || !newUser.name || newUser.name.length < 4"
-        >
-          <mat-icon
-            class="mdi-24px self-center"
-            fontIcon="mdi-account-plus"
-            matTooltip="Add this user"
-          ></mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          (click)="addUserRequest(false)"
-          matTooltip="Cancel"
-        >
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-account-remove"></mat-icon>
-        </button>
-      </span>
-    </mat-expansion-panel-header>
-  </mat-expansion-panel>
-
   <section
     matSort
     (matSortChange)="sortChanged($event)"
