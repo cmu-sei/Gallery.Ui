@@ -35,7 +35,6 @@ export class AdminUsersComponent implements OnInit {
   @Output() sortChange = new EventEmitter<Sort>();
   @Output() pageChange = new EventEmitter<PageEvent>();
   addingNewUser = false;
-  newUser: User = { id: '', name: '' };
   isLoading = false;
   topbarColor = '#ef3a47';
 
@@ -72,11 +71,13 @@ export class AdminUsersComponent implements OnInit {
 
   addOrEditUser(user: User) {
     if (!user) {
+      this.addingNewUser = true;
       user = {
         name: '',
         id: ''
       };
     } else {
+      this.addingNewUser = false;
       user = {... user};
     }
     const dialogRef = this.dialog.open(AdminUserEditDialogComponent, {
@@ -94,24 +95,15 @@ export class AdminUsersComponent implements OnInit {
   }
 
   saveUser(user: User) {
-    if (user.id) {
+    if (!this.addingNewUser) {
       this.userDataService.updateUser(user);
     } else {
       this.userDataService.addUser(user);
     }
   }
 
-  addUserRequest(isAdd: boolean) {
-    if (isAdd) {
-      this.addUser.emit(this.newUser);
-    }
-    this.newUser.id = '';
-    this.newUser.name = '';
-    this.addingNewUser = false;
-  }
-
   deleteUserRequest(user: User) {
-    this.deleteUser.emit(user);
+    this.userDataService.deleteUser(user);
   }
 
   applyFilter(filterValue: string) {
