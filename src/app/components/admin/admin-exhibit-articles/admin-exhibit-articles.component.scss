@@ -3,6 +3,7 @@
 
 .panel-container {
   display: flex;
+  flex: 1;
   flex-flow: column;
   justify-content: flex-start;
   align-items: flex-start;
@@ -12,6 +13,7 @@
 
 .panel-div {
   display: flex;
+  flex: 1;
   flex-flow: row;
   justify-content: flex-start;
   align-items: center;
@@ -26,14 +28,6 @@
   text-align: left;
 }
 
-.team-div {
-  display: flex;
-  flex-flow: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-align: left;
-}
-
 .name-width {
   width: 600px;
 }
@@ -43,11 +37,11 @@
 }
 
 .mat-header-row {
-  min-height: 56px;
+  min-height: 32px;
 }
 
 .mat-row {
-  min-height: 48px;
+  min-height: 40px;
 }
 
 .mat-row, .mat-header-row {
@@ -86,6 +80,10 @@
 
 .mat-expansion-panel {
   text-align: left;
+}
+
+.pad-top {
+  margin-top: 12px;
 }
 
 .five-cell {

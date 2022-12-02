@@ -60,7 +60,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           style="outline: none;"
           title="Edit Exhibit"
         >
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
         </button>
         <button
           mat-icon-button
@@ -68,38 +68,71 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           style="outline: none;"
           title="Delete Exhibit"
         >
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can"></mat-icon>
         </button>
         {{ exhibit.dateCreated | date: "yyyy-MM-dd HH:mm" }}
       </span>
-      <span class="mat-cell three-cell">
+      <span class="mat-cell three-cell center-self">
         {{ getUserName(exhibit.createdBy) }}
       </span>
-      <span class="mat-cell three-cell">
+      <span class="mat-cell three-cell center-self">
         {{ exhibit.scenarioId }}
       </span>
-      <span class="mat-cell one-cell">
+      <span class="mat-cell one-cell center-self">
         {{ exhibit.currentMove }}
       </span>
-      <span class="mat-cell one-cell">
+      <span class="mat-cell one-cell center-self">
         {{ exhibit.currentInject }}
       </span>
     </mat-expansion-panel-header>
     <div class="panel-container" *ngIf="editExhibit.id === exhibit.id">
       <div class="team-div">
-        <app-admin-exhibit-teams
-          [exhibitId]="exhibit.id"
-          [teamList]="teamList"
-        ></app-admin-exhibit-teams>
+        <h3>Teams</h3>
+        <button
+          class="center-self"
+          mat-icon-button
+          (click)="showTeams = !showTeams; $event.stopPropagation()"
+          style="outline: none;"
+          title="Show/Hide Teams"
+        >
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-chevron-down" *ngIf="!showTeams"></mat-icon>
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-chevron-up" *ngIf="showTeams"></mat-icon>
+        </button>
       </div>
+      <app-admin-exhibit-teams
+        *ngIf="showTeams"
+        [exhibitId]="exhibit.id"
+        [teamList]="teamList"
+        class="full-width"
+      ></app-admin-exhibit-teams>
+      <div class="team-div">
+        <h3>Articles</h3>
+        <button
+          class="center-self"
+          mat-icon-button
+          (click)="showArticles = !showArticles; $event.stopPropagation()"
+          style="outline: none;"
+          title="Show/Hide Articles"
+        >
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-chevron-down" *ngIf="!showArticles"></mat-icon>
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-chevron-up" *ngIf="showArticles"></mat-icon>
+        </button>
+      </div>
+      <app-admin-exhibit-articles
+        *ngIf="showArticles"
+        [exhibit]="exhibit"
+        [teamList]="teamList"
+        class="full-width"
+      >
+      </app-admin-exhibit-articles>
     </div>
   </mat-expansion-panel>
 </mat-accordion>
 
-<mat-exhibit
+<mat-card
   *ngIf="isLoading"
   style="display: flex; justify-content: center; align-items: center;"
 >
   <mat-progress-spinner color="primary" mode="indeterminate">
   </mat-progress-spinner>
-</mat-exhibit>
+</mat-card>
