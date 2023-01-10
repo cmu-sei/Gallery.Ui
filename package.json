@@ -39,7 +39,7 @@
     "@ngtools/webpack": "^12.0.5",
     "ajv": "^8.6.0",
     "core-js": "^3.14.0",
-    "luxon": "^1.27.0",
+    "luxon": "^1.28.1",
     "ngx-clipboard": "^14.0.1",
     "ngx-material-timepicker": "^5.5.3",
     "ngx-quill": "^14.3.0",
