@@ -3,7 +3,7 @@
 
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import {
-  FormControl,
+  UntypedFormControl,
   FormGroupDirective,
   NgForm,
   Validators,
@@ -16,7 +16,7 @@ import { SystemMessageService } from 'src/app/services/system-message/system-mes
 /** Error when invalid control is dirty, touched, or submitted. */
 export class UserErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
-    control: FormControl | null,
+    control: UntypedFormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
     const isSubmitted = form && form.submitted;
@@ -35,19 +35,19 @@ const MIN_NAME_LENGTH = 3;
 export class AdminTeamCardEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
-  public teamIdFormControl = new FormControl(
+  public teamIdFormControl = new UntypedFormControl(
     [this.data.teamCard.teamId],
     []
   );
-  public cardIdFormControl = new FormControl(
+  public cardIdFormControl = new UntypedFormControl(
     this.data.teamCard.cardId,
     []
   );
-  public moveFormControl = new FormControl(
+  public moveFormControl = new UntypedFormControl(
     this.data.teamCard.move,
     []
   );
-  public injectFormControl = new FormControl(
+  public injectFormControl = new UntypedFormControl(
     this.data.teamCard.inject,
     []
   );

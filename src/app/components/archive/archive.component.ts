@@ -16,7 +16,7 @@ import { HealthService } from 'src/app/generated/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Section } from 'src/app/utilities/enumerations';
 import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
@@ -45,7 +45,7 @@ export class ArchiveComponent implements OnDestroy {
   moveList: number[] = [];
   teamList: Team[] = [];
   filteredUserArticleList: UserArticle[] = [];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'datePosted', direction: 'desc'};
   pageSize = 25;

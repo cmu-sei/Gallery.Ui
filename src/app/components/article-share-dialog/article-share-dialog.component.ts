@@ -3,7 +3,7 @@
 
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import {
-  FormControl,
+  UntypedFormControl,
   FormGroupDirective,
   NgForm,
   Validators,
@@ -21,9 +21,9 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 export class ArticleShareDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
-  shareTeamsControl = new FormControl();
-  subjectFormControl = new FormControl(this.data.article.sourceName + ': ' + this.data.article.name);
-  messageFormControl = new FormControl('FYSA\n\n- - - - - -\n\n' +
+  shareTeamsControl = new UntypedFormControl();
+  subjectFormControl = new UntypedFormControl(this.data.article.sourceName + ': ' + this.data.article.name);
+  messageFormControl = new UntypedFormControl('FYSA\n\n- - - - - -\n\n' +
     this.data.article.sourceType + ' from ' + this.data.article.sourceName + '\n\n' + this.data.article.name + '\n' + this.data.article.description + '\n\n');
 
   constructor(

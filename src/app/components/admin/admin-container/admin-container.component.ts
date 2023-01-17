@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,7 +38,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   isContentDeveloper = false;
   teamList = this.teamQuery.selectAll();
   userList: Observable<User[]>;
-  filterControl: FormControl = this.userDataService.filterControl;
+  filterControl: UntypedFormControl = this.userDataService.filterControl;
   filterString: Observable<string>;
   permissionList: Observable<Permission[]>;
   pageSize: Observable<number>;

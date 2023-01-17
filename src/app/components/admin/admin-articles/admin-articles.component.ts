@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Article, Collection, User, ItemStatus, SourceType} from 'src/app/generated/api/model/models';
@@ -47,7 +47,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   originalArticle: Article = {};
   defaultScoringModelId = this.settingsService.settings.DefaultScoringModelId;
   filteredArticleList: Article[] = [];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'datePosted', direction: 'desc'};
   itemStatusList: ItemStatus[] = [

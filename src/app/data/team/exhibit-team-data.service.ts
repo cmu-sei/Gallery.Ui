@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Injectable, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComnAuthQuery, ComnAuthService } from '@cmusei/crucible-common';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
@@ -16,7 +16,7 @@ import { ExhibitTeam, Team } from 'src/app/generated/api/model/models';
 export class ExhibitTeamDataService implements OnDestroy {
   private _exhibitTeams: ExhibitTeam[] = [];
   readonly exhibitTeams = new BehaviorSubject<ExhibitTeam[]>(this._exhibitTeams);
-  readonly filterControl = new FormControl();
+  readonly filterControl = new UntypedFormControl();
   private filterTerm: Observable<string>;
   private sortColumn: Observable<string>;
   private sortIsAscending: Observable<boolean>;

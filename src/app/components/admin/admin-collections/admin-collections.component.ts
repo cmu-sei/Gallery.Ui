@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { Collection, User, ItemStatus} from 'src/app/generated/api/model/models';
@@ -33,7 +33,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   editCollection: Collection = {};
   originalCollection: Collection = {};
   filteredCollectionList: Collection[] = [];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'dateCreated', direction: 'desc'};
   private unsubscribe$ = new Subject();

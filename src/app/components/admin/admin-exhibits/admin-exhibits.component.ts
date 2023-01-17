@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Collection, Exhibit, Team, User } from 'src/app/generated/api/model/models';
@@ -36,7 +36,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   editExhibit: Exhibit = {};
   originalExhibit: Exhibit = {};
   filteredExhibitList: Exhibit[] = [];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'dateCreated', direction: 'desc'};
   showTeams = false;

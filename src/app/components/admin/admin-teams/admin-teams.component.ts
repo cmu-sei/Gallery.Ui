@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Collection, Exhibit, Team, User, ItemStatus} from 'src/app/generated/api/model/models';
@@ -36,7 +36,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
   newTeam: Team = { id: '', name: '' };
   teamList: Team[];
   filteredTeamList: Team[];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   isLoading = false;
   topbarColor = '#ef3a47';

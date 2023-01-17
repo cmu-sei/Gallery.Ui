@@ -4,7 +4,7 @@
 import { ArticleStore } from './article.store';
 import { ArticleQuery } from './article.query';
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -24,7 +24,7 @@ export class ArticleDataService {
     map((params) => params.get('articleId') || '')
   );
   readonly ArticleList: Observable<Article[]>;
-  readonly filterControl = new FormControl();
+  readonly filterControl = new UntypedFormControl();
   private filterTerm: Observable<string>;
   private sortColumn: Observable<string>;
   private sortIsAscending: Observable<boolean>;

@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Injectable, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComnAuthQuery, ComnAuthService } from '@cmusei/crucible-common';
 import { User as AuthUser } from 'oidc-client';
@@ -26,7 +26,7 @@ export class UserDataService implements OnDestroy {
   private _permissions: Permission[] = [];
   private _users: User[] = [];
   readonly users = new BehaviorSubject<User[]>(this._users);
-  readonly filterControl = new FormControl();
+  readonly filterControl = new UntypedFormControl();
   readonly userList: Observable<User[]>;
   readonly userListTotalLength: Observable<number>;
   readonly selectedUser: Observable<User>;

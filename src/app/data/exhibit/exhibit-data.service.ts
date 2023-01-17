@@ -4,7 +4,7 @@
 import { ExhibitStore } from './exhibit.store';
 import { ExhibitQuery } from './exhibit.query';
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -24,7 +24,7 @@ export class ExhibitDataService {
     map((params) => params.get('exhibitId') || '')
   );
   readonly ExhibitList: Observable<Exhibit[]>;
-  readonly filterControl = new FormControl();
+  readonly filterControl = new UntypedFormControl();
   private filterTerm: Observable<string>;
   private sortColumn: Observable<string>;
   private sortIsAscending: Observable<boolean>;
