@@ -4,10 +4,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div
-  class="app-events-container"
-  fxLayout="column"
-  fxLayoutAlign="center stretch"
-  fxFlexFill>
+  class="app-events-container background">
 
   <app-topbar *ngIf="!hideTopbar"
   [title]="titleText"
@@ -17,7 +14,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   [imageFilePath]="topbarImage"
   ></app-topbar>
 
-  <div *ngIf="apiIsSick" class="app-header-container mat-elevation-z8 background text" autosize>
+  <div *ngIf="apiIsSick" class="app-header-container background text" autosize>
     <h1>{{apiMessage}}</h1>
     <h2>Please refresh this page.</h2>
     <h2>If the problem persists, please contact the site administrator.</h2>
@@ -36,7 +33,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-  <div *ngIf="!apiIsSick && !exhibitId" class="app-header-container mat-elevation-z8 background text" autosize>
+  <div *ngIf="!apiIsSick && !exhibitId" class="app-header-container background text" autosize>
     <mat-form-field class="width-500">
       <mat-label>Collection</mat-label>
       <mat-select placeholder="Collection" [value]="collectionId" (selectionChange)="selectCollection($event.value)">
@@ -56,14 +53,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </div>
 
   <span *ngIf="!apiIsSick && exhibit && !selectedSection">
-    <div class="app-header-container mat-elevation-z8 background text" autosize>
+    <div class="app-header-container background text" autosize>
       <button mat-stroked-button (click)="gotoWallSection()">Wall</button>
       <button mat-stroked-button (click)="gotoArchiveSection()">Archive</button>
     </div>
   </span>
 
   <span *ngIf="!apiIsSick && exhibit && selectedSection === 'wall'">
-    <div class="app-header-container mat-elevation-z8 background text" autosize>
+    <div class="app-header-container background text" autosize>
       <app-wall
         [showAdminButton]="isContentDeveloper$ | async"
       ></app-wall>
@@ -74,12 +71,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <app-archive
       [showAdminButton]="isContentDeveloper$ | async"
     ></app-archive>
-  </span>
-
-  <span *ngIf="!apiIsSick && !exhibit">
-        <div class="app-header-container mat-elevation-z8 background text empty-container" autosize>
-          <h2>No Exhibit Selected</h2>
-        </div>
   </span>
 
 </div>

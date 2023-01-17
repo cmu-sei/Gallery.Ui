@@ -10,12 +10,20 @@
   font-family: open_sansbold;
 }
 
+.app-events-container {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: fixed;
+  height: 100%;
+}
+
 .app-header-container {
-  //display: flex;
   flex-flow: row;
   justify-content: center;
   text-align: center;
-  height: calc(100vh - 6vh);
+  height: inherit;
 }
 
 .app-content-container {
@@ -34,7 +42,6 @@
 }
 
 .app-score-container {
-  //display: flex;
   flex-flow: column;
   text-align: center;
   flex: 30;
@@ -88,8 +95,4 @@
 .width-500 {
   align-self: center;
   width: 500px;
-}
-
-.empty-container {
-  min-height: 99vh;
 }
