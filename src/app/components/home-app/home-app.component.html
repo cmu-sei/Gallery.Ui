@@ -34,7 +34,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </div>
 
   <div *ngIf="!apiIsSick && !exhibitId" class="app-header-container background text" autosize>
-    <mat-form-field class="width-500">
+    <mat-form-field class="width-30">
       <mat-label>Collection</mat-label>
       <mat-select placeholder="Collection" [value]="collectionId" (selectionChange)="selectCollection($event.value)">
         <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
@@ -42,7 +42,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="width-500">
+    <span>&nbsp;&nbsp;</span>
+    <mat-form-field class="width-30">
       <mat-label>Exhibit</mat-label>
       <mat-select placeholder="Exhibit" [value]="exhibitId" (selectionChange)="selectExhibit($event.value)">
         <mat-option *ngFor="let exhibit of exhibitList" [value]="exhibit.id">
@@ -60,7 +61,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </span>
 
   <span *ngIf="!apiIsSick && exhibit && selectedSection === 'wall'">
-    <div class="app-header-container background text" autosize>
+    <div>
       <app-wall
         [showAdminButton]="isContentDeveloper$ | async"
       ></app-wall>

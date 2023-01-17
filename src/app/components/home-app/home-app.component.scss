@@ -20,10 +20,10 @@
 }
 
 .app-header-container {
+  display: flex;
   flex-flow: row;
   justify-content: center;
   text-align: center;
-  height: inherit;
 }
 
 .app-content-container {
@@ -92,7 +92,7 @@
   width: 60px;
 }
 
-.width-500 {
+.width-30 {
   align-self: center;
-  width: 500px;
+  width: 30%;
 }
