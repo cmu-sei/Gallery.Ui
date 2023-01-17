@@ -15,7 +15,7 @@
   flex-flow: row;
   justify-content: center;
   text-align: center;
-  min-height: 99vh;
+  height: calc(100vh - 6vh);
 }
 
 .app-content-container {

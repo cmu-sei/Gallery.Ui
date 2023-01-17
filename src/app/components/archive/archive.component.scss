@@ -176,7 +176,7 @@
 }
 
 .app-header-container {
-  min-height: 99vh;
+  height: calc(100vh - 6vh);
 }
 
 .cards {

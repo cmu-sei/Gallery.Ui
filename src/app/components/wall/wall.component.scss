@@ -4,7 +4,7 @@
 .wall-container {
   display: flex;
   flex-flow: column;
-  min-height: 99vh;
+  height: calc(100vh - 6vh);
 }
 
 .top-row {
