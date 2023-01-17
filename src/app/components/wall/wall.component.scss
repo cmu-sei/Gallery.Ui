@@ -4,7 +4,8 @@
 .wall-container {
   display: flex;
   flex-flow: column;
-  min-height: 99vh;
+  justify-content: center;
+  text-align: center;
 }
 
 .top-row {
