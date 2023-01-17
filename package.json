@@ -36,7 +36,7 @@
     "@datorama/akita-ngdevtools": "^6.0.0",
     "@mdi/font": "^5.9.55",
     "@microsoft/signalr": "^5.0.7",
-    "@ngtools/webpack": "^13.3.10",
+    "@ngtools/webpack": "^14.2.10",
     "ajv": "^8.6.0",
     "core-js": "^3.14.0",
     "loader-utils": "^3.2.1",
