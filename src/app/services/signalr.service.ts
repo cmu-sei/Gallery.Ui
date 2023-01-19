@@ -24,7 +24,6 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class SignalRService implements OnDestroy {
   private hubConnection: signalR.HubConnection;
-  private viewId: string;
   private connectionPromise: Promise<void>;
   private unsubscribe$ = new Subject();
 
