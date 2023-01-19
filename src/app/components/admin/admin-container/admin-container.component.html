@@ -56,7 +56,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
           <div class="lefticon">
             <mat-icon
-              class="font-35px"
+              class="mdi-24px"
               fontIcon="mdi-account"
               [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
@@ -77,7 +77,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
           <div class="lefticon">
             <mat-icon
-              class="font-35px"
+              class="mdi-24px"
               fontIcon="mdi-account-multiple"
               [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
@@ -98,7 +98,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
           <div class="lefticon">
             <mat-icon
-              class="font-35px"
+              class="mdi-24px"
               fontIcon="mdi-focus-field"
               [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
@@ -119,7 +119,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
           <div class="lefticon">
             <mat-icon
-              class="font-35px"
+              class="mdi-24px"
               fontIcon="mdi-border-all-variant"
               [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
@@ -140,7 +140,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
           <div class="lefticon">
             <mat-icon
-              class="font-35px"
+              class="mdi-24px"
               fontIcon="mdi-account-box-multiple-outline"
               [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
@@ -161,7 +161,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
           <div class="lefticon">
             <mat-icon
-              class="font-35px"
+              class="mdi-24px"
               fontIcon="mdi-format-list-bulleted-type"
               [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
@@ -182,7 +182,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
           <div class="lefticon">
             <mat-icon
-              class="font-35px"
+              class="mdi-24px"
               fontIcon="mdi-monitor-dashboard"
               [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
@@ -227,30 +227,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <span *ngIf="isContentDeveloper && displayedSection === section.teams">
         <app-admin-teams
           [userList]="userList | async"
-          [filterControl]="filterControl"
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          [filterString]="filterString | async"
-          (removeUserPermission)="removeUserPermissionHandler($event)"
-          (addUserPermission)="addUserPermissionHandler($event)"
-          (addUser)="addUserHandler($event)"
-          (deleteUser)="deleteUserHandler($event)"
-          (sortChange)="sortChangeHandler($event)"
           (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-teams>
       </span>
       <span *ngIf="isContentDeveloper && displayedSection === section.collections">
         <app-admin-collections
-          [collectionList]="collectionList | async"
-          [filterControl]="filterControl"
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          [filterString]="filterString | async"
-          (addCollection)="addCollectionHandler($event)"
-          (updateCollection)="updateCollectionHandler($event)"
-          (deleteCollection)="deleteCollectionHandler($event)"
-          (sortChange)="sortChangeHandler($event)"
           (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-collections>
@@ -259,29 +245,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-exhibits
           [userList]="userList | async"
           [teamList]="teamList | async"
-          [filterControl]="filterControl"
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          [filterString]="filterString | async"
-          (addExhibit)="addExhibitHandler($event)"
-          (updateExhibit)="updateExhibitHandler($event)"
-          (deleteExhibit)="deleteExhibitHandler($event)"
-          (sortChange)="sortChangeHandler($event)"
           (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-exhibits>
       </span>
       <span *ngIf="isContentDeveloper && displayedSection === section.cards">
         <app-admin-cards
-          [cardList]="cardList | async"
-          [filterControl]="filterControl"
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          [filterString]="filterString | async"
-          (addCard)="addCardHandler($event)"
-          (updateCard)="updateCardHandler($event)"
-          (deleteCard)="deleteCardHandler($event)"
-          (sortChange)="sortChangeHandler($event)"
           (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-cards>
@@ -298,15 +271,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </span>
       <span *ngIf="isContentDeveloper && displayedSection === section.articles">
         <app-admin-articles
-          [articleList]="articleList | async"
-          [filterControl]="filterControl"
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          [filterString]="filterString | async"
-          (addArticle)="addArticleHandler($event)"
-          (updateArticle)="updateArticleHandler($event)"
-          (deleteArticle)="deleteArticleHandler($event)"
-          (sortChange)="sortChangeHandler($event)"
           (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-articles>
