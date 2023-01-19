@@ -78,10 +78,7 @@ export class AdminArticleEditDialogComponent {
     this.data.article.datePosted,
     []
   );
-  public timePostedFormControl = new UntypedFormControl(
-    this.data.article.datePosted.toTimeString().substr(0, 5),
-    []
-  );
+
   public matcher = new UserErrorStateMatcher();
   itemStatusList = [
     ItemStatus.Unused,
@@ -172,24 +169,14 @@ export class AdminArticleEditDialogComponent {
       case 'url':
         this.data.article.url = this.urlFormControl.value ? this.urlFormControl.value.toString() : '';
         break;
-      case 'datePosted':
+      case 'datePosted': {
         const newPosted = new Date(this.datePostedFormControl.value);
         const oldPosted = new Date(this.data.article.datePosted);
         newPosted.setHours(oldPosted.getHours());
         newPosted.setMinutes(oldPosted.getMinutes());
         this.data.article.datePosted = newPosted;
         break;
-      case 'timePosted':
-        var timeParts: string[];
-        var newTime = this.timePostedFormControl.value;
-        if (newTime.length === 5) {
-          timeParts = newTime.split(':');
-        } else {
-          timeParts = this.convertTime12to24(newTime);
-        }
-        this.data.article.datePosted.setHours(timeParts[0]);
-        this.data.article.datePosted.setMinutes(timeParts[1]);
-        break;
+      }
       default:
         break;
     }
@@ -206,5 +193,5 @@ export class AdminArticleEditDialogComponent {
     }
 
     return [hours, minutes];
-  };
+  }
 }

@@ -52,7 +52,6 @@ import {
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { ClipboardModule } from 'ngx-clipboard';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminContainerComponent } from './components/admin/admin-container/admin-container.component';
@@ -90,7 +89,7 @@ import { DisplayOrderPipe, SortByPipe } from 'src/app/utilities/sort-by-pipe';
 import { ArchiveComponent } from './components/archive/archive.component';
 import { WallComponent } from './components/wall/wall.component';
 import { QuillModule } from 'ngx-quill';
-
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 
 const settings: ComnSettingsConfig = {
   url: 'assets/config/settings.json',
@@ -182,7 +181,10 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     CdkTableModule,
     MatTreeModule,
     CdkTreeModule,
-    NgxMaterialTimepickerModule,
+    MatDatepickerModule,
+    NgxMatTimepickerModule,
+    NgxMatDatetimePickerModule,
+    NgxMatNativeDateModule,
     ClipboardModule,
     ComnAuthModule.forRoot(),
     ComnSettingsModule.forRoot(),

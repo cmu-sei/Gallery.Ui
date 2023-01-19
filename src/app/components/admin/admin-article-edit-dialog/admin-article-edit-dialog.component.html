@@ -135,19 +135,29 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div fxLayout="row" class="add-margin">
     <div fxFlex fxFlexOffset="10">
       <mat-form-field>
-        <input matInput [matDatepicker]="postedDatePicker" placeholder="Posted Date / Time" (inputChange)="saveArticle('datePosted')" (dateChange)="saveArticle('datePosted')"
-          [formControl]="datePostedFormControl">
-        <mat-datepicker-toggle matSuffix [for]="postedDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #postedDatePicker [startAt]="data.article.datePosted.toLocaleDateString()"></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field fxFlexOffset="5" style="margin-top: -15px;">
-        <input matInput hidden>
-        <ngx-timepicker-field
-          [formControl]="timePostedFormControl"
-          [format]=24
-          [defaultTime]="timePostedFormControl.value"
-          (timeChanged)="saveArticle('timePosted')">
-        </ngx-timepicker-field>
+        <input
+          matInput
+          [ngxMatDatetimePicker]="postedDatePicker"
+          placeholder="Posted Date / Time"
+          [formControl]="datePostedFormControl"
+          (inputChange)="saveArticle('datePosted')"
+          (dateChange)="saveArticle('datePosted')"
+          >
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="$any(postedDatePicker)">
+        </mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #postedDatePicker
+          [showSpinners]=true
+          [showSeconds]=true
+          [stepHour]=1
+          [stepMinute]=1
+          [stepSecond]=1
+          [touchUi]=false
+          [enableMeridian]=true
+          [disableMinute]=false
+          [hideTime]=false>
+        </ngx-mat-datetime-picker>
       </mat-form-field>
     </div>
   </div>
