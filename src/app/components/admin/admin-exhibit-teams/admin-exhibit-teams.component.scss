@@ -47,14 +47,9 @@
 }
 
 .sp-icon {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-}
-
-.search-div {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  margin-left: 20px;
+  margin-left: 10px;
+  margin-right: 20px;
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
 }
