@@ -50,7 +50,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <section matSort (matSortChange)="sortChanged($event)" class="mat-elevation-z2 mat-header-row">
     <div class="mat-header-cell two-cell" mat-sort-header="shortName"><span style="margin-left: 80px;">Short Name</span></div>
     <div class="mat-header-cell five-cell" mat-sort-header="name">Name</div>
-    <div class="mat-header-cell three-cell" mat-sort-header="exhibitId">Exhibit ID</div>
   </section>
 
   <mat-expansion-panel
@@ -82,11 +81,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <div class="mat-cell five-cell center-self">
         <div class="panel-div">
           {{ team.name }}
-        </div>
-      </div>
-      <div class="mat-cell three-cell center-self">
-        <div class="panel-div">
-          {{ team.exhibitId }}
         </div>
       </div>
     </mat-expansion-panel-header>
