@@ -12,7 +12,7 @@ import {
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { User, Team } from 'src/app/generated/api';
+import { User } from 'src/app/generated/api';
 import { TeamUserDataService } from 'src/app/data/user/team-user-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
