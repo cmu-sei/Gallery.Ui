@@ -95,6 +95,11 @@ export class AdminArticleEditDialogComponent {
   ) {
     dialogRef.disableClose = true;
   }
+  editorStyle = {
+    'min-height': '100px',
+    'max-height': '400px',
+    'overflow': 'auto'
+  };
 
   errorFree() {
     return !(
@@ -182,16 +187,4 @@ export class AdminArticleEditDialogComponent {
     }
   }
 
-  private convertTime12to24(time12h: string) {
-    const [time, modifier] = time12h.split(' ');
-    let [hours, minutes] = time.split(':');
-    if (hours === '12') {
-      hours = '00';
-    }
-    if (modifier.toUpperCase() === 'PM') {
-      hours = (parseInt(hours, 10) + 12).toString();
-    }
-
-    return [hours, minutes];
-  }
 }

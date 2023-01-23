@@ -38,9 +38,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         Description
       </p>
         <div id="quill">
-          <quill-editor [styles]="editorStyle" placeholder="Enter Text" [modules]="config"
+          <quill-editor [styles]="editorStyle"
              placeholder="Description" [formControl]="descriptionFormControl"
-             (blur)="saveArticle('description')" value="{{data.article.description}}" [errorStateMatcher]="matcher">
+             (blur)="saveArticle('description')">
           </quill-editor>
           <mat-error *ngIf="descriptionFormControl.hasError('required')">
             Description is <strong>required</strong>
