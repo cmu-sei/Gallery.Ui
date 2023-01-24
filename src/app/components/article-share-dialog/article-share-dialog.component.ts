@@ -23,8 +23,8 @@ export class ArticleShareDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
   shareTeamsControl = new UntypedFormControl();
   subjectFormControl = new UntypedFormControl(this.data.article.sourceName + ': ' + this.data.article.name);
-  messageFormControl = new UntypedFormControl('FYSA\n\n- - - - - -\n\n' +
-    this.data.article.sourceType + ' from ' + this.data.article.sourceName + '\n\n' + this.data.article.name + '\n' + this.data.article.description + '\n\n');
+  messageFormControl = new UntypedFormControl('<p>FYSA</p>\n<p>- - - - - -</p>\n<p>' +
+    this.data.article.sourceType + ' from ' + this.data.article.sourceName + '</p>\n<p>' + this.data.article.name + '\n' + this.data.article.description + '\n\n');
 
   constructor(
     public dialogService: DialogService,
