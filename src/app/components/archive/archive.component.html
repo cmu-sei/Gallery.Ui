@@ -98,8 +98,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <section class="cards">
     <mat-card class="card" *ngFor="let userArticle of filteredUserArticleList">
       <mat-card-header [ngClass]="getIsReadClass(userArticle)">
-        <div mat-card-avatar class="example-header-image">
-          <mat-icon fontIcon="{{ sourceIcon[userArticle.article.sourceType] }}" title="{{ userArticle.article.sourceType }}" class="mdi-48px center-self title source-icon"></mat-icon>
+        <div mat-card-avatar>
+          <mat-icon style="overflow:visible" fontIcon="{{ sourceIcon[userArticle.article.sourceType] }}" title="{{ userArticle.article.sourceType }}" class="mdi-48px center-self title source-icon"></mat-icon>
         </div>
         <mat-card-title class="article-title">{{userArticle.article.name}}</mat-card-title>
         <mat-card-subtitle class="article-subtitle">{{userArticle.article.sourceName}}</mat-card-subtitle>
