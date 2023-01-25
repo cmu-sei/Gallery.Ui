@@ -8,7 +8,7 @@ import {
   CardStore,
 } from './card.store';
 import { Injectable } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Observable } from 'rxjs';
 
 @QueryConfig({

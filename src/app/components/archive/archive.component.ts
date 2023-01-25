@@ -14,14 +14,14 @@ import { Observable, Subject } from "rxjs";
 import { map, take, takeUntil } from "rxjs/operators";
 import { HealthService } from 'src/app/generated/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PageEvent } from '@angular/material/paginator';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
 import { UntypedFormControl } from '@angular/forms';
 import { Section } from 'src/app/utilities/enumerations';
 import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { QuillModule } from 'ngx-quill';
 
