@@ -90,7 +90,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
       exhibit = {... exhibit};
     }
     const dialogRef = this.dialog.open(AdminExhibitEditDialogComponent, {
-      width: '800px',
+      width: '480px',
       data: {
         exhibit: exhibit,
         exhibitList: this.exhibitList,

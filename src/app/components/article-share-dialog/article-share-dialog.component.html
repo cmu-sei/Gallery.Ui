@@ -29,7 +29,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <input matInput [formControl]="subjectFormControl" />
   </mat-form-field>
   <div fxLayout="row" class="add-margin left">
-    <div fxFlex>
+    <div>
       <h4>Email Message</h4>
         <div id="quill">
           <quill-editor [styles]="editorStyle" placeholder="Enter Text" [modules]="config"
@@ -42,8 +42,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
     </div>
   </div>
-  <div fxLayout="row" class="bottom-button">
-    <div fxFlex fxLayoutAlign="left" class="delete-button">
+  <div class="cssLayoutRowStartCenter bottom-button">
+    <div class="delete-button">
       <button
         mat-stroked-button
         (click)="handleShareIsComplete(true)"
@@ -51,7 +51,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         [disabled]="!shareTeamsControl.value || shareTeamsControl.value.length === 0"
       >Share</button>
     </div>
-    <div fxFlex fxLayoutAlign="end" class="delete-button">
+    <div class="delete-button">
       <button
         mat-stroked-button
         (click)="handleShareIsComplete(false)"

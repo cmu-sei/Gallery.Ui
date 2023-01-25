@@ -121,7 +121,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
       teamCard = {... teamCard};
     }
     const dialogRef = this.dialog.open(AdminTeamCardEditDialogComponent, {
-      width: '800px',
+      width: '480px',
       data: {
         teamCard: teamCard,
         cardList: this.cardList,

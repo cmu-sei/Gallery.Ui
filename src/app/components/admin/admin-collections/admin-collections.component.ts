@@ -81,7 +81,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
       collection = {... collection};
     }
     const dialogRef = this.dialog.open(AdminCollectionEditDialogComponent, {
-      width: '800px',
+      width: '480px',
       data: {
         collection: collection
       },

@@ -104,7 +104,7 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
       card = {... card};
     }
     const dialogRef = this.dialog.open(AdminCardEditDialogComponent, {
-      width: '800px',
+      width: '480px',
       data: {
         card: card,
         collectionList: this.collectionList

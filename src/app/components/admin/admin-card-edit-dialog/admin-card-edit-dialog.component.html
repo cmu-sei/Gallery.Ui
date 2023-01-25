@@ -4,7 +4,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div mat-dialog-title>
-  &nbsp;
+  Edit Card
   <button
     mat-icon-button
     (click)="handleEditComplete(false)"
@@ -17,8 +17,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 </div>
 <div mat-dialog-content *ngIf="!!data && data.card !== undefined && data.card !== null">
 
-  <div fxLayout="row" class="add-margin">
-    <div fxFlex fxFlexOffset="10">
+  <div class="add-margin">
+    <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="cardNameFormControl" placeholder="Name (required)" (blur)="saveCard('name')"
           value="{{data.card.name}}" [errorStateMatcher]="matcher">
@@ -32,17 +32,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-  <div fxLayout="row" class="add-margin">
-    <div fxFlex fxFlexOffset="10">
+  <div class="add-margin">
+    <div>
       <mat-form-field class="full-width">
-        <input type="text" matInput [formControl]="cardDescriptionFormControl" placeholder="Description" (blur)="saveCard('description')"
-          value="{{data.card.description}}" [errorStateMatcher]="matcher">
+        <textarea matInput [formControl]="cardDescriptionFormControl" placeholder="Description"
+        (blur)="saveCard('description')" value="{{data.card.description}}" [errorStateMatcher]="matcher"></textarea>
       </mat-form-field>
     </div>
   </div>
 
-  <div fxLayout="row" class="add-margin">
-    <div fxFlex fxFlexOffset="10">
+  <div class="add-margin">
+    <div>
       <mat-form-field class="name-width">
         <mat-select placeholder="Collection" [formControl]="collectionIdFormControl" (selectionChange)="saveCard()">
           <mat-option>None</mat-option>
@@ -54,11 +54,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-  <div fxLayout="row" class="bottom-button">
-    <div fxFlex fxLayoutAlign="left" class="delete-button">
+  <div class="cssLayoutRowStartCenter bottom-button">
+    <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
     </div>
-    <div fxFlex fxLayoutAlign="end" class="delete-button">
+    <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
     </div>
   </div>

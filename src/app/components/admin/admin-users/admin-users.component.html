@@ -3,7 +3,7 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div fxLayout="row" fxLayoutAlign="start center">
+<div class="cssLayoutRowStartCenter">
   <div class="sp-icon">
     <mat-icon
       class="mdi-24px"
@@ -12,12 +12,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     ></mat-icon>
   </div>
   <mat-icon
-    style="margin-left: 40px; transform: scale(0.85); margin-right: 5px;"
+    style="margin-left: 20px; transform: scale(0.85); margin-right: 5px;"
     class="icon-color"
     svgIcon="ic_magnify_search"
   ></mat-icon>
   <mat-form-field style="width: 300px;">
-    <input matInput [formControl]="filterControl" placeholder="Search" />
+    <input matInput [formControl]="filterControl" placeholder="Search" class="mat-form-field"/>
   </mat-form-field>
   <div style="width: 30px;">
     <button
@@ -29,10 +29,10 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
     </button>
   </div>
-  <div style="width: 100px;">
+  <div class="button-margins">
     <button mat-stroked-button (click)="addOrEditUser(null)">Add User</button>
   </div>
-  <div class="button-end">
+  <div>
     <mat-paginator
       #paginator
       [length]="userList?.length"
@@ -60,7 +60,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     [disabled]="true"
   >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading">
-      <div class="mat-cell three-cell">
+      <div class="mat-cell two-cell">
         <div class="panel-div">
           <button
             mat-icon-button
@@ -79,7 +79,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           {{ user.name }}
         </div>
       </div>
-      <div class="mat-cell three-cell center-self">
+      <div class="mat-cell two-cell center-self">
         <div class="panel-div">
           <input
             matInput
@@ -90,7 +90,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </div>
       <div class="mat-cell four-cell center-self">
         <div class="panel-div">
-          <div fxLayout="row">
+          <div class="cssLayoutRowStartCenter">
             <div class="permission-item" *ngFor="let permission of permissionList">
               <mat-checkbox
                 [checked]="hasPermission(permission.id, user)"

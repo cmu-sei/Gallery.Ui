@@ -4,7 +4,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div
-  class="app-events-container background">
+  class="app-home-container background">
 
   <app-topbar *ngIf="!hideTopbar"
   [title]="titleText"
@@ -14,7 +14,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   [imageFilePath]="topbarImage"
   ></app-topbar>
 
-  <div *ngIf="apiIsSick" class="app-header-container background text" autosize>
+  <div *ngIf="apiIsSick" class="app-error-container background text" autosize>
     <h1>{{apiMessage}}</h1>
     <h2>Please refresh this page.</h2>
     <h2>If the problem persists, please contact the site administrator.</h2>

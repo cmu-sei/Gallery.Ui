@@ -4,10 +4,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div
-  class="app-admin-container mat-elevation-z8"
-  fxLayout="column"
-  fxLayoutAlign="center stretch"
-  fxFlexFill
+  class="app-admin-container background"
 >
   <app-topbar *ngIf="!hideTopbar"
     [title]="titleText"
@@ -19,16 +16,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
   <mat-sidenav-container
     *ngIf="isContentDeveloper"
-    fxFlex
+    class="tall"
     autosize
   >
     <mat-sidenav
-      class="appbarmenu-container background"
       #sidenav
       mode="side"
       [(opened)]="isSidebarOpen"
+      class="background"
     >
-      <mat-list>
+      <mat-nav-list>
         <mat-list-item
           class="appslist showhand"
           (click)="exitAdmin()"
@@ -42,7 +39,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
           </button>
           <a class="nolink showhand" (click)="exitAdmin()" title="Exit Administration">
-            <div fxLayout="row" fxLayoutAlign="middle center">
+            <div class="cssLayoutRowCenterCenter">
               <h2 class="icon-text">Administration</h2>
             </div>
           </a>
@@ -196,8 +193,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             </button>
           </div>
         </mat-list-item>
-      </mat-list>
+      </mat-nav-list>
       <img
+        *ngIf="!hideTopbar"
         class="cmu-logo"
         [src]="
           (theme$ | async) === 'light-theme'
