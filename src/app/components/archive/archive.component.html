@@ -14,8 +14,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             svgIcon="ic_magnify_search"
           ></mat-icon>
           <mat-form-field>
-            <mat-placeholder class="tiny">Search the Archive</mat-placeholder>
-            <input matInput class="tiny" [formControl]="filterControl" />
+            <input matInput placeholder="Search the Archive" class="tiny" [formControl]="filterControl" />
           </mat-form-field>
           <mat-icon class="mdi-24px point" fontIcon="mdi-close-circle-outline" (click)="applyFilter('')"></mat-icon>
         </div>
