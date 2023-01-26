@@ -61,7 +61,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
     SourceType.News,
     SourceType.Reporting,
     SourceType.Social
-  ]
+  ];
   private unsubscribe$ = new Subject();
 
   constructor(
@@ -242,7 +242,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
                 );
     }
     if (this.selectedMove > -1) {
-      this.filteredArticleList = this.filteredArticleList.filter((a) => (a.move == this.selectedMove));
+      this.filteredArticleList = this.filteredArticleList.filter((a) => (a.move === this.selectedMove));
     }
   }
 
@@ -254,27 +254,27 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
-      case "name":
+      case 'name':
         return (
           (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "cardId":
+      case 'cardId':
         return (
           (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "move":
+      case 'move':
           return (
             (a.move < b.move ? -1 : 1) *
             (isAsc ? 1 : -1)
           );
-      case "inject":
+      case 'inject':
         return (
           (a.inject < b.inject ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "sourceName":
+      case 'sourceName':
         return (
           (a.sourceName.toLowerCase() < b.sourceName.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
@@ -300,8 +300,8 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   getCardName(id: string) {
-    var card = id ? this.cardList.find(card => card.id === id) : null;
-    var name = card ? card.name : '';
+    const card = id ? this.cardList.find(item => item.id === id) : null;
+    const name = card ? card.name : '';
     return name;
   }
 

@@ -135,7 +135,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
         teamIdList.forEach(teamId => {
           result.teamCard.teamId = teamId;
           this.saveTeamCard(result.teamCard);
-        })
+        });
       }
       dialogRef.close();
     });
@@ -184,27 +184,27 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
-      case "teamId":
+      case 'teamId':
         return (
           (this.getTeamName(a.teamId).toLowerCase() < this.getTeamName(b.teamId).toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "cardId":
+      case 'cardId':
         return (
           (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "move":
+      case 'move':
           return (
             (a.move < b.move ? -1 : 1) *
             (isAsc ? 1 : -1)
           );
-      case "inject":
+      case 'inject':
         return (
           (a.inject < b.inject ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "isShownOnWall":
+      case 'isShownOnWall':
         return (
           (a.isShownOnWall < b.isShownOnWall ? -1 : 1) *
           (isAsc ? 1 : -1)

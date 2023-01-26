@@ -190,27 +190,27 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
-      case "name":
+      case 'name':
         return (
           (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "description":
+      case 'description':
         return (
           (a.description.toLowerCase() < b.description.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "collectionId":
+      case 'collectionId':
         return (
           (this.getCollectionName(a.collectionId).toLowerCase() < this.getCollectionName(b.collectionId).toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "move":
+      case 'move':
           return (
             (a.move < b.move ? -1 : 1) *
             (isAsc ? 1 : -1)
           );
-      case "inject":
+      case 'inject':
         return (
           (a.inject < b.inject ? -1 : 1) *
           (isAsc ? 1 : -1)

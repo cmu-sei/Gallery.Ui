@@ -10,7 +10,6 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
-import { ItemStatus } from 'src/app/generated/api';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -46,6 +45,8 @@ export class AdminCollectionEditDialogComponent {
     this.data.collection.description ,
     []
   );
+
+  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
 
   constructor(
     public dialogService: DialogService,

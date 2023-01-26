@@ -219,7 +219,7 @@ export class UserDataService implements OnDestroy {
   addUser(user: User) {
     this.userService.createUser(user).subscribe(
       (u) => {
-        this._users = this._users.filter((user) => u.id !== user.id);
+        this._users = this._users.filter((x) => x.id !== user.id);
         this._users.unshift(u);
         this.updateUsers(this._users);
       },

@@ -84,7 +84,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       const collectionId = params.get('collection');
       this.exhibitId = exhibitId ? exhibitId : this.exhibitId;
       this.collectionId = collectionId ? collectionId : this.collectionId;
-      this.exhibitDataService.setActive(this.exhibitId)
+      this.exhibitDataService.setActive(this.exhibitId);
       this.collectionDataService.setActive(this.collectionId);
       this.setExhibitAndCollection();
     });
@@ -116,7 +116,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.userDataService.loggedInUser
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((user) => {
-        if (user && user.profile && user.profile.sub != this.loggedInUserId) {
+        if (user && user.profile && user.profile.sub !== this.loggedInUserId) {
           this.loggedInUserId = user.profile.sub;
           this.exhibitDataService.unload();
           this.collectionDataService.unload();

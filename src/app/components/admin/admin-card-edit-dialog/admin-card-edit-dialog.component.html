@@ -21,7 +21,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="cardNameFormControl" placeholder="Name (required)" (blur)="saveCard('name')"
-          value="{{data.card.name}}" [errorStateMatcher]="matcher">
+          value="{{data.card.name}}">
         <mat-error *ngIf="cardNameFormControl.hasError('minlength') && !cardNameFormControl.hasError('required')">
           Must contain {{ MIN_NAME_LENGTH }} or more characters
         </mat-error>
@@ -36,7 +36,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <textarea matInput [formControl]="cardDescriptionFormControl" placeholder="Description"
-        (blur)="saveCard('description')" value="{{data.card.description}}" [errorStateMatcher]="matcher"></textarea>
+        (blur)="saveCard('description')" value="{{data.card.description}}"></textarea>
       </mat-form-field>
     </div>
   </div>
@@ -44,7 +44,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="name-width">
-        <mat-select placeholder="Collection" [formControl]="collectionIdFormControl" (selectionChange)="saveCard()">
+        <mat-select placeholder="Collection" [formControl]="collectionIdFormControl">
           <mat-option>None</mat-option>
           <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
             {{ collection.name }}

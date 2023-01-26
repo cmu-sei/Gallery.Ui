@@ -21,7 +21,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="currentMoveFormControl" placeholder="Current Move" (blur)="saveExhibit('currentMove')"
-          value="{{data.exhibit.currentMove}}" [errorStateMatcher]="matcher">
+          value="{{data.exhibit.currentMove}}">
         <mat-error *ngIf="currentMoveFormControl.hasError('required')">
           Current Move is <strong>required</strong>
         </mat-error>
@@ -33,7 +33,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="currentInjectFormControl" placeholder="Current Inject" (blur)="saveExhibit('currentInject')"
-          value="{{data.exhibit.currentInject}}" [errorStateMatcher]="matcher">
+          value="{{data.exhibit.currentInject}}">
         <mat-error *ngIf="currentInjectFormControl.hasError('required')">
           Current Inject is <strong>required</strong>
         </mat-error>
@@ -45,7 +45,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="scenarioIdFormControl" placeholder="Scenario ID" (blur)="saveExhibit('scenarioId')"
-          value="{{data.exhibit.scenarioId}}" [errorStateMatcher]="matcher">
+          value="{{data.exhibit.scenarioId}}">
       </mat-form-field>
     </div>
   </div>

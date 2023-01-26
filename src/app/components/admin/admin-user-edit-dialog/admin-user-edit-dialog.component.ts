@@ -52,6 +52,8 @@ export class AdminUserEditDialogComponent {
     ]
   );
 
+  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
+
   constructor(
     public dialogService: DialogService,
     dialogRef: MatDialogRef<AdminUserEditDialogComponent>,

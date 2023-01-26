@@ -172,12 +172,12 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
           (a.dateCreated.getTime() < b.dateCreated.getTime() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "currentMove":
+      case 'currentMove':
           return (
             (a.currentMove < b.currentMove ? -1 : 1) *
             (isAsc ? 1 : -1)
           );
-      case "currentInject":
+      case 'currentInject':
         return (
           (a.currentInject < b.currentInject ? -1 : 1) *
           (isAsc ? 1 : -1)
@@ -193,7 +193,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
 
   getUserName(userId: string) {
     if (this.userList && this.userList.length > 0) {
-      const user = this.userList.find(user => user.id === userId);
+      const user = this.userList.find(item => item.id === userId);
       return user ? user.name : '';
     }
     return '';

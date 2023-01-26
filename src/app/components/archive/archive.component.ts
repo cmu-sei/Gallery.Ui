@@ -54,6 +54,10 @@ export class ArchiveComponent implements OnDestroy {
   private unreadCount = 0;
   private unsubscribe$ = new Subject();
 
+  editorStyle = {
+    height: '200px'
+  };
+
   constructor(
     @Inject(DOCUMENT) private _document: HTMLDocument,
     private dialog: MatDialog,
@@ -306,9 +310,5 @@ export class ArchiveComponent implements OnDestroy {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
-  editorStyle = {
-    height: '200px'
-  };
 
 }

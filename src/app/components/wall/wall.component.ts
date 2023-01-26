@@ -8,8 +8,8 @@ import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
-import { Observable, Subject } from "rxjs";
-import { map, take, takeUntil } from "rxjs/operators";
+import { Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { HealthService } from 'src/app/generated/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Section } from 'src/app/utilities/enumerations';
@@ -61,7 +61,7 @@ export class WallComponent implements OnDestroy {
       .subscribe(userArticles => {
         this.userArticleList = userArticles;
         this.setShownCardList();
-      })
+      });
   }
 
   healthCheck() {
@@ -105,14 +105,13 @@ export class WallComponent implements OnDestroy {
         const cardToAdd = { ... card };
         const userArticles = this.userArticleList
           .filter(ua => ua.article.cardId === card.id)
-          .sort((a: Card, b:Card) => a.datePosted < b.datePosted ? -1: 1);
-        if (userArticles.length > 0)
-        {
+          .sort((a: Card, b: Card) => a.datePosted < b.datePosted ? -1 : 1);
+        if (userArticles.length > 0) {
           cardToAdd.datePosted = userArticles[0].article?.datePosted;
           cardToAdd.unreadCount = userArticles.filter(ua => !ua.isRead).length;
           cardToAdd.displayedStatus = this.getDisplayedStatus(userArticles[0].article.status);
         } else {
-          cardToAdd.datePosted = new Date("1/1/1900");
+          cardToAdd.datePosted = new Date('1/1/1900');
           cardToAdd.unreadCount = 0;
           cardToAdd.displayedStatus = this.getDisplayedStatus(ItemStatus.Unused);
         }

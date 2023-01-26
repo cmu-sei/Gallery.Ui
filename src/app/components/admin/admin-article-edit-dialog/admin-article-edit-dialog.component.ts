@@ -86,7 +86,9 @@ export class AdminArticleEditDialogComponent {
     ItemStatus.Affected,
     ItemStatus.Critical,
     ItemStatus.Closed
-  ]
+  ];
+
+  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
 
   constructor(
     public dialogService: DialogService,
@@ -95,6 +97,7 @@ export class AdminArticleEditDialogComponent {
   ) {
     dialogRef.disableClose = true;
   }
+
   editorStyle = {
     'min-height': '100px',
     'max-height': '400px',
