@@ -3,7 +3,7 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div class="enchilada">
+<div class="cssLayoutRowSpaceCenter">
   <div class="team-list-container mat-elevation-z8">
     <div class="sp-icon">
       <mat-icon
@@ -14,7 +14,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         All Teams
       </span>
     </div>
-    <div fxLayout="row" fxLayoutAlign="start center">
+    <div>
       <mat-icon
         style="transform: scale(0.85); margin-right: 5px; margin-left: 10px;"
         svgIcon="ic_magnify_search"
@@ -30,7 +30,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
         <button
           *ngIf="filterString != ''"
-          fxLayoutAlign="start center"
           mat-icon-button
           (click)="clearFilter()"
           style="outline: none;"

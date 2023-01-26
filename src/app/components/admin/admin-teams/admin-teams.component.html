@@ -85,7 +85,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </div>
     </mat-expansion-panel-header>
     <div class="panel-container" *ngIf="editTeam.id === team.id">
-      <div class="user-div">
+      <div class="full-width">
         <app-admin-team-users *ngIf="team.id === editTeam.id"
           [teamId]="team.id"
           [userList]="userList"

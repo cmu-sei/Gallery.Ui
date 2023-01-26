@@ -6,7 +6,6 @@ import {
   OnDestroy,
   OnInit,
   Input,
-  ElementRef,
   ViewChild,
 } from '@angular/core';
 import { LegacyPageEvent as PageEvent, MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
@@ -15,7 +14,6 @@ import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/materia
 import { Team } from 'src/app/generated/api';
 import { ExhibitTeamDataService } from 'src/app/data/team/exhibit-team-data.service';
 import { ArticleTeamDataService } from 'src/app/data/team/article-team-data.service';
-import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

@@ -28,13 +28,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <mat-label>Email Subject</mat-label>
     <input matInput [formControl]="subjectFormControl" />
   </mat-form-field>
-  <div fxLayout="row" class="add-margin left">
+  <div class="add-margin left">
     <div>
       <h4>Email Message</h4>
         <div id="quill">
           <quill-editor [styles]="editorStyle" placeholder="Enter Text" [modules]="config"
              placeholder="Description" [formControl]="messageFormControl"
-             (blur)="saveArticle('description')" value="{{data.article.description}}" [errorStateMatcher]="matcher">
+          >
           </quill-editor>
           <mat-error *ngIf="messageFormControl.hasError('required')">
             Message is <strong>required</strong>
