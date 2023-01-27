@@ -3,20 +3,18 @@
 
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import {
-  FormControl,
+  UntypedFormControl,
   FormGroupDirective,
   NgForm,
-  Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ItemStatus } from 'src/app/generated/api';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { SystemMessageService } from 'src/app/services/system-message/system-message.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class UserErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
-    control: FormControl | null,
+    control: UntypedFormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
     const isSubmitted = form && form.submitted;
@@ -35,19 +33,19 @@ const MIN_NAME_LENGTH = 3;
 export class AdminTeamCardEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
-  public teamIdFormControl = new FormControl(
+  public teamIdFormControl = new UntypedFormControl(
     [this.data.teamCard.teamId],
     []
   );
-  public cardIdFormControl = new FormControl(
+  public cardIdFormControl = new UntypedFormControl(
     this.data.teamCard.cardId,
     []
   );
-  public moveFormControl = new FormControl(
+  public moveFormControl = new UntypedFormControl(
     this.data.teamCard.move,
     []
   );
-  public injectFormControl = new FormControl(
+  public injectFormControl = new UntypedFormControl(
     this.data.teamCard.inject,
     []
   );
@@ -64,7 +62,7 @@ export class AdminTeamCardEditDialogComponent {
     dialogRef.disableClose = true;
     data.teamList.forEach((team) => {
       this.teamIdList.push(team.id);
-    })
+    });
   }
 
   errorFree() {
@@ -75,7 +73,7 @@ export class AdminTeamCardEditDialogComponent {
   }
 
   isDuplicateTeamCard() {
-    var existingTeamCard = this.data.teamCardList.find(
+    const existingTeamCard = this.data.teamCardList.find(
       tc => tc.teamId === this.data.teamCard.teamId  &&
       tc.cardId === this.data.teamCard.cardId
     );
@@ -111,7 +109,7 @@ export class AdminTeamCardEditDialogComponent {
    */
   saveTeamCard(changedField): void {
     switch (changedField) {
-      case 'teamId':
+      case 'teamId': {
         let addAllTeams = false;
         const allTeamsIsChecked = this.teamIdFormControl.value.includes(this.ALL_TEAMS);
         // remove "All Teams" from the selected values
@@ -143,6 +141,7 @@ export class AdminTeamCardEditDialogComponent {
         this.teamIdFormControl.setValue(newValue);
         this.allTeamsWasChecked = addAllTeams;
         break;
+      }
       case 'cardId':
         this.data.teamCard.cardId = this.cardIdFormControl.value;
         break;

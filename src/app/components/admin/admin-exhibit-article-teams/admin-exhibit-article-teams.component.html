@@ -3,15 +3,20 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div fxLayout="row" fxLayoutAlign="center">
-  <div class="exhibit-list-container mat-elevation-z8">
+<div class="cssLayoutRowSpaceCenter">
+  <div class="exhibit-teams-list-container mat-elevation-z8">
     <div class="sp-icon">
-      <img height="35" src="./assets/svg-icons/account-multiple.svg" alt="Teams" />
-      <span style="margin-left: 30px;">Exhibit Teams</span>
+      <mat-icon
+        class="mdi-24px"
+        fontIcon="mdi-account-multiple"
+      ></mat-icon>
+      <span style="margin-left: 10px">
+        Exhibit Teams
+      </span>
     </div>
     <hr />
 
-    <div fxLayout="row" fxLayoutAlign="start center">
+    <div>
       <mat-table
         class="mat-table-exhibit-teams"
         #table
@@ -40,15 +45,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-  <div style="margin-left: 20px;">
-    <div class="article-list-container mat-elevation-z8">
+    <div class="exhibit-article-teams-list-container mat-elevation-z8">
       <div class="sp-icon">
-        <img
-          height="35"
-          src="./assets/svg-icons/account-group.svg"
-          alt="Teams"
-        />
-        <span style="margin-left: 30px;">Article Teams</span>
+        <mat-icon
+          class="mdi-24px"
+          fontIcon="mdi-account-multiple"
+        ></mat-icon>
+        <span style="margin-left: 10px">
+          Article Teams
+        </span>
       </div>
       <hr />
       <mat-table
@@ -78,5 +83,4 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-table>
 
     </div>
-  </div>
 </div>

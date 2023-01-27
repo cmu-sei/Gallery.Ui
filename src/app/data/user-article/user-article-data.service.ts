@@ -5,8 +5,8 @@ import { UserArticleStore } from './user-article.store';
 import { UserArticleQuery } from './user-article.query';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { UntypedFormControl } from '@angular/forms';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   Article,
@@ -26,7 +26,7 @@ export class UserArticleDataService {
     map((params) => params.get('userArticleId') || '')
   );
   readonly UserArticleList: Observable<UserArticle[]>;
-  readonly filterControl = new FormControl();
+  readonly filterControl = new UntypedFormControl();
   private filterTerm: Observable<string>;
   private sortColumn: Observable<string>;
   private sortIsAscending: Observable<boolean>;

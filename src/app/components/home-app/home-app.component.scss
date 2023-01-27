@@ -10,7 +10,7 @@
   font-family: open_sansbold;
 }
 
-.app-events-container {
+.app-home-container {
   top: 0;
   bottom: 0;
   left: 0;
@@ -22,6 +22,13 @@
 .app-header-container {
   display: flex;
   flex-flow: row;
+  justify-content: center;
+  text-align: center;
+}
+
+.app-error-container {
+  display: flex;
+  flex-flow: column;
   justify-content: center;
   text-align: center;
 }

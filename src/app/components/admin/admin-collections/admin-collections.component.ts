@@ -2,16 +2,16 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
-import { Collection, User, ItemStatus} from 'src/app/generated/api/model/models';
+import { UntypedFormControl } from '@angular/forms';
+import { MatLegacyPaginator as MatPaginator, LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { Sort } from '@angular/material/sort';
+import { Collection } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
+import { takeUntil } from 'rxjs/operators';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
@@ -33,7 +33,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   editCollection: Collection = {};
   originalCollection: Collection = {};
   filteredCollectionList: Collection[] = [];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'dateCreated', direction: 'desc'};
   private unsubscribe$ = new Subject();
@@ -81,7 +81,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
       collection = {... collection};
     }
     const dialogRef = this.dialog.open(AdminCollectionEditDialogComponent, {
-      width: '800px',
+      width: '480px',
       data: {
         collection: collection
       },
@@ -154,12 +154,12 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
-      case "name":
+      case 'name':
         return (
           (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "description":
+      case 'description':
         return (
           (a.description.toLowerCase() < b.description.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)

@@ -1,20 +1,20 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-.exhibit-list-container {
+.exhibit-teams-list-container {
   display: inline-block;
   flex-direction: column;
   margin-top: 10px;
   width: 400px;
-  height: 400px;
+  height: 500px;
 }
 
-.article-list-container {
+.exhibit-article-teams-list-container {
   display: inline-block;
   flex-direction: column;
   margin-top: 10px;
   width: 400px;
-  height: 400px;
+  height: 500px;
 }
 
 .mat-table-exhibit-teams {
@@ -39,6 +39,9 @@
 .sp-icon {
   margin-left: 10px;
   margin-right: 20px;
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .push-right {

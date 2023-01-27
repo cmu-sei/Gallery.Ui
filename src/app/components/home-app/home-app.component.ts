@@ -3,7 +3,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { EntityActions } from '@datorama/akita';
 import { ComnSettingsService, Theme, ComnAuthQuery } from '@cmusei/crucible-common';
@@ -14,14 +14,11 @@ import { SignalRService } from 'src/app/services/signalr.service';
 import { Collection, Exhibit, Team, User } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
-import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
 import { CardDataService } from 'src/app/data/card/card-data.service';
-import { CardQuery } from 'src/app/data/card/card.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
-import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { Section } from 'src/app/utilities/enumerations';
 
@@ -67,14 +64,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     private authQuery: ComnAuthQuery,
     private signalRService: SignalRService,
     private healthService: HealthService,
-    private articleDataService: ArticleDataService,
     private userArticleDataService: UserArticleDataService,
     private cardDataService: CardDataService,
-    private cardQuery: CardQuery,
     private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
     private teamDataService: TeamDataService,
-    private teamQuery: TeamQuery,
     private teamCardDataService: TeamCardDataService,
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery
@@ -90,7 +84,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       const collectionId = params.get('collection');
       this.exhibitId = exhibitId ? exhibitId : this.exhibitId;
       this.collectionId = collectionId ? collectionId : this.collectionId;
-      this.exhibitDataService.setActive(this.exhibitId)
+      this.exhibitDataService.setActive(this.exhibitId);
       this.collectionDataService.setActive(this.collectionId);
       this.setExhibitAndCollection();
     });
@@ -122,7 +116,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.userDataService.loggedInUser
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((user) => {
-        if (user && user.profile && user.profile.sub != this.loggedInUserId) {
+        if (user && user.profile && user.profile.sub !== this.loggedInUserId) {
           this.loggedInUserId = user.profile.sub;
           this.exhibitDataService.unload();
           this.collectionDataService.unload();

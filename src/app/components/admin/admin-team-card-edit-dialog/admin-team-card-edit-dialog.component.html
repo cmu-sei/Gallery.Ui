@@ -4,7 +4,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div mat-dialog-title>
-  &nbsp;
+  Edit Team Card
   <button
     mat-icon-button
     (click)="handleEditComplete(false)"
@@ -17,8 +17,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 </div>
 <div mat-dialog-content *ngIf="!!data && data.teamCard !== undefined && data.teamCard !== null">
 
-  <div fxLayout="row" class="add-margin">
-    <div fxFlex fxFlexOffset="10">
+  <div class="add-margin">
+    <div>
       <mat-form-field class="full-width">
         <mat-select placeholder="Team" [formControl]="teamIdFormControl" multiple (selectionChange)="saveTeamCard('teamId')">
           <mat-option [value]="ALL_TEAMS">All Teams</mat-option>
@@ -30,8 +30,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-  <div fxLayout="row" class="add-margin">
-    <div fxFlex fxFlexOffset="10">
+  <div class="add-margin">
+    <div fx>
       <mat-form-field class="full-width">
         <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveTeamCard('cardId')">
           <mat-option *ngFor="let card of data.cardList" [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
@@ -42,8 +42,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-  <div fxLayout="row" class="add-margin">
-    <div fxFlex fxFlexOffset="10">
+  <div class="add-margin">
+    <div>
       <mat-form-field class="short-width">
         <input matInput placeholder="Move" [formControl]="moveFormControl"
           (blur)="saveTeamCard('move')" value="{{data.teamCard.move}}" />
@@ -51,8 +51,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-  <div fxLayout="row" class="add-margin">
-    <div fxFlex fxFlexOffset="10">
+  <div class="add-margin">
+    <div>
       <mat-form-field class="short-width">
         <input matInput placeholder="Inject" [formControl]="injectFormControl"
           (blur)="saveTeamCard('inject')" value="{{data.teamCard.inject}}" />
@@ -60,8 +60,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-  <div fxLayout="row" class="add-margin">
-    <div fxFlex fxFlexOffset="10" class="full-width">
+  <div class="add-margin">
+    <div class="full-width">
       <mat-checkbox
         [(ngModel)]="data.teamCard.isShownOnWall"
       >
@@ -70,11 +70,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-  <div fxLayout="row" class="bottom-button">
-    <div fxFlex fxLayoutAlign="left" class="delete-button">
+  <div class="cssLayoutRowStartCenter bottom-button">
+    <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
     </div>
-    <div fxFlex fxLayoutAlign="end" class="delete-button">
+    <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
     </div>
   </div>

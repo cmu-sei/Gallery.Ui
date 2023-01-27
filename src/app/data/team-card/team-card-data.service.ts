@@ -4,8 +4,8 @@
 import { TeamCardStore } from './team-card.store';
 import { TeamCardQuery } from './team-card.query';
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { UntypedFormControl } from '@angular/forms';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   TeamCard,
@@ -24,7 +24,7 @@ export class TeamCardDataService {
     map((params) => params.get('teamCardId') || '')
   );
   readonly TeamCardList: Observable<TeamCard[]>;
-  readonly filterControl = new FormControl();
+  readonly filterControl = new UntypedFormControl();
   private filterTerm: Observable<string>;
   private sortColumn: Observable<string>;
   private sortIsAscending: Observable<boolean>;

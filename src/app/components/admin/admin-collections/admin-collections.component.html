@@ -3,11 +3,12 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div fxLayout="row" fxLayoutAlign="start center">
+<div class="cssLayoutRowStartCenter">
   <div class="sp-icon">
     <mat-icon
+      class="mdi-24px"
       fontIcon="mdi-focus-field"
-      [ngStyle]="{'color': topbarColor, 'font-size': '35px'}"
+      [ngStyle]="{'color': topbarColor}"
     ></mat-icon>
   </div>
   <mat-icon
@@ -88,10 +89,10 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </mat-expansion-panel>
 </mat-accordion>
 
-<mat-collection
+<mat-card
   *ngIf="isLoading"
   style="display: flex; justify-content: center; align-items: center;"
 >
   <mat-progress-spinner color="primary" mode="indeterminate">
   </mat-progress-spinner>
-</mat-collection>
+</mat-card>

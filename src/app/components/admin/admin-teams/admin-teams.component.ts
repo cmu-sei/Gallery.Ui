@@ -2,8 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { UntypedFormControl } from '@angular/forms';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
 import { Collection, Exhibit, Team, User, ItemStatus} from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
@@ -14,8 +14,8 @@ import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
+import { takeUntil } from 'rxjs/operators';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AdminTeamEditDialogComponent } from 'src/app/components/admin/admin-team-edit-dialog/admin-team-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
@@ -36,7 +36,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
   newTeam: Team = { id: '', name: '' };
   teamList: Team[];
   filteredTeamList: Team[];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   isLoading = false;
   topbarColor = '#ef3a47';
@@ -101,7 +101,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
       team = {... team};
     }
     const dialogRef = this.dialog.open(AdminTeamEditDialogComponent, {
-      width: '800px',
+      width: '480px',
       data: {
         team: team,
         exhibitList: this.exhibitList,
@@ -171,12 +171,12 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
-      case "shortName":
+      case 'shortName':
         return (
           (a.shortName.toLowerCase() < b.shortName.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "name":
+      case 'name':
         return (
           (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)

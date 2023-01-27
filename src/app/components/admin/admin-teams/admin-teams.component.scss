@@ -18,14 +18,6 @@
   text-align: left;
 }
 
-.user-div {
-  display: flex;
-  flex-flow: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-align: left;
-}
-
 .name-width {
   width: 600px;
 }
@@ -106,4 +98,9 @@
 
 .center-self {
   align-self: center;
+}
+
+.full-width {
+  width: 100%;
+  display: inline-block;
 }

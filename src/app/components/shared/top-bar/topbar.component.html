@@ -35,7 +35,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <ng-container *ngIf="teams && team && teams.length > 0">
       <div class="team-text">Team:</div>
       <b class="team-text">{{ team.name }}</b>
-      <div *ngIf="teams.length > 1" fxLayout="row" fxLayoutAlign="start center">
+      <div *ngIf="teams.length > 1" class="cssLayoutRowStartCenter">
         <button
           mat-button
           [matMenuTriggerFor]="teamMenu"
@@ -52,13 +52,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             {{ val.name }}
           </button>
         </mat-menu>
-      </div>
+      </div>s
     </ng-container>
     <span class="spacer"></span>
     <div
-      fxFlex
-      class="team-text"
-      fxLayoutAlign="end center"
+      class="team-text cssLayoutColumnSpaceCenter"
       *ngIf="currentUser$ | async as currentUser"
     >
       <button

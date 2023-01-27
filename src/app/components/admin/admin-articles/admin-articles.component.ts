@@ -2,8 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { UntypedFormControl } from '@angular/forms';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
 import { Article, Collection, User, ItemStatus, SourceType} from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
@@ -14,10 +14,9 @@ import { CardQuery } from 'src/app/data/card/card.query';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { createAdd } from 'typescript';
+import { takeUntil } from 'rxjs/operators';
 import { AdminArticleEditDialogComponent } from 'src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -47,7 +46,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   originalArticle: Article = {};
   defaultScoringModelId = this.settingsService.settings.DefaultScoringModelId;
   filteredArticleList: Article[] = [];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'datePosted', direction: 'desc'};
   itemStatusList: ItemStatus[] = [
@@ -62,7 +61,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
     SourceType.News,
     SourceType.Reporting,
     SourceType.Social
-  ]
+  ];
   private unsubscribe$ = new Subject();
 
   constructor(
@@ -243,7 +242,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
                 );
     }
     if (this.selectedMove > -1) {
-      this.filteredArticleList = this.filteredArticleList.filter((a) => (a.move == this.selectedMove));
+      this.filteredArticleList = this.filteredArticleList.filter((a) => (a.move === this.selectedMove));
     }
   }
 
@@ -255,27 +254,27 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
-      case "name":
+      case 'name':
         return (
           (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "cardId":
+      case 'cardId':
         return (
           (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "move":
+      case 'move':
           return (
             (a.move < b.move ? -1 : 1) *
             (isAsc ? 1 : -1)
           );
-      case "inject":
+      case 'inject':
         return (
           (a.inject < b.inject ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "sourceName":
+      case 'sourceName':
         return (
           (a.sourceName.toLowerCase() < b.sourceName.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
@@ -301,8 +300,8 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   getCardName(id: string) {
-    var card = id ? this.cardList.find(card => card.id === id) : null;
-    var name = card ? card.name : '';
+    const card = id ? this.cardList.find(item => item.id === id) : null;
+    const name = card ? card.name : '';
     return name;
   }
 

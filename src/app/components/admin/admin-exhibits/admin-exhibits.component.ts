@@ -2,8 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { UntypedFormControl } from '@angular/forms';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
 import { Collection, Exhibit, Team, User } from 'src/app/generated/api/model/models';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
@@ -12,7 +12,7 @@ import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminExhibitEditDialogComponent } from '../admin-exhibit-edit-dialog/admin-exhibit-edit-dialog.component';
@@ -36,7 +36,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   editExhibit: Exhibit = {};
   originalExhibit: Exhibit = {};
   filteredExhibitList: Exhibit[] = [];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'dateCreated', direction: 'desc'};
   showTeams = false;
@@ -90,7 +90,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
       exhibit = {... exhibit};
     }
     const dialogRef = this.dialog.open(AdminExhibitEditDialogComponent, {
-      width: '800px',
+      width: '480px',
       data: {
         exhibit: exhibit,
         exhibitList: this.exhibitList,
@@ -172,12 +172,12 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
           (a.dateCreated.getTime() < b.dateCreated.getTime() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "currentMove":
+      case 'currentMove':
           return (
             (a.currentMove < b.currentMove ? -1 : 1) *
             (isAsc ? 1 : -1)
           );
-      case "currentInject":
+      case 'currentInject':
         return (
           (a.currentInject < b.currentInject ? -1 : 1) *
           (isAsc ? 1 : -1)
@@ -193,7 +193,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
 
   getUserName(userId: string) {
     if (this.userList && this.userList.length > 0) {
-      const user = this.userList.find(user => user.id === userId);
+      const user = this.userList.find(item => item.id === userId);
       return user ? user.name : '';
     }
     return '';

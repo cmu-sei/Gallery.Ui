@@ -2,10 +2,10 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { UntypedFormControl } from '@angular/forms';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
-import { Collection, User, ItemStatus} from 'src/app/generated/api/model/models';
+import { Collection } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { Card } from 'src/app/data/card/card.store';
@@ -13,8 +13,8 @@ import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
+import { takeUntil } from 'rxjs/operators';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AdminCardEditDialogComponent } from 'src/app/components/admin/admin-card-edit-dialog/admin-card-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,7 +39,7 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   editCard: Card = {};
   originalCard: Card = {};
   filteredCardList: Card[] = [];
-  filterControl = new FormControl();
+  filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'datePosted', direction: 'desc'};
   private unsubscribe$ = new Subject();
@@ -104,7 +104,7 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
       card = {... card};
     }
     const dialogRef = this.dialog.open(AdminCardEditDialogComponent, {
-      width: '800px',
+      width: '480px',
       data: {
         card: card,
         collectionList: this.collectionList
@@ -190,27 +190,27 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
-      case "name":
+      case 'name':
         return (
           (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "description":
+      case 'description':
         return (
           (a.description.toLowerCase() < b.description.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "collectionId":
+      case 'collectionId':
         return (
           (this.getCollectionName(a.collectionId).toLowerCase() < this.getCollectionName(b.collectionId).toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "move":
+      case 'move':
           return (
             (a.move < b.move ? -1 : 1) *
             (isAsc ? 1 : -1)
           );
-      case "inject":
+      case 'inject':
         return (
           (a.inject < b.inject ? -1 : 1) *
           (isAsc ? 1 : -1)

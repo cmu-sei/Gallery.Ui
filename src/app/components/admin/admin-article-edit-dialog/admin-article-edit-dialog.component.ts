@@ -3,20 +3,20 @@
 
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import {
-  FormControl,
+  UntypedFormControl,
   FormGroupDirective,
   NgForm,
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { ItemStatus } from 'src/app/generated/api';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class UserErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
-    control: FormControl | null,
+    control: UntypedFormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
     const isSubmitted = form && form.submitted;
@@ -35,53 +35,50 @@ const MIN_NAME_LENGTH = 3;
 export class AdminArticleEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
-  public articleNameFormControl = new FormControl(
+  public articleNameFormControl = new UntypedFormControl(
     this.data.article.name,
     [
       Validators.required,
       Validators.minLength(MIN_NAME_LENGTH),
     ]
   );
-  public descriptionFormControl = new FormControl(
+  public descriptionFormControl = new UntypedFormControl(
     this.data.article.description ,
     []
   );
-  public cardIdFormControl = new FormControl(
+  public cardIdFormControl = new UntypedFormControl(
     this.data.article.cardId,
     []
   );
-  public moveFormControl = new FormControl(
+  public moveFormControl = new UntypedFormControl(
     this.data.article.move,
     []
   );
-  public injectFormControl = new FormControl(
+  public injectFormControl = new UntypedFormControl(
     this.data.article.inject,
     []
   );
-  public statusFormControl = new FormControl(
+  public statusFormControl = new UntypedFormControl(
     this.data.article.status,
     []
   );
-  public sourceTypeFormControl = new FormControl(
+  public sourceTypeFormControl = new UntypedFormControl(
     this.data.article.sourceType,
     []
   );
-  public sourceNameFormControl = new FormControl(
+  public sourceNameFormControl = new UntypedFormControl(
     this.data.article.sourceName,
     []
   );
-  public urlFormControl = new FormControl(
+  public urlFormControl = new UntypedFormControl(
     this.data.article.url,
     []
   );
-  public datePostedFormControl = new FormControl(
+  public datePostedFormControl = new UntypedFormControl(
     this.data.article.datePosted,
     []
   );
-  public timePostedFormControl = new FormControl(
-    this.data.article.datePosted.toTimeString().substr(0, 5),
-    []
-  );
+
   public matcher = new UserErrorStateMatcher();
   itemStatusList = [
     ItemStatus.Unused,
@@ -89,7 +86,9 @@ export class AdminArticleEditDialogComponent {
     ItemStatus.Affected,
     ItemStatus.Critical,
     ItemStatus.Closed
-  ]
+  ];
+
+  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
 
   constructor(
     public dialogService: DialogService,
@@ -98,6 +97,12 @@ export class AdminArticleEditDialogComponent {
   ) {
     dialogRef.disableClose = true;
   }
+
+  editorStyle = {
+    'min-height': '100px',
+    'max-height': '400px',
+    'overflow': 'auto'
+  };
 
   errorFree() {
     return !(
@@ -172,39 +177,17 @@ export class AdminArticleEditDialogComponent {
       case 'url':
         this.data.article.url = this.urlFormControl.value ? this.urlFormControl.value.toString() : '';
         break;
-      case 'datePosted':
+      case 'datePosted': {
         const newPosted = new Date(this.datePostedFormControl.value);
         const oldPosted = new Date(this.data.article.datePosted);
         newPosted.setHours(oldPosted.getHours());
         newPosted.setMinutes(oldPosted.getMinutes());
         this.data.article.datePosted = newPosted;
         break;
-      case 'timePosted':
-        var timeParts: string[];
-        var newTime = this.timePostedFormControl.value;
-        if (newTime.length === 5) {
-          timeParts = newTime.split(':');
-        } else {
-          timeParts = this.convertTime12to24(newTime);
-        }
-        this.data.article.datePosted.setHours(timeParts[0]);
-        this.data.article.datePosted.setMinutes(timeParts[1]);
-        break;
+      }
       default:
         break;
     }
   }
 
-  private convertTime12to24(time12h: string) {
-    const [time, modifier] = time12h.split(' ');
-    let [hours, minutes] = time.split(':');
-    if (hours === '12') {
-      hours = '00';
-    }
-    if (modifier.toUpperCase() === 'PM') {
-      hours = (parseInt(hours, 10) + 12).toString();
-    }
-
-    return [hours, minutes];
-  };
 }

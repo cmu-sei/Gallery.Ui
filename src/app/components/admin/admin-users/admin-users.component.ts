@@ -2,8 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { UntypedFormControl } from '@angular/forms';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
 import {
   Permission,
@@ -11,7 +11,7 @@ import {
   UserPermission,
 } from 'src/app/generated/api/model/models';
 import { ComnSettingsService } from '@cmusei/crucible-common';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AdminUserEditDialogComponent } from 'src/app/components/admin/admin-user-edit-dialog/admin-user-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { UserDataService } from 'src/app/data/user/user-data.service';
@@ -22,7 +22,7 @@ import { UserDataService } from 'src/app/data/user/user-data.service';
   styleUrls: ['./admin-users.component.scss'],
 })
 export class AdminUsersComponent implements OnInit {
-  @Input() filterControl: FormControl;
+  @Input() filterControl: UntypedFormControl;
   @Input() filterString: string;
   @Input() userList: User[];
   @Input() permissionList: Permission[];
@@ -81,7 +81,7 @@ export class AdminUsersComponent implements OnInit {
       user = {... user};
     }
     const dialogRef = this.dialog.open(AdminUserEditDialogComponent, {
-      width: '800px',
+      width: '480px',
       data: {
         user: user
       },

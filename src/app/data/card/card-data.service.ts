@@ -4,8 +4,8 @@
 import { Card, CardStore } from './card.store';
 import { CardQuery } from './card.query';
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { UntypedFormControl } from '@angular/forms';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CardService } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
@@ -20,7 +20,7 @@ export class CardDataService {
     map((params) => params.get('cardId') || '')
   );
   readonly CardList: Observable<Card[]>;
-  readonly filterControl = new FormControl();
+  readonly filterControl = new UntypedFormControl();
   private filterTerm: Observable<string>;
   private sortColumn: Observable<string>;
   private sortIsAscending: Observable<boolean>;

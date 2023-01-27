@@ -2,15 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import {
-  FormControl,
-  FormGroupDirective,
-  NgForm,
-  Validators,
-} from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ItemStatus } from 'src/app/generated/api';
+import { UntypedFormControl } from '@angular/forms';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 @Component({
@@ -21,10 +14,15 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 export class ArticleShareDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
-  shareTeamsControl = new FormControl();
-  subjectFormControl = new FormControl(this.data.article.sourceName + ': ' + this.data.article.name);
-  messageFormControl = new FormControl('FYSA\n\n- - - - - -\n\n' +
-    this.data.article.sourceType + ' from ' + this.data.article.sourceName + '\n\n' + this.data.article.name + '\n' + this.data.article.description + '\n\n');
+  shareTeamsControl = new UntypedFormControl();
+  subjectFormControl = new UntypedFormControl(this.data.article.sourceName + ': ' + this.data.article.name);
+  messageFormControl = new UntypedFormControl('<p>FYSA</p>\n<p>- - - - - -</p>\n<p>' +
+    this.data.article.sourceType + ' from ' + this.data.article.sourceName + '</p>\n<p>' +
+    this.data.article.name + '\n' + this.data.article.description + '\n\n');
+
+  editorStyle = {
+    height: '200px'
+  };
 
   constructor(
     public dialogService: DialogService,

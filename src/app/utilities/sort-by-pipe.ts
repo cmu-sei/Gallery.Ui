@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Carnegie Mellon University. All Rights Reserved. 
+Copyright 2022 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
@@ -13,7 +13,7 @@ import { orderBy } from 'lodash';
 @Pipe({ name: 'sortBy' })
 export class SortByPipe implements PipeTransform {
 
-  transform(value: any[], order = '', column: string = ''): any[] {
+  transform(value: any[], order = '', column = ''): any[] {
     // no array
     if (!value || order === '' || !order) { return value; }
     // array with only one item
@@ -40,7 +40,7 @@ export class DisplayOrderPipe implements PipeTransform {
       return value;
     }
     // sort by displayOrder
-    var temp = value.map(x => x);
+    const temp = value.map(x => x);
     return temp.sort((a: any, b: any) =>
       (a.displayOrder - b.displayOrder)
     );
