@@ -52,7 +52,9 @@ export class ArchiveComponent implements OnDestroy {
   sort: Sort = {active: 'datePosted', direction: 'desc'};
   pageSize = 25;
   pageIndex = 0;
-  sourceIcon: {[key: string]: string} = {Intel: 'mdi-shield-lock', Reporting: 'mdi-file-chart', News: 'mdi-television-classic', Social: 'mdi-bullhorn'};
+  sourceIcon: {[key: string]: string} = {
+    Intel: 'mdi-shield-lock', Reporting: 'mdi-file-chart', News: 'mdi-television-classic', Social: 'mdi-bullhorn'
+  };
   private unreadCount = 0;
   private unsubscribe$ = new Subject();
 
