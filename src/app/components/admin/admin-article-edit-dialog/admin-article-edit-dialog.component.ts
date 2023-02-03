@@ -1,5 +1,6 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
-// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the
+// project root for license information.
 
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import {
@@ -30,7 +31,7 @@ const MIN_NAME_LENGTH = 3;
   selector: 'app-admin-article-edit-dialog',
   templateUrl: './admin-article-edit-dialog.component.html',
   styleUrls: ['./admin-article-edit-dialog.component.scss'],
-})
+  })
 
 export class AdminArticleEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();

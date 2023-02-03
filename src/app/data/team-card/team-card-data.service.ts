@@ -10,7 +10,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {
   TeamCard,
   TeamCardService,
-  ItemStatus
 } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
@@ -80,15 +79,14 @@ export class TeamCardDataService {
         ]) =>
           items
             ? (items as TeamCard[])
-                .sort((a: TeamCard, b: TeamCard) =>
-                  this.sortTeamCards(a, b, sortColumn, sortIsAscending)
-                )
-                .filter(
-                  (teamCard) =>
-                    teamCard.id
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase())
-                )
+              .sort((a: TeamCard, b: TeamCard) =>
+                this.sortTeamCards(a, b, sortColumn, sortIsAscending)
+              )
+              .filter(
+                (teamCard) =>
+                  teamCard.id
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase())                )
             : []
       )
     );

@@ -80,10 +80,10 @@ export class AdminCardEditDialogComponent {
       this.data.card.name = this.cardNameFormControl.value
         .toString()
         .trim();
-        this.data.card.description = this.cardDescriptionFormControl.value
+      this.data.card.description = this.cardDescriptionFormControl.value
         .toString()
         .trim();
-        this.data.card.collectionId = this.collectionIdFormControl.value
+      this.data.card.collectionId = this.collectionIdFormControl.value
         .toString()
         .trim();
       if (this.errorFree) {

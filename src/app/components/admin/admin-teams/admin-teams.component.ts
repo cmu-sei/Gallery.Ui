@@ -80,7 +80,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
       .subscribe((term) => {
         this.filterString = term;
         this.sortChanged(this.sort);
-    });
+      });
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.collectionList = collections;
     });
@@ -156,10 +156,10 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
       this.filteredTeamList = this.teamList
         .sort((a: Team, b: Team) => this.sortTeams(a, b, sort.active, sort.direction))
         .filter((a) => (
-                        (!this.filterString ||
+          (!this.filterString ||
                          a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
                          a.shortName.toLowerCase().includes(this.filterString.toLowerCase())
-        )) );
+          )));
     }
   }
 

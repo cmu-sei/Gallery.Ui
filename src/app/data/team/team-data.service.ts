@@ -80,18 +80,18 @@ export class TeamDataService {
         ]) =>
           items
             ? (items as Team[])
-                .sort((a: Team, b: Team) =>
-                  this.sortTeams(a, b, sortColumn, sortIsAscending)
-                )
-                .filter(
-                  (team) =>
-                    ('' + team.name)
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase()) ||
+              .sort((a: Team, b: Team) =>
+                this.sortTeams(a, b, sortColumn, sortIsAscending)
+              )
+              .filter(
+                (team) =>
+                  ('' + team.name)
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase()) ||
                     team.id
                       .toLowerCase()
                       .includes(filterTerm.toLowerCase())
-                )
+              )
             : []
       )
     );

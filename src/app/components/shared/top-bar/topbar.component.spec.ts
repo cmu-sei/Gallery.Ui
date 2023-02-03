@@ -2,7 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { TopbarComponent } from './topbar.component';
 
 describe('TopbarComponent', () => {
@@ -13,7 +12,7 @@ describe('TopbarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ TopbarComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

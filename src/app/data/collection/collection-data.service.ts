@@ -10,7 +10,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {
   Collection,
   CollectionService,
-  ItemStatus
 } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
@@ -80,18 +79,18 @@ export class CollectionDataService {
         ]) =>
           items
             ? (items as Collection[])
-                .sort((a: Collection, b: Collection) =>
-                  this.sortCollections(a, b, sortColumn, sortIsAscending)
-                )
-                .filter(
-                  (collection) =>
-                    ('' + collection.description)
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase()) ||
+              .sort((a: Collection, b: Collection) =>
+                this.sortCollections(a, b, sortColumn, sortIsAscending)
+              )
+              .filter(
+                (collection) =>
+                  ('' + collection.description)
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase()) ||
                     collection.id
                       .toLowerCase()
                       .includes(filterTerm.toLowerCase())
-                )
+              )
             : []
       )
     );

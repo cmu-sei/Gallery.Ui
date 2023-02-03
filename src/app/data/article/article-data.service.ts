@@ -10,7 +10,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {
   Article,
   ArticleService,
-  ItemStatus
 } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
@@ -80,18 +79,18 @@ export class ArticleDataService {
         ]) =>
           items
             ? (items as Article[])
-                .sort((a: Article, b: Article) =>
-                  this.sortArticles(a, b, sortColumn, sortIsAscending)
-                )
-                .filter(
-                  (article) =>
-                    ('' + article.description)
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase()) ||
+              .sort((a: Article, b: Article) =>
+                this.sortArticles(a, b, sortColumn, sortIsAscending)
+              )
+              .filter(
+                (article) =>
+                  ('' + article.description)
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase()) ||
                     article.id
                       .toLowerCase()
                       .includes(filterTerm.toLowerCase())
-                )
+              )
             : []
       )
     );

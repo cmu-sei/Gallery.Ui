@@ -2,7 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { HomeAppComponent } from './home-app.component';
 
 describe('HomeAppComponent', () => {
@@ -13,7 +12,7 @@ describe('HomeAppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ HomeAppComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

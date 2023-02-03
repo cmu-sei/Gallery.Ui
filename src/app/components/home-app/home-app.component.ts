@@ -125,23 +125,23 @@ export class HomeAppComponent implements OnDestroy, OnInit {
           this.teamCardDataService.unload();
           this.userArticleDataService.unload();
         }
-    });
+      });
 
     this.userDataService.isAuthorizedUser
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((isAuthorized) => {
         this.isAuthorizedUser = isAuthorized;
-    });
+      });
     this.collectionDataService.loadMine();
     this.exhibitDataService.loadMine();
 
     // Set the display settings from config file
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
-                      ? this.settingsService.settings.AppTopBarHexColor
-                      : this.topbarColor;
+      ? this.settingsService.settings.AppTopBarHexColor
+      : this.topbarColor;
     this.topbarTextColor = this.settingsService.settings.AppTopBarHexTextColor
-                      ? this.settingsService.settings.AppTopBarHexTextColor
-                      : this.topbarTextColor;
+      ? this.settingsService.settings.AppTopBarHexTextColor
+      : this.topbarTextColor;
     this.titleText = this.settingsService.settings.AppTopBarText;
 
   }
@@ -198,23 +198,23 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     });
   }
 
-reloadCardsAndArticles() {
-  this.cardDataService.unload();
-  this.teamDataService.unload();
-  this.teamCardDataService.unload();
-  this.userArticleDataService.unload();
-  // process the change
-  if (this.exhibit) {
-    this.collectionId = this.exhibit.collectionId;
-    this.exhibitDataService.setActive(this.exhibitId);
-    this.currentMove = this.exhibit.currentMove;
-    this.currentInject = this.exhibit.currentInject;
-    this.cardDataService.loadMine(this.exhibitId);
-    this.teamDataService.loadByExhibitId(this.exhibitId);
-    this.teamCardDataService.loadByCollection(this.exhibit.collectionId);
-    this.userArticleDataService.loadMine(this.exhibitId);
+  reloadCardsAndArticles() {
+    this.cardDataService.unload();
+    this.teamDataService.unload();
+    this.teamCardDataService.unload();
+    this.userArticleDataService.unload();
+    // process the change
+    if (this.exhibit) {
+      this.collectionId = this.exhibit.collectionId;
+      this.exhibitDataService.setActive(this.exhibitId);
+      this.currentMove = this.exhibit.currentMove;
+      this.currentInject = this.exhibit.currentInject;
+      this.cardDataService.loadMine(this.exhibitId);
+      this.teamDataService.loadByExhibitId(this.exhibitId);
+      this.teamCardDataService.loadByCollection(this.exhibit.collectionId);
+      this.userArticleDataService.loadMine(this.exhibitId);
+    }
   }
-}
 
   selectCollection(collectionId: string) {
     this.collectionId = collectionId;

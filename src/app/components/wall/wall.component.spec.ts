@@ -2,7 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { WallComponent } from './wall.component';
 
 describe('WallComponent', () => {
@@ -13,7 +12,7 @@ describe('WallComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ WallComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

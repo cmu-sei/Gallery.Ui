@@ -90,10 +90,10 @@ export class AdminTeamCardEditDialogComponent {
       if (this.errorFree) {
         if (this.isDuplicateTeamCard()) {
           this.systemMessage
-          .displayMessage(
-            'This Team Card already exists!',
-            'Please select a different combination of Team and Card.'
-          );
+            .displayMessage(
+              'This Team Card already exists!',
+              'Please select a different combination of Team and Card.'
+            );
         } else {
           this.editComplete.emit({
             saveChanges: saveChanges,

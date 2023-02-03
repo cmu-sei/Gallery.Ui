@@ -120,7 +120,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
       .subscribe((term) => {
         this.filterString = term;
         this.sortChanged(this.sort);
-    });
+      });
     activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.selectedCollectionId = params.get('collection');
       this.articleDataService.unload();
@@ -211,7 +211,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
     this.editArticle = this.originalArticle;
   }
 
-   deleteArticle(article: Article): void {
+  deleteArticle(article: Article): void {
     this.dialogService
       .confirm(
         'Delete Article',
@@ -238,8 +238,8 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
                               a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
                               a.description.toLowerCase().includes(this.filterString.toLowerCase()) ||
                               a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
-                            )
-                );
+                        )
+        );
     }
     if (this.selectedMove > -1) {
       this.filteredArticleList = this.filteredArticleList.filter((a) => (a.move === this.selectedMove));
@@ -265,10 +265,10 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
           (isAsc ? 1 : -1)
         );
       case 'move':
-          return (
-            (a.move < b.move ? -1 : 1) *
-            (isAsc ? 1 : -1)
-          );
+        return (
+          (a.move < b.move ? -1 : 1) *
+          (isAsc ? 1 : -1)
+        );
       case 'inject':
         return (
           (a.inject < b.inject ? -1 : 1) *

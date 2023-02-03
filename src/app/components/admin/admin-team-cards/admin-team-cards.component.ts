@@ -20,7 +20,9 @@ import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { AdminTeamCardEditDialogComponent } from 'src/app/components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
+import {
+  AdminTeamCardEditDialogComponent
+} from 'src/app/components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -165,11 +167,11 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     if (this.teamCardList && this.teamCardList.length > 0) {
       this.filteredTeamCardList = this.teamCardList
         .sort((a: TeamCard, b: TeamCard) => this.sortTeamCards(a, b, sort.active, sort.direction));
-        if (this.selectedTeamId) {
-          this.filteredTeamCardList = this.filteredTeamCardList
-            .filter(tc => tc.teamId === this.selectedTeamId);
-        }
-        if (this.selectedCardId) {
+      if (this.selectedTeamId) {
+        this.filteredTeamCardList = this.filteredTeamCardList
+          .filter(tc => tc.teamId === this.selectedTeamId);
+      }
+      if (this.selectedCardId) {
         this.filteredTeamCardList = this.filteredTeamCardList
           .filter(tc => tc.cardId === this.selectedCardId);
       }
@@ -195,10 +197,10 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
           (isAsc ? 1 : -1)
         );
       case 'move':
-          return (
-            (a.move < b.move ? -1 : 1) *
-            (isAsc ? 1 : -1)
-          );
+        return (
+          (a.move < b.move ? -1 : 1) *
+          (isAsc ? 1 : -1)
+        );
       case 'inject':
         return (
           (a.inject < b.inject ? -1 : 1) *

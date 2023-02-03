@@ -24,7 +24,7 @@ export class ErrorService implements ErrorHandler {
           'The Gallery API could not be reached.'
         );
         console.log('Gallery API Error', 'The Gallery API could not be reached.');
-      } else if(err.error && err.error.title) {
+      } else if (err.error && err.error.title) {
         messageService.displayMessage(err.statusText, err.error.title);
         console.log(err.statusText + ' ==> ' + err.error.title);
       } else {

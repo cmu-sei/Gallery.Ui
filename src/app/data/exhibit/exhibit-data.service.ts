@@ -80,15 +80,15 @@ export class ExhibitDataService {
         ]) =>
           items
             ? (items as Exhibit[])
-                .sort((a: Exhibit, b: Exhibit) =>
-                  this.sortExhibits(a, b, sortColumn, sortIsAscending)
-                )
-                .filter(
-                  (exhibit) =>
-                    exhibit.id
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase())
-                )
+              .sort((a: Exhibit, b: Exhibit) =>
+                this.sortExhibits(a, b, sortColumn, sortIsAscending)
+              )
+              .filter(
+                (exhibit) =>
+                  exhibit.id
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase())
+              )
             : []
       )
     );
@@ -133,8 +133,8 @@ export class ExhibitDataService {
           });
           const sortedExhibits = exhibits.sort(
             (a: Exhibit, b: Exhibit) =>
-            this.sortExhibits(a, b, 'dateCreated', false)
-          )
+              this.sortExhibits(a, b, 'dateCreated', false)
+          );
           this.exhibitStore.set(sortedExhibits);
         },
         (error) => {
@@ -160,8 +160,8 @@ export class ExhibitDataService {
           });
           const sortedExhibits = exhibits.sort(
             (a: Exhibit, b: Exhibit) =>
-            this.sortExhibits(a, b, 'dateCreated', false)
-          )
+              this.sortExhibits(a, b, 'dateCreated', false)
+          );
           this.exhibitStore.set(sortedExhibits);
         },
         (error) => {
