@@ -110,7 +110,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     }
   }
 
-   deleteArticleTeam(article: Article): void {
+  deleteArticleTeam(article: Article): void {
     this.dialogService
       .confirm(
         'Delete Article',
@@ -128,13 +128,13 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     if (this.articleList && this.articleList.length > 0) {
       this.filteredArticleList = this.articleList
         .sort((a: Article, b: Article) => this.sortArticles(a, b, sort.active, sort.direction));
-        // .filter((a) => ((this.selectedCard.id === '') || a.cardId === this.selectedCard.id)
-        //                 && (!this.filterString ||
-        //                       a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-        //                       a.description.toLowerCase().includes(this.filterString.toLowerCase()) ||
-        //                       a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
-        //                     )
-        //         );
+      //  .filter((a) => ((this.selectedCard.id === '') || a.cardId === this.selectedCard.id)
+      //                 && (!this.filterString ||
+      //                       a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
+      //                       a.description.toLowerCase().includes(this.filterString.toLowerCase()) ||
+      //                       a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
+      //                     )
+      //         );
     }
   }
 
@@ -157,10 +157,10 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
           (isAsc ? 1 : -1)
         );
       case 'move':
-          return (
-            (a.move < b.move ? -1 : 1) *
-            (isAsc ? 1 : -1)
-          );
+        return (
+          (a.move < b.move ? -1 : 1) *
+          (isAsc ? 1 : -1)
+        );
       case 'inject':
         return (
           (a.inject < b.inject ? -1 : 1) *

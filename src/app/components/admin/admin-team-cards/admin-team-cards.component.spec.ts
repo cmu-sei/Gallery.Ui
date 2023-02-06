@@ -2,8 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AdminTeamCardsComponent } from './admin-teamCards.component';
+import { AdminTeamCardsComponent } from './admin-team-cards.component';
 
 describe('AdminTeamCardsComponent', () => {
   let component: AdminTeamCardsComponent;
@@ -13,7 +12,7 @@ describe('AdminTeamCardsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ AdminTeamCardsComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

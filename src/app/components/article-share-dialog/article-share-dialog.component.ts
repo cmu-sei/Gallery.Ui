@@ -31,7 +31,9 @@ export class ArticleShareDialogComponent {
   ) {
     dialogRef.disableClose = true;
     if (this.data.article.url) {
-      this.messageFormControl.setValue(this.messageFormControl.value + '<a href="' + this.data.article.url + '" rel="noopener noreferrer" target="_blank">More Information</a>');
+      this.messageFormControl
+        .setValue(this.messageFormControl.value + '<a href="' + this.data.article.url
+          + '" rel="noopener noreferrer" target="_blank">More Information</a>');
     }
   }
 

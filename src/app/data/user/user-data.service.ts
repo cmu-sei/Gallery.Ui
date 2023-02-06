@@ -103,16 +103,16 @@ export class UserDataService implements OnDestroy {
         ]) =>
           users
             ? (users as User[])
-                .sort((a: User, b: User) =>
-                  this.sortUsers(a, b, sortColumn, sortIsAscending)
-                )
-                .filter(
-                  (user) =>
-                    user.name
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase()) ||
+              .sort((a: User, b: User) =>
+                this.sortUsers(a, b, sortColumn, sortIsAscending)
+              )
+              .filter(
+                (user) =>
+                  user.name
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase()) ||
                     user.id.toLowerCase().includes(filterTerm.toLowerCase())
-                )
+              )
             : []
       )
     );

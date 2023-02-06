@@ -79,18 +79,18 @@ export class UserArticleDataService {
         ]) =>
           items
             ? (items as UserArticle[])
-                .sort((a: UserArticle, b: UserArticle) =>
-                  this.sortArticles(a.article, b.article, sortColumn, sortIsAscending)
-                )
-                .filter(
-                  (userArticle) =>
-                    ('' + userArticle.article.description)
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase()) ||
+              .sort((a: UserArticle, b: UserArticle) =>
+                this.sortArticles(a.article, b.article, sortColumn, sortIsAscending)
+              )
+              .filter(
+                (userArticle) =>
+                  ('' + userArticle.article.description)
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase()) ||
                     userArticle.id
                       .toLowerCase()
                       .includes(filterTerm.toLowerCase())
-                )
+              )
             : []
       )
     );

@@ -173,10 +173,10 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
           (isAsc ? 1 : -1)
         );
       case 'currentMove':
-          return (
-            (a.currentMove < b.currentMove ? -1 : 1) *
+        return (
+          (a.currentMove < b.currentMove ? -1 : 1) *
             (isAsc ? 1 : -1)
-          );
+        );
       case 'currentInject':
         return (
           (a.currentInject < b.currentInject ? -1 : 1) *

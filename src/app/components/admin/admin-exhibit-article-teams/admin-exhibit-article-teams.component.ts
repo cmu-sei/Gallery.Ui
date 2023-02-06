@@ -83,9 +83,9 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
       if (a.name < b.name) {
         return -1;
       } else if (a.name > b.name) {
-          return 1;
+        return 1;
       } else {
-          return 0;
+        return 0;
       }
     });
     const newAllTeams = this.exhibitTeams.slice(0);

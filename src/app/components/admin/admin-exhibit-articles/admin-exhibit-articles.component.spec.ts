@@ -2,7 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AdminExhibitArticlesComponent } from './admin-exhibit-articles.component';
 
 describe('AdminExhibitArticlesComponent', () => {
@@ -13,7 +12,7 @@ describe('AdminExhibitArticlesComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ AdminExhibitArticlesComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

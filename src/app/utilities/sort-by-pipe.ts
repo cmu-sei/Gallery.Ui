@@ -15,9 +15,13 @@ export class SortByPipe implements PipeTransform {
 
   transform(value: any[], order = '', column = ''): any[] {
     // no array
-    if (!value || order === '' || !order) { return value; }
+    if (!value || order === '' || !order) {
+      return value;
+    }
     // array with only one item
-    if (value.length <= 1) { return value; }
+    if (value.length <= 1) {
+      return value;
+    }
     // sort 1d array
     if (!column || column === '') {
       if (order === 'asc') {

@@ -108,7 +108,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       .getPermissionsFromApi()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe();
-      // Set the display settings from config file
+    // Set the display settings from config file
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;

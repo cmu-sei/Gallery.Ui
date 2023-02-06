@@ -10,8 +10,11 @@ import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TeamQuery } from 'src/app/data/team/team.query';
-import { Observable, Subject } from "rxjs";
-import { map, take, takeUntil } from "rxjs/operators";
+import {
+  Subject,
+  take,
+  takeUntil
+} from 'rxjs';
 import { HealthService } from 'src/app/generated/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
@@ -23,7 +26,6 @@ import { ArticleShareDialogComponent } from 'src/app/components/article-share-di
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
-import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'app-archive',
@@ -50,7 +52,9 @@ export class ArchiveComponent implements OnDestroy {
   sort: Sort = {active: 'datePosted', direction: 'desc'};
   pageSize = 25;
   pageIndex = 0;
-  sourceIcon: {[key: string]: string} = {Intel: 'mdi-shield-lock', Reporting: 'mdi-file-chart', News: 'mdi-television-classic', Social: 'mdi-bullhorn'};
+  sourceIcon: {[key: string]: string} = {
+    Intel: 'mdi-shield-lock', Reporting: 'mdi-file-chart', News: 'mdi-television-classic', Social: 'mdi-bullhorn'
+  };
   private unreadCount = 0;
   private unsubscribe$ = new Subject();
 
@@ -94,7 +98,8 @@ export class ArchiveComponent implements OnDestroy {
       if (unreadCount === 0) {
         this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
       } else {
-        this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive (' + unreadCount.toString() + ')';
+        this._document.getElementById('appTitle').innerHTML =
+            this.settingsService.settings.AppTitle + ' Archive (' + unreadCount.toString() + ')';
       }
     });
     this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
@@ -118,7 +123,7 @@ export class ArchiveComponent implements OnDestroy {
         this.exhibitId = exhibitId;
         this.cardId = cardId ? cardId : 'all';
         this.sortChanged(this.sort);
-    });
+      });
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
@@ -142,7 +147,7 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   getCardName(id: string) {
-    const card = id ? this.cardList.find(card => card.id === id) : null;
+    const card = id ? this.cardList.find(c => c.id === id) : null;
     const name = card ? card.name : '';
     return name;
   }
@@ -172,8 +177,8 @@ export class ArchiveComponent implements OnDestroy {
                               a.article.sourceType.toLowerCase().includes(this.filterString.toLowerCase()) ||
                               a.article.sourceName.toLowerCase().includes(this.filterString.toLowerCase()) ||
                               a.article.status.toLowerCase().includes(this.filterString.toLowerCase())
-                            )
-                );
+                        )
+        );
     }
   }
 
@@ -185,32 +190,32 @@ export class ArchiveComponent implements OnDestroy {
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
-      case "name":
+      case 'name':
         return (
           (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "sourceType":
+      case 'sourceType':
         return (
           (a.sourceType.toLowerCase() < b.sourceType.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "sourceName":
+      case 'sourceName':
         return (
           (a.sourceName.toLowerCase() < b.sourceName.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "cardId":
+      case 'cardId':
         return (
           (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "status":
+      case 'status':
         return (
           (a.status.toLowerCase() < b.status.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case "datePosted":
+      case 'datePosted':
         return (
           (a.datePosted.getTime() < b.datePosted.getTime() ? -1 : 1) *
           (isAsc ? 1 : -1)
@@ -230,7 +235,7 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   getMoveArticles(move: number) {
-    return this.filteredUserArticleList.filter(a => a.article.move == move)
+    return this.filteredUserArticleList.filter(a => a.article.move === move);
   }
 
   openMoreDialog(userArticle: UserArticle) {

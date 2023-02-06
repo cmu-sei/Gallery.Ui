@@ -55,9 +55,7 @@ export class SignalRService implements OnDestroy {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(
         `${this.settingsService.settings.ApiUrl}/hubs/main`, {
-          accessTokenFactory: () => {
-            return this.authService.getAuthorizationToken();
-          },
+          accessTokenFactory: () => this.authService.getAuthorizationToken(),
         })
       .withAutomaticReconnect(new RetryPolicy(60, 0, 5))
       .build();
@@ -107,9 +105,8 @@ export class SignalRService implements OnDestroy {
 
   private addUserHandlers() {
     this.hubConnection.on('UserUpdated', (user: User) => {
-        this.userDataService.updateStore(user);
-      }
-    );
+      this.userDataService.updateStore(user);
+    });
 
     this.hubConnection.on('UserCreated', (user: User) => {
       this.userDataService.updateStore(user);
@@ -122,9 +119,8 @@ export class SignalRService implements OnDestroy {
 
   private addTeamHandlers() {
     this.hubConnection.on('TeamUpdated', (team: Team) => {
-        this.teamDataService.updateStore(team);
-      }
-    );
+      this.teamDataService.updateStore(team);
+    });
 
     this.hubConnection.on('TeamCreated', (team: Team) => {
       this.teamDataService.updateStore(team);
@@ -137,9 +133,8 @@ export class SignalRService implements OnDestroy {
 
   private addTeamUserHandlers() {
     this.hubConnection.on('TeamUserUpdated', (teamUser: TeamUser) => {
-        this.teamUserDataService.updateStore(teamUser);
-      }
-    );
+      this.teamUserDataService.updateStore(teamUser);
+    });
 
     this.hubConnection.on('TeamUserCreated', (teamUser: TeamUser) => {
       this.teamUserDataService.updateStore(teamUser);
@@ -152,9 +147,8 @@ export class SignalRService implements OnDestroy {
 
   private addCardHandlers() {
     this.hubConnection.on('CardUpdated', (card: Card) => {
-        this.cardDataService.updateStore(card);
-      }
-    );
+      this.cardDataService.updateStore(card);
+    });
 
     this.hubConnection.on('CardCreated', (card: Card) => {
       this.cardDataService.updateStore(card);
@@ -167,9 +161,8 @@ export class SignalRService implements OnDestroy {
 
   private addTeamCardHandlers() {
     this.hubConnection.on('TeamCardUpdated', (teamCard: TeamCard) => {
-        this.teamCardDataService.updateStore(teamCard);
-      }
-    );
+      this.teamCardDataService.updateStore(teamCard);
+    });
 
     this.hubConnection.on('TeamCardCreated', (teamCard: TeamCard) => {
       this.teamCardDataService.updateStore(teamCard);
@@ -182,10 +175,9 @@ export class SignalRService implements OnDestroy {
 
   private addArticleHandlers() {
     this.hubConnection.on('ArticleUpdated', (article: Article) => {
-        this.articleDataService.setAsDates(article);
-        this.articleDataService.updateStore(article);
-      }
-    );
+      this.articleDataService.setAsDates(article);
+      this.articleDataService.updateStore(article);
+    });
 
     this.hubConnection.on('ArticleCreated', (article: Article) => {
       this.articleDataService.setAsDates(article);
@@ -199,9 +191,8 @@ export class SignalRService implements OnDestroy {
 
   private addCollectionHandlers() {
     this.hubConnection.on('CollectionUpdated', (collection: Collection) => {
-        this.collectionDataService.updateStore(collection);
-      }
-    );
+      this.collectionDataService.updateStore(collection);
+    });
 
     this.hubConnection.on('CollectionCreated', (collection: Collection) => {
       this.collectionDataService.updateStore(collection);
@@ -214,10 +205,9 @@ export class SignalRService implements OnDestroy {
 
   private addExhibitHandlers() {
     this.hubConnection.on('ExhibitUpdated', (exhibit: Exhibit) => {
-        this.exhibitDataService.setAsDates(exhibit);
-        this.exhibitDataService.updateStore(exhibit);
-      }
-    );
+      this.exhibitDataService.setAsDates(exhibit);
+      this.exhibitDataService.updateStore(exhibit);
+    });
 
     this.hubConnection.on('ExhibitCreated', (exhibit: Exhibit) => {
       this.exhibitDataService.setAsDates(exhibit);
@@ -231,10 +221,9 @@ export class SignalRService implements OnDestroy {
 
   private addExhibitTeamHandlers() {
     this.hubConnection.on('ExhibitTeamUpdated', (exhibitTeam: ExhibitTeam) => {
-        this.exhibitTeamDataService.setAsDates(exhibitTeam);
-        this.exhibitTeamDataService.updateStore(exhibitTeam);
-      }
-    );
+      this.exhibitTeamDataService.setAsDates(exhibitTeam);
+      this.exhibitTeamDataService.updateStore(exhibitTeam);
+    });
 
     this.hubConnection.on('ExhibitTeamCreated', (exhibitTeam: ExhibitTeam) => {
       this.exhibitTeamDataService.setAsDates(exhibitTeam);
@@ -248,10 +237,9 @@ export class SignalRService implements OnDestroy {
 
   private addUserArticleHandlers() {
     this.hubConnection.on('UserArticleUpdated', (userArticle: UserArticle) => {
-        this.userArticleDataService.setAsDates(userArticle);
-        this.userArticleDataService.updateStore(userArticle);
-      }
-    );
+      this.userArticleDataService.setAsDates(userArticle);
+      this.userArticleDataService.updateStore(userArticle);
+    });
 
     this.hubConnection.on('UserArticleCreated', (userArticle: UserArticle) => {
       this.userArticleDataService.setAsDates(userArticle);

@@ -2,21 +2,20 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AdminExhibitTeamsDialogComponent } from './admin-exhibit-teams.component';
+import { AdminExhibitTeamsComponent } from './admin-exhibit-teams.component';
 
 describe('AdminExhibitTeamsComponent', () => {
-  let component: AdminExhibitTeamsDialogComponent;
-  let fixture: ComponentFixture<AdminExhibitTeamsDialogComponent>;
+  let component: AdminExhibitTeamsComponent;
+  let fixture: ComponentFixture<AdminExhibitTeamsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AdminExhibitTeamsDialogComponent],
+      declarations: [AdminExhibitTeamsComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AdminExhibitTeamsDialogComponent);
+    fixture = TestBed.createComponent(AdminExhibitTeamsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

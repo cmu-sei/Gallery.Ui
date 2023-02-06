@@ -2,7 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ArchiveComponent } from './archive.component';
 
 describe('ArchiveComponent', () => {
@@ -13,7 +12,7 @@ describe('ArchiveComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ArchiveComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

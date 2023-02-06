@@ -12,7 +12,9 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
+import {
+  AdminCollectionEditDialogComponent
+} from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 @Component({
@@ -64,7 +66,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
       .subscribe((term) => {
         this.filterString = term;
         this.sortChanged(this.sort);
-    });
+      });
   }
 
   ngOnInit() {

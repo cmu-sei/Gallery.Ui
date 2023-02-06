@@ -76,18 +76,18 @@ export class CardDataService {
         ]) =>
           items
             ? (items as Card[])
-                .sort((a: Card, b: Card) =>
-                  this.sortCards(a, b, sortColumn, sortIsAscending)
-                )
-                .filter(
-                  (card) =>
-                    ('' + card.description)
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase()) ||
+              .sort((a: Card, b: Card) =>
+                this.sortCards(a, b, sortColumn, sortIsAscending)
+              )
+              .filter(
+                (card) =>
+                  ('' + card.description)
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase()) ||
                     card.id
                       .toLowerCase()
                       .includes(filterTerm.toLowerCase())
-                )
+              )
             : []
       )
     );

@@ -79,14 +79,14 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
       .subscribe((term) => {
         this.filterString = term;
         this.sortChanged(this.sort);
-    });
+      });
     activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.selectedCollectionId = params.get('collection');
       this.cardDataService.unload();
       if (this.selectedCollectionId) {
         this.cardDataService.loadByCollection(this.selectedCollectionId);
       }
-      });
+    });
   }
 
   ngOnInit() {
@@ -206,10 +206,10 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
           (isAsc ? 1 : -1)
         );
       case 'move':
-          return (
-            (a.move < b.move ? -1 : 1) *
-            (isAsc ? 1 : -1)
-          );
+        return (
+          (a.move < b.move ? -1 : 1) *
+          (isAsc ? 1 : -1)
+        );
       case 'inject':
         return (
           (a.inject < b.inject ? -1 : 1) *
