@@ -1,6 +1,10 @@
 # GalleryUi
 This project is intended to be a functioning UI that can be used within the Crucible Framework.
 
+## Documentation
+
+[Gallery Documentation](https://cmu-sei.github.io/crucible/gallery/)
+
 # Generate code to get data from the API
 Run `npm run swagger:gen`
 # Angular
