@@ -12,14 +12,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     ></mat-icon>
   </div>
   <mat-form-field class="button-margins">
-    <mat-label>Collection</mat-label>
-    <mat-select placeholder="Collection" [value]="selectedCollectionId" (selectionChange)="selectCollection($event.value)">
-      <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
-        {{ collection.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="button-margins">
     <mat-label>Team</mat-label>
     <mat-select placeholder="Team" [(ngModel)]="selectedTeamId" (selectionChange)="sortChanged(sort)">
       <mat-option value=''>All Teams</mat-option>
@@ -38,11 +30,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </mat-select>
   </mat-form-field>
   <div class="button-margins">
-    <span *ngIf="selectedCollectionId">
-      <button mat-stroked-button (click)="addOrEditTeamCard(null)">Add TeamCard</button>
-    </span>
+    <button mat-stroked-button (click)="addOrEditTeamCard(null)">Add TeamCard</button>
   </div>
-  <div *ngIf="selectedCollectionId">
+  <div>
     <mat-paginator
       #paginator
       [length]="filteredTeamCardList?.length"
@@ -68,7 +58,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </section>
 
   <mat-expansion-panel
-    *ngFor="let teamCard of paginateTeamCards(filteredTeamCardList, pageIndex, pageSize)"
+    *ngFor="let teamCard of filteredTeamCardList"
     disabled
   >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="$event.stopPropagation()">

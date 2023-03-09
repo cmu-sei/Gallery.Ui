@@ -16,7 +16,6 @@ export * from './eventAttributes';
 export * from './eventInfo';
 export * from './exception';
 export * from './exhibit';
-export * from './exhibitTeam';
 export * from './fieldAttributes';
 export * from './fieldInfo';
 export * from './genericParameterAttributes';

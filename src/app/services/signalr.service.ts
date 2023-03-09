@@ -4,7 +4,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ComnAuthService, ComnSettingsService } from '@cmusei/crucible-common';
 import * as signalR from '@microsoft/signalr';
-import { Article, Collection, Exhibit, ExhibitTeam, Team, TeamCard, TeamUser, User, UserArticle } from 'src/app/generated/api';
+import { Article, Collection, Exhibit, Team, TeamCard, TeamUser, User, UserArticle } from 'src/app/generated/api';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { UserArticleDataService } from '../data/user-article/user-article-data.service';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
@@ -12,7 +12,6 @@ import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
-import { ExhibitTeamDataService } from '../data/team/exhibit-team-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { TeamUserDataService } from '../data/user/team-user-data.service';
@@ -34,7 +33,6 @@ export class SignalRService implements OnDestroy {
     private cardDataService: CardDataService,
     private collectionDataService: CollectionDataService,
     private exhibitDataService: ExhibitDataService,
-    private exhibitTeamDataService: ExhibitTeamDataService,
     private teamDataService: TeamDataService,
     private teamCardDataService: TeamCardDataService,
     private teamUserDataService: TeamUserDataService,
@@ -95,7 +93,6 @@ export class SignalRService implements OnDestroy {
     this.addCardHandlers();
     this.addCollectionHandlers();
     this.addExhibitHandlers();
-    this.addExhibitTeamHandlers();
     this.addTeamCardHandlers();
     this.addTeamHandlers();
     this.addTeamUserHandlers();
@@ -216,22 +213,6 @@ export class SignalRService implements OnDestroy {
 
     this.hubConnection.on('ExhibitDeleted', (id: string) => {
       this.exhibitDataService.deleteFromStore(id);
-    });
-  }
-
-  private addExhibitTeamHandlers() {
-    this.hubConnection.on('ExhibitTeamUpdated', (exhibitTeam: ExhibitTeam) => {
-      this.exhibitTeamDataService.setAsDates(exhibitTeam);
-      this.exhibitTeamDataService.updateStore(exhibitTeam);
-    });
-
-    this.hubConnection.on('ExhibitTeamCreated', (exhibitTeam: ExhibitTeam) => {
-      this.exhibitTeamDataService.setAsDates(exhibitTeam);
-      this.exhibitTeamDataService.updateStore(exhibitTeam);
-    });
-
-    this.hubConnection.on('ExhibitTeamDeleted', (id: string) => {
-      this.exhibitTeamDataService.deleteFromStore(id);
     });
   }
 

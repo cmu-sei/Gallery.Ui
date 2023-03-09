@@ -5,12 +5,10 @@ import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angu
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
-import { Collection, Team, TeamCard, User } from 'src/app/generated/api/model/models';
+import { Team, TeamCard } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
-import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
-import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
@@ -32,15 +30,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 
 export class AdminTeamCardsComponent implements OnInit, OnDestroy {
-  @Input() userList: User[];
   @Input() teamList: Team[];
+  @Input() collectionId: string;
   @Input() pageSize: number;
   @Input() pageIndex: number;
   @Output() pageChange = new EventEmitter<PageEvent>();
-  collectionList: Collection[] = [];
   cardList: Card[] = [];
   teamCardList: TeamCard[] = [];
-  selectedCollectionId = '';
   selectedTeamId = '';
   selectedCardId = '';
   newTeamCard: TeamCard = { id: '', teamId: '', cardId: '', isShownOnWall: true, move: 0, inject: 0 };
@@ -61,8 +57,6 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     public dialogService: DialogService,
     private cardDataService: CardDataService,
     private cardQuery: CardQuery,
-    private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery,
     private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
     private teamCardDataService: TeamCardDataService,
@@ -89,25 +83,13 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
       this.teamCardList = teamCards;
       this.sortChanged(this.sort);
     });
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.collectionList = collections;
-    });
-    this.collectionDataService.load();
-    activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.selectedCollectionId = params.get('collection');
-      this.teamCardDataService.unload();
-      this.cardDataService.unload();
-      this.filteredTeamCardList = [];
-      if (this.selectedCollectionId) {
-        this.cardDataService.loadByCollection(this.selectedCollectionId);
-        this.teamCardDataService.loadByCollection(this.selectedCollectionId);
-      }
-      this.sortChanged(this.sort);
-    });
   }
 
   ngOnInit() {
+    this.cardDataService.loadByCollection(this.collectionId);
+    this.teamCardDataService.loadByCollection(this.collectionId);
     this.filterControl.setValue(this.filterString);
+    this.sortChanged(this.sort);
   }
 
   addOrEditTeamCard(teamCard: TeamCard) {
@@ -224,18 +206,6 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   getTeamName(teamId: string) {
     const team = this.teamList.find(t => t.id === teamId);
     return team ? team.name : ' ';
-  }
-
-  getUserName(userId: string) {
-    const user = this.userList.find(u => u.id === userId);
-    return user ? user.name : ' ';
-  }
-
-  selectCollection(collectionId: string) {
-    this.router.navigate([], {
-      queryParams: { collection: collectionId },
-      queryParamsHandling: 'merge',
-    });
   }
 
   handleInput(event: KeyboardEvent): void {

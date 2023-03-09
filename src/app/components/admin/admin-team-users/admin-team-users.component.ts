@@ -14,6 +14,7 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { User } from 'src/app/generated/api';
 import { TeamUserDataService } from 'src/app/data/user/team-user-data.service';
+import { UserDataService } from 'src/app/data/user/user-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -25,8 +26,7 @@ import { takeUntil } from 'rxjs/operators';
 
 export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   @Input() teamId: string;
-  @Input() userList: User[];
-  users: User[];
+  userList: User[] = [];
   teamUsers: User[];
 
   displayedUserColumns: string[] = ['name', 'id'];
@@ -43,8 +43,13 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    private teamUserDataService: TeamUserDataService
-  ) {}
+    private teamUserDataService: TeamUserDataService,
+    private userDataService: UserDataService
+  ) {
+    this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
+      this.userList = users;
+    });
+  }
 
   ngOnInit() {
     this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });

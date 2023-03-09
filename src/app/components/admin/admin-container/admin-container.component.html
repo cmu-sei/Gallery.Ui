@@ -68,27 +68,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </div>
         </mat-list-item>
         <mat-list-item
-          [ngClass]="getSelectedClass(section.teams)"
-          id="wrapper"
-          (click)="gotoSection(section.teams)"
-        >
-          <div class="lefticon">
-            <mat-icon
-              class="mdi-24px"
-              fontIcon="mdi-account-multiple"
-              [ngStyle]="{ color: topbarColor }"
-            ></mat-icon>
-          </div>
-
-          <div id="teamsText" class="application-name">Teams</div>
-
-          <div>
-            <button aria-labelledby="teamsText" mat-icon-button>
-              <mat-icon class="icon-color" svgIcon="ic_chevron_right"></mat-icon>
-            </button>
-          </div>
-        </mat-list-item>
-        <mat-list-item
           [ngClass]="getSelectedClass(section.collections)"
           id="wrapper"
           (click)="gotoSection(section.collections)"
@@ -126,27 +105,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
           <div>
             <button aria-labelledby="cardsText" mat-icon-button>
-              <mat-icon class="icon-color" svgIcon="ic_chevron_right"></mat-icon>
-            </button>
-          </div>
-        </mat-list-item>
-        <mat-list-item
-        [ngClass]="getSelectedClass(section.teamcards)"
-        id="wrapper"
-          (click)="gotoSection(section.teamcards)"
-        >
-          <div class="lefticon">
-            <mat-icon
-              class="mdi-24px"
-              fontIcon="mdi-account-box-multiple-outline"
-              [ngStyle]="{ color: topbarColor }"
-            ></mat-icon>
-          </div>
-
-          <div id="teamCardsText" class="application-name">Team Cards</div>
-
-          <div>
-            <button aria-labelledby="teamCardsText" mat-icon-button>
               <mat-icon class="icon-color" svgIcon="ic_chevron_right"></mat-icon>
             </button>
           </div>
@@ -222,15 +180,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
         </app-admin-users>
       </span>
-      <span *ngIf="isContentDeveloper && displayedSection === section.teams">
-        <app-admin-teams
-          [userList]="userList | async"
-          [pageSize]="pageSize | async"
-          [pageIndex]="pageIndex | async"
-          (pageChange)="pageChangeHandler($event)"
-        >
-        </app-admin-teams>
-      </span>
       <span *ngIf="isContentDeveloper && displayedSection === section.collections">
         <app-admin-collections
           [pageSize]="pageSize | async"
@@ -256,16 +205,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-cards>
-      </span>
-      <span *ngIf="isContentDeveloper && displayedSection === section.teamcards">
-        <app-admin-team-cards
-          [userList]="userList | async"
-          [teamList]="teamList | async"
-          [pageSize]="pageSize | async"
-          [pageIndex]="pageIndex | async"
-          (pageChange)="pageChangeHandler($event)"
-        >
-        </app-admin-team-cards>
       </span>
       <span *ngIf="isContentDeveloper && displayedSection === section.articles">
         <app-admin-articles

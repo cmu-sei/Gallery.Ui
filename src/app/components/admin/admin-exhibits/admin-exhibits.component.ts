@@ -212,6 +212,10 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     return copy.splice(startIndex, pageSize);
   }
 
+  getExhibitId(index: number, exhibit: Exhibit) {
+    return exhibit.id;
+  }
+
   ngOnDestroy() {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();

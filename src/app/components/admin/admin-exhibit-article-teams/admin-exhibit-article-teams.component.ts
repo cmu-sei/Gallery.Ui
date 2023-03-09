@@ -12,8 +12,9 @@ import { LegacyPageEvent as PageEvent, MatLegacyPaginator as MatPaginator } from
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { Team } from 'src/app/generated/api';
-import { ExhibitTeamDataService } from 'src/app/data/team/exhibit-team-data.service';
 import { ArticleTeamDataService } from 'src/app/data/team/article-team-data.service';
+import { TeamDataService } from 'src/app/data/team/team-data.service';
+import { TeamQuery } from 'src/app/data/team/team.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -26,7 +27,6 @@ import { takeUntil } from 'rxjs/operators';
 export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;
   @Input() articleId: string;
-  @Input() teamList: Team[];
   articleTeams: Team[] = [];
   exhibitTeams: Team[] = [];
 
@@ -41,7 +41,8 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    private exhibitTeamDataService: ExhibitTeamDataService,
+    private teamDataService: TeamDataService,
+    private teamQuery: TeamQuery,
     private articleTeamDataService: ArticleTeamDataService
   ) {}
 
@@ -49,9 +50,9 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
     this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
     this.articleTeamDataService.teamArticles.pipe(takeUntil(this.unsubscribe$)).subscribe(teamArticles => {
       const teams: Team[] = [];
-      if (this.teamList.length > 0) {
+      if (this.exhibitTeams.length > 0) {
         teamArticles.filter(ta => ta.exhibitId === this.exhibitId && ta.articleId === this.articleId).forEach(ta => {
-          const team = this.teamList.find(t => t.id === ta.teamId);
+          const team = this.exhibitTeams.find(t => t.id === ta.teamId);
           if (team) {
             teams.push(team);
           }
@@ -60,21 +61,12 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
       this.articleTeams = teams;
       this.setDataSources();
     });
-    this.exhibitTeamDataService.exhibitTeams.pipe(takeUntil(this.unsubscribe$)).subscribe(exhibitTeams => {
-      const teams: Team[] = [];
-      if (this.teamList.length > 0) {
-        exhibitTeams.filter(et => et.exhibitId === this.exhibitId).forEach(et => {
-          const team = this.teamList.find(t => t.id === et.teamId);
-          if (team) {
-            teams.push(team);
-          }
-        });
-      }
+    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
       this.exhibitTeams = teams;
       this.setDataSources();
     });
     this.articleTeamDataService.getTeamArticlesFromApi(this.exhibitId);
-    this.exhibitTeamDataService.getExhibitTeamsFromApi(this.exhibitId);
+    this.teamDataService.loadByExhibitId(this.exhibitId);
   }
 
   setDataSources() {
