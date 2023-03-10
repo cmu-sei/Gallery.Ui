@@ -13,6 +13,7 @@ import { LegacyPageEvent as PageEvent, MatLegacyPaginator as MatPaginator } from
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { User } from 'src/app/generated/api';
+import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamUserDataService } from 'src/app/data/user/team-user-data.service';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { Subject } from 'rxjs';
@@ -27,6 +28,7 @@ import { takeUntil } from 'rxjs/operators';
 export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   @Input() teamId: string;
   userList: User[] = [];
+  exhibitUsers: User[] = [];
   teamUsers: User[];
 
   displayedUserColumns: string[] = ['name', 'id'];
@@ -43,11 +45,21 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
+    private teamQuery: TeamQuery,
     private teamUserDataService: TeamUserDataService,
     private userDataService: UserDataService
   ) {
     this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
       this.userList = users;
+    });
+    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
+      this.exhibitUsers = [];
+      teams.forEach(t => {
+        t.users.forEach(u => {
+          this.exhibitUsers.push(u);
+        });
+      });
+      this.exhibitUsers.sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1);
     });
   }
 
@@ -87,6 +99,10 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
     });
     const newAllUsers = !this.userList ? new Array<User>() : this.userList.slice(0);
     this.teamUserDataSource.data.forEach((tu) => {
+      const index = newAllUsers.findIndex((u) => u.id === tu.id);
+      newAllUsers.splice(index, 1);
+    });
+    this.exhibitUsers.forEach((tu) => {
       const index = newAllUsers.findIndex((u) => u.id === tu.id);
       newAllUsers.splice(index, 1);
     });
