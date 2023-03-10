@@ -26,6 +26,11 @@
   text-align: left;
 }
 
+.srollable-region {
+  height: 500px;
+  overflow-y: auto;
+}
+
 .name-width {
   width: 600px;
 }
@@ -36,6 +41,8 @@
 
 .mat-header-row {
   min-height: 56px;
+  text-align: left;
+  width: calc(100% - 18px);
 }
 
 .mat-row {
@@ -55,15 +62,19 @@
   flex: 1;
   overflow: hidden;
   word-wrap: break-word;
+  text-align: left;
 }
 
-.button-margins {
-  margin-left: 20px;
-  margin-right: 20px;
+.filter-selection {
+  width: 90%;
 }
 
 .sp-icon {
   margin-left: 10px;
+}
+
+.button-div {
+  min-width: 81px;
 }
 
 .mat-accordion .mat-header-row {

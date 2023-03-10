@@ -32,9 +32,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   @Input() teamList: Team[];
   @Input() collectionId: string;
-  @Input() pageSize: number;
-  @Input() pageIndex: number;
-  @Output() pageChange = new EventEmitter<PageEvent>();
+  @Input() exhibitId: string;
   cardList: Card[] = [];
   teamCardList: TeamCard[] = [];
   selectedTeamId = '';
@@ -87,7 +85,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.cardDataService.loadByCollection(this.collectionId);
-    this.teamCardDataService.loadByCollection(this.collectionId);
+    this.teamCardDataService.loadByExhibit(this.exhibitId);
     this.filterControl.setValue(this.filterString);
     this.sortChanged(this.sort);
   }
@@ -218,19 +216,6 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
         break;
     }
     event.stopPropagation();
-  }
-
-  paginatorEvent(page: PageEvent) {
-    this.pageChange.emit(page);
-  }
-
-  paginateTeamCards(teamCards: TeamCard[], pageIndex: number, pageSize: number) {
-    if (!teamCards) {
-      return [];
-    }
-    const startIndex = pageIndex * pageSize;
-    const copy = teamCards.slice();
-    return copy.splice(startIndex, pageSize);
   }
 
   ngOnDestroy() {

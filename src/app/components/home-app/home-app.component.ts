@@ -211,7 +211,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.currentInject = this.exhibit.currentInject;
       this.cardDataService.loadMine(this.exhibitId);
       this.teamDataService.loadByExhibitId(this.exhibitId);
-      this.teamCardDataService.loadByCollection(this.exhibit.collectionId);
+      this.teamCardDataService.loadByExhibit(this.exhibit.id);
       this.userArticleDataService.loadMine(this.exhibitId);
     }
   }
