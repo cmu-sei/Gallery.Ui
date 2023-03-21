@@ -66,7 +66,6 @@ import { AdminExhibitArticlesComponent } from './components/admin/admin-exhibit-
 import { AdminExhibitArticleTeamsComponent } from './components/admin/admin-exhibit-article-teams/admin-exhibit-article-teams.component';
 import { AdminExhibitsComponent } from './components/admin/admin-exhibits/admin-exhibits.component';
 import { AdminExhibitEditDialogComponent } from './components/admin/admin-exhibit-edit-dialog/admin-exhibit-edit-dialog.component';
-import { AdminExhibitTeamsComponent } from './components/admin/admin-exhibit-teams/admin-exhibit-teams.component';
 import { AdminTeamCardsComponent } from './components/admin/admin-team-cards/admin-team-cards.component';
 import { AdminTeamCardEditDialogComponent } from './components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
 import { AdminTeamEditDialogComponent } from './components/admin/admin-team-edit-dialog/admin-team-edit-dialog.component';
@@ -118,7 +117,6 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AdminExhibitArticleTeamsComponent,
     AdminExhibitsComponent,
     AdminExhibitEditDialogComponent,
-    AdminExhibitTeamsComponent,
     AdminTeamCardsComponent,
     AdminTeamCardEditDialogComponent,
     AdminTeamEditDialogComponent,

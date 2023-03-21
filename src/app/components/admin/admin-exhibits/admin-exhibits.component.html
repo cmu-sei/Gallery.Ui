@@ -50,7 +50,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </section>
 
   <mat-expansion-panel
-    *ngFor="let exhibit of paginateExhibits(exhibitList, pageIndex, pageSize)"
+    *ngFor="let exhibit of paginateExhibits(exhibitList, pageIndex, pageSize); trackBy:getExhibitId"
     [expanded]="editExhibit.id === exhibit.id"
   >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(exhibit); $event.stopPropagation()">
@@ -86,46 +86,36 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         {{ exhibit.currentInject }}
       </span>
     </mat-expansion-panel-header>
-    <div class="panel-container" *ngIf="editExhibit.id === exhibit.id">
-      <div class="team-div">
-        <h3>Teams</h3>
-        <button
-          class="center-self"
-          mat-icon-button
-          (click)="showTeams = !showTeams; $event.stopPropagation()"
-          style="outline: none;"
-          title="Show/Hide Teams"
+    <div class="sub-container" *ngIf="editExhibit.id === exhibit.id">
+      <mat-expansion-panel class="bottom-space">
+        <mat-expansion-panel-header>
+          <h4>Exhibit Teams</h4>
+        </mat-expansion-panel-header>
+        <app-admin-teams
+          [exhibitId]="exhibit.id"
+        ></app-admin-teams>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="bottom-space">
+        <mat-expansion-panel-header>
+          <h4>Card Teams</h4>
+        </mat-expansion-panel-header>
+        <app-admin-team-cards
+          [teamList]="teamList"
+          [collectionId]="selectedCollectionId"
+          [exhibitId]="editExhibit.id"
         >
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-chevron-down" *ngIf="!showTeams"></mat-icon>
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-chevron-up" *ngIf="showTeams"></mat-icon>
-        </button>
-      </div>
-      <app-admin-exhibit-teams
-        *ngIf="showTeams"
-        [exhibitId]="exhibit.id"
-        [teamList]="teamList"
-        class="full-width"
-      ></app-admin-exhibit-teams>
-      <div class="team-div">
-        <h3>Articles</h3>
-        <button
-          class="center-self"
-          mat-icon-button
-          (click)="showArticles = !showArticles; $event.stopPropagation()"
-          style="outline: none;"
-          title="Show/Hide Articles"
+        </app-admin-team-cards>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <h4>Article Teams</h4>
+        </mat-expansion-panel-header>
+        <app-admin-exhibit-articles
+          [exhibit]="exhibit"
+          [teamList]="teamList"
         >
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-chevron-down" *ngIf="!showArticles"></mat-icon>
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-chevron-up" *ngIf="showArticles"></mat-icon>
-        </button>
-      </div>
-      <app-admin-exhibit-articles
-        *ngIf="showArticles"
-        [exhibit]="exhibit"
-        [teamList]="teamList"
-        class="full-width"
-      >
-      </app-admin-exhibit-articles>
+        </app-admin-exhibit-articles>
+      </mat-expansion-panel>
     </div>
   </mat-expansion-panel>
 </mat-accordion>

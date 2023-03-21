@@ -155,10 +155,10 @@ export class TeamCardDataService {
       );
   }
 
-  loadByCollection(collectionId: string) {
+  loadByExhibit(exhibitId: string) {
     this.teamCardStore.setLoading(true);
     this.teamCardService
-      .getCollectionTeamCards(collectionId)
+      .GetExhibitTeamCards(exhibitId)
       .pipe(
         tap(() => {
           this.teamCardStore.setLoading(false);

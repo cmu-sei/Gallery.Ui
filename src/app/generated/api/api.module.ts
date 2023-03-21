@@ -12,7 +12,6 @@ import { ArticleService } from './api/article.service';
 import { CardService } from './api/card.service';
 import { CollectionService } from './api/collection.service';
 import { ExhibitService } from './api/exhibit.service';
-import { ExhibitTeamService } from './api/exhibitTeam.service';
 import { HealthService } from './api/health.service';
 import { PermissionService } from './api/permission.service';
 import { TeamService } from './api/team.service';
@@ -32,7 +31,6 @@ import { UserPermissionService } from './api/userPermission.service';
     CardService,
     CollectionService,
     ExhibitService,
-    ExhibitTeamService,
     HealthService,
     PermissionService,
     TeamService,

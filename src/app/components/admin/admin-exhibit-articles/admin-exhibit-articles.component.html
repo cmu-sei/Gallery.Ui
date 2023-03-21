@@ -9,18 +9,45 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     (matSortChange)="sortChanged($event)"
     class="mat-elevation-z2 mat-header-row"
   >
-    <div class="mat-header-cell three-cell" mat-sort-header="name">Title</div>
-    <div class="mat-header-cell two-cell" mat-sort-header="cardId">Card</div>
-    <div class="mat-header-cell two-cell" mat-sort-header="sourceName">Source Name</div>
     <div class="mat-header-cell one-cell" mat-sort-header="move">Move</div>
     <div class="mat-header-cell one-cell" mat-sort-header="inject">Inject</div>
+    <div class="mat-header-cell two-cell" mat-sort-header="cardId">Card</div>
+    <div class="mat-header-cell two-cell" mat-sort-header="sourceName">Source Name</div>
+    <div class="mat-header-cell two-cell" mat-sort-header="name">Article Title</div>
+    <div class="mat-header-cell three-cell">
+      <div class="panel-div">
+        <mat-form-field style="width: 60%; margin-left: 10px;">
+          <input
+            matInput
+            [(ngModel)]="filterString"
+            (keyup)="applyFilter($any($event.target).value); $event.stopPropagation"
+            (keypress)="$event.stopPropagation"
+            (blur)="$event.stopPropagation"
+            placeholder="Search"
+          />
+        </mat-form-field>
+        <div style="width: 30px;">
+          <button
+            mat-icon-button
+            (click)="applyFilter(''); $event.stopPropagation"
+            style="outline: none;"
+            title="Clear Search"
+          >
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
   </section>
   <mat-expansion-panel
-    *ngFor="let article of filteredArticleList"
+    *ngFor="let article of sortedArticles; trackBy:getArticleId"
   >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading">
-      <div class="mat-cell three-cell">
-        {{ article.name }}
+      <div class="mat-cell one-cell center-self">
+        {{ article.move }}
+      </div>
+      <div class="mat-cell one-cell center-self">
+        {{ article.inject }}
       </div>
       <div class="mat-cell two-cell center-self">
         {{ getCardName(article.cardId) }}
@@ -28,17 +55,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <div class="mat-cell two-cell center-self">
         {{ article.sourceName }}
       </div>
-      <div class="mat-cell one-cell center-self">
-        {{ article.move }}
-      </div>
-      <div class="mat-cell one-cell center-self">
-        {{ article.inject }}
+      <div class="mat-cell five-cell">
+        {{ article.name }}
       </div>
     </mat-expansion-panel-header>
     <app-admin-exhibit-article-teams
       [exhibitId]="exhibit.id"
       [articleId]="article.id"
-      [teamList]="teamList"
     >
     </app-admin-exhibit-article-teams>
   </mat-expansion-panel>

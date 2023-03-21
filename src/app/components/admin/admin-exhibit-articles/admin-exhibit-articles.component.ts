@@ -1,7 +1,8 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Article, Exhibit, ItemStatus, SourceType, Team} from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
@@ -9,14 +10,11 @@ import { ArticleQuery } from 'src/app/data/article/article.query';
 import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
-import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
-import { ComnSettingsService } from '@cmusei/crucible-common';
-import { ExhibitTeamDataService } from 'src/app/data/team/exhibit-team-data.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-exhibit-articles',
@@ -26,11 +24,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   @Input() exhibit: Exhibit;
   @Input() teamList: Team[];
+  filterControl: UntypedFormControl = new UntypedFormControl();
+  filterString = '';
   isLoading = false;
   articleList: Article[] = [];
   cardList: Card[] = [];
-  filteredArticleList: Article[] = [];
-  sort: Sort = {active: 'datePosted', direction: 'desc'};
+  // filteredArticleList: Article[] = [];
+  sortedArticles: Article[] = [];
+  sort: Sort = {active: 'move', direction: 'asc'};
   itemStatusList: ItemStatus[] = [
     ItemStatus.Unused,
     ItemStatus.Affected,
@@ -44,21 +45,16 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     SourceType.Reporting,
     SourceType.Social
   ];
-  // exhibitTeamDataSource = new MatTableDataSource<Team>(new Array<Team>());
   private unsubscribe$ = new Subject();
 
   constructor(
-    activatedRoute: ActivatedRoute,
     private router: Router,
-    private dialog: MatDialog,
     public dialogService: DialogService,
-    private settingsService: ComnSettingsService,
     private articleDataService: ArticleDataService,
     private articleQuery: ArticleQuery,
     private cardDataService: CardDataService,
     private cardQuery: CardQuery,
-    private collectionDataService: CollectionDataService,
-    private exhibitTeamDataService: ExhibitTeamDataService
+    private teamDataService: TeamDataService
   ) {
     this.articleDataService.unload();
     this.cardDataService.unload();
@@ -70,14 +66,21 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
       this.articleList = articles;
       this.sortChanged(this.sort);
     });
+    this.filterControl.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((term) => {
+        this.filterString = term;
+        this.sortChanged(this.sort);
+      });
   }
 
   ngOnInit() {
     if (this.exhibit && this.exhibit.collectionId) {
       this.articleDataService.loadByCollection(this.exhibit.collectionId);
       this.cardDataService.loadByCollection(this.exhibit.collectionId);
-      this.exhibitTeamDataService.getExhibitTeamsFromApi(this.exhibit.id);
+      this.teamDataService.loadByExhibitId(this.exhibit.id);
     }
+    this.filterControl.setValue(this.filterString);
   }
 
   addArticleTeam(articleId: string, teamId: string) {
@@ -123,19 +126,49 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
       });
   }
 
+  applyFilter(filterValue: string) {
+    this.filterControl.setValue(filterValue);
+  }
+
+  // sortChanged(sort: Sort) {
+  //   this.sort = sort;
+  //   if (this.articleList && this.articleList.length > 0) {
+  //     this.filteredArticleList = this.articleList
+  //       .sort((a: Article, b: Article) => this.sortArticles(a, b, sort.active, sort.direction))
+  //       .filter((a) => (!this.filterString ||
+  //                         a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
+  //                         this.getCardName(a.cardId).includes(this.filterString.toLowerCase()) ||
+  //                         a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
+  //                       )
+  //             );
+  //   }
+  // }
+
   sortChanged(sort: Sort) {
-    this.sort = sort;
-    if (this.articleList && this.articleList.length > 0) {
-      this.filteredArticleList = this.articleList
-        .sort((a: Article, b: Article) => this.sortArticles(a, b, sort.active, sort.direction));
-      //  .filter((a) => ((this.selectedCard.id === '') || a.cardId === this.selectedCard.id)
-      //                 && (!this.filterString ||
-      //                       a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-      //                       a.description.toLowerCase().includes(this.filterString.toLowerCase()) ||
-      //                       a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
-      //                     )
-      //         );
+    this.sort = sort && sort.direction ? sort : {active: 'move', direction: 'asc'};
+    this.sortedArticles = this.getSortedArticles(this.getFilteredArticles(this.articleList));
+  }
+
+  getFilteredArticles(articles: Article[]): Article[] {
+    let filteredArticles = articles;
+    if (articles && articles.length > 0 && this.filterString) {
+      const filterString = this.filterString.toLowerCase();
+      filteredArticles = articles
+        .filter((a) => (!this.filterString ||
+                          a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
+                          this.getCardName(a.cardId).toLowerCase().includes(this.filterString.toLowerCase()) ||
+                          a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
+                        )
+        );
     }
+    return filteredArticles;
+  }
+
+  getSortedArticles(articles: Article[]) {
+    if (articles) {
+      articles.sort((a, b) => this.sortArticles(a, b, this.sort.active, this.sort.direction));
+    }
+    return articles;
   }
 
   private sortArticles(
@@ -152,21 +185,65 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
           (isAsc ? 1 : -1)
         );
       case 'cardId':
+        const aVal = this.getCardName(a.cardId).toLowerCase();
+        const bVal = this.getCardName(b.cardId).toLowerCase();
+        if (aVal === bVal) {
+          if (+a.move === +b.move) {
+            return (
+              (+a.inject < +b.inject ? -1 : 1) *
+              (isAsc ? 1 : -1)
+            );
+          }
+          return (
+            (+a.move < +b.move ? -1 : 1) *
+            (isAsc ? 1 : -1)
+          );
+        }
         return (
-          (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
+          (aVal < bVal ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
       case 'move':
+        if (+a.move === +b.move) {
+          if (+a.inject === +b.inject) {
+            return (
+              (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
+              (isAsc ? 1 : -1)
+            );
+          }
+          return (
+            (+a.inject < +b.inject ? -1 : 1) *
+            (isAsc ? 1 : -1)
+          );
+        }
         return (
-          (a.move < b.move ? -1 : 1) *
+          (+a.move < +b.move ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
       case 'inject':
         return (
-          (a.inject < b.inject ? -1 : 1) *
+          (+a.inject < +b.inject ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
       case 'sourceName':
+        if (a.sourceName === b.sourceName) {
+          if (+a.move === +b.move) {
+            if (+a.inject === +b.inject) {
+              return (
+                (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
+                (isAsc ? 1 : -1)
+              );
+            }
+            return (
+              (+a.inject < +b.inject ? -1 : 1) *
+              (isAsc ? 1 : -1)
+            );
+          }
+          return (
+            (+a.move < +b.move ? -1 : 1) *
+            (isAsc ? 1 : -1)
+          );
+        }
         return (
           (a.sourceName.toLowerCase() < b.sourceName.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
@@ -180,6 +257,10 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     const card = id ? this.cardList.find(c => c.id === id) : null;
     const name = card ? card.name : '';
     return name;
+  }
+
+  getArticleId(index: number, article: Article) {
+    return article.id;
   }
 
   ngOnDestroy() {
