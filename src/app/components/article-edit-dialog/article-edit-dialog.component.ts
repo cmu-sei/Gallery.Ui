@@ -28,12 +28,12 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 const MIN_NAME_LENGTH = 3;
 
 @Component({
-  selector: 'app-admin-article-edit-dialog',
-  templateUrl: './admin-article-edit-dialog.component.html',
-  styleUrls: ['./admin-article-edit-dialog.component.scss'],
+  selector: 'app-article-edit-dialog',
+  templateUrl: './article-edit-dialog.component.html',
+  styleUrls: ['./article-edit-dialog.component.scss'],
 })
 
-export class AdminArticleEditDialogComponent {
+export class ArticleEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
   public articleNameFormControl = new UntypedFormControl(
@@ -98,7 +98,7 @@ export class AdminArticleEditDialogComponent {
 
   constructor(
     public dialogService: DialogService,
-    dialogRef: MatDialogRef<AdminArticleEditDialogComponent>,
+    dialogRef: MatDialogRef<ArticleEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     dialogRef.disableClose = true;

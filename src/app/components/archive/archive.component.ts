@@ -3,14 +3,18 @@
 
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input, OnDestroy } from '@angular/core';
-import { Article, ItemStatus, Team, User, UserArticle } from 'src/app/generated/api/model/models';
+import { Article, Card, ItemStatus, Team, TeamCard, Exhibit, UserArticle, SourceType } from 'src/app/generated/api/model/models';
+import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
-import { Card } from 'src/app/data/card/card.store';
+import { UserDataService } from 'src/app/data/user/user-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
+import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TeamQuery } from 'src/app/data/team/team.query';
+import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import {
+  Observable,
   Subject,
   take,
   takeUntil
@@ -23,6 +27,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { Section } from 'src/app/utilities/enumerations';
 import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
+import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dialog/article-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
@@ -38,24 +43,26 @@ export class ArchiveComponent implements OnDestroy {
   apiMessage = 'The GALLERY API web service is not responding.';
   cardId = 'all';
   exhibitId = '';
-  currentMove = -1;
-  currentInject = -1;
+  exhibit: Exhibit = {};
   sourceType = '';
   isLoading = false;
   userArticleList: UserArticle[] = [];
   cardList: Card[] = [];
   moveList: number[] = [];
   teamList: Team[] = [];
+  postCardList: Card[] = [];
+  showCardList: Card[] = [];
+  teamCardList: TeamCard[] = [];
   filteredUserArticleList: UserArticle[] = [];
   filterControl = new UntypedFormControl();
   filterString = '';
+  username = 'unknown';
   sort: Sort = {active: 'datePosted', direction: 'desc'};
   pageSize = 25;
   pageIndex = 0;
   sourceIcon: {[key: string]: string} = {
     Intel: 'mdi-shield-lock', Reporting: 'mdi-file-chart', News: 'mdi-television-classic', Social: 'mdi-bullhorn'
   };
-  private unreadCount = 0;
   private unsubscribe$ = new Subject();
 
   editorStyle = {
@@ -66,11 +73,15 @@ export class ArchiveComponent implements OnDestroy {
     @Inject(DOCUMENT) private _document: HTMLDocument,
     private dialog: MatDialog,
     public dialogService: DialogService,
+    private articleDataService: ArticleDataService,
     private userArticleQuery: UserArticleQuery,
     private userArticleDataService: UserArticleDataService,
     private cardQuery: CardQuery,
+    private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
     private teamQuery: TeamQuery,
+    private teamCardQuery: TeamCardQuery,
+    private userDataService: UserDataService,
     private healthService: HealthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -108,6 +119,10 @@ export class ArchiveComponent implements OnDestroy {
         this.cardList.push({ ...card });
       });
       this.sortChanged(this.sort);
+      this.setCardLists();
+    });
+    (this.exhibitQuery.selectActive() as Observable<Exhibit>).pipe(takeUntil(this.unsubscribe$)).subscribe(e => {
+      this.exhibit = e;
     });
     this.activatedRoute.queryParamMap
       .pipe(takeUntil(this.unsubscribe$))
@@ -121,6 +136,7 @@ export class ArchiveComponent implements OnDestroy {
           });
         }
         this.exhibitId = exhibitId;
+        this.exhibitDataService.setActive(this.exhibitId);
         this.cardId = cardId ? cardId : 'all';
         this.sortChanged(this.sort);
       });
@@ -133,6 +149,20 @@ export class ArchiveComponent implements OnDestroy {
     this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
       this.teamList = teams;
     });
+    this.teamCardQuery.selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(teamCards => {
+        this.teamCardList = teamCards;
+        this.setCardLists();
+        this.sortChanged(this.sort);
+      });
+    this.userDataService.loggedInUser
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((user) => {
+        if (user && user.profile) {
+          this.username = user.profile.name;
+        }
+      });
   }
 
   healthCheck() {
@@ -309,6 +339,67 @@ export class ArchiveComponent implements OnDestroy {
       queryParams: { section: Section.wall },
       queryParamsHandling: 'merge'
     });
+  }
+
+  setCardLists() {
+    this.postCardList = [];
+    this.showCardList = [];
+    if (this.teamCardList.length > 0 && this.cardList.length > 0) {
+      this.teamCardList.forEach(tc => {
+        const card = { ...this.cardList.find(c => c.id === tc.cardId)};
+        this.showCardList.push(card);
+        if (tc.canPostArticles) {
+          this.postCardList.push(card);
+        }
+      });
+    }
+  }
+
+  canAddArticles() {
+    return this.postCardList.length > 0;
+  }
+
+  addOrEditArticle(article: Article) {
+    if (!this.exhibit || !this.exhibit.collectionId) {
+      return;
+    }
+    if (!article) {
+      const datePosted = new Date();
+      article = {
+        name: '',
+        description: '',
+        collectionId: this.exhibit.collectionId,
+        move: this.exhibit.currentMove,
+        inject: this.exhibit.currentInject,
+        status: ItemStatus.Unused,
+        sourceType: SourceType.Reporting,
+        sourceName: this.username,
+        datePosted: datePosted
+      };
+    } else {
+      article = {... article};
+    }
+    const dialogRef = this.dialog.open(ArticleEditDialogComponent, {
+      width: '800px',
+      data: {
+        article: article,
+        cardList: this.postCardList
+      },
+    });
+    dialogRef.componentInstance.editComplete.subscribe((result) => {
+      if (result.saveChanges && result.article) {
+        this.saveArticle(result.article);
+      }
+      dialogRef.close();
+    });
+  }
+
+  saveArticle(article: Article) {
+    if (article.id) {
+      this.articleDataService.updateArticle(article);
+    } else {
+      this.articleDataService.add(article);
+    }
   }
 
   ngOnDestroy() {

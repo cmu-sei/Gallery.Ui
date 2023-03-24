@@ -4,6 +4,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div mat-dialog-title>
+  <!-- dialog title dependent on creating new or editing existing -->
   <span *ngIf="data.article.id">Edit Article</span>
   <span *ngIf="!data.article.id">Add Article</span>
   <button
@@ -22,7 +23,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)" (blur)="saveArticle('name')"
-          value="{{data.article.name}}" [errorStateMatcher]="matcher">
+          [value]="data.article.name" [errorStateMatcher]="matcher">
         <mat-error *ngIf="articleNameFormControl.hasError('minlength') && !articleNameFormControl.hasError('required')">
           Must contain {{ MIN_NAME_LENGTH }} or more characters
         </mat-error>
@@ -52,52 +53,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
   <div class="add-margin">
     <div>
-      <mat-form-field>
-        <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor="let card of data.cardList" [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
-            {{card.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="add-margin">
-    <div>
-      <mat-form-field>
-        <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
-          <mat-option *ngFor="let itemStatusOption of itemStatusList" [value]="itemStatusOption" >
-            {{ itemStatusOption }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="add-margin">
-    <div>
-      <mat-form-field>
-        <mat-select placeholder="Source Type" [formControl]="sourceTypeFormControl" (selectionChange)="saveArticle('sourceType')">
-          <mat-option *ngFor="let sourceTypeOption of sourceTypeList" [value]="sourceTypeOption" >
-            {{ sourceTypeOption }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Source Name" [formControl]="sourceNameFormControl"
-          (blur)="saveArticle('sourceName')" value="{{data.article.sourceName}}" />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="add-margin">
-    <div>
       <mat-form-field class="full-width">
         <input matInput placeholder="URL for more info" [formControl]="urlFormControl"
           (blur)="saveArticle('url')" value="{{data.article.url}}" />
@@ -117,18 +72,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
   <div class="add-margin">
     <div>
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Move" [formControl]="moveFormControl"
-          (blur)="saveArticle('move')" value="{{data.article.move}}" />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Inject" [formControl]="injectFormControl"
-          (blur)="saveArticle('inject')" value="{{data.article.inject}}" />
+      <mat-form-field>
+        <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
+          <mat-option>None</mat-option>
+          <mat-option *ngFor="let card of data.cardList" [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
+            {{card.name}}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
   </div>
@@ -136,29 +86,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field>
-        <input
-          matInput
-          [ngxMatDatetimePicker]="postedDatePicker"
-          placeholder="Posted Date / Time"
-          [formControl]="datePostedFormControl"
-          (inputChange)="saveArticle('datePosted')"
-          (dateChange)="saveArticle('datePosted')"
-          >
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="$any(postedDatePicker)">
-        </mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #postedDatePicker
-          [showSpinners]=true
-          [showSeconds]=true
-          [stepHour]=1
-          [stepMinute]=1
-          [stepSecond]=1
-          [touchUi]=false
-          [enableMeridian]=true
-          [disableMinute]=false
-          [hideTime]=false>
-        </ngx-mat-datetime-picker>
+        <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
+          <mat-option *ngFor="let itemStatusOption of itemStatusList" [value]="itemStatusOption" >
+            {{ itemStatusOption }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
   </div>

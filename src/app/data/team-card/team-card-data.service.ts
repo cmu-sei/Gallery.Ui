@@ -178,10 +178,10 @@ export class TeamCardDataService {
       );
   }
 
-  loadByTeam(teamId: string) {
+  loadMineByExhibit(exhibitId: string) {
     this.teamCardStore.setLoading(true);
     this.teamCardService
-      .getTeamTeamCards(teamId)
+      .GetMyExhibitTeamCards(exhibitId)
       .pipe(
         tap(() => {
           this.teamCardStore.setLoading(false);

@@ -18,7 +18,27 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </mat-form-field>
           <mat-icon class="mdi-24px point" fontIcon="mdi-close-circle-outline" (click)="applyFilter('')"></mat-icon>
         </div>
-        <div class="three-cell">
+        <div class="two-cell">
+          <mat-form-field>
+            <mat-select [(ngModel)]="cardId" (selectionChange)="sortChanged(sort)">
+              <mat-option [value]="'all'">All Cards</mat-option>
+              <mat-option *ngFor="let card of showCardList" [value]="card.id">
+                {{card.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="one-cell" *ngIf="canAddArticles()">
+          <button
+            mat-icon-button
+            (click)="addOrEditArticle(null)"
+            style="outline: none;"
+            title="Add an Article"
+          >
+            <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
+          </button>
+        </div>
+        <div class="five-cell">
           <button mat-stroked-button class="tiny" (click)="filterBySourceType('Intel')" *ngIf="sourceType !== 'Intel'">
             <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px"></mat-icon>
             Intel
@@ -52,27 +72,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             Social
           </button>
         </div>
-        <div class="one-cell">
-          <mat-form-field>
-            <mat-select [(ngModel)]="cardId" (selectionChange)="sortChanged(sort)">
-              <mat-option [value]="'all'">All Cards</mat-option>
-              <mat-option *ngFor="let card of cardList" [value]="card.id">
-                {{card.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="three-cell">
-          <mat-paginator *ngIf="false"
-            #paginator
-            [length]="filteredUserArticleList?.length"
-            [pageIndex]="pageIndex"
-            [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
-            (page)="paginatorEvent($event)"
-          ></mat-paginator>
-        </div>
-        <div class="one-cell last-cell">
+        <div class="two-cell last-cell">
           <button
             mat-icon-button
             (click)="gotoWallSection()"
