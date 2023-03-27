@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
-import { ItemStatus, SourceType } from 'src/app/generated/api';
+import { ItemStatus, SourceType, Team } from 'src/app/generated/api';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -95,6 +95,7 @@ export class ArticleEditDialogComponent {
     SourceType.Social
   ];
   readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
+  teamIdList: string[] = [];
 
   constructor(
     public dialogService: DialogService,
@@ -114,7 +115,8 @@ export class ArticleEditDialogComponent {
     return !(
       this.articleNameFormControl.hasError('required') ||
       this.articleNameFormControl.hasError('minlength') ||
-      !this.data.article.cardId
+      !this.data.article.cardId ||
+      this.teamIdList.length === 0
     );
   }
 
@@ -146,6 +148,7 @@ export class ArticleEditDialogComponent {
         this.editComplete.emit({
           saveChanges: saveChanges,
           article: this.data.article,
+          teamIdList: this.teamIdList
         });
       }
     }
@@ -194,6 +197,11 @@ export class ArticleEditDialogComponent {
       default:
         break;
     }
+  }
+
+  updateArticleTeams(teamList: any) {
+    const selectedIds = teamList.map(({ id }) => id);
+    this.teamIdList = selectedIds;
   }
 
 }

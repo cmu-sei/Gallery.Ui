@@ -76,6 +76,7 @@ import { AdminUsersComponent } from './components/admin/admin-users/admin-users.
 import { ArticleEditDialogComponent } from './components/article-edit-dialog/article-edit-dialog.component';
 import { ArticleMoreDialogComponent } from './components/article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from './components/article-share-dialog/article-share-dialog.component';
+import { ArticleTeamsComponent } from './components/article-teams/article-teams.component';
 import { HomeAppComponent } from './components/home-app/home-app.component';
 import { ConfirmDialogComponent } from './components/shared/confirm-dialog/confirm-dialog.component';
 import { SystemMessageComponent } from './components/shared/system-message/system-message.component';
@@ -128,6 +129,7 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     ArticleEditDialogComponent,
     ArticleMoreDialogComponent,
     ArticleShareDialogComponent,
+    ArticleTeamsComponent,
     TopbarComponent,
     DisplayOrderPipe,
     SortByPipe,

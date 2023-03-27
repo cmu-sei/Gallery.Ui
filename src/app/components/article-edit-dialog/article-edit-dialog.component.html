@@ -5,8 +5,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div mat-dialog-title>
   <!-- dialog title dependent on creating new or editing existing -->
-  <span *ngIf="data.article.id">Edit Article</span>
-  <span *ngIf="!data.article.id">Add Article</span>
+  <span *ngIf="data.article.id">Edit Article for Selected Teams</span>
+  <span *ngIf="!data.article.id">Add Article for Selected Teams</span>
   <button
     mat-icon-button
     (click)="handleEditComplete(false)"
@@ -93,6 +93,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </mat-select>
       </mat-form-field>
     </div>
+  </div>
+
+  <div>
+    <app-article-teams
+      [exhibitId]="data.exhibitId"
+      (articleTeamsChange)="updateArticleTeams($event)"
+    >
+    </app-article-teams>
   </div>
 
   <div class="cssLayoutRowStartCenter bottom-button">

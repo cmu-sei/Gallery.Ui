@@ -383,23 +383,20 @@ export class ArchiveComponent implements OnDestroy {
       width: '800px',
       data: {
         article: article,
-        cardList: this.postCardList
+        cardList: this.postCardList,
+        exhibitId: this.exhibit.id
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
       if (result.saveChanges && result.article) {
-        this.saveArticle(result.article);
+        this.saveArticle(result.article, result.teamIdList);
       }
       dialogRef.close();
     });
   }
 
-  saveArticle(article: Article) {
-    if (article.id) {
-      this.articleDataService.updateArticle(article);
-    } else {
-      this.articleDataService.add(article);
-    }
+  saveArticle(article: Article, teamIdList: string[]) {
+    this.articleDataService.addFromUser(this.exhibitId, article, teamIdList);
   }
 
   ngOnDestroy() {
