@@ -5,7 +5,6 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input, OnDestroy } from '@angular/core';
 import { Article, Card, ItemStatus, Team, TeamCard, Exhibit, UserArticle, SourceType } from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
-import { ArticleQuery } from 'src/app/data/article/article.query';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
@@ -76,7 +75,6 @@ export class ArchiveComponent implements OnDestroy {
     private dialog: MatDialog,
     public dialogService: DialogService,
     private articleDataService: ArticleDataService,
-    private articleQuery: ArticleQuery,
     private userArticleQuery: UserArticleQuery,
     private userArticleDataService: UserArticleDataService,
     private cardQuery: CardQuery,
@@ -125,6 +123,17 @@ export class ArchiveComponent implements OnDestroy {
       this.setCardLists();
     });
     (this.exhibitQuery.selectActive() as Observable<Exhibit>).pipe(takeUntil(this.unsubscribe$)).subscribe(e => {
+      if (!e) {
+        console.log('active exhibit is undefined');
+        if (this.exhibitId) {
+          this.exhibitDataService.setActive(this.exhibitId);
+        } else {
+          this.router.navigate([''], {
+            queryParams: { },
+            queryParamsHandling: 'merge'
+          });
+        }
+      }
       this.exhibit = e;
     });
     this.activatedRoute.queryParamMap
@@ -169,9 +178,6 @@ export class ArchiveComponent implements OnDestroy {
           this.setMyTeam();
         }
       });
-    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
-      this.userArticleDataService.loadMine(this.exhibitId);
-    });
   }
 
   healthCheck() {
@@ -361,7 +367,7 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   canAddArticles() {
-    return this.postCardList.length > 0;
+    return this.postCardList.length > 0 && this.exhibit && this.exhibit.collectionId;
   }
 
   addOrEditArticle(article: Article) {
@@ -374,7 +380,7 @@ export class ArchiveComponent implements OnDestroy {
         name: '',
         description: '',
         collectionId: this.exhibit.collectionId,
-        exhibitId: this.exhibit.id,
+        exhibitId: this.exhibitId,
         move: this.exhibit.currentMove,
         inject: this.exhibit.currentInject,
         status: ItemStatus.Unused,
@@ -390,7 +396,7 @@ export class ArchiveComponent implements OnDestroy {
       data: {
         article: article,
         cardList: this.postCardList,
-        exhibitId: this.exhibit.id
+        exhibitId: this.exhibitId
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
