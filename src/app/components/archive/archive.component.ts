@@ -5,6 +5,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input, OnDestroy } from '@angular/core';
 import { Article, Card, ItemStatus, Team, TeamCard, Exhibit, UserArticle, SourceType } from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
+import { ArticleQuery } from 'src/app/data/article/article.query';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
@@ -49,6 +50,7 @@ export class ArchiveComponent implements OnDestroy {
   cardList: Card[] = [];
   moveList: number[] = [];
   teamList: Team[] = [];
+  myTeam: Team = {} as Team;
   postCardList: Card[] = [];
   showCardList: Card[] = [];
   teamCardList: TeamCard[] = [];
@@ -56,6 +58,7 @@ export class ArchiveComponent implements OnDestroy {
   filterControl = new UntypedFormControl();
   filterString = '';
   username = 'unknown';
+  userId = '';
   sort: Sort = {active: 'datePosted', direction: 'desc'};
   pageSize = 25;
   pageIndex = 0;
@@ -73,6 +76,7 @@ export class ArchiveComponent implements OnDestroy {
     private dialog: MatDialog,
     public dialogService: DialogService,
     private articleDataService: ArticleDataService,
+    private articleQuery: ArticleQuery,
     private userArticleQuery: UserArticleQuery,
     private userArticleDataService: UserArticleDataService,
     private cardQuery: CardQuery,
@@ -147,6 +151,7 @@ export class ArchiveComponent implements OnDestroy {
       });
     this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
       this.teamList = teams;
+      this.setMyTeam();
     });
     this.teamCardQuery.selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -160,8 +165,13 @@ export class ArchiveComponent implements OnDestroy {
       .subscribe((user) => {
         if (user && user.profile) {
           this.username = user.profile.name;
+          this.userId = user.profile.sub;
+          this.setMyTeam();
         }
       });
+    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
+      this.userArticleDataService.loadMine(this.exhibitId);
+    });
   }
 
   healthCheck() {
@@ -172,6 +182,16 @@ export class ArchiveComponent implements OnDestroy {
     error => {
       this.apiIsSick = true;
       this.apiMessage = error.message;
+    });
+  }
+
+  setMyTeam() {
+    this.teamList.forEach(t => {
+      t.users.forEach(u => {
+        if (u.id === this.userId) {
+          this.myTeam = t;
+        }
+      });
     });
   }
 
@@ -359,7 +379,7 @@ export class ArchiveComponent implements OnDestroy {
         inject: this.exhibit.currentInject,
         status: ItemStatus.Unused,
         sourceType: SourceType.Reporting,
-        sourceName: this.username,
+        sourceName: this.myTeam.shortName,
         datePosted: datePosted
       };
     } else {
@@ -375,14 +395,31 @@ export class ArchiveComponent implements OnDestroy {
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
       if (result.saveChanges && result.article) {
-        this.saveArticle(result.article, result.teamIdList);
+        this.saveArticle(result.article);
       }
       dialogRef.close();
     });
   }
 
-  saveArticle(article: Article, teamIdList: string[]) {
-    this.articleDataService.addFromUser(article);
+  saveArticle(article: Article) {
+    if (article.id) {
+      this.articleDataService.updateArticle(article);
+    } else {
+      this.articleDataService.addFromUser(article);
+    }
+  }
+
+  deleteArticle(article: Article): void {
+    this.dialogService
+      .confirm(
+        'Delete Article',
+        'Are you sure that you want to delete ' + article.name + '?'
+      )
+      .subscribe((result) => {
+        if (result['confirm']) {
+          this.articleDataService.delete(article.id);
+        }
+      });
   }
 
   ngOnDestroy() {
