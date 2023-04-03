@@ -21,7 +21,6 @@ import {
 } from 'rxjs';
 import { HealthService } from 'src/app/generated/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
 import { UntypedFormControl } from '@angular/forms';
 import { Section } from 'src/app/utilities/enumerations';
@@ -313,20 +312,6 @@ export class ArchiveComponent implements OnDestroy {
     this.userArticleDataService.setIsRead(userArticle.id, !userArticle.isRead);
   }
 
-  paginatorEvent(page: PageEvent) {
-    this.pageIndex = page.pageIndex;
-    this.pageSize = page.pageSize;
-  }
-
-  paginateArticles(userArticles: UserArticle[], pageIndex: number, pageSize: number) {
-    if (!userArticles) {
-      return [];
-    }
-    const startIndex = pageIndex * pageSize;
-    const copy = userArticles.slice();
-    return copy.splice(startIndex, pageSize);
-  }
-
   gotoAdmin() {
     this.router.navigate(['/admin'], {
       queryParams: { section: Section.exhibits },
@@ -369,6 +354,7 @@ export class ArchiveComponent implements OnDestroy {
         name: '',
         description: '',
         collectionId: this.exhibit.collectionId,
+        exhibitId: this.exhibit.id,
         move: this.exhibit.currentMove,
         inject: this.exhibit.currentInject,
         status: ItemStatus.Unused,
@@ -396,7 +382,7 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   saveArticle(article: Article, teamIdList: string[]) {
-    this.articleDataService.addFromUser(this.exhibitId, article, teamIdList);
+    this.articleDataService.addFromUser(article);
   }
 
   ngOnDestroy() {

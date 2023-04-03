@@ -225,7 +225,7 @@ export class ArticleDataService {
       });
   }
 
-  addFromUser(exhibitId: string, article: Article, teamIdList: string[]) {
+  addFromUser(article: Article) {
     this.articleStore.setLoading(true);
     this.articleService
       .createArticle(article)
@@ -238,9 +238,6 @@ export class ArticleDataService {
       .subscribe((s) => {
         this.setAsDates(s);
         this.articleStore.add(s);
-        teamIdList.forEach(teamId => {
-          this.articleTeamDataService.addTeamToArticle(exhibitId, teamId, s.id);
-        });
       });
   }
 

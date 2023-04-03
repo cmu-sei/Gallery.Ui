@@ -115,8 +115,7 @@ export class ArticleEditDialogComponent {
     return !(
       this.articleNameFormControl.hasError('required') ||
       this.articleNameFormControl.hasError('minlength') ||
-      !this.data.article.cardId ||
-      this.teamIdList.length === 0
+      !this.data.article.cardId
     );
   }
 
@@ -147,8 +146,7 @@ export class ArticleEditDialogComponent {
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,
-          article: this.data.article,
-          teamIdList: this.teamIdList
+          article: this.data.article
         });
       }
     }
@@ -197,11 +195,6 @@ export class ArticleEditDialogComponent {
       default:
         break;
     }
-  }
-
-  updateArticleTeams(teamList: any) {
-    const selectedIds = teamList.map(({ id }) => id);
-    this.teamIdList = selectedIds;
   }
 
 }
