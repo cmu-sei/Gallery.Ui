@@ -31,6 +31,8 @@
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  height: calc(100vh - 110px);
+  overflow-y: auto;
 }
 
 .card {
