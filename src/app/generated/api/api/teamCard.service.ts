@@ -321,6 +321,56 @@ export class TeamCardService {
     }
 
     /**
+     * Gets all TeamCards for an exhibit for the current user
+     * Returns a list of all of the TeamCards for the exhibit for the current user.
+     * @param exhibitId The id of the Exhibit
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public GetMyExhibitTeamCards(exhibitId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<TeamCard>>;
+    public GetMyExhibitTeamCards(exhibitId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TeamCard>>>;
+    public GetMyExhibitTeamCards(exhibitId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TeamCard>>>;
+    public GetMyExhibitTeamCards(exhibitId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (exhibitId === null || exhibitId === undefined) {
+            throw new Error('Required parameter exhibitId was null or undefined when calling getTeamTeamCards.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (oauth2) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.get<Array<TeamCard>>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/teamcards/mine`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Gets a specific TeamCard by id
      * Returns the TeamCard with the id specified  &lt;para /&gt;  Only accessible to a SuperCard
      * @param id The id of the TeamCard
@@ -407,56 +457,6 @@ export class TeamCardService {
         ];
 
         return this.httpClient.get<Array<TeamCard>>(`${this.configuration.basePath}/api/teamcards`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Gets all TeamCards for an team
-     * Returns a list of all of the TeamCards for the team.
-     * @param teamId The id of the TeamCard
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getTeamTeamCards(teamId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<TeamCard>>;
-    public getTeamTeamCards(teamId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TeamCard>>>;
-    public getTeamTeamCards(teamId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TeamCard>>>;
-    public getTeamTeamCards(teamId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (teamId === null || teamId === undefined) {
-            throw new Error('Required parameter teamId was null or undefined when calling getTeamTeamCards.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (oauth2) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.get<Array<TeamCard>>(`${this.configuration.basePath}/api/teams/${encodeURIComponent(String(teamId))}/teamcards`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

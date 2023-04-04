@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
-import { ItemStatus, SourceType } from 'src/app/generated/api';
+import { ItemStatus, SourceType, Team } from 'src/app/generated/api';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -28,12 +28,12 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 const MIN_NAME_LENGTH = 3;
 
 @Component({
-  selector: 'app-admin-article-edit-dialog',
-  templateUrl: './admin-article-edit-dialog.component.html',
-  styleUrls: ['./admin-article-edit-dialog.component.scss'],
+  selector: 'app-article-edit-dialog',
+  templateUrl: './article-edit-dialog.component.html',
+  styleUrls: ['./article-edit-dialog.component.scss'],
 })
 
-export class AdminArticleEditDialogComponent {
+export class ArticleEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
   public articleNameFormControl = new UntypedFormControl(
@@ -95,10 +95,11 @@ export class AdminArticleEditDialogComponent {
     SourceType.Social
   ];
   readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
+  teamIdList: string[] = [];
 
   constructor(
     public dialogService: DialogService,
-    dialogRef: MatDialogRef<AdminArticleEditDialogComponent>,
+    dialogRef: MatDialogRef<ArticleEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     dialogRef.disableClose = true;
@@ -145,7 +146,7 @@ export class AdminArticleEditDialogComponent {
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,
-          article: this.data.article,
+          article: this.data.article
         });
       }
     }

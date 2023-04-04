@@ -13,6 +13,7 @@ import {
 } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { ArticleTeamDataService } from '../team/article-team-data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,7 @@ export class ArticleDataService {
     private articleStore: ArticleStore,
     private articleQuery: ArticleQuery,
     private articleService: ArticleService,
+    private articleTeamDataService: ArticleTeamDataService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -208,6 +210,22 @@ export class ArticleDataService {
   }
 
   add(article: Article) {
+    this.articleStore.setLoading(true);
+    this.articleService
+      .createArticle(article)
+      .pipe(
+        tap(() => {
+          this.articleStore.setLoading(false);
+        }),
+        take(1)
+      )
+      .subscribe((s) => {
+        this.setAsDates(s);
+        this.articleStore.add(s);
+      });
+  }
+
+  addFromUser(article: Article) {
     this.articleStore.setLoading(true);
     this.articleService
       .createArticle(article)

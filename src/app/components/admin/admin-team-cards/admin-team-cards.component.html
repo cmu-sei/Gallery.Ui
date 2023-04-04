@@ -49,6 +49,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="mat-header-cell five-cell" mat-sort-header="teamId">Team</div>
     <div class="mat-header-cell five-cell" mat-sort-header="cardId">Card</div>
     <div class="mat-header-cell one-cell" mat-sort-header="isShownOnWall">Show</div>
+    <div class="mat-header-cell one-cell" mat-sort-header="canPostArticles">Post</div>
     <div class="mat-header-cell one-cell" mat-sort-header="move">Move</div>
     <div class="mat-header-cell one-cell" mat-sort-header="inject">Inject</div>
   </section>
@@ -83,6 +84,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
         <div class="mat-cell one-cell center-self">
           {{ teamCard.isShownOnWall }}
+        </div>
+        <div class="mat-cell one-cell center-self">
+          {{ teamCard.canPostArticles }}
         </div>
         <div class="mat-cell one-cell center-self">
           {{ teamCard.move }}

@@ -4,7 +4,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div mat-dialog-title>
-  Edit Article
+  <span *ngIf="data.article.id">Edit Article</span>
+  <span *ngIf="!data.article.id">Add Article</span>
   <button
     mat-icon-button
     (click)="handleEditComplete(false)"
@@ -78,7 +79,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field>
         <mat-select placeholder="Source Type" [formControl]="sourceTypeFormControl" (selectionChange)="saveArticle('sourceType')">
-          <mat-option *ngFor="let sourceTypeOption of data.sourceTypeList" [value]="sourceTypeOption" >
+          <mat-option *ngFor="let sourceTypeOption of sourceTypeList" [value]="sourceTypeOption" >
             {{ sourceTypeOption }}
           </mat-option>
         </mat-select>

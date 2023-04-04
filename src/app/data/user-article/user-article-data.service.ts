@@ -231,10 +231,7 @@ export class UserArticleDataService {
   }
 
   updateStore(userArticle: UserArticle) {
-    const activeExhibitId = this.exhibitQuery.getActiveId();
-    if (userArticle.exhibitId === activeExhibitId) {
-      this.userArticleStore.upsert(userArticle.id, userArticle);
-    }
+    this.userArticleStore.upsert(userArticle.id, userArticle);
   }
 
   deleteFromStore(id: string) {

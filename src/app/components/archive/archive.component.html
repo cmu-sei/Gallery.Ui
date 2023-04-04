@@ -18,7 +18,26 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </mat-form-field>
           <mat-icon class="mdi-24px point" fontIcon="mdi-close-circle-outline" (click)="applyFilter('')"></mat-icon>
         </div>
-        <div class="three-cell">
+        <div class="seven-cell">
+          <mat-form-field>
+            <mat-select [(ngModel)]="cardId" (selectionChange)="sortChanged(sort)">
+              <mat-option [value]="'all'">All Cards</mat-option>
+              <mat-option *ngFor="let card of showCardList" [value]="card.id">
+                {{card.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-button
+            *ngIf="canAddArticles()"
+            (click)="addOrEditArticle(null)"
+            style="outline: none;"
+            title="Add an Article"
+          >
+            <mat-icon class="add-button mdi-18px" fontIcon="mdi-plus-circle"></mat-icon> Add Article
+          </button>
+        </div>
+        <div class="seven-cell">
           <button mat-stroked-button class="tiny" (click)="filterBySourceType('Intel')" *ngIf="sourceType !== 'Intel'">
             <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px"></mat-icon>
             Intel
@@ -52,27 +71,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             Social
           </button>
         </div>
-        <div class="one-cell">
-          <mat-form-field>
-            <mat-select [(ngModel)]="cardId" (selectionChange)="sortChanged(sort)">
-              <mat-option [value]="'all'">All Cards</mat-option>
-              <mat-option *ngFor="let card of cardList" [value]="card.id">
-                {{card.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="three-cell">
-          <mat-paginator *ngIf="false"
-            #paginator
-            [length]="filteredUserArticleList?.length"
-            [pageIndex]="pageIndex"
-            [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
-            (page)="paginatorEvent($event)"
-          ></mat-paginator>
-        </div>
-        <div class="one-cell last-cell">
+        <div class="two-cell last-cell">
           <button
             mat-icon-button
             (click)="gotoWallSection()"
@@ -122,6 +121,27 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </button>
         <button mat-button class="article-action" title="More Article Info" (click)="openMoreDialog(userArticle)" [disabled]="!userArticle.article.url">
           <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye" alt="View Media"></mat-icon> More
+        </button>
+        <br />
+        <button
+          mat-button
+          class="article-action"
+          (click)="addOrEditArticle(userArticle.article); $event.stopPropagation()"
+          style="outline: none;"
+          title="Edit {{ userArticle.article.name }}"
+          *ngIf="userArticle.article.exhibitId && userArticle.article.sourceName === myTeam.shortName"
+        >
+          <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-square-edit-outline"></mat-icon> Edit
+        </button>
+        <button
+          mat-button
+          class="article-action"
+          (click)="deleteArticle(userArticle.article); $event.stopPropagation()"
+          style="outline: none;"
+          title="Delete {{ userArticle.article.name }}"
+          *ngIf="userArticle.article.exhibitId && userArticle.article.sourceName === myTeam.shortName"
+        >
+          <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-trash-can"></mat-icon> Delete
         </button>
       </mat-card-actions>
     </mat-card>

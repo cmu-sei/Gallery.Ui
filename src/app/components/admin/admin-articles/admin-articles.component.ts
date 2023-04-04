@@ -5,7 +5,7 @@ import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angu
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
-import { Article, Collection, User, ItemStatus, SourceType} from 'src/app/generated/api/model/models';
+import { Article, Collection, ItemStatus, SourceType } from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
 import { Card } from 'src/app/data/card/card.store';
@@ -49,19 +49,6 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'datePosted', direction: 'desc'};
-  itemStatusList: ItemStatus[] = [
-    ItemStatus.Unused,
-    ItemStatus.Affected,
-    ItemStatus.Closed,
-    ItemStatus.Critical,
-    ItemStatus.Open
-  ];
-  sourceTypeList: SourceType[] = [
-    SourceType.Intel,
-    SourceType.News,
-    SourceType.Reporting,
-    SourceType.Social
-  ];
   private unsubscribe$ = new Subject();
 
   constructor(
@@ -160,9 +147,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
       width: '800px',
       data: {
         article: article,
-        cardList: this.cardList,
-        itemStatusList: this.itemStatusList,
-        sourceTypeList: this.sourceTypeList
+        cardList: this.cardList
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {

@@ -30,7 +30,6 @@ import { Section } from 'src/app/utilities/enumerations';
   styleUrls: ['./admin-container.component.scss'],
 })
 export class AdminContainerComponent implements OnDestroy, OnInit {
-  loggedInUser = this.userDataService.loggedInUser;
   titleText = 'GALLERY';
   displayedSection = '';
   isSidebarOpen = true;
