@@ -289,23 +289,27 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   openMoreDialog(userArticle: UserArticle) {
-    if (userArticle.article.openInNewTab) {
-      window.open(userArticle.article.url);
-    } else {
-      const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
-        width: '1200px',
-        data: {
-          article: userArticle.article
-        },
-      });
-      dialogRef.componentInstance.editComplete.subscribe((result) => {
-        dialogRef.close();
-        if (result.openNewTab) {
-          window.open(userArticle.article.url);
-        }
-      });
-    }
+    window.open('http://localhost:4723/article?article=' + userArticle.articleId);
   }
+
+  // openMoreDialog(userArticle: UserArticle) {
+  //   if (userArticle.article.openInNewTab) {
+  //     window.open(userArticle.article.url);
+  //   } else {
+  //     const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
+  //       width: '1200px',
+  //       data: {
+  //         article: userArticle.article
+  //       },
+  //     });
+  //     dialogRef.componentInstance.editComplete.subscribe((result) => {
+  //       dialogRef.close();
+  //       if (result.openNewTab) {
+  //         window.open(userArticle.article.url);
+  //       }
+  //     });
+  //   }
+  // }
 
   openShareDialog(userArticle: UserArticle) {
     const dialogRef = this.dialog.open(ArticleShareDialogComponent, {

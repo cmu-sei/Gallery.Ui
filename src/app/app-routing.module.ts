@@ -8,6 +8,7 @@ import { ComnAuthGuardService } from '@cmusei/crucible-common';
 import { AdminContainerComponent } from './components/admin/admin-container/admin-container.component';
 import { HomeAppComponent } from './components/home-app/home-app.component';
 import { ArchiveComponent } from './components/archive/archive.component';
+import { ArticleComponent } from './components/article/article.component';
 import { WallComponent } from './components/wall/wall.component';
 
 export const ROUTES: Routes = [
@@ -19,6 +20,11 @@ export const ROUTES: Routes = [
   {
     path: 'archive',
     component: ArchiveComponent,
+    canActivate: [ComnAuthGuardService],
+  },
+  {
+    path: 'article',
+    component: ArticleComponent,
     canActivate: [ComnAuthGuardService],
   },
   {

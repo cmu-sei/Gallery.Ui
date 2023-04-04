@@ -73,6 +73,7 @@ import { AdminTeamsComponent } from './components/admin/admin-teams/admin-teams.
 import { AdminTeamUsersComponent } from './components/admin/admin-team-users/admin-team-users.component';
 import { AdminUserEditDialogComponent } from './components/admin/admin-user-edit-dialog/admin-user-edit-dialog.component';
 import { AdminUsersComponent } from './components/admin/admin-users/admin-users.component';
+import { ArticleComponent } from './components/article/article.component';
 import { ArticleEditDialogComponent } from './components/article-edit-dialog/article-edit-dialog.component';
 import { ArticleMoreDialogComponent } from './components/article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from './components/article-share-dialog/article-share-dialog.component';
@@ -126,6 +127,7 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AdminTeamUsersComponent,
     AdminUsersComponent,
     AdminUserEditDialogComponent,
+    ArticleComponent,
     ArticleEditDialogComponent,
     ArticleMoreDialogComponent,
     ArticleShareDialogComponent,

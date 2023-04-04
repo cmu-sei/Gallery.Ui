@@ -119,9 +119,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <button mat-button class="article-action" title="Share UserArticle" (click)="openShareDialog(userArticle)">
           <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-share-variant" alt="Share UserArticle"></mat-icon> Share
         </button>
-        <button mat-button class="article-action" title="More Article Info" (click)="openMoreDialog(userArticle)" [disabled]="!userArticle.article.url">
-          <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye" alt="View Media"></mat-icon> More
+        <button mat-button class="article-action" title="View" (click)="openMoreDialog(userArticle)">
+          <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye" alt="View Media"></mat-icon> View
         </button>
+        <!-- <button mat-button class="article-action" title="More Article Info" (click)="openMoreDialog(userArticle)" [disabled]="!userArticle.article.url">
+          <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye" alt="View Media"></mat-icon> More
+        </button> -->
         <br />
         <button
           mat-button
