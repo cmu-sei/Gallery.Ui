@@ -124,13 +124,11 @@ export class ArchiveComponent implements OnDestroy {
     });
     (this.exhibitQuery.selectActive() as Observable<Exhibit>).pipe(takeUntil(this.unsubscribe$)).subscribe(e => {
       if (!e) {
-        console.log('active exhibit is undefined');
         if (this.exhibitId) {
           this.exhibitDataService.setActive(this.exhibitId);
         } else {
           this.router.navigate([''], {
-            queryParams: { },
-            queryParamsHandling: 'merge'
+            queryParams: { }
           });
         }
       }

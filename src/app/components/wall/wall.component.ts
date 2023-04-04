@@ -105,7 +105,7 @@ export class WallComponent implements OnDestroy {
         const cardToAdd = { ... card };
         const userArticles = this.userArticleList
           .filter(ua => ua.article.cardId === card.id)
-          .sort((a: Card, b: Card) => a.datePosted < b.datePosted ? -1 : 1);
+          .sort((a: UserArticle, b: UserArticle) => a.actualDatePosted.getTime() > b.actualDatePosted.getTime() ? -1 : 1);
         if (userArticles.length > 0) {
           cardToAdd.datePosted = userArticles[0].article?.datePosted;
           cardToAdd.unreadCount = userArticles.filter(ua => !ua.isRead).length;

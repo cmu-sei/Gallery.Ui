@@ -18,7 +18,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </mat-form-field>
           <mat-icon class="mdi-24px point" fontIcon="mdi-close-circle-outline" (click)="applyFilter('')"></mat-icon>
         </div>
-        <div class="two-cell">
+        <div class="seven-cell">
           <mat-form-field>
             <mat-select [(ngModel)]="cardId" (selectionChange)="sortChanged(sort)">
               <mat-option [value]="'all'">All Cards</mat-option>
@@ -27,18 +27,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
               </mat-option>
             </mat-select>
           </mat-form-field>
-        </div>
-        <div class="one-cell" *ngIf="canAddArticles()">
           <button
-            mat-icon-button
+            mat-button
+            *ngIf="canAddArticles()"
             (click)="addOrEditArticle(null)"
             style="outline: none;"
             title="Add an Article"
           >
-            <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
+            <mat-icon class="add-button" fontIcon="mdi-plus-circle"></mat-icon> Add Article
           </button>
         </div>
-        <div class="five-cell">
+        <div class="seven-cell">
           <button mat-stroked-button class="tiny" (click)="filterBySourceType('Intel')" *ngIf="sourceType !== 'Intel'">
             <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px"></mat-icon>
             Intel
