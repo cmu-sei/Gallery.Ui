@@ -18,7 +18,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </mat-form-field>
           <mat-icon class="mdi-24px point" fontIcon="mdi-close-circle-outline" (click)="applyFilter('')"></mat-icon>
         </div>
-        <div class="seven-cell">
+        <div class="seven-cell" style="min-width: 315px;">
           <mat-form-field>
             <mat-select [(ngModel)]="cardId" (selectionChange)="sortChanged(sort)">
               <mat-option [value]="'all'">All Cards</mat-option>
