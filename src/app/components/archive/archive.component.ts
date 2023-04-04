@@ -126,13 +126,10 @@ export class ArchiveComponent implements OnDestroy {
       if (!e) {
         if (this.exhibitId) {
           this.exhibitDataService.setActive(this.exhibitId);
-        } else {
-          this.router.navigate([''], {
-            queryParams: { }
-          });
         }
+      } else {
+        this.exhibit = e;
       }
-      this.exhibit = e;
     });
     this.activatedRoute.queryParamMap
       .pipe(takeUntil(this.unsubscribe$))
