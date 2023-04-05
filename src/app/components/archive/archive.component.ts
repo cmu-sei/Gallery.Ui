@@ -288,28 +288,30 @@ export class ArchiveComponent implements OnDestroy {
     return this.filteredUserArticleList.filter(a => a.article.move === move);
   }
 
-  openMoreDialog(userArticle: UserArticle) {
-    window.open('http://localhost:4723/article?article=' + userArticle.articleId);
+  openMoreDialog(userArticle: UserArticle, useUrl: boolean) {
+    if (useUrl && userArticle.article.openInNewTab) {
+      window.open(userArticle.article.url);
+    } else {
+      const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
+        width: '1200px',
+        data: {
+          article: userArticle.article,
+          useUrl: useUrl
+        },
+      });
+      dialogRef.componentInstance.editComplete.subscribe((result) => {
+        dialogRef.close();
+        if (result.openNewTab) {
+          if (result.useUrl) {
+            window.open(userArticle.article.url);
+          } else {
+            const url = location.origin + '/article/' + userArticle.articleId;
+            window.open(url);
+          }
+        }
+      });
+    }
   }
-
-  // openMoreDialog(userArticle: UserArticle) {
-  //   if (userArticle.article.openInNewTab) {
-  //     window.open(userArticle.article.url);
-  //   } else {
-  //     const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
-  //       width: '1200px',
-  //       data: {
-  //         article: userArticle.article
-  //       },
-  //     });
-  //     dialogRef.componentInstance.editComplete.subscribe((result) => {
-  //       dialogRef.close();
-  //       if (result.openNewTab) {
-  //         window.open(userArticle.article.url);
-  //       }
-  //     });
-  //   }
-  // }
 
   openShareDialog(userArticle: UserArticle) {
     const dialogRef = this.dialog.open(ArticleShareDialogComponent, {

@@ -53,13 +53,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </mat-form-field>
   </div>
 
-  <span *ngIf="!apiIsSick && exhibit && !selectedSection">
-    <div class="app-header-container background text" autosize>
-      <button mat-stroked-button (click)="gotoWallSection()">Wall</button>
-      <button mat-stroked-button (click)="gotoArchiveSection()">Archive</button>
-    </div>
-  </span>
-
   <span *ngIf="!apiIsSick && exhibit && selectedSection === 'wall'">
     <div>
       <app-wall
@@ -68,7 +61,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </span>
 
-  <span *ngIf="!apiIsSick && exhibit && selectedSection === 'archive'">
+  <span *ngIf="!apiIsSick && exhibit && selectedSection !== 'wall'">
     <app-archive
       [showAdminButton]="isContentDeveloper$ | async"
     ></app-archive>

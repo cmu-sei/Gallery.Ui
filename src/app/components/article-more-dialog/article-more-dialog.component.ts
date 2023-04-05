@@ -4,7 +4,7 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-article-more-dialog',
@@ -15,6 +15,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class ArticleMoreDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
   safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.data.article.url);
+  safeContent: SafeHtml = '';
 
   constructor(
     public dialogService: DialogService,
@@ -23,13 +24,23 @@ export class ArticleMoreDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     dialogRef.disableClose = true;
+    if (this.data.useUrl) {
+      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.data.article.url);
+    } else {
+      const parser = new DOMParser();
+      const document = parser.parseFromString(this.data.article.description, 'text/html');
+      this.safeContent = this.sanitizer.bypassSecurityTrustHtml(document.body.outerHTML);
+    }
   }
 
   /**
    * Closes the dialog
    */
   handleMoreIsComplete(openNewTab: boolean): void {
-    this.editComplete.emit({ openNewTab: openNewTab });
+    this.editComplete.emit({
+      openNewTab: openNewTab,
+      useUrl: this.data.useUrl
+    });
   }
 
 }
