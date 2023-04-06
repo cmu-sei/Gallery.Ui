@@ -16,9 +16,11 @@ export class ArticleShareDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
   shareTeamsControl = new UntypedFormControl();
   subjectFormControl = new UntypedFormControl(this.data.article.sourceName + ': ' + this.data.article.name);
-  messageFormControl = new UntypedFormControl('<p>FYSA</p>\n<p>- - - - - -</p>\n<p>' +
-    this.data.article.sourceType + ' from ' + this.data.article.sourceName + '</p>\n<p>' +
-    this.data.article.name + '\n' + this.data.article.description + '\n\n');
+  messageFormControl = new UntypedFormControl('<p>FYSA</p><p>- - - - - -</p><p>' +
+    this.data.article.sourceType + ' from ' + this.data.article.sourceName + '</p><p>' +
+    this.data.article.name + '</p>&nbsp;<p>' + this.data.article.summary + '</p>&nbsp;<p>' +
+    '<a href="' + location.origin + '/article/' + this.data.article.id
+          + '" rel="noopener noreferrer" target="_blank">Article Text</a></p>');
 
   editorStyle = {
     height: '200px'
