@@ -288,20 +288,26 @@ export class ArchiveComponent implements OnDestroy {
     return this.filteredUserArticleList.filter(a => a.article.move === move);
   }
 
-  openMoreDialog(userArticle: UserArticle) {
-    if (userArticle.article.openInNewTab) {
+  openMoreDialog(userArticle: UserArticle, useUrl: boolean) {
+    if (useUrl && userArticle.article.openInNewTab) {
       window.open(userArticle.article.url);
     } else {
       const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
-        width: '1200px',
+        width: '900px',
         data: {
-          article: userArticle.article
+          article: userArticle.article,
+          useUrl: useUrl
         },
       });
       dialogRef.componentInstance.editComplete.subscribe((result) => {
         dialogRef.close();
         if (result.openNewTab) {
-          window.open(userArticle.article.url);
+          if (result.useUrl) {
+            window.open(userArticle.article.url);
+          } else {
+            const url = location.origin + '/article/' + userArticle.articleId;
+            window.open(url);
+          }
         }
       });
     }
@@ -309,7 +315,7 @@ export class ArchiveComponent implements OnDestroy {
 
   openShareDialog(userArticle: UserArticle) {
     const dialogRef = this.dialog.open(ArticleShareDialogComponent, {
-      width: '800px',
+      width: '900px',
       data: {
         article: userArticle.article,
         teamList: this.teamList,
@@ -387,7 +393,7 @@ export class ArchiveComponent implements OnDestroy {
       article = {... article};
     }
     const dialogRef = this.dialog.open(ArticleEditDialogComponent, {
-      width: '800px',
+      width: '900px',
       data: {
         article: article,
         cardList: this.postCardList,

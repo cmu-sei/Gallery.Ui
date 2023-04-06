@@ -144,7 +144,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
       article = {... article};
     }
     const dialogRef = this.dialog.open(AdminArticleEditDialogComponent, {
-      width: '800px',
+      width: '900px',
       data: {
         article: article,
         cardList: this.cardList

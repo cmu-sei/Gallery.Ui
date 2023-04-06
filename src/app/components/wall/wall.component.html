@@ -36,7 +36,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <div class="center">
             <span style="float: left;"><mat-icon fontIcon="mdi-calendar-clock-outline" alt="Simulated Date/Time"></mat-icon> {{ card.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }} ET</span>
           </div>
-          <h3 *ngIf="card.unreadCount > 0">{{ card.unreadCount }} unread article<span *ngIf="card.unreadCount > 1">s</span></h3>
+          <h3><span *ngIf="card.unreadCount > 0">{{ card.unreadCount }} unread article</span><span *ngIf="card.unreadCount > 1">s</span>&nbsp;</h3>
         </mat-card-content>
         <mat-card-actions>
           <button mat-stroked-button (click)="gotoArchive(card.id)">Details</button>

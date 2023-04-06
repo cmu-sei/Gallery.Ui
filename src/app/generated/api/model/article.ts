@@ -25,6 +25,7 @@ export interface Article {
     modifiedBy?: string;
     id?: string;
     name?: string;
+    summary?: string;
     description?: string;
     collectionId?: string;
     exhibitId?: string;

@@ -31,6 +31,13 @@
   text-align: left;
 }
 
+.summary-text {
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .max-width {
   flex: 1;
   width: 100%;
@@ -198,7 +205,10 @@
 }
 
 .action-buttons {
-    text-align: center;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  text-align: center;
 }
 
 .cards {

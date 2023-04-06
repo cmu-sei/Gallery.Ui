@@ -30,6 +30,7 @@
 .cards {
   width: 100%;
   display: flex;
+  align-content: flex-start;
   flex-wrap: wrap;
   height: calc(100vh - 110px);
   overflow-y: auto;
