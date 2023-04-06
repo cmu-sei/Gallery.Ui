@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
-import { ItemStatus, SourceType, Team } from 'src/app/generated/api';
+import { ItemStatus, SourceType } from 'src/app/generated/api';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -26,6 +26,7 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 const MIN_NAME_LENGTH = 3;
+const MAX_SUMMARY_LENGTH = 300;
 
 @Component({
   selector: 'app-article-edit-dialog',
@@ -41,6 +42,14 @@ export class ArticleEditDialogComponent {
     [
       Validators.required,
       Validators.minLength(MIN_NAME_LENGTH),
+    ]
+  );
+  public summaryFormControl = new UntypedFormControl(
+    this.data.article.summary ,
+    [
+      Validators.required,
+      Validators.minLength(MIN_NAME_LENGTH),
+      Validators.maxLength(MAX_SUMMARY_LENGTH)
     ]
   );
   public descriptionFormControl = new UntypedFormControl(
@@ -95,6 +104,7 @@ export class ArticleEditDialogComponent {
     SourceType.Social
   ];
   readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
+  readonly MAX_SUMMARY_LENGTH = MAX_SUMMARY_LENGTH;
   teamIdList: string[] = [];
 
   constructor(
@@ -115,6 +125,9 @@ export class ArticleEditDialogComponent {
     return !(
       this.articleNameFormControl.hasError('required') ||
       this.articleNameFormControl.hasError('minlength') ||
+      this.summaryFormControl.hasError('required') ||
+      this.summaryFormControl.hasError('minlength') ||
+      this.summaryFormControl.hasError('maxlength') ||
       !this.data.article.cardId
     );
   }
@@ -143,6 +156,9 @@ export class ArticleEditDialogComponent {
       this.data.article.description = this.descriptionFormControl.value
         .toString()
         .trim();
+      this.data.article.summary = this.summaryFormControl.value
+        .toString()
+        .trim();
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,
@@ -159,6 +175,9 @@ export class ArticleEditDialogComponent {
     switch (changedField) {
       case 'name':
         this.data.article.name = this.articleNameFormControl.value ? this.articleNameFormControl.value.toString() : '';
+        break;
+      case 'summary':
+        this.data.article.summary = this.summaryFormControl.value ? this.summaryFormControl.value.toString() : '';
         break;
       case 'description':
         this.data.article.description = this.descriptionFormControl.value ? this.descriptionFormControl.value.toString() : '';

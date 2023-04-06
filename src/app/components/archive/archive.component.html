@@ -103,26 +103,26 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-card-subtitle class="article-subtitle">{{userArticle.article.sourceName}}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content class="article-text" contenteditable="false">
-        <div class="quill-view-html">
-          <quill-view-html [content]="userArticle.article.description" theme="snow"></quill-view-html>
-        </div>
         <div class="center">
           <span style="float: left;"><mat-icon fontIcon="mdi-calendar-clock-outline" alt="Simulated Date/Time"></mat-icon> {{ userArticle.article.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }} ET</span>
+        </div>
+        <div class="summary-text">
+          {{ userArticle.article.summary }}
         </div>
       </mat-card-content>
       <mat-card-actions>
         <div class="action-buttons">
+          <div class="one-cell">
+            <button mat-button class="article-action" title="View" (click)="openMoreDialog(userArticle, false)">
+              <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye" alt="View Media"></mat-icon> View
+            </button>
+          </div>
           <div class="one-cell">
             <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" *ngIf="!userArticle.isRead">
               <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-checkbox-blank-outline" alt="UserArticle Read"></mat-icon> Read
             </button>
             <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" *ngIf="userArticle.isRead">
               <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-checkbox-marked-outline" alt="UserArticle Read"></mat-icon> Read
-            </button>
-          </div>
-          <div class="one-cell">
-            <button mat-button class="article-action" title="View" (click)="openMoreDialog(userArticle, false)">
-              <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye" alt="View Media"></mat-icon> View
             </button>
           </div>
           <div class="one-cell">

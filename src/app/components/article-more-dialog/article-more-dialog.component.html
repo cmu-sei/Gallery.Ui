@@ -25,12 +25,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </button>
 </div>
 
-<div mat-dialog-content class="container" *ngIf="data.useUrl && safeUrl">
+<div mat-dialog-content
+  class="container"
+  *ngIf="data.useUrl && safeUrl"
+>
   <iframe [src]="safeUrl" class="responsive-iframe"></iframe>
 </div>
 
 <div
   mat-dialog-content
-  *ngIf="!data.useUrl && safeContent"
-  [innerHTML]="safeContent">
+  class="paper-width"
+  *ngIf="!data.useUrl && data.article && data.article.description"
+>
+  <quill-view-html [content]="data.article.description" theme="snow"></quill-view-html>
 </div>

@@ -293,7 +293,7 @@ export class ArchiveComponent implements OnDestroy {
       window.open(userArticle.article.url);
     } else {
       const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
-        width: '1200px',
+        width: '900px',
         data: {
           article: userArticle.article,
           useUrl: useUrl
@@ -315,7 +315,7 @@ export class ArchiveComponent implements OnDestroy {
 
   openShareDialog(userArticle: UserArticle) {
     const dialogRef = this.dialog.open(ArticleShareDialogComponent, {
-      width: '800px',
+      width: '900px',
       data: {
         article: userArticle.article,
         teamList: this.teamList,
@@ -393,7 +393,7 @@ export class ArchiveComponent implements OnDestroy {
       article = {... article};
     }
     const dialogRef = this.dialog.open(ArticleEditDialogComponent, {
-      width: '800px',
+      width: '900px',
       data: {
         article: article,
         cardList: this.postCardList,

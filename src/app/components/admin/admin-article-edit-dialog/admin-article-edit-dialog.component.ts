@@ -26,6 +26,7 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 const MIN_NAME_LENGTH = 3;
+const MAX_SUMMARY_LENGTH = 300;
 
 @Component({
   selector: 'app-admin-article-edit-dialog',
@@ -41,6 +42,14 @@ export class AdminArticleEditDialogComponent {
     [
       Validators.required,
       Validators.minLength(MIN_NAME_LENGTH),
+    ]
+  );
+  public summaryFormControl = new UntypedFormControl(
+    this.data.article.summary ,
+    [
+      Validators.required,
+      Validators.minLength(MIN_NAME_LENGTH),
+      Validators.maxLength(MAX_SUMMARY_LENGTH)
     ]
   );
   public descriptionFormControl = new UntypedFormControl(
@@ -95,6 +104,7 @@ export class AdminArticleEditDialogComponent {
     SourceType.Social
   ];
   readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
+  readonly MAX_SUMMARY_LENGTH = MAX_SUMMARY_LENGTH;
 
   constructor(
     public dialogService: DialogService,
@@ -114,6 +124,9 @@ export class AdminArticleEditDialogComponent {
     return !(
       this.articleNameFormControl.hasError('required') ||
       this.articleNameFormControl.hasError('minlength') ||
+      this.summaryFormControl.hasError('required') ||
+      this.summaryFormControl.hasError('minlength') ||
+      this.summaryFormControl.hasError('maxlength') ||
       !this.data.article.cardId
     );
   }
@@ -142,6 +155,9 @@ export class AdminArticleEditDialogComponent {
       this.data.article.description = this.descriptionFormControl.value
         .toString()
         .trim();
+      this.data.article.summary = this.summaryFormControl.value
+        .toString()
+        .trim();
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,
@@ -158,6 +174,9 @@ export class AdminArticleEditDialogComponent {
     switch (changedField) {
       case 'name':
         this.data.article.name = this.articleNameFormControl.value ? this.articleNameFormControl.value.toString() : '';
+        break;
+      case 'summary':
+        this.data.article.summary = this.summaryFormControl.value ? this.summaryFormControl.value.toString() : '';
         break;
       case 'description':
         this.data.article.description = this.descriptionFormControl.value ? this.descriptionFormControl.value.toString() : '';

@@ -18,7 +18,7 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 })
 export class ArticleComponent implements OnDestroy {
   safeContent: SafeHtml = '';
-  articleName = '';
+  article: Article = {} as Article;
   private unsubscribe$ = new Subject();
 
   constructor(
@@ -43,10 +43,7 @@ export class ArticleComponent implements OnDestroy {
     // subscribe to the article
     (this.articleQuery.selectActive() as Observable<Article>).pipe(takeUntil(this.unsubscribe$)).subscribe(article => {
       if (article) {
-        this.articleName = article.name;
-        const parser = new DOMParser();
-        const document = parser.parseFromString(article.description, 'text/html');
-        this.safeContent = this.sanitizer.bypassSecurityTrustHtml(document.body.outerHTML);
+        this.article = article;
       }
     });
 
