@@ -42,6 +42,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   loggedInUserId = '';
   userList: User[] = [];
   collectionList: Collection[] = [];
+  collectionLoadCount = 0;
   allExhibits: Exhibit[] = [];
   exhibitList: Exhibit[] = [];
   teamList: Team[] = [];
@@ -91,6 +92,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     // subscribe to the collections
     (this.collectionQuery.selectAll() as Observable<Collection[]>).pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.collectionList = collections;
+      if ((!collections || collections.length === 0) && this.collectionLoadCount < 5) {
+        this.collectionDataService.loadMine();
+        this.collectionLoadCount++;
+        console.log('Attempt to load collections #' + this.collectionLoadCount);
+      }
       this.setExhibitAndCollection();
     });
     // subscribe to the exhibits
