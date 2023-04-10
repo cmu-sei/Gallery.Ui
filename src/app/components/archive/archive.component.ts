@@ -43,7 +43,7 @@ export class ArchiveComponent implements OnDestroy {
   cardId = 'all';
   exhibitId = '';
   exhibit: Exhibit = {};
-  sourceType = '';
+  sourceTypeList = 'IntelReportingOrdersNewsSocialPhoneEmail';
   isLoading = false;
   userArticleList: UserArticle[] = [];
   cardList: Card[] = [];
@@ -62,7 +62,13 @@ export class ArchiveComponent implements OnDestroy {
   pageSize = 25;
   pageIndex = 0;
   sourceIcon: {[key: string]: string} = {
-    Intel: 'mdi-shield-lock', Reporting: 'mdi-file-chart', News: 'mdi-television-classic', Social: 'mdi-bullhorn'
+    Intel: 'mdi-shield-lock',
+    Reporting: 'mdi-file-chart',
+    News: 'mdi-television-classic',
+    Social: 'mdi-bullhorn',
+    Phone: 'mdi-cellphone',
+    Email: 'mdi-email',
+    Orders: 'mdi-police-badge'
   };
   private unsubscribe$ = new Subject();
 
@@ -220,7 +226,7 @@ export class ArchiveComponent implements OnDestroy {
       this.filteredUserArticleList = this.userArticleList
         .sort((a: UserArticle, b: UserArticle) => this.sortArticles(a.article, b.article, sort.active, sort.direction))
         .filter((a) => ((this.cardId === 'all') || a.article.cardId === this.cardId)
-                        && (!this.sourceType || a.article.sourceType === this.sourceType)
+                        && (this.sourceTypeList.indexOf(a.article.sourceType) > -1)
                         && (!this.filterString ||
                               a.article.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
                               a.article.description.toLowerCase().includes(this.filterString.toLowerCase()) ||
@@ -276,10 +282,10 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   filterBySourceType(sourceType: string) {
-    if (this.sourceType === sourceType) {
-      this.sourceType = '';
+    if (this.sourceTypeList.indexOf(sourceType) > -1) {
+      this.sourceTypeList = this.sourceTypeList.replace(sourceType, '');
     } else {
-      this.sourceType = sourceType;
+      this.sourceTypeList = this.sourceTypeList + sourceType;
     }
     this.sortChanged(this.sort);
   }

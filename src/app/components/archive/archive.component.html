@@ -38,37 +38,68 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </button>
         </div>
         <div class="seven-cell">
-          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Intel')" *ngIf="sourceType !== 'Intel'">
+          <!-- Intel -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Intel')" *ngIf="!(sourceTypeList.indexOf('Intel') > -1)">
             <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px"></mat-icon>
             Intel
           </button>
-          <button mat-flat-button class="tiny" (click)="filterBySourceType('Intel')" *ngIf="sourceType === 'Intel'">
+          <button mat-flat-button class="tiny" (click)="filterBySourceType('Intel')" *ngIf="sourceTypeList.indexOf('Intel') > -1">
             <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px"></mat-icon>
             Intel
           </button>
-          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Reporting')" *ngIf="sourceType !== 'Reporting'">
+          <!-- Reporting -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Reporting')" *ngIf="!(sourceTypeList.indexOf('Reporting') > -1)">
             <mat-icon fontIcon="{{ sourceIcon['Reporting'] }}" class="mdi-18px"></mat-icon>
             Reporting
           </button>
-          <button mat-flat-button class="tiny" (click)="filterBySourceType('Reporting')" *ngIf="sourceType === 'Reporting'">
+          <button mat-flat-button class="tiny" (click)="filterBySourceType('Reporting')" *ngIf="sourceTypeList.indexOf('Reporting') > -1">
             <mat-icon fontIcon="{{ sourceIcon['Reporting'] }}" class="mdi-18px"></mat-icon>
             Reporting
           </button>
-          <button mat-stroked-button class="tiny" (click)="filterBySourceType('News')" *ngIf="sourceType !== 'News'">
+          <!-- Orders -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Orders')" *ngIf="!(sourceTypeList.indexOf('Orders') > -1)">
+            <mat-icon fontIcon="{{ sourceIcon['Orders'] }}" class="mdi-18px"></mat-icon>
+            Orders
+          </button>
+          <button mat-flat-button class="tiny" (click)="filterBySourceType('Orders')" *ngIf="sourceTypeList.indexOf('Orders') > -1">
+            <mat-icon fontIcon="{{ sourceIcon['Orders'] }}" class="mdi-18px"></mat-icon>
+            Orders
+          </button>
+          <!-- News -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('News')" *ngIf="!(sourceTypeList.indexOf('News') > -1)">
             <mat-icon fontIcon="{{ sourceIcon['News'] }}" class="mdi-18px"></mat-icon>
             News
           </button>
-          <button mat-flat-button class="tiny" (click)="filterBySourceType('News')" *ngIf="sourceType === 'News'">
+          <button mat-flat-button class="tiny" (click)="filterBySourceType('News')" *ngIf="sourceTypeList.indexOf('News') > -1">
             <mat-icon fontIcon="{{ sourceIcon['News'] }}" class="mdi-18px"></mat-icon>
             News
           </button>
-          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Social')" *ngIf="sourceType !== 'Social'">
+          <!-- Social -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Social')" *ngIf="!(sourceTypeList.indexOf('Social') > -1)">
             <mat-icon fontIcon="{{ sourceIcon['Social'] }}" class="mdi-18px"></mat-icon>
             Social
           </button>
-          <button mat-flat-button class="tiny" (click)="filterBySourceType('Social')" *ngIf="sourceType === 'Social'">
+          <button mat-flat-button class="tiny" (click)="filterBySourceType('Social')" *ngIf="sourceTypeList.indexOf('Social') > -1">
             <mat-icon fontIcon="{{ sourceIcon['Social'] }}" class="mdi-18px"></mat-icon>
             Social
+          </button>
+          <!-- Phone -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Phone')" *ngIf="!(sourceTypeList.indexOf('Phone') > -1)">
+            <mat-icon fontIcon="{{ sourceIcon['Phone'] }}" class="mdi-18px"></mat-icon>
+            Phone
+          </button>
+          <button mat-flat-button class="tiny" (click)="filterBySourceType('Phone')" *ngIf="sourceTypeList.indexOf('Phone') > -1">
+            <mat-icon fontIcon="{{ sourceIcon['Phone'] }}" class="mdi-18px"></mat-icon>
+            Phone
+          </button>
+          <!-- Email -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Email')" *ngIf="!(sourceTypeList.indexOf('Email') > -1)">
+            <mat-icon fontIcon="{{ sourceIcon['Email'] }}" class="mdi-18px"></mat-icon>
+            Email
+          </button>
+          <button mat-flat-button class="tiny" (click)="filterBySourceType('Email')" *ngIf="sourceTypeList.indexOf('Email') > -1">
+            <mat-icon fontIcon="{{ sourceIcon['Email'] }}" class="mdi-18px"></mat-icon>
+            Email
           </button>
         </div>
         <div class="two-cell last-cell">
