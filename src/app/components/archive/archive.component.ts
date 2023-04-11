@@ -435,6 +435,17 @@ export class ArchiveComponent implements OnDestroy {
       });
   }
 
+  getButtonClass(sourceType: string): string {
+    let classes = '';
+    if (this.sourceTypeList.indexOf(sourceType) > -1) {
+      classes = ' active-sourcetype-button';
+    } else {
+      classes = ' inactive-sourcetype-button';
+    }
+
+    return classes;
+  }
+
   ngOnDestroy() {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();

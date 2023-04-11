@@ -260,6 +260,16 @@ $custom-typography: mat.define-legacy-typography-config(
     color: map-get($foreground, 'text') !important;
   }
 
+  .active-sourcetype-button {
+    background-color: mat.get-color-from-palette($primary);
+    color: white;
+  }
+
+  .inactive-sourcetype-button {
+    background-color: map-get($background, button);
+    color: map-get($foreground, button);
+  }
+
 }
 
 $primary: mat.define-palette($mat-cmu-tartan, A900);
