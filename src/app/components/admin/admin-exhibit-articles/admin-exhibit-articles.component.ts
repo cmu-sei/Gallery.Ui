@@ -43,7 +43,10 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     SourceType.Intel,
     SourceType.News,
     SourceType.Reporting,
-    SourceType.Social
+    SourceType.Social,
+    SourceType.Phone,
+    SourceType.Email,
+    SourceType.Orders
   ];
   private unsubscribe$ = new Subject();
 

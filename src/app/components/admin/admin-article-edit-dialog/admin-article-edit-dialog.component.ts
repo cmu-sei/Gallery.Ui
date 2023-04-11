@@ -101,7 +101,10 @@ export class AdminArticleEditDialogComponent {
     SourceType.Intel,
     SourceType.News,
     SourceType.Reporting,
-    SourceType.Social
+    SourceType.Social,
+    SourceType.Phone,
+    SourceType.Email,
+    SourceType.Orders
   ];
   readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
   readonly MAX_SUMMARY_LENGTH = MAX_SUMMARY_LENGTH;

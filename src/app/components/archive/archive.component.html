@@ -37,38 +37,41 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-icon class="add-button mdi-18px" fontIcon="mdi-plus-circle"></mat-icon> Add Article
           </button>
         </div>
-        <div class="seven-cell">
-          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Intel')" *ngIf="sourceType !== 'Intel'">
+        <div class="twelve-cell">
+          <!-- Intel -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Intel')" [ngClass]="getButtonClass('Intel')">
             <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px"></mat-icon>
             Intel
           </button>
-          <button mat-flat-button class="tiny" (click)="filterBySourceType('Intel')" *ngIf="sourceType === 'Intel'">
-            <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px"></mat-icon>
-            Intel
-          </button>
-          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Reporting')" *ngIf="sourceType !== 'Reporting'">
+          <!-- Reporting -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Reporting')" [ngClass]="getButtonClass('Reporting')">
             <mat-icon fontIcon="{{ sourceIcon['Reporting'] }}" class="mdi-18px"></mat-icon>
             Reporting
           </button>
-          <button mat-flat-button class="tiny" (click)="filterBySourceType('Reporting')" *ngIf="sourceType === 'Reporting'">
-            <mat-icon fontIcon="{{ sourceIcon['Reporting'] }}" class="mdi-18px"></mat-icon>
-            Reporting
+          <!-- Orders -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Orders')" [ngClass]="getButtonClass('Orders')">
+            <mat-icon fontIcon="{{ sourceIcon['Orders'] }}" class="mdi-18px"></mat-icon>
+            Orders
           </button>
-          <button mat-stroked-button class="tiny" (click)="filterBySourceType('News')" *ngIf="sourceType !== 'News'">
+          <!-- News -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('News')" [ngClass]="getButtonClass('News')">
             <mat-icon fontIcon="{{ sourceIcon['News'] }}" class="mdi-18px"></mat-icon>
             News
           </button>
-          <button mat-flat-button class="tiny" (click)="filterBySourceType('News')" *ngIf="sourceType === 'News'">
-            <mat-icon fontIcon="{{ sourceIcon['News'] }}" class="mdi-18px"></mat-icon>
-            News
-          </button>
-          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Social')" *ngIf="sourceType !== 'Social'">
+          <!-- Social -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Social')" [ngClass]="getButtonClass('Social')">
             <mat-icon fontIcon="{{ sourceIcon['Social'] }}" class="mdi-18px"></mat-icon>
             Social
           </button>
-          <button mat-flat-button class="tiny" (click)="filterBySourceType('Social')" *ngIf="sourceType === 'Social'">
-            <mat-icon fontIcon="{{ sourceIcon['Social'] }}" class="mdi-18px"></mat-icon>
-            Social
+          <!-- Phone -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Phone')" [ngClass]="getButtonClass('Phone')">
+            <mat-icon fontIcon="{{ sourceIcon['Phone'] }}" class="mdi-18px"></mat-icon>
+            Phone
+          </button>
+          <!-- Email -->
+          <button mat-stroked-button class="tiny" (click)="filterBySourceType('Email')" [ngClass]="getButtonClass('Email')">
+            <mat-icon fontIcon="{{ sourceIcon['Email'] }}" class="mdi-18px"></mat-icon>
+            Email
           </button>
         </div>
         <div class="two-cell last-cell">
