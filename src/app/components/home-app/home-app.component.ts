@@ -223,6 +223,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   selectCollection(collectionId: string) {
+    this.exhibitDataService.loadByCollection(collectionId);
     this.collectionId = collectionId;
     this.exhibitList = this.allExhibits.filter(e => e.collectionId === collectionId);
     this.exhibitId = '';
