@@ -60,12 +60,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     *ngFor="let collection of paginateCollections(filteredCollectionList, pageIndex, pageSize)"
     disabled
   >
-    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(collection); $event.stopPropagation()">
+    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(collection)">
       <div class="mat-cell three-cell">
         <div class="panel-div">
           <button
             mat-icon-button
-            (click)="addOrEditCollection(collection); $event.stopPropagation()"
+            (click)="addOrEditCollection(collection)"
             style="outline: none;"
             title="Edit {{ collection.name }}"
           >
@@ -73,7 +73,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </button>
           <button
             mat-icon-button
-            (click)="deleteCollection(collection); $event.stopPropagation()"
+            (click)="deleteCollection(collection)"
             style="outline: none;"
             title="Delete {{ collection.name }}"
           >

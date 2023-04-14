@@ -144,7 +144,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <button
               mat-button
               class="article-action"
-              (click)="addOrEditArticle(userArticle.article); $event.stopPropagation()"
+              (click)="addOrEditArticle(userArticle.article)"
               style="outline: none;"
               title="Edit {{ userArticle.article.name }}"
               *ngIf="userArticle.article.exhibitId && userArticle.article.sourceName === myTeam.shortName"
@@ -156,7 +156,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <button
               mat-button
               class="article-action"
-              (click)="deleteArticle(userArticle.article); $event.stopPropagation()"
+              (click)="deleteArticle(userArticle.article)"
               style="outline: none;"
               title="Delete {{ userArticle.article.name }}"
               *ngIf="userArticle.article.exhibitId && userArticle.article.sourceName === myTeam.shortName"
