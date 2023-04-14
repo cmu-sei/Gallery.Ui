@@ -59,18 +59,18 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       *ngFor="let teamCard of filteredTeamCardList"
       disabled
     >
-      <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="$event.stopPropagation()">
+      <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading">
         <div class="mat-cell two-cell button-div">
           <button
             mat-icon-button
-            (click)="addOrEditTeamCard(teamCard); $event.stopPropagation()"
+            (click)="addOrEditTeamCard(teamCard)"
             title="Edit TeamCard"
           >
             <mat-icon class="mdi-24px" fontIcon="mdi-square-edit-outline"></mat-icon>
           </button>
           <button
             mat-icon-button
-            (click)="deleteTeamCard(teamCard); $event.stopPropagation()"
+            (click)="deleteTeamCard(teamCard)"
             title="Delete TeamCard"
           >
             <mat-icon class="mdi-24px" fontIcon="mdi-trash-can"></mat-icon>

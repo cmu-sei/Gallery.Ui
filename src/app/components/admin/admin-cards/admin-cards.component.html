@@ -63,11 +63,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </section>
 
   <mat-expansion-panel *ngFor="let card of paginateCards(filteredCardList, pageIndex, pageSize)" disabled >
-    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(card); $event.stopPropagation()">
+    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(card)">
       <span class="mat-cell three-cell">
         <button
           mat-icon-button
-          (click)="addOrEditCard(card); $event.stopPropagation()"
+          (click)="addOrEditCard(card)"
           style="outline: none;"
           title="Edit {{ card.name }}"
         >
@@ -75,7 +75,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </button>
         <button
           mat-icon-button
-          (click)="deleteCard(card); $event.stopPropagation()"
+          (click)="deleteCard(card)"
           style="outline: none;"
           title="Delete {{ card.name }}"
         >
