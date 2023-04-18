@@ -17,7 +17,6 @@ import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.servi
 import { TeamUserDataService } from '../data/user/team-user-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -38,8 +37,7 @@ export class SignalRService implements OnDestroy {
     private teamCardDataService: TeamCardDataService,
     private teamUserDataService: TeamUserDataService,
     private userDataService: UserDataService,
-    private userArticleDataService: UserArticleDataService,
-    private router: Router
+    private userArticleDataService: UserArticleDataService
   ) {
     this.authService.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.reconnect();
@@ -57,7 +55,7 @@ export class SignalRService implements OnDestroy {
         `${this.settingsService.settings.ApiUrl}/hubs/main`, {
           accessTokenFactory: () => this.authService.getAuthorizationToken(),
         })
-      .withAutomaticReconnect(new RetryPolicy(120, 0, 5, this.router))
+      .withAutomaticReconnect(new RetryPolicy(120, 0, 5))
       .build();
 
     this.hubConnection.onreconnected(() => {
@@ -245,8 +243,7 @@ class RetryPolicy {
   constructor(
     private maxSeconds: number,
     private minJitterSeconds: number,
-    private maxJitterSeconds: number,
-    private router: Router
+    private maxJitterSeconds: number
   ) {}
 
   nextRetryDelayInMilliseconds(
