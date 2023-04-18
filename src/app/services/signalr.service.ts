@@ -55,7 +55,7 @@ export class SignalRService implements OnDestroy {
         `${this.settingsService.settings.ApiUrl}/hubs/main`, {
           accessTokenFactory: () => this.authService.getAuthorizationToken(),
         })
-      .withAutomaticReconnect(new RetryPolicy(60, 0, 5))
+      .withAutomaticReconnect(new RetryPolicy(120, 0, 5))
       .build();
 
     this.hubConnection.onreconnected(() => {
@@ -251,8 +251,8 @@ class RetryPolicy {
   ): number | null {
     let nextRetrySeconds = Math.pow(2, retryContext.previousRetryCount + 1);
 
-    if (nextRetrySeconds > this.maxSeconds) {
-      nextRetrySeconds = this.maxSeconds;
+    if (retryContext.elapsedMilliseconds / 1000 > this.maxSeconds) {
+      location.reload();
     }
 
     nextRetrySeconds +=
