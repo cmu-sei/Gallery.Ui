@@ -43,7 +43,7 @@ export class ArchiveComponent implements OnDestroy {
   cardId = 'all';
   exhibitId = '';
   exhibit: Exhibit = {};
-  sourceTypeList = 'IntelReportingOrdersNewsSocialPhoneEmail';
+  sourceTypeList = '';
   isLoading = false;
   userArticleList: UserArticle[] = [];
   cardList: Card[] = [];
@@ -226,7 +226,7 @@ export class ArchiveComponent implements OnDestroy {
       this.filteredUserArticleList = this.userArticleList
         .sort((a: UserArticle, b: UserArticle) => this.sortArticles(a.article, b.article, sort.active, sort.direction))
         .filter((a) => ((this.cardId === 'all') || a.article.cardId === this.cardId)
-                        && (this.sourceTypeList.indexOf(a.article.sourceType) > -1)
+                        && (!this.sourceTypeList || this.sourceTypeList.indexOf(a.article.sourceType) > -1)
                         && (!this.filterString ||
                               a.article.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
                               a.article.description.toLowerCase().includes(this.filterString.toLowerCase()) ||
@@ -438,9 +438,9 @@ export class ArchiveComponent implements OnDestroy {
   getButtonClass(sourceType: string): string {
     let classes = '';
     if (this.sourceTypeList.indexOf(sourceType) > -1) {
-      classes = ' active-sourcetype-button';
+      classes = 'active-sourcetype-button';
     } else {
-      classes = ' inactive-sourcetype-button';
+      classes = 'inactive-sourcetype-button';
     }
 
     return classes;
