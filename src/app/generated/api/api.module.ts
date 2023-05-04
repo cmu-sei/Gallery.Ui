@@ -12,7 +12,7 @@ import { ArticleService } from './api/article.service';
 import { CardService } from './api/card.service';
 import { CollectionService } from './api/collection.service';
 import { ExhibitService } from './api/exhibit.service';
-import { HealthService } from './api/health.service';
+import { HealthCheckService } from './api/healthCheck.service';
 import { PermissionService } from './api/permission.service';
 import { TeamService } from './api/team.service';
 import { TeamArticleService } from './api/teamArticle.service';
@@ -31,7 +31,7 @@ import { UserPermissionService } from './api/userPermission.service';
     CardService,
     CollectionService,
     ExhibitService,
-    HealthService,
+    HealthCheckService,
     PermissionService,
     TeamService,
     TeamArticleService,

@@ -10,8 +10,7 @@ import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { HealthService } from 'src/app/generated/api';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Section } from 'src/app/utilities/enumerations';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 
@@ -23,8 +22,6 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
   isLoading = false;
-  apiIsSick = false;
-  apiMessage = 'The GALLERY API web service is not responding.';
   cardList: Card[] = [];
   shownCardList: Card[] = [];
   teamCardList: TeamCard[] = [];
@@ -36,12 +33,9 @@ export class WallComponent implements OnDestroy {
     private cardQuery: CardQuery,
     private teamCardQuery: TeamCardQuery,
     private userArticleQuery: UserArticleQuery,
-    private healthService: HealthService,
-    private activatedRoute: ActivatedRoute,
     private router: Router,
     private settingsService: ComnSettingsService
   ) {
-    this.healthCheck();
     this._document.getElementById('appFavicon').setAttribute('href', '/assets/img/wall-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Wall';
     this.cardQuery.selectAll()
@@ -62,17 +56,6 @@ export class WallComponent implements OnDestroy {
         this.userArticleList = userArticles;
         this.setShownCardList();
       });
-  }
-
-  healthCheck() {
-    this.healthService.healthGetReadiness().pipe(take(1)).subscribe(healthReport => {
-      this.apiIsSick = false;
-      this.apiMessage = healthReport.status;
-    },
-    error => {
-      this.apiIsSick = true;
-      this.apiMessage = error.message;
-    });
   }
 
   gotoAdmin() {
