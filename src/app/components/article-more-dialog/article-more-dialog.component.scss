@@ -28,8 +28,12 @@
   align-self: center;
 }
 
-.paper-width {
-  margin: 0px;
-  padding: 0px;
-  max-width: 700px;
+.page {
+  width: 21cm;
+  padding: 2cm;
+  margin: 1cm auto;
+  border: 1px #D3D3D3 solid;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }

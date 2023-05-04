@@ -299,7 +299,7 @@ export class ArchiveComponent implements OnDestroy {
       window.open(userArticle.article.url);
     } else {
       const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
-        width: '900px',
+        width: '1000px',
         data: {
           article: userArticle.article,
           useUrl: useUrl

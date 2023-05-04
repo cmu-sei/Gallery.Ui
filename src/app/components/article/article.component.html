@@ -2,7 +2,8 @@
 Copyright 2023 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
-
-<div class="paper-width" *ngIf="article && article.description">
-  <quill-view-html [content]="article.description" theme="snow"></quill-view-html>
+<div class="article-container background">
+  <div class="page" *ngIf="article && article.description">
+    <quill-view-html [content]="article.description" theme="snow"></quill-view-html>
+  </div>
 </div>
