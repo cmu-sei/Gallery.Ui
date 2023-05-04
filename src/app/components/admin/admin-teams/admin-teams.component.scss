@@ -86,6 +86,15 @@
   margin-top: 12px;
 }
 
+.search-input {
+  width: calc(100% - 60px);
+}
+
+.far-right-cell {
+  float: right;
+  min-width: 200px;
+}
+
 .five-cell {
   flex: 5;
 }

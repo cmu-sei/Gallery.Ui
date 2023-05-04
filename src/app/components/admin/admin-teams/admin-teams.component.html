@@ -23,24 +23,25 @@ project root for license information or contact permission@sei.cmu.edu for full 
     <div class="mat-header-cell one-cell" mat-sort-header="shortName">
       Short Name
     </div>
-    <div class="mat-header-cell two-cell" mat-sort-header="name">
-      Name
+    <div class="mat-header-cell two-cell" mat-sort-header="email">
+      Email
     </div>
-    <div class="mat-header-cell three-cell">
-      <div class="panel-div">
-        <mat-form-field style="width: 60%; margin-left: 10px;">
+    <div class="mat-header-cell one-cell" mat-sort-header="name">
+      Full Name
+    </div>
+    <div class="mat-header-cell four-cell">
+      <div class="far-right-cell">
+        <mat-form-field class="search-input">
           <input matInput [formControl]="filterControl" placeholder="Search" />
         </mat-form-field>
-        <div style="width: 30px;">
-          <button
-            mat-icon-button
-            (click)="applyFilter('')"
-            style="outline: none;"
-            title="Clear Search"
-          >
-            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
-          </button>
-        </div>
+        <button
+          mat-icon-button
+          (click)="applyFilter('')"
+          style="outline: none;"
+          title="Clear Search"
+        >
+          <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+        </button>
       </div>
     </div>
   </section>
@@ -73,6 +74,11 @@ project root for license information or contact permission@sei.cmu.edu for full 
       <div class="mat-cell one-cell center-self">
         <div class="panel-div">
           {{ team.shortName }}
+        </div>
+      </div>
+      <div class="mat-cell two-cell center-self">
+        <div class="panel-div">
+          {{ team.email }}
         </div>
       </div>
       <div class="mat-cell five-cell center-self">
