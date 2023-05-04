@@ -152,6 +152,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </div>
         </mat-list-item>
       </mat-nav-list>
+      <div class="app-versions" style="margin-bottom: 58px;" *ngIf="!hideTopbar">
+        Versions: UI {{ uiVersion }},  API {{ apiVersion }}
+      </div>
+      <div class="app-versions" *ngIf="hideTopbar">
+        Versions: UI {{ uiVersion }},  API {{ apiVersion }}
+      </div>
       <img
         *ngIf="!hideTopbar"
         class="cmu-logo"
