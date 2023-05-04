@@ -47,6 +47,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Email" [formControl]="emailFormControl"
+          (blur)="saveTeam('email')" value="{{data.team.email}}">
+      </mat-form-field>
+    </div>
+  </div>
+
   <div class="cssLayoutRowStartCenter bottom-button">
     <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>

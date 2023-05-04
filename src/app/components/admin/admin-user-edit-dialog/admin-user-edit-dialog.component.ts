@@ -111,7 +111,7 @@ export class AdminUserEditDialogComponent {
         this.data.user.name = this.userNameFormControl.value.toString();
         break;
       case 'email':
-        this.data.user.email = this.emailFormControl.value.toString();
+        this.data.user.email = this.emailFormControl.value ? this.emailFormControl.value.toString() : '';
         break;
       case 'id':
         this.data.user.id = this.idFormControl.value.toString();

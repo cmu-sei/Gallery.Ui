@@ -49,9 +49,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field class="full-width">
         <input matInput placeholder="Email" [formControl]="emailFormControl"
           (blur)="saveUser('email')" value="{{data.user.email}}">
-        <mat-error *ngIf="emailFormControl.hasError('required')">
-          Email is <strong>required</strong>
-        </mat-error>
       </mat-form-field>
     </div>
   </div>

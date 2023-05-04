@@ -48,6 +48,10 @@ export class AdminTeamEditDialogComponent {
       Validators.minLength(MIN_NAME_LENGTH),
     ]
   );
+  public emailFormControl = new UntypedFormControl(
+    this.data.team.email ,
+    []
+  );
 
   readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
 
@@ -100,6 +104,9 @@ export class AdminTeamEditDialogComponent {
         break;
       case 'shortName':
         this.data.team.shortName = this.teamShortNameFormControl.value.toString();
+        break;
+      case 'email':
+        this.data.team.email = this.emailFormControl.value.toString();
         break;
       default:
         break;

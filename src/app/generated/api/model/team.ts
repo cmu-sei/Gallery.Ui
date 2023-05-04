@@ -25,6 +25,7 @@ export interface Team {
     id?: string;
     name?: string;
     shortName?: string;
+    email?: string;
     exhibitId?: string;
     users?: Array<User>;
 }
