@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 export const environment = {
-  production: true
+  production: true,
+  VERSION: require('../../package.json').version,
 };
 

@@ -19,7 +19,6 @@ import {
   take,
   takeUntil
 } from 'rxjs';
-import { HealthService } from 'src/app/generated/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
 import { UntypedFormControl } from '@angular/forms';
@@ -89,12 +88,10 @@ export class ArchiveComponent implements OnDestroy {
     private teamQuery: TeamQuery,
     private teamCardQuery: TeamCardQuery,
     private userDataService: UserDataService,
-    private healthService: HealthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private settingsService: ComnSettingsService
   ) {
-    this.healthCheck();
     this._document.getElementById('appFavicon').setAttribute('href', '/assets/img/archive-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
     this.userArticleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(userArticles => {
@@ -179,17 +176,6 @@ export class ArchiveComponent implements OnDestroy {
           this.setMyTeam();
         }
       });
-  }
-
-  healthCheck() {
-    this.healthService.healthGetReadiness().pipe(take(1)).subscribe(healthReport => {
-      this.apiIsSick = false;
-      this.apiMessage = healthReport.status;
-    },
-    error => {
-      this.apiIsSick = true;
-      this.apiMessage = error.message;
-    });
   }
 
   setMyTeam() {

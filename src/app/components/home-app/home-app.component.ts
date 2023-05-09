@@ -9,7 +9,7 @@ import { EntityActions } from '@datorama/akita';
 import { ComnSettingsService, Theme, ComnAuthQuery } from '@cmusei/crucible-common';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { TopbarView } from './../shared/top-bar/topbar.models';
-import { HealthService } from 'src/app/generated/api';
+import { HealthCheckService } from 'src/app/generated/api';
 import { SignalRService } from 'src/app/services/signalr.service';
 import { Collection, Exhibit, Team, User } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
@@ -64,7 +64,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     private settingsService: ComnSettingsService,
     private authQuery: ComnAuthQuery,
     private signalRService: SignalRService,
-    private healthService: HealthService,
+    private healthCheckService: HealthCheckService,
     private userArticleDataService: UserArticleDataService,
     private cardDataService: CardDataService,
     private exhibitDataService: ExhibitDataService,
@@ -196,7 +196,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   healthCheck() {
-    this.healthService.healthGetReadiness().pipe(take(1)).subscribe(healthReport => {
+    this.healthCheckService.healthGetReadiness().pipe(take(1)).subscribe(healthReport => {
       this.apiIsSick = false;
     },
     error => {

@@ -7,7 +7,7 @@ import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator
 import { Sort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, take, takeUntil } from 'rxjs/operators';
 import { PermissionService } from 'src/app/generated/api/api/api';
 import {
   Permission,
@@ -23,6 +23,8 @@ import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { SignalRService } from 'src/app/services/signalr.service';
 import { Section } from 'src/app/utilities/enumerations';
+import { environment } from 'src/environments/environment';
+import { HealthCheckService } from 'src/app/generated/api/api/api';
 
 @Component({
   selector: 'app-admin-container',
@@ -50,6 +52,8 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   topbarImage = this.settingsService.settings.AppTopBarImage;
   theme$: Observable<Theme>;
   section = Section;
+  uiVersion = environment.VERSION;
+  apiVersion = 'ERROR!';
 
   constructor(
     @Inject(DOCUMENT) private _document: HTMLDocument,
@@ -62,6 +66,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     private userDataService: UserDataService,
     activatedRoute: ActivatedRoute,
     private permissionService: PermissionService,
+    private healthCheckService: HealthCheckService,
     private settingsService: ComnSettingsService,
     private authQuery: ComnAuthQuery
   ) {
@@ -115,6 +120,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       ? this.settingsService.settings.AppTopBarHexTextColor
       : this.topbarTextColor;
     this.titleText = this.settingsService.settings.AppTopBarText;
+    this.getApiVersion();
   }
 
   ngOnInit() {
@@ -201,6 +207,20 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     } catch (e) {
       return true;
     }
+  }
+
+  getApiVersion() {
+    this.healthCheckService
+      .getVersion()
+      .pipe(take(1))
+      .subscribe(
+        (message) => {
+          this.apiVersion = message;
+        },
+        (error) => {
+          this.apiVersion = 'ERROR!';
+        }
+      );
   }
 
   ngOnDestroy() {
