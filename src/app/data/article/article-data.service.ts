@@ -120,29 +120,6 @@ export class ArticleDataService {
     }
   }
 
-  load() {
-    this.articleStore.setLoading(true);
-    this.articleService
-      .getArticles()
-      .pipe(
-        tap(() => {
-          this.articleStore.setLoading(false);
-        }),
-        take(1)
-      )
-      .subscribe(
-        (articles) => {
-          articles.forEach(a => {
-            this.setAsDates(a);
-          });
-          this.articleStore.set(articles);
-        },
-        (error) => {
-          this.articleStore.set([]);
-        }
-      );
-  }
-
   loadByCard(cardId: string) {
     this.articleStore.setLoading(true);
     this.articleService
