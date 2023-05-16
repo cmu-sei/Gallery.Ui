@@ -1,8 +1,3 @@
-/*
-Copyright 2022 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
-*/
-
 export * from './article.service';
 import { ArticleService } from './article.service';
 export * from './card.service';
@@ -11,6 +6,8 @@ export * from './collection.service';
 import { CollectionService } from './collection.service';
 export * from './exhibit.service';
 import { ExhibitService } from './exhibit.service';
+export * from './exhibitTeam.service';
+import { ExhibitTeamService } from './exhibitTeam.service';
 export * from './healthCheck.service';
 import { HealthCheckService } from './healthCheck.service';
 export * from './permission.service';
@@ -29,4 +26,6 @@ export * from './userArticle.service';
 import { UserArticleService } from './userArticle.service';
 export * from './userPermission.service';
 import { UserPermissionService } from './userPermission.service';
-export const APIS = [ArticleService, CardService, CollectionService, ExhibitService, HealthCheckService, PermissionService, TeamService, TeamArticleService, TeamCardService, TeamUserService, UserService, UserArticleService, UserPermissionService];
+export * from './xApi.service';
+import { XApiService } from './xApi.service';
+export const APIS = [ArticleService, CardService, CollectionService, ExhibitService, ExhibitTeamService, HealthCheckService, PermissionService, TeamService, TeamArticleService, TeamCardService, TeamUserService, UserService, UserArticleService, UserPermissionService, XApiService];
