@@ -360,7 +360,7 @@ export class TeamCardService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<Array<TeamCard>>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/teamcards/mine`,
+        return this.httpClient.get<Array<TeamCard>>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/myteamcards`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
