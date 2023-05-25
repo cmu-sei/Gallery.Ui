@@ -202,6 +202,13 @@ export class ArchiveComponent implements OnDestroy {
     return itemStatus.toString();
   }
 
+  changeCard(cardId: string) {
+    this.router.navigate([], {
+      queryParams: { card: cardId },
+      queryParamsHandling: 'merge'
+    });
+  }
+
   applyFilter(filterValue: string) {
     this.filterControl.setValue(filterValue);
   }

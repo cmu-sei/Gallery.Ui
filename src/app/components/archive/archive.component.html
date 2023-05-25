@@ -20,7 +20,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
         <div class="seven-cell" style="min-width: 315px;">
           <mat-form-field>
-            <mat-select [(ngModel)]="cardId" (selectionChange)="sortChanged(sort)">
+            <mat-select [(ngModel)]="cardId" (selectionChange)="changeCard($event.value)">
               <mat-option [value]="'all'">All Cards</mat-option>
               <mat-option *ngFor="let card of showCardList" [value]="card.id">
                 {{card.name}}
