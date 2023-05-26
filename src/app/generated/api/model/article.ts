@@ -1,6 +1,7 @@
 /*
-Copyright 2022 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+ Copyright 2023 Carnegie Mellon University. All Rights Reserved.
+ Released under a MIT (SEI)-style license. See LICENSE.md in the
+ project root for license information.
 */
 
 /**
@@ -16,26 +17,28 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
  */
 import { ItemStatus } from './itemStatus';
 import { SourceType } from './sourceType';
+import { Team } from './team';
 
 
 export interface Article {
-    dateCreated?: Date;
-    dateModified?: Date;
-    createdBy?: string;
-    modifiedBy?: string;
-    id?: string;
-    name?: string;
-    summary?: string;
-    description?: string;
-    collectionId?: string;
-    exhibitId?: string;
-    cardId?: string;
-    move?: number;
-    inject?: number;
-    status?: ItemStatus;
-    sourceType?: SourceType;
-    sourceName?: string;
-    url?: string;
-    datePosted?: Date;
-    openInNewTab?: boolean;
+  dateCreated?: Date;
+  dateModified?: Date;
+  createdBy?: string;
+  modifiedBy?: string;
+  id?: string;
+  name?: string;
+  summary?: string;
+  description?: string;
+  collectionId?: string;
+  exhibitId?: string;
+  cardId?: string;
+  move?: number;
+  inject?: number;
+  status?: ItemStatus;
+  sourceType?: SourceType;
+  sourceName?: string;
+  url?: string;
+  datePosted?: Date;
+  openInNewTab?: boolean;
+  teams?: Array<Team>;
 }

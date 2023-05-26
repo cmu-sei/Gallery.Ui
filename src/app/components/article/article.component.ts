@@ -4,12 +4,13 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { Article } from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ComnSettingsService } from '@cmusei/crucible-common';
+import { XApiService } from 'src/app/generated/api';
 
 @Component({
   selector: 'app-article-app',
@@ -27,6 +28,7 @@ export class ArticleComponent implements OnDestroy {
     private articleQuery: ArticleQuery,
     private sanitizer: DomSanitizer,
     private settingsService: ComnSettingsService,
+    private xApiService: XApiService,
     @Inject(DOCUMENT) private _document: HTMLDocument
   ) {
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Article';
@@ -36,6 +38,7 @@ export class ArticleComponent implements OnDestroy {
       if (articleId) {
         this.articleDataService.loadById(articleId);
         this.articleDataService.setActive(articleId);
+        this.xApiService.viewedArticle(articleId).pipe(take(1)).subscribe();
       } else {
         this.articleDataService.setActive('');
       }
@@ -46,9 +49,8 @@ export class ArticleComponent implements OnDestroy {
         this.article = article;
       }
     });
-
-
   }
+
 
   ngOnDestroy() {
     this.unsubscribe$.next(null);

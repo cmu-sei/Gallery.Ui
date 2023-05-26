@@ -1,6 +1,7 @@
 /*
- Copyright 2022 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+ Copyright 2023 Carnegie Mellon University. All Rights Reserved.
+ Released under a MIT (SEI)-style license. See LICENSE.md in the
+ project root for license information.
 */
 
 export * from './article';
@@ -16,6 +17,7 @@ export * from './eventAttributes';
 export * from './eventInfo';
 export * from './exception';
 export * from './exhibit';
+export * from './exhibitTeam';
 export * from './fieldAttributes';
 export * from './fieldInfo';
 export * from './genericParameterAttributes';

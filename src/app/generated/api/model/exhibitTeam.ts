@@ -15,14 +15,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Exhibit } from './exhibit';
+import { Team } from './team';
 
 
-export type CallingConventions = 'Standard' | 'VarArgs' | 'Any' | 'HasThis' | 'ExplicitThis';
-
-export const CallingConventions = {
-  Standard: 'Standard' as CallingConventions,
-  VarArgs: 'VarArgs' as CallingConventions,
-  Any: 'Any' as CallingConventions,
-  HasThis: 'HasThis' as CallingConventions,
-  ExplicitThis: 'ExplicitThis' as CallingConventions
-};
+export interface ExhibitTeam {
+  dateCreated?: Date;
+  dateModified?: Date;
+  createdBy?: string;
+  modifiedBy?: string;
+  id?: string;
+  teamId?: string;
+  team?: Team;
+  exhibitId?: string;
+  exhibit?: Exhibit;
+}

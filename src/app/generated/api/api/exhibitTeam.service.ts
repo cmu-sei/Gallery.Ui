@@ -24,7 +24,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
-import { Collection } from '../model/collection';
+import { ExhibitTeam } from '../model/exhibitTeam';
 import { ProblemDetails } from '../model/problemDetails';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -34,7 +34,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class CollectionService {
+export class ExhibitTeamService {
 
   protected basePath = 'http://localhost';
   public defaultHeaders = new HttpHeaders();
@@ -67,16 +67,16 @@ export class CollectionService {
 
 
   /**
-     * Creates a new Collection
-     * Creates a new Collection with the attributes specified  &lt;para /&gt;  Accessible only to a ContentDeveloper or an Administrator
-     * @param Collection The data used to create the Collection
+     * Creates a new ExhibitTeam
+     * Creates a new ExhibitTeam with the attributes specified  &lt;para /&gt;  Accessible only to a SuperTeam
+     * @param ExhibitTeam The data to create the ExhibitTeam with
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public createCollection(Collection?: Collection, observe?: 'body', reportProgress?: boolean): Observable<Collection>;
-  public createCollection(Collection?: Collection, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Collection>>;
-  public createCollection(Collection?: Collection, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Collection>>;
-  public createCollection(Collection?: Collection, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+  public createExhibitTeam(ExhibitTeam?: ExhibitTeam, observe?: 'body', reportProgress?: boolean): Observable<ExhibitTeam>;
+  public createExhibitTeam(ExhibitTeam?: ExhibitTeam, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ExhibitTeam>>;
+  public createExhibitTeam(ExhibitTeam?: ExhibitTeam, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ExhibitTeam>>;
+  public createExhibitTeam(ExhibitTeam?: ExhibitTeam, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
     let headers = this.defaultHeaders;
 
@@ -110,8 +110,8 @@ export class CollectionService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.post<Collection>(`${this.configuration.basePath}/api/collections`,
-      Collection,
+    return this.httpClient.post<ExhibitTeam>(`${this.configuration.basePath}/api/exhibitteams`,
+      ExhibitTeam,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
@@ -122,18 +122,18 @@ export class CollectionService {
   }
 
   /**
-     * Deletes a  Collection
-     * Deletes a  Collection with the specified id  &lt;para /&gt;  Accessible only to a ContentDeveloper or an Administrator
-     * @param id The id of the Collection to delete
+     * Deletes a ExhibitTeam
+     * Deletes a ExhibitTeam with the specified id  &lt;para /&gt;  Accessible only to a SuperTeam
+     * @param id The id of the ExhibitTeam to delete
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public deleteCollection(id: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-  public deleteCollection(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-  public deleteCollection(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-  public deleteCollection(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+  public deleteExhibitTeam(id: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public deleteExhibitTeam(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public deleteExhibitTeam(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public deleteExhibitTeam(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
     if (id === null || id === undefined) {
-      throw new Error('Required parameter id was null or undefined when calling deleteCollection.');
+      throw new Error('Required parameter id was null or undefined when calling deleteExhibitTeam.');
     }
 
     let headers = this.defaultHeaders;
@@ -159,7 +159,7 @@ export class CollectionService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.delete<any>(`${this.configuration.basePath}/api/collections/${encodeURIComponent(String(id))}`,
+    return this.httpClient.delete<any>(`${this.configuration.basePath}/api/exhibitteams/${encodeURIComponent(String(id))}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
@@ -170,18 +170,120 @@ export class CollectionService {
   }
 
   /**
-     * Gets a specific Collection by id
-     * Returns the Collection with the id specified
-     * @param id The id of the Collection
+     * Deletes a ExhibitTeam by team ID and exhibit ID
+     * Deletes a ExhibitTeam with the specified team ID and exhibit ID  &lt;para /&gt;  Accessible only to a SuperTeam
+     * @param exhibitId ID of a exhibit.
+     * @param teamId ID of a team.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public getCollection(id: string, observe?: 'body', reportProgress?: boolean): Observable<Collection>;
-  public getCollection(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Collection>>;
-  public getCollection(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Collection>>;
-  public getCollection(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+  public deleteExhibitTeamByIds(exhibitId: string, teamId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public deleteExhibitTeamByIds(exhibitId: string, teamId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public deleteExhibitTeamByIds(exhibitId: string, teamId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public deleteExhibitTeamByIds(exhibitId: string, teamId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling deleteExhibitTeamByIds.');
+    }
+    if (teamId === null || teamId === undefined) {
+      throw new Error('Required parameter teamId was null or undefined when calling deleteExhibitTeamByIds.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.delete<any>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/teams/${encodeURIComponent(String(teamId))}`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
+     * Gets all ExhibitTeams for an exhibit
+     * Returns a list of all of the ExhibitTeams for the exhibit.
+     * @param exhibitId The id of the Exhibit
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+  public getExhibitExhibitTeams(exhibitId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<ExhibitTeam>>;
+  public getExhibitExhibitTeams(exhibitId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ExhibitTeam>>>;
+  public getExhibitExhibitTeams(exhibitId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ExhibitTeam>>>;
+  public getExhibitExhibitTeams(exhibitId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling getExhibitExhibitTeams.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.get<Array<ExhibitTeam>>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/exhibitteams`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
+     * Gets a specific ExhibitTeam by id
+     * Returns the ExhibitTeam with the id specified  &lt;para /&gt;  Only accessible to a SuperTeam
+     * @param id The id of the ExhibitTeam
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+  public getExhibitTeam(id: string, observe?: 'body', reportProgress?: boolean): Observable<ExhibitTeam>;
+  public getExhibitTeam(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ExhibitTeam>>;
+  public getExhibitTeam(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ExhibitTeam>>;
+  public getExhibitTeam(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
     if (id === null || id === undefined) {
-      throw new Error('Required parameter id was null or undefined when calling getCollection.');
+      throw new Error('Required parameter id was null or undefined when calling getExhibitTeam.');
     }
 
     let headers = this.defaultHeaders;
@@ -209,7 +311,7 @@ export class CollectionService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.get<Collection>(`${this.configuration.basePath}/api/collections/${encodeURIComponent(String(id))}`,
+    return this.httpClient.get<ExhibitTeam>(`${this.configuration.basePath}/api/exhibitteams/${encodeURIComponent(String(id))}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
@@ -220,15 +322,15 @@ export class CollectionService {
   }
 
   /**
-     * Gets Collections
-     * Returns a list of Collections.
+     * Gets all ExhibitTeams in the system
+     * Returns a list of all of the ExhibitTeams in the system.  &lt;para /&gt;  Only accessible to a SuperTeam
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public getCollections(observe?: 'body', reportProgress?: boolean): Observable<Array<Collection>>;
-  public getCollections(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Collection>>>;
-  public getCollections(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Collection>>>;
-  public getCollections(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+  public getExhibitTeams(observe?: 'body', reportProgress?: boolean): Observable<Array<ExhibitTeam>>;
+  public getExhibitTeams(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ExhibitTeam>>>;
+  public getExhibitTeams(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ExhibitTeam>>>;
+  public getExhibitTeams(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
     let headers = this.defaultHeaders;
 
@@ -255,112 +357,7 @@ export class CollectionService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.get<Array<Collection>>(`${this.configuration.basePath}/api/collections`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
-
-  /**
-     * Gets User&#39;s Collections
-     * Returns a list of Collections.
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-  public getMyCollections(observe?: 'body', reportProgress?: boolean): Observable<Array<Collection>>;
-  public getMyCollections(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Collection>>>;
-  public getMyCollections(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Collection>>>;
-  public getMyCollections(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-    let headers = this.defaultHeaders;
-
-    // authentication (oauth2) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
-
-    return this.httpClient.get<Array<Collection>>(`${this.configuration.basePath}/api/collections/mine`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
-
-  /**
-     * Updates a  Collection
-     * Updates a Collection with the attributes specified.  The ID from the route MUST MATCH the ID contained in the collection parameter  &lt;para /&gt;  Accessible only to a ContentDeveloper or an Administrator
-     * @param id The Id of the Collection to update
-     * @param Collection The updated Collection values
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-  public updateCollection(id: string, Collection?: Collection, observe?: 'body', reportProgress?: boolean): Observable<Collection>;
-  public updateCollection(id: string, Collection?: Collection, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Collection>>;
-  public updateCollection(id: string, Collection?: Collection, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Collection>>;
-  public updateCollection(id: string, Collection?: Collection, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-    if (id === null || id === undefined) {
-      throw new Error('Required parameter id was null or undefined when calling updateCollection.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // authentication (oauth2) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json',
-      'text/json',
-      'application/_*+json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected !== undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    return this.httpClient.put<Collection>(`${this.configuration.basePath}/api/collections/${encodeURIComponent(String(id))}`,
-      Collection,
+    return this.httpClient.get<Array<ExhibitTeam>>(`${this.configuration.basePath}/api/exhibitteams`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,

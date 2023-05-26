@@ -5,117 +5,6 @@
     "version": "v1"
   },
   "paths": {
-    "/api/articles": {
-      "get": {
-        "tags": [
-          "Article"
-        ],
-        "summary": "Gets Articles",
-        "description": "Returns a list of Articles.",
-        "operationId": "getArticles",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Article"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Article"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Article"
-                  }
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Problem response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Article"
-        ],
-        "summary": "Creates a new Article",
-        "description": "Creates a new Article with the attributes specified\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
-        "operationId": "createArticle",
-        "requestBody": {
-          "description": "The data used to create the Article",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Article"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Article"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Article"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Article"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Article"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Article"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Problem response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/cards/{cardId}/articles": {
       "get": {
         "tags": [
@@ -452,6 +341,68 @@
         "responses": {
           "204": {
             "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/articles": {
+      "post": {
+        "tags": [
+          "Article"
+        ],
+        "summary": "Creates a new Article",
+        "description": "Creates a new Article with the attributes specified\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
+        "operationId": "createArticle",
+        "requestBody": {
+          "description": "The data used to create the Article",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Article"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Article"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Article"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              }
+            }
           },
           "default": {
             "description": "Problem response",
@@ -1973,6 +1924,69 @@
         }
       }
     },
+    "/api/exhibits/{exhibitId}/exhibitteams": {
+      "get": {
+        "tags": [
+          "ExhibitTeam"
+        ],
+        "summary": "Gets all ExhibitTeams for an exhibit",
+        "description": "Returns a list of all of the ExhibitTeams for the exhibit.",
+        "operationId": "getExhibitExhibitTeams",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "path",
+            "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExhibitTeam"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExhibitTeam"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExhibitTeam"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/exhibits/{exhibitId}/teams/{teamId}": {
       "delete": {
         "tags": [
@@ -2023,11 +2037,11 @@
     "/api/health/live": {
       "get": {
         "tags": [
-          "Health"
+          "HealthCheck"
         ],
         "summary": "Checks the liveliness health endpoint",
         "description": "Returns a HealthReport of the liveliness health check",
-        "operationId": "Health_GetLiveliness",
+        "operationId": "getLiveliness",
         "responses": {
           "200": {
             "description": "Success",
@@ -2065,11 +2079,11 @@
     "/api/health/ready": {
       "get": {
         "tags": [
-          "Health"
+          "HealthCheck"
         ],
         "summary": "Checks the readiness health endpoint",
         "description": "Returns a HealthReport of the readiness health check",
-        "operationId": "Health_GetReadiness",
+        "operationId": "getReadiness",
         "responses": {
           "200": {
             "description": "Success",
@@ -2087,6 +2101,48 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HealthReport"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/version": {
+      "get": {
+        "tags": [
+          "HealthCheck"
+        ],
+        "summary": "Returns the current version of the API",
+        "description": "Returns the version.",
+        "operationId": "getVersion",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2998,6 +3054,402 @@
         }
       }
     },
+    "/api/exhibits/{exhibitId}/teamarticles": {
+      "get": {
+        "tags": [
+          "TeamArticle"
+        ],
+        "summary": "Gets all TeamArticles for a exhibit",
+        "description": "Returns a list of all of the TeamArticles for the exhibit.",
+        "operationId": "getExhibitTeamArticles",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "path",
+            "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamArticle"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamArticle"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamArticle"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teams/{teamId}/teamarticles": {
+      "get": {
+        "tags": [
+          "TeamArticle"
+        ],
+        "summary": "Gets all TeamArticles for a team",
+        "description": "Returns a list of all of the TeamArticles for the team.",
+        "operationId": "getTeamTeamArticles",
+        "parameters": [
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "The id of the TeamArticle",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamArticle"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamArticle"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamArticle"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teamarticles/{id}": {
+      "get": {
+        "tags": [
+          "TeamArticle"
+        ],
+        "summary": "Gets a specific TeamArticle by id",
+        "description": "Returns the TeamArticle with the id specified\r\n<para />\r\nOnly accessible to a SuperArticle",
+        "operationId": "getTeamArticle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the TeamArticle",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamArticle"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamArticle"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamArticle"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "TeamArticle"
+        ],
+        "summary": "Updates an TeamArticle",
+        "description": "Updates a TeamArticle with the attributes specified.\r\nThe ID from the route MUST MATCH the ID contained in the teamArticle parameter\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
+        "operationId": "updateTeamArticle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the TeamArticle to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The updated TeamArticle values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamArticle"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamArticle"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamArticle"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamArticle"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamArticle"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamArticle"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TeamArticle"
+        ],
+        "summary": "Deletes a TeamArticle",
+        "description": "Deletes a TeamArticle with the specified id\r\n<para />\r\nAccessible only to a SuperArticle",
+        "operationId": "deleteTeamArticle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the TeamArticle to delete",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teamarticles": {
+      "post": {
+        "tags": [
+          "TeamArticle"
+        ],
+        "summary": "Creates a new TeamArticle",
+        "description": "Creates a new TeamArticle with the attributes specified\r\n<para />\r\nAccessible only to a SuperArticle",
+        "operationId": "createTeamArticle",
+        "requestBody": {
+          "description": "The data to create the TeamArticle with",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamArticle"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamArticle"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamArticle"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamArticle"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamArticle"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamArticle"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teams/{teamId}/articles/{articleId}": {
+      "delete": {
+        "tags": [
+          "TeamArticle"
+        ],
+        "summary": "Deletes a TeamArticle by article ID and team ID",
+        "description": "Deletes a TeamArticle with the specified article ID and team ID\r\n<para />\r\nAccessible only to a SuperArticle",
+        "operationId": "deleteTeamArticleByIds",
+        "parameters": [
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "ID of a team.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "ID of a article.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/teamcards": {
       "get": {
         "tags": [
@@ -3109,19 +3561,19 @@
         }
       }
     },
-    "/api/collections/{collectionId}/teamcards": {
+    "/api/exhibits/{exhibitId}/teamcards": {
       "get": {
         "tags": [
           "TeamCard"
         ],
-        "summary": "Gets all TeamCards for a collection",
-        "description": "Returns a list of all of the TeamCards for the collection.",
-        "operationId": "getCollectionTeamCards",
+        "summary": "Gets all TeamCards for an exhibit",
+        "description": "Returns a list of all of the TeamCards for the exhibit.",
+        "operationId": "getExhibitTeamCards",
         "parameters": [
           {
-            "name": "collectionId",
+            "name": "exhibitId",
             "in": "path",
-            "description": "The id of the Collection",
+            "description": "The id of the Exhibit",
             "required": true,
             "schema": {
               "type": "string",
@@ -3177,7 +3629,7 @@
         "tags": [
           "TeamCard"
         ],
-        "summary": "Gets all TeamCards for an card",
+        "summary": "Gets all TeamCards for a card",
         "description": "Returns a list of all of the TeamCards for the card.",
         "operationId": "getCardTeamCards",
         "parameters": [
@@ -3235,17 +3687,17 @@
         }
       }
     },
-    "/api/teams/{teamId}/teamcards": {
+    "/api/exhibits/{exhibitId}/teamcards/mine": {
       "get": {
         "tags": [
           "TeamCard"
         ],
-        "summary": "Gets all TeamCards for an team",
-        "description": "Returns a list of all of the TeamCards for the team.",
-        "operationId": "getTeamTeamCards",
+        "summary": "Gets all TeamCards for an exhibit for the current user",
+        "description": "Returns a list of all of the TeamCards for the exhibit for the current user.",
+        "operationId": "getMyExhibitTeamCards",
         "parameters": [
           {
-            "name": "teamId",
+            "name": "exhibitId",
             "in": "path",
             "description": "The id of the TeamCard",
             "required": true,
@@ -4771,6 +5223,171 @@
           }
         }
       }
+    },
+    "/api/xapi/viewed/exhibit/{exhibitId}/card/{cardId}": {
+      "get": {
+        "tags": [
+          "XApi"
+        ],
+        "summary": "Logs xAPI viewed statement for Card by id",
+        "description": "Returns status",
+        "operationId": "viewedCard",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "path",
+            "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cardId",
+            "in": "path",
+            "description": "The id of the Card",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/xapi/viewed/exhibit/{exhibitId}/wall": {
+      "get": {
+        "tags": [
+          "XApi"
+        ],
+        "summary": "Logs xAPI viewed statement for Wall by Exhibit id",
+        "description": "Returns status",
+        "operationId": "viewedExhibitWall",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "path",
+            "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/xapi/viewed/exhibit/{id}/archive": {
+      "get": {
+        "tags": [
+          "XApi"
+        ],
+        "summary": "Logs xAPI viewed statement for Archive by Exhibit id",
+        "description": "Returns status",
+        "operationId": "viewedExhibitArchive",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "query",
+            "description": "The id of the Exhibit",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/xapi/viewed/article/{articleId}": {
+      "get": {
+        "tags": [
+          "XApi"
+        ],
+        "summary": "Logs xAPI viewed statement for Article by id",
+        "description": "Returns status",
+        "operationId": "viewedArticle",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "The id of the Article",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4804,6 +5421,10 @@
             "type": "string",
             "nullable": true
           },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          },
           "description": {
             "type": "string",
             "nullable": true
@@ -4811,6 +5432,11 @@
           "collectionId": {
             "type": "string",
             "format": "uuid"
+          },
+          "exhibitId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "cardId": {
             "type": "string",
@@ -4845,6 +5471,13 @@
           },
           "openInNewTab": {
             "type": "boolean"
+          },
+          "teams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Team"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6396,7 +7029,8 @@
           "Email",
           "Phone",
           "Intel",
-          "Reporting"
+          "Reporting",
+          "Orders"
         ],
         "type": "string"
       },
@@ -6446,12 +7080,71 @@
             "type": "string",
             "nullable": true
           },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "exhibitId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "exhibit": {
+            "$ref": "#/components/schemas/Exhibit"
+          },
           "users": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/User"
             },
             "nullable": true
+          },
+          "articles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Article"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TeamArticle": {
+        "type": "object",
+        "properties": {
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dateModified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "exhibitId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "teamId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "articleId": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
@@ -6490,6 +7183,9 @@
             "format": "int32"
           },
           "isShownOnWall": {
+            "type": "boolean"
+          },
+          "canPostArticles": {
             "type": "boolean"
           },
           "teamId": {
@@ -7443,7 +8139,7 @@
             "authorizationUrl": "http://localhost:5000/connect/authorize",
             "tokenUrl": "http://localhost:5000/connect/token",
             "scopes": {
-              "gallery": "public api access"
+              "gallery-api": "public api access"
             }
           }
         }
@@ -7453,7 +8149,7 @@
   "security": [
     {
       "oauth2": [
-        "gallery"
+        "gallery-api"
       ]
     }
   ]
