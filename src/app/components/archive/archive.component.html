@@ -7,18 +7,22 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="archive">
     <div class="max-width">
       <div class="top-row">
-        <div class="search-cell two-cell">
-          <mat-icon
-            style="transform: scale(0.75); margin-right: 5px;"
-            class="icon-color"
-            svgIcon="ic_magnify_search"
-          ></mat-icon>
+        <div class="search-cell">
+          <button
+            mat-button
+            *ngIf="canAddArticles()"
+            (click)="addOrEditArticle(null)"
+            style="outline: none;"
+            title="Add an Article"
+          >
+            <mat-icon class="add-button mdi-18px" fontIcon="mdi-plus-circle"></mat-icon>
+          </button>
           <mat-form-field>
             <input matInput placeholder="Search the Archive" class="tiny" [formControl]="filterControl" />
           </mat-form-field>
           <mat-icon class="mdi-24px point" fontIcon="mdi-close-circle-outline" (click)="applyFilter('')"></mat-icon>
         </div>
-        <div class="seven-cell" style="min-width: 315px;">
+        <div class="two-cell">
           <mat-form-field>
             <mat-select [(ngModel)]="cardId" (selectionChange)="changeCard($event.value)">
               <mat-option [value]="'all'">All Cards</mat-option>
@@ -27,17 +31,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <button
-            mat-button
-            *ngIf="canAddArticles()"
-            (click)="addOrEditArticle(null)"
-            style="outline: none;"
-            title="Add an Article"
-          >
-            <mat-icon class="add-button mdi-18px" fontIcon="mdi-plus-circle"></mat-icon> Add Article
-          </button>
         </div>
-        <div class="twelve-cell">
+        <div class="source-type-cell">
           <!-- Intel -->
           <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Intel')" [ngClass]="getButtonClass('Intel')">
             <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px"></mat-icon>
@@ -74,7 +69,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             Email
           </button>
         </div>
-        <div class="two-cell last-cell">
+        <div class="four-cell">
+          <app-team-selector
+            [myTeam]="myTeam$ | async"
+          ></app-team-selector>
+        </div>
+        <div class="one-cell last-cell">
           <button
             mat-icon-button
             (click)="gotoWallSection()"

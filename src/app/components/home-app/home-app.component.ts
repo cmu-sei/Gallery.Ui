@@ -3,7 +3,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { EntityActions } from '@datorama/akita';
 import { ComnSettingsService, Theme, ComnAuthQuery } from '@cmusei/crucible-common';
@@ -19,6 +19,7 @@ import { CardDataService } from 'src/app/data/card/card-data.service';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
+import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { Section } from 'src/app/utilities/enumerations';
 
@@ -39,13 +40,15 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   currentMove = -1;
   currentInject = -1;
   selectedSection: string = Section.none;
-  loggedInUserId = '';
+  loggedInUser = { id: '', name: '' };
   userList: User[] = [];
   collectionList: Collection[] = [];
   collectionLoadCount = 0;
   allExhibits: Exhibit[] = [];
   exhibitList: Exhibit[] = [];
   teamList: Team[] = [];
+  teamList$ = new BehaviorSubject<Team[]>([]);
+  myTeam$ = new BehaviorSubject<Team>({});
   isContentDeveloper$ = this.userDataService.isContentDeveloper.asObservable();
   isAuthorizedUser = false;
   isSidebarOpen = true;
@@ -70,6 +73,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
     private teamDataService: TeamDataService,
+    private teamQuery: TeamQuery,
     private teamCardDataService: TeamCardDataService,
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery
@@ -116,14 +120,17 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
       this.userList = users;
     });
-
     this.userDataService.getUsersFromApi();
-
+    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
+      this.teamList = teams;
+      this.setMyTeam();
+    });
     this.userDataService.loggedInUser
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((user) => {
-        if (user && user.profile && user.profile.sub !== this.loggedInUserId) {
-          this.loggedInUserId = user.profile.sub;
+        if (user && user.profile && user.profile.sub !== this.loggedInUser.id) {
+          this.loggedInUser.id = user.profile.sub;
+          this.loggedInUser.name = user.profile.name;
           this.exhibitDataService.unload();
           this.collectionDataService.unload();
           this.cardDataService.unload();
@@ -132,7 +139,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
           this.userArticleDataService.unload();
         }
       });
-
     this.userDataService.isAuthorizedUser
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((isAuthorized) => {
@@ -140,7 +146,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       });
     this.collectionDataService.loadMine();
     this.exhibitDataService.loadMine();
-
     // Set the display settings from config file
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
@@ -181,6 +186,16 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.collectionDataService.setActive(this.collectionId);
     }
     this.exhibitList = this.allExhibits.filter(e => e.collectionId === this.collectionId);
+  }
+
+  setMyTeam() {
+    this.teamList.forEach(t => {
+      t.users.forEach(u => {
+        if (u.id === this.loggedInUser.id) {
+          this.myTeam$.next(t);
+        }
+      });
+    });
   }
 
   logout() {

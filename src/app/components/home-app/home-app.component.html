@@ -57,13 +57,18 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <app-wall
         [showAdminButton]="isContentDeveloper$ | async"
-      ></app-wall>
+        [myTeam$]="myTeam$"
+        [teamList$]="teamList$"
+        ></app-wall>
     </div>
   </span>
 
   <span *ngIf="!apiIsSick && exhibit && selectedSection !== 'wall'">
     <app-archive
       [showAdminButton]="isContentDeveloper$ | async"
+      [myTeam]="myTeam$ | async"
+      [myTeam$]="myTeam$"
+      [teamList$]="teamList$"
     ></app-archive>
   </span>
 

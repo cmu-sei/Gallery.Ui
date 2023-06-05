@@ -37,6 +37,9 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 })
 export class ArchiveComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
+  @Input() myTeam: Team;
+  @Input() myTeam$: Observable<Team>;
+  @Input() teamList$: Observable<Team[]>;
   apiIsSick = false;
   apiMessage = 'The GALLERY API web service is not responding.';
   cardId = 'all';
@@ -48,7 +51,6 @@ export class ArchiveComponent implements OnDestroy {
   cardList: Card[] = [];
   moveList: number[] = [];
   teamList: Team[] = [];
-  myTeam: Team = {} as Team;
   postCardList: Card[] = [];
   showCardList: Card[] = [];
   teamCardList: TeamCard[] = [];
@@ -156,10 +158,6 @@ export class ArchiveComponent implements OnDestroy {
         this.filterString = term;
         this.sortChanged(this.sort);
       });
-    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
-      this.teamList = teams;
-      this.setMyTeam();
-    });
     this.teamCardQuery.selectAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(teamCards => {
@@ -167,25 +165,6 @@ export class ArchiveComponent implements OnDestroy {
         this.setCardLists();
         this.sortChanged(this.sort);
       });
-    this.userDataService.loggedInUser
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((user) => {
-        if (user && user.profile) {
-          this.username = user.profile.name;
-          this.userId = user.profile.sub;
-          this.setMyTeam();
-        }
-      });
-  }
-
-  setMyTeam() {
-    this.teamList.forEach(t => {
-      t.users.forEach(u => {
-        if (u.id === this.userId) {
-          this.myTeam = t;
-        }
-      });
-    });
   }
 
   getCardName(id: string) {
