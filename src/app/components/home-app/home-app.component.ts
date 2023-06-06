@@ -49,6 +49,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   teamList: Team[] = [];
   teamList$ = new BehaviorSubject<Team[]>([]);
   myTeam$ = new BehaviorSubject<Team>({});
+  myTeamWasSelected = false;
   isContentDeveloper$ = this.userDataService.isContentDeveloper.asObservable();
   isAuthorizedUser = false;
   isSidebarOpen = true;
@@ -173,6 +174,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.exhibit = this.allExhibits.find(e => e.id === this.exhibitId);
       if (this.exhibit) {
         if (this.collectionId && this.collectionId !== this.exhibit.collectionId) {
+          this.myTeamWasSelected = false;
           this.router.navigate([], {
             queryParams: { collection: this.exhibit.collectionId },
             queryParamsHandling: 'merge'
@@ -193,6 +195,10 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       t.users.forEach(u => {
         if (u.id === this.loggedInUser.id) {
           this.myTeam$.next(t);
+          if (!this.myTeamWasSelected) {
+            this.myTeamWasSelected = true;
+            this.teamDataService.setActive(t.id);
+          }
         }
       });
     });

@@ -5,6 +5,7 @@
   display: flex;
   flex: 100;
   flex-direction: "row";
+  flex-wrap: nowrap;
   height: 66px;
 }
 
@@ -57,13 +58,17 @@
 }
 
 .last-cell {
-  text-align: right;
-  min-width: 100px;
+  width: 80px;
 }
 
 .source-type-cell {
   flex: 6;
   min-width: 287px;
+  padding-left: 10px;
+}
+
+.team-cell {
+  width: 250px;
 }
 
 .center-self {
@@ -80,11 +85,11 @@
 
 .tiny {
   font-size: 10px;
+  width: 80px;
 }
 
-.button-margins {
-  margin-left: 20px;
-  margin-right: 20px;
+.shift-left {
+  margin-left: -15px;
 }
 
 .add-button {
@@ -103,6 +108,7 @@
   flex: 1;
   flex-wrap: wrap;
   width: 100%;
+  min-width: 1010px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   align-items: center;
@@ -113,6 +119,16 @@
   display: flex;
   flex: 2;
   align-items: center;
+}
+
+.card-cell {
+  display: flex;
+  flex: 1;
+  padding-left: 10px;
+}
+
+.card-selector {
+  width: 100px;
 }
 
 .mat-icon {

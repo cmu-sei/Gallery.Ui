@@ -2,11 +2,11 @@
 Copyright 2023 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
-<div class="container">
-  <span *ngIf="myTeam && selectedTeamId === myTeam.id" class="mat-select right-text bold-text">Team:&nbsp;</span>
-  <span *ngIf="myTeam && selectedTeamId !== myTeam.id" class="mat-select right-text bold-text">Observing:&nbsp;</span>
-  <span *ngIf="teamList && teamList.length <= 1" class="mat-select center-self">{{ getTeamShortName() }}</span>
-  <mat-select *ngIf="teamList && teamList.length > 1" class="center-self" placeholder="Team" [value]="selectedTeamId" (selectionChange)="setActiveTeam($event.value)">
+<div class="container" *ngIf="myTeam && selectedTeamId && teamList">
+  <span *ngIf="selectedTeamId === myTeam.id" class="mat-select right-text bold-text">Team:&nbsp;</span>
+  <span *ngIf="selectedTeamId !== myTeam.id" class="mat-select right-text bold-text">Observing:&nbsp;</span>
+  <span *ngIf="teamList.length <= 1" class="mat-select center-self">{{ getTeamShortName() }}</span>
+  <mat-select *ngIf="teamList.length > 1" class="center-self" placeholder="Team" [value]="selectedTeamId" (selectionChange)="setActiveTeam($event.value)">
     <mat-option *ngFor="let team of teamList" [value]="team.id">
       {{ team.shortName }}
     </mat-option>
