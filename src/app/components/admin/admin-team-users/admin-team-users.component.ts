@@ -62,7 +62,6 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
     this.userDataSource.sort = this.sort;
-    // this.teamUserDataService.loadByTeam(this.teamId);
     this.filterControl.setValue('');
     this.teamUsers = this.teamUserQuery.getAll().filter(tu => tu.teamId === this.teamId);
     this.setDataSources();

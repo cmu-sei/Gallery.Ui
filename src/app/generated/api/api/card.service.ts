@@ -365,21 +365,26 @@ export class CardService {
     }
 
     /**
-     * Gets Cards for an exhibit for the user
-     * Returns a list of Cards based on the exhibit&#39;s current move and current inject for the user.
+     * Gets Cards for an exhibit team
+     * Returns a list of Cards based on the exhibit&#39;s current move and current inject for the team.
      * @param exhibitId The id of the Exhibit
+     * @param teamId The id of the Team
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getExhibitCardsMine(exhibitId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<Card>>;
-    public getExhibitCardsMine(exhibitId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Card>>>;
-    public getExhibitCardsMine(exhibitId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Card>>>;
-    public getExhibitCardsMine(exhibitId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getExhibitTeamCards(exhibitId: string, teamId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<Card>>;
+    public getExhibitTeamCards(exhibitId: string, teamId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Card>>>;
+    public getExhibitTeamCards(exhibitId: string, teamId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Card>>>;
+    public getExhibitTeamCards(exhibitId: string, teamId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (exhibitId === null || exhibitId === undefined) {
-            throw new Error('Required parameter exhibitId was null or undefined when calling getExhibitCardsMine.');
+            throw new Error('Required parameter exhibitId was null or undefined when calling getExhibitTeamCards.');
         }
 
-        let headers = this.defaultHeaders;
+        if (teamId === null || teamId === undefined) {
+          throw new Error('Required parameter teamId was null or undefined when calling getExhibitTeamCards.');
+      }
+
+      let headers = this.defaultHeaders;
 
         // authentication (oauth2) required
         if (this.configuration.accessToken) {
@@ -404,7 +409,7 @@ export class CardService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<Array<Card>>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/mycards`,
+        return this.httpClient.get<Array<Card>>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/teams/${encodeURIComponent(String(teamId))}/cards`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

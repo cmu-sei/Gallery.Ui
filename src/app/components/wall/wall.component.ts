@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, OnDestroy } from '@angular/core';
 import { Team, TeamCard, UserArticle, ItemStatus } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
@@ -23,6 +23,7 @@ export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
   @Input() myTeam$: Observable<Team>;
   @Input() teamList$: Observable<Team[]>;
+  @Output() changeTeam = new EventEmitter<string>();
   isLoading = false;
   cardList: Card[] = [];
   shownCardList: Card[] = [];
@@ -104,6 +105,10 @@ export class WallComponent implements OnDestroy {
       }
     });
     this.shownCardList = shownCardList;
+  }
+
+  changeTeamRequest(teamId: string) {
+    this.changeTeam.emit(teamId);
   }
 
   ngOnDestroy() {

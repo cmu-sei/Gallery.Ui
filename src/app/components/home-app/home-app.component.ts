@@ -50,6 +50,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   teamList$ = new BehaviorSubject<Team[]>([]);
   myTeam$ = new BehaviorSubject<Team>({});
   myTeamWasSelected = false;
+  selectedTeamId = '';
   isContentDeveloper$ = this.userDataService.isContentDeveloper.asObservable();
   isAuthorizedUser = false;
   isSidebarOpen = true;
@@ -183,7 +184,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.collectionId = this.exhibit.collectionId;
         this.collectionDataService.setActive(this.collectionId);
       }
-      this.reloadCardsAndArticles();
+      this.loadExhibitData();
     } else if (this.collectionId && (!this.collection || this.collection.id !== this.collectionId)) {
       this.collectionDataService.setActive(this.collectionId);
     }
@@ -197,10 +198,22 @@ export class HomeAppComponent implements OnDestroy, OnInit {
           this.myTeam$.next(t);
           if (!this.myTeamWasSelected) {
             this.myTeamWasSelected = true;
+            this.selectedTeamId = t.id;
             this.teamDataService.setActive(t.id);
+            this.loadTeamData();
           }
         }
       });
+    });
+  }
+
+  changeTeam(teamId: string) {
+    this.selectedTeamId = teamId;
+    this.teamDataService.setActive(teamId);
+    this.loadTeamData();
+    this.router.navigate([], {
+      queryParams: { team: teamId },
+      queryParamsHandling: 'merge'
     });
   }
 
@@ -225,9 +238,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     });
   }
 
-  reloadCardsAndArticles() {
-    this.cardDataService.unload();
+  loadExhibitData() {
     this.teamDataService.unload();
+    this.cardDataService.unload();
     this.teamCardDataService.unload();
     this.userArticleDataService.unload();
     // process the change
@@ -236,10 +249,19 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.exhibitDataService.setActive(this.exhibitId);
       this.currentMove = this.exhibit.currentMove;
       this.currentInject = this.exhibit.currentInject;
-      this.cardDataService.loadMine(this.exhibitId);
       this.teamDataService.loadByExhibitId(this.exhibitId);
-      this.teamCardDataService.loadMineByExhibit(this.exhibit.id);
-      this.userArticleDataService.loadMine(this.exhibitId);
+    }
+  }
+
+  loadTeamData() {
+    this.cardDataService.unload();
+    this.teamCardDataService.unload();
+    this.userArticleDataService.unload();
+    // process the change
+    if (this.selectedTeamId) {
+      this.cardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
+      this.teamCardDataService.loadByExhibitTeam(this.exhibit.id, this.selectedTeamId);
+      this.userArticleDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
     }
   }
 

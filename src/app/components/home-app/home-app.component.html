@@ -59,6 +59,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         [showAdminButton]="isContentDeveloper$ | async"
         [myTeam$]="myTeam$"
         [teamList$]="teamList$"
+        (changeTeam)="changeTeam($event)"
         ></app-wall>
     </div>
   </span>
@@ -69,7 +70,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       [myTeam]="myTeam$ | async"
       [myTeam$]="myTeam$"
       [teamList$]="teamList$"
-    ></app-archive>
+      (changeTeam)="changeTeam($event)"
+      ></app-archive>
   </span>
 
 </div>

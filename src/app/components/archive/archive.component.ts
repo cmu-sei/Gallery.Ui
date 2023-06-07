@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, OnDestroy } from '@angular/core';
 import { Article, Card, ItemStatus, Team, TeamCard, Exhibit, UserArticle, SourceType } from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
@@ -40,11 +40,13 @@ export class ArchiveComponent implements OnDestroy {
   @Input() myTeam: Team;
   @Input() myTeam$: Observable<Team>;
   @Input() teamList$: Observable<Team[]>;
+  @Output() changeTeam = new EventEmitter<string>();
   apiIsSick = false;
   apiMessage = 'The GALLERY API web service is not responding.';
   cardId = 'all';
   exhibitId = '';
   exhibit: Exhibit = {};
+  selectedTeamId = '';
   sourceTypeList = '';
   isLoading = false;
   userArticleList: UserArticle[] = [];
@@ -98,6 +100,7 @@ export class ArchiveComponent implements OnDestroy {
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
     this.userArticleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(userArticles => {
       this.userArticleList = [];
+      this.filteredUserArticleList = [];
       let unreadCount = 0;
       userArticles.forEach(ua => {
         unreadCount = ua.isRead ? unreadCount : ++unreadCount;
@@ -141,6 +144,7 @@ export class ArchiveComponent implements OnDestroy {
       .subscribe((params) => {
         const cardId  = params.get('card');
         const exhibitId  = params.get('exhibit');
+        const teamId = params.get('team');
         if (!exhibitId) {
           this.router.navigate([''], {
             queryParams: { },
@@ -149,6 +153,7 @@ export class ArchiveComponent implements OnDestroy {
         }
         this.exhibitId = exhibitId;
         this.exhibitDataService.setActive(this.exhibitId);
+        this.selectedTeamId = teamId;
         this.cardId = cardId ? cardId : 'all';
         this.sortChanged(this.sort);
       });
@@ -345,7 +350,7 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   canAddArticles() {
-    return this.postCardList.length > 0 && this.exhibit && this.exhibit.collectionId;
+    return this.postCardList.length > 0 && this.exhibit && this.exhibit.collectionId && this.selectedTeamId === this.myTeam.id;
   }
 
   addOrEditArticle(article: Article) {
@@ -415,6 +420,10 @@ export class ArchiveComponent implements OnDestroy {
     }
 
     return classes;
+  }
+
+  changeTeamRequest(teamId: string) {
+    this.changeTeam.emit(teamId);
   }
 
   ngOnDestroy() {

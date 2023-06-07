@@ -184,10 +184,10 @@ export class CardDataService {
       );
   }
 
-  loadMine(exhibitId: string) {
+  loadByExhibitTeam(exhibitId: string, teamId: string) {
     this.cardStore.setLoading(true);
     this.cardService
-      .getExhibitCardsMine(exhibitId)
+      .getExhibitTeamCards(exhibitId, teamId)
       .pipe(
         tap(() => {
           this.cardStore.setLoading(false);

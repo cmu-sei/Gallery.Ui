@@ -9,6 +9,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="selector-cell">
       <app-team-selector
         [myTeam]="myTeam$ | async"
+        (changeTeam)="changeTeamRequest($event)"
         style="float: right;"
       ></app-team-selector>
     </div>
