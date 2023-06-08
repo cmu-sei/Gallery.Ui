@@ -1,6 +1,7 @@
 /*
- Copyright 2022 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+ Copyright 2023 Carnegie Mellon University. All Rights Reserved.
+ Released under a MIT (SEI)-style license. See LICENSE.md in the
+ project root for license information.
 */
 
 /**
@@ -17,12 +18,12 @@
 
 
 export interface TeamArticle {
-    dateCreated?: Date;
-    dateModified?: Date;
-    createdBy?: string;
-    modifiedBy?: string;
-    id?: string;
-    exhibitId?: string;
-    teamId?: string;
-    articleId?: string;
+  dateCreated?: Date;
+  dateModified?: Date;
+  createdBy?: string;
+  modifiedBy?: string;
+  id?: string;
+  exhibitId?: string;
+  teamId?: string;
+  articleId?: string;
 }

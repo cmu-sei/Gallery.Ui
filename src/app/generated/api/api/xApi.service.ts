@@ -25,7 +25,6 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ProblemDetails } from '../model/problemDetails';
-import { UserPermission } from '../model/userPermission';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -34,7 +33,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class UserPermissionService {
+export class XApiService {
 
   protected basePath = 'http://localhost';
   public defaultHeaders = new HttpHeaders();
@@ -67,73 +66,18 @@ export class UserPermissionService {
 
 
   /**
-     * Creates a new UserPermission
-     * Creates a new UserPermission with the attributes specified  &lt;para /&gt;  Accessible only to a SuperUser
-     * @param UserPermission The data to create the UserPermission with
+     * Logs xAPI viewed statement for Article by id
+     * Returns status
+     * @param articleId The id of the Article
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public createUserPermission(UserPermission?: UserPermission, observe?: 'body', reportProgress?: boolean): Observable<UserPermission>;
-  public createUserPermission(UserPermission?: UserPermission, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserPermission>>;
-  public createUserPermission(UserPermission?: UserPermission, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserPermission>>;
-  public createUserPermission(UserPermission?: UserPermission, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-    let headers = this.defaultHeaders;
-
-    // authentication (oauth2) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json',
-      'text/json',
-      'application/_*+json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected !== undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    return this.httpClient.post<UserPermission>(`${this.configuration.basePath}/api/userpermissions`,
-      UserPermission,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
-
-  /**
-     * Deletes a UserPermission
-     * Deletes a UserPermission with the specified id  &lt;para /&gt;  Accessible only to a SuperUser
-     * @param id The id of the UserPermission to delete
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-  public deleteUserPermission(id: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-  public deleteUserPermission(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-  public deleteUserPermission(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-  public deleteUserPermission(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-    if (id === null || id === undefined) {
-      throw new Error('Required parameter id was null or undefined when calling deleteUserPermission.');
+  public viewedArticle(articleId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public viewedArticle(articleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public viewedArticle(articleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public viewedArticle(articleId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (articleId === null || articleId === undefined) {
+      throw new Error('Required parameter articleId was null or undefined when calling viewedArticle.');
     }
 
     let headers = this.defaultHeaders;
@@ -159,7 +103,7 @@ export class UserPermissionService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.delete<any>(`${this.configuration.basePath}/api/userpermissions/${encodeURIComponent(String(id))}`,
+    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/viewed/article/${encodeURIComponent(String(articleId))}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
@@ -170,22 +114,22 @@ export class UserPermissionService {
   }
 
   /**
-     * Deletes a UserPermission by user ID and permission ID
-     * Deletes a UserPermission with the specified user ID and permission ID  &lt;para /&gt;  Accessible only to a SuperUser
-     * @param userId ID of a user.
-     * @param permissionId ID of a permission.
+     * Logs xAPI viewed statement for Card by id
+     * Returns status
+     * @param exhibitId The id of the Exhibit
+     * @param cardId The id of the Card
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public deleteUserPermissionByIds(userId: string, permissionId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-  public deleteUserPermissionByIds(userId: string, permissionId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-  public deleteUserPermissionByIds(userId: string, permissionId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-  public deleteUserPermissionByIds(userId: string, permissionId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-    if (userId === null || userId === undefined) {
-      throw new Error('Required parameter userId was null or undefined when calling deleteUserPermissionByIds.');
+  public viewedCard(exhibitId: string, cardId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public viewedCard(exhibitId: string, cardId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public viewedCard(exhibitId: string, cardId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public viewedCard(exhibitId: string, cardId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling viewedCard.');
     }
-    if (permissionId === null || permissionId === undefined) {
-      throw new Error('Required parameter permissionId was null or undefined when calling deleteUserPermissionByIds.');
+    if (cardId === null || cardId === undefined) {
+      throw new Error('Required parameter cardId was null or undefined when calling viewedCard.');
     }
 
     let headers = this.defaultHeaders;
@@ -211,7 +155,7 @@ export class UserPermissionService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.delete<any>(`${this.configuration.basePath}/api/users/${encodeURIComponent(String(userId))}/permissions/${encodeURIComponent(String(permissionId))}`,
+    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/viewed/exhibit/${encodeURIComponent(String(exhibitId))}/card/${encodeURIComponent(String(cardId))}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
@@ -222,18 +166,24 @@ export class UserPermissionService {
   }
 
   /**
-     * Gets a specific UserPermission by id
-     * Returns the UserPermission with the id specified  &lt;para /&gt;  Only accessible to a SuperUser
-     * @param id The id of the UserPermission
+     * Logs xAPI viewed statement for Archive by Exhibit id
+     * Returns status
+     * @param id
+     * @param exhibitId The id of the Exhibit
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public getUserPermission(id: string, observe?: 'body', reportProgress?: boolean): Observable<UserPermission>;
-  public getUserPermission(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserPermission>>;
-  public getUserPermission(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserPermission>>;
-  public getUserPermission(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+  public viewedExhibitArchive(id: string, exhibitId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public viewedExhibitArchive(id: string, exhibitId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public viewedExhibitArchive(id: string, exhibitId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public viewedExhibitArchive(id: string, exhibitId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
     if (id === null || id === undefined) {
-      throw new Error('Required parameter id was null or undefined when calling getUserPermission.');
+      throw new Error('Required parameter id was null or undefined when calling viewedExhibitArchive.');
+    }
+
+    let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+    if (exhibitId !== undefined && exhibitId !== null) {
+      queryParameters = queryParameters.set('exhibitId', <any>exhibitId);
     }
 
     let headers = this.defaultHeaders;
@@ -248,9 +198,7 @@ export class UserPermissionService {
 
     // to determine the Accept header
     const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
+      'application/json'
     ];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
@@ -261,8 +209,9 @@ export class UserPermissionService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.get<UserPermission>(`${this.configuration.basePath}/api/userpermissions/${encodeURIComponent(String(id))}`,
+    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/viewed/exhibit/${encodeURIComponent(String(id))}/archive`,
       {
+        params: queryParameters,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -272,15 +221,19 @@ export class UserPermissionService {
   }
 
   /**
-     * Gets all UserPermissions in the system
-     * Returns a list of all of the UserPermissions in the system.  &lt;para /&gt;  Only accessible to a SuperUser
+     * Logs xAPI viewed statement for Wall by Exhibit id
+     * Returns status
+     * @param exhibitId The id of the Exhibit
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public getUserPermissions(observe?: 'body', reportProgress?: boolean): Observable<Array<UserPermission>>;
-  public getUserPermissions(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<UserPermission>>>;
-  public getUserPermissions(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<UserPermission>>>;
-  public getUserPermissions(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+  public viewedExhibitWall(exhibitId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public viewedExhibitWall(exhibitId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public viewedExhibitWall(exhibitId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public viewedExhibitWall(exhibitId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling viewedExhibitWall.');
+    }
 
     let headers = this.defaultHeaders;
 
@@ -294,9 +247,7 @@ export class UserPermissionService {
 
     // to determine the Accept header
     const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
+      'application/json'
     ];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
@@ -307,7 +258,7 @@ export class UserPermissionService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.get<Array<UserPermission>>(`${this.configuration.basePath}/api/userpermissions`,
+    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/viewed/exhibit/${encodeURIComponent(String(exhibitId))}/wall`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,

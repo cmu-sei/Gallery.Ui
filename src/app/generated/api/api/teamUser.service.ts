@@ -1,6 +1,7 @@
 /*
-Copyright 2022 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+ Copyright 2023 Carnegie Mellon University. All Rights Reserved.
+ Released under a MIT (SEI)-style license. See LICENSE.md in the
+ project root for license information.
 */
 
 /**
@@ -18,7 +19,7 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent }                           from '@angular/common/http';
+  HttpResponse, HttpEvent }                           from '@angular/common/http';
 import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
@@ -35,34 +36,34 @@ import { Configuration }                                     from '../configurat
 })
 export class TeamUserService {
 
-    protected basePath = 'http://localhost';
-    public defaultHeaders = new HttpHeaders();
-    public configuration = new Configuration();
+  protected basePath = 'http://localhost';
+  public defaultHeaders = new HttpHeaders();
+  public configuration = new Configuration();
 
-    constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+  constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
 
-        if (configuration) {
-            this.configuration = configuration;
-            this.configuration.basePath = configuration.basePath || basePath || this.basePath;
+    if (configuration) {
+      this.configuration = configuration;
+      this.configuration.basePath = configuration.basePath || basePath || this.basePath;
 
-        } else {
-            this.configuration.basePath = basePath || this.basePath;
-        }
+    } else {
+      this.configuration.basePath = basePath || this.basePath;
     }
+  }
 
-    /**
+  /**
      * @param consumes string[] mime-types
      * @return true: consumes contains 'multipart/form-data', false: otherwise
      */
-    private canConsumeForm(consumes: string[]): boolean {
-        const form = 'multipart/form-data';
-        for (const consume of consumes) {
-            if (form === consume) {
-                return true;
-            }
-        }
-        return false;
+  private canConsumeForm(consumes: string[]): boolean {
+    const form = 'multipart/form-data';
+    for (const consume of consumes) {
+      if (form === consume) {
+        return true;
+      }
     }
+    return false;
+  }
 
 
     /**
@@ -123,103 +124,103 @@ export class TeamUserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createTeamUser(TeamUser?: TeamUser, observe?: 'body', reportProgress?: boolean): Observable<TeamUser>;
-    public createTeamUser(TeamUser?: TeamUser, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TeamUser>>;
-    public createTeamUser(TeamUser?: TeamUser, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TeamUser>>;
-    public createTeamUser(TeamUser?: TeamUser, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+  public createTeamUser(TeamUser?: TeamUser, observe?: 'body', reportProgress?: boolean): Observable<TeamUser>;
+  public createTeamUser(TeamUser?: TeamUser, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TeamUser>>;
+  public createTeamUser(TeamUser?: TeamUser, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TeamUser>>;
+  public createTeamUser(TeamUser?: TeamUser, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-        let headers = this.defaultHeaders;
+    let headers = this.defaultHeaders;
 
-        // authentication (oauth2) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json',
-            'text/json',
-            'application/_*+json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        return this.httpClient.post<TeamUser>(`${this.configuration.basePath}/api/teamusers`,
-            TeamUser,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
     }
 
-    /**
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+      'application/json',
+      'text/json',
+      'application/_*+json'
+    ];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    return this.httpClient.post<TeamUser>(`${this.configuration.basePath}/api/teamusers`,
+      TeamUser,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
      * Deletes a TeamUser
      * Deletes a TeamUser with the specified id  &lt;para /&gt;  Accessible only to a SuperUser
      * @param id The id of the TeamUser to delete
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteTeamUser(id: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public deleteTeamUser(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public deleteTeamUser(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public deleteTeamUser(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteTeamUser.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (oauth2) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/api/teamusers/${encodeURIComponent(String(id))}`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+  public deleteTeamUser(id: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public deleteTeamUser(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public deleteTeamUser(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public deleteTeamUser(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling deleteTeamUser.');
     }
 
-    /**
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.delete<any>(`${this.configuration.basePath}/api/teamusers/${encodeURIComponent(String(id))}`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
      * Deletes a TeamUser by user ID and team ID
      * Deletes a TeamUser with the specified user ID and team ID  &lt;para /&gt;  Accessible only to a SuperUser
      * @param teamId ID of a team.
@@ -227,49 +228,49 @@ export class TeamUserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteTeamUserByIds(teamId: string, userId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public deleteTeamUserByIds(teamId: string, userId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public deleteTeamUserByIds(teamId: string, userId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public deleteTeamUserByIds(teamId: string, userId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (teamId === null || teamId === undefined) {
-            throw new Error('Required parameter teamId was null or undefined when calling deleteTeamUserByIds.');
-        }
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling deleteTeamUserByIds.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (oauth2) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/api/teams/${encodeURIComponent(String(teamId))}/users/${encodeURIComponent(String(userId))}`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+  public deleteTeamUserByIds(teamId: string, userId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public deleteTeamUserByIds(teamId: string, userId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public deleteTeamUserByIds(teamId: string, userId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public deleteTeamUserByIds(teamId: string, userId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (teamId === null || teamId === undefined) {
+      throw new Error('Required parameter teamId was null or undefined when calling deleteTeamUserByIds.');
     }
+    if (userId === null || userId === undefined) {
+      throw new Error('Required parameter userId was null or undefined when calling deleteTeamUserByIds.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.delete<any>(`${this.configuration.basePath}/api/teams/${encodeURIComponent(String(teamId))}/users/${encodeURIComponent(String(userId))}`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
 
     /**
      * Gets TeamUsers for the specified exhibit
@@ -377,48 +378,48 @@ export class TeamUserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTeamUser(id: string, observe?: 'body', reportProgress?: boolean): Observable<TeamUser>;
-    public getTeamUser(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TeamUser>>;
-    public getTeamUser(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TeamUser>>;
-    public getTeamUser(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getTeamUser.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (oauth2) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.get<TeamUser>(`${this.configuration.basePath}/api/teamusers/${encodeURIComponent(String(id))}`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+  public getTeamUser(id: string, observe?: 'body', reportProgress?: boolean): Observable<TeamUser>;
+  public getTeamUser(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TeamUser>>;
+  public getTeamUser(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TeamUser>>;
+  public getTeamUser(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling getTeamUser.');
     }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.get<TeamUser>(`${this.configuration.basePath}/api/teamusers/${encodeURIComponent(String(id))}`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
 
     /**
      * Sets the selected TeamUser observer flag
@@ -435,30 +436,30 @@ export class TeamUserService {
             throw new Error('Required parameter id was null or undefined when calling setObserver.');
         }
 
-        let headers = this.defaultHeaders;
+    let headers = this.defaultHeaders;
 
-        // authentication (oauth2) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
 
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
 
         return this.httpClient.put<TeamUser>(`${this.configuration.basePath}/api/teamusers/${encodeURIComponent(String(id))}/observer/set`,
             null,

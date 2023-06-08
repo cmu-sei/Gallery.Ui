@@ -1,6 +1,7 @@
 /*
-Copyright 2022 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+ Copyright 2023 Carnegie Mellon University. All Rights Reserved.
+ Released under a MIT (SEI)-style license. See LICENSE.md in the
+ project root for license information.
 */
 
 /**
@@ -14,18 +15,22 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Article } from './article';
+import { Exhibit } from './exhibit';
 import { User } from './user';
 
 
 export interface Team {
-    dateCreated?: Date;
-    dateModified?: Date;
-    createdBy?: string;
-    modifiedBy?: string;
-    id?: string;
-    name?: string;
-    shortName?: string;
-    email?: string;
-    exhibitId?: string;
-    users?: Array<User>;
+  dateCreated?: Date;
+  dateModified?: Date;
+  createdBy?: string;
+  modifiedBy?: string;
+  id?: string;
+  name?: string;
+  shortName?: string;
+  email?: string;
+  exhibitId?: string;
+  exhibit?: Exhibit;
+  users?: Array<User>;
+  articles?: Array<Article>;
 }

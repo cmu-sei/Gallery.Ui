@@ -22,6 +22,7 @@ import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { Section } from 'src/app/utilities/enumerations';
+import { XApiService } from 'src/app/generated/api';
 
 @Component({
   selector: 'app-home-app',
@@ -76,7 +77,8 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     private teamQuery: TeamQuery,
     private teamCardDataService: TeamCardDataService,
     private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery
+    private collectionQuery: CollectionQuery,
+    private xApiService: XApiService
   ) {
     this.healthCheck();
 
@@ -87,11 +89,20 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.selectedSection = params.get('section');
       const exhibitId = params.get('exhibit');
       const collectionId = params.get('collection');
+      const cardId = params.get('card');
       this.exhibitId = exhibitId ? exhibitId : this.exhibitId;
       this.collectionId = collectionId ? collectionId : this.collectionId;
       this.exhibitDataService.setActive(this.exhibitId);
       this.collectionDataService.setActive(this.collectionId);
       this.setExhibitAndCollection();
+      if (this.selectedSection === 'archive') {
+        this.xApiService.viewedExhibitArchive(exhibitId).pipe(take(1)).subscribe();
+        if (cardId) {
+          this.xApiService.viewedCard(exhibitId, cardId).pipe(take(1)).subscribe();
+        }
+      } else if (this.selectedSection === 'wall') {
+        this.xApiService.viewedExhibitWall(exhibitId).pipe(take(1)).subscribe();
+      }
     });
     // subscribe to the collections
     (this.collectionQuery.selectAll() as Observable<Collection[]>).pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
@@ -227,7 +238,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   healthCheck() {
-    this.healthCheckService.healthGetReadiness().pipe(take(1)).subscribe(healthReport => {
+    this.healthCheckService.getReadiness().pipe(take(1)).subscribe(healthReport => {
       this.apiIsSick = false;
     },
     error => {
