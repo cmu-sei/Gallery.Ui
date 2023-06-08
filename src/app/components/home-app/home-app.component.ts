@@ -97,7 +97,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.setExhibitAndCollection();
       if (this.selectedSection === 'archive') {
         this.xApiService.viewedExhibitArchive(exhibitId).pipe(take(1)).subscribe();
-        if (cardId) {
+        if (cardId && cardId !== 'all') {
           this.xApiService.viewedCard(exhibitId, cardId).pipe(take(1)).subscribe();
         }
       } else if (this.selectedSection === 'wall') {
