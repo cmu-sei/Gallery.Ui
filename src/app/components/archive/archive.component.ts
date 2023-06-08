@@ -11,6 +11,7 @@ import { UserDataService } from 'src/app/data/user/user-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
+import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import {
@@ -37,8 +38,6 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 })
 export class ArchiveComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
-  @Input() myTeam: Team;
-  @Input() myTeam$: Observable<Team>;
   @Input() teamList$: Observable<Team[]>;
   @Output() changeTeam = new EventEmitter<string>();
   apiIsSick = false;
@@ -46,7 +45,6 @@ export class ArchiveComponent implements OnDestroy {
   cardId = 'all';
   exhibitId = '';
   exhibit: Exhibit = {};
-  selectedTeamId = '';
   sourceTypeList = '';
   isLoading = false;
   userArticleList: UserArticle[] = [];
@@ -89,6 +87,7 @@ export class ArchiveComponent implements OnDestroy {
     private cardQuery: CardQuery,
     private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
+    private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
     private teamCardQuery: TeamCardQuery,
     private userDataService: UserDataService,
@@ -153,7 +152,6 @@ export class ArchiveComponent implements OnDestroy {
         }
         this.exhibitId = exhibitId;
         this.exhibitDataService.setActive(this.exhibitId);
-        this.selectedTeamId = teamId;
         this.cardId = cardId ? cardId : 'all';
         this.sortChanged(this.sort);
       });
@@ -349,8 +347,18 @@ export class ArchiveComponent implements OnDestroy {
     }
   }
 
+  myTeamIsSelected(): boolean {
+    return this.teamQuery.getActiveId() === this.teamDataService.getMyTeamId();
+  }
+
   canAddArticles() {
-    return this.postCardList.length > 0 && this.exhibit && this.exhibit.collectionId && this.selectedTeamId === this.myTeam.id;
+    return this.postCardList.length > 0 &&
+      this.exhibit && this.exhibit.collectionId &&
+      this.myTeamIsSelected();
+  }
+
+  sourceIsMe(sourceName: string): boolean {
+    return sourceName === (this.teamQuery.getActive() as Team).shortName;
   }
 
   addOrEditArticle(article: Article) {
@@ -368,7 +376,7 @@ export class ArchiveComponent implements OnDestroy {
         inject: this.exhibit.currentInject,
         status: ItemStatus.Unused,
         sourceType: SourceType.Reporting,
-        sourceName: this.myTeam.shortName,
+        sourceName: this.teamDataService.getMyTeam().shortName,
         datePosted: datePosted
       };
     } else {

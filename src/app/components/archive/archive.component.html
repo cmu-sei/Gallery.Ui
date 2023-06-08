@@ -16,6 +16,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
           <mat-icon class="add-button mdi-18px" fontIcon="mdi-plus-circle"></mat-icon>
         </button>
+        <span *ngIf="!canAddArticles()" style="width: 20px;">&nbsp;</span>
         <mat-form-field>
           <input matInput placeholder="Search the Archive" class="tiny" [formControl]="filterControl" />
         </mat-form-field>
@@ -70,7 +71,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </div>
       <div class="team-cell">
         <app-team-selector
-          [myTeam]="myTeam$ | async"
           (changeTeam)="changeTeamRequest($event)"
           style="float: right;"
         ></app-team-selector>
@@ -122,15 +122,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </button>
         </div>
         <div class="one-cell">
-          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" *ngIf="!userArticle.isRead">
+          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" [disabled]="!myTeamIsSelected()" *ngIf="!userArticle.isRead">
             <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-checkbox-blank-outline" alt="UserArticle Read"></mat-icon> Read
           </button>
-          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" *ngIf="userArticle.isRead">
+          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" [disabled]="!myTeamIsSelected()" *ngIf="userArticle.isRead">
             <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-checkbox-marked-outline" alt="UserArticle Read"></mat-icon> Read
           </button>
         </div>
         <div class="one-cell">
-          <button mat-button class="article-action" title="Share UserArticle" (click)="openShareDialog(userArticle)">
+          <button mat-button class="article-action" title="Share UserArticle" (click)="openShareDialog(userArticle)" [disabled]="!myTeamIsSelected()">
             <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-share-variant" alt="Share UserArticle"></mat-icon> Share
           </button>
         </div>
@@ -148,7 +148,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             (click)="addOrEditArticle(userArticle.article)"
             style="outline: none;"
             title="Edit {{ userArticle.article.name }}"
-            *ngIf="userArticle.article.exhibitId && userArticle.article.sourceName === myTeam.shortName"
+            [disabled]="!myTeamIsSelected()"
+            *ngIf="userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)"
           >
             <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-square-edit-outline"></mat-icon> Edit
           </button>
@@ -160,7 +161,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             (click)="deleteArticle(userArticle.article)"
             style="outline: none;"
             title="Delete {{ userArticle.article.name }}"
-            *ngIf="userArticle.article.exhibitId && userArticle.article.sourceName === myTeam.shortName"
+            [disabled]="!myTeamIsSelected()"
+            *ngIf="userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)"
           >
             <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-trash-can"></mat-icon> Delete
           </button>

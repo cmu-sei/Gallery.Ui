@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { Team } from 'src/app/generated/api/model/models';
+import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { takeUntil, Subject } from 'rxjs';
 
@@ -9,13 +10,13 @@ import { takeUntil, Subject } from 'rxjs';
   styleUrls: ['./team-selector.component.scss']
 })
 export class TeamSelectorComponent implements OnDestroy {
-  @Input() myTeam: Team;
   @Output() changeTeam = new EventEmitter<string>();
   teamList: Team[];
   selectedTeamId = '';
   private unsubscribe$ = new Subject();
 
   constructor (
+    private teamDataService: TeamDataService,
     private teamQuery: TeamQuery
   ) {
     this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
@@ -24,16 +25,20 @@ export class TeamSelectorComponent implements OnDestroy {
     this.teamQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(id => {
       this.selectedTeamId = id ? id : this.selectedTeamId;
     });
+    this.selectedTeamId = this.teamQuery.getActiveId();
   }
 
-  getTeamShortName() {
-    const myTeam = this.teamList.find(t => t.id === this.myTeam.id);
-    return myTeam ? myTeam.shortName : '';
+  getMyTeamShortName() {
+    return this.teamDataService.getMyTeam().shortName;
   }
 
   setActiveTeam(teamId: string) {
     this.selectedTeamId = teamId;
     this.changeTeam.emit(teamId);
+  }
+
+  myTeamIsSelected(): boolean {
+    return this.selectedTeamId === this.teamDataService.getMyTeamId();
   }
 
   ngOnDestroy() {

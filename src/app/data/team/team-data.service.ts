@@ -32,6 +32,7 @@ export class TeamDataService {
   readonly pageEvent = new BehaviorSubject<PageEvent>(this._pageEvent);
   private pageSize: Observable<number>;
   private pageIndex: Observable<number>;
+  private myTeam = {} as Team;
 
   constructor(
     private teamStore: TeamStore,
@@ -283,10 +284,19 @@ export class TeamDataService {
 
   setActive(id: string) {
     this.teamStore.setActive(id);
-    // this.router.navigate([], {
-    //   queryParams: { teamId: id },
-    //   queryParamsHandling: 'merge',
-    // });
+  }
+
+  setMyTeam(id: string) {
+    const myTeam = this.teamQuery.getAll().find(t => t.id === id);
+    this.myTeam = myTeam ? myTeam : {} as Team;
+  }
+
+  getMyTeam(): Team {
+    return this.myTeam;
+  }
+
+  getMyTeamId(): string {
+    return this.myTeam.id;
   }
 
   setPageEvent(pageEvent: PageEvent) {
