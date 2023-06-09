@@ -205,7 +205,7 @@ export class PermissionService {
     const consumes: string[] = [
     ];
 
-        return this.httpClient.get<Array<Permission>>(`${this.configuration.basePath}/api/mypermissions`,
+        return this.httpClient.get<Array<Permission>>(`${this.configuration.basePath}/api/my-permissions`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

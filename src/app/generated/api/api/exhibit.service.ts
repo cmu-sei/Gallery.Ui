@@ -355,7 +355,7 @@ export class ExhibitService {
     const consumes: string[] = [
     ];
 
-        return this.httpClient.get<Array<Exhibit>>(`${this.configuration.basePath}/api/collections/${encodeURIComponent(String(collectionId))}/myexhibits`,
+        return this.httpClient.get<Array<Exhibit>>(`${this.configuration.basePath}/api/collections/${encodeURIComponent(String(collectionId))}/my-exhibits`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -401,7 +401,7 @@ export class ExhibitService {
     const consumes: string[] = [
     ];
 
-        return this.httpClient.get<Array<Exhibit>>(`${this.configuration.basePath}/api/myexhibits`,
+        return this.httpClient.get<Array<Exhibit>>(`${this.configuration.basePath}/api/my-exhibits`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

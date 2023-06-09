@@ -301,7 +301,7 @@ export class CollectionService {
     const consumes: string[] = [
     ];
 
-        return this.httpClient.get<Array<Collection>>(`${this.configuration.basePath}/api/mycollections`,
+        return this.httpClient.get<Array<Collection>>(`${this.configuration.basePath}/api/my-collections`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

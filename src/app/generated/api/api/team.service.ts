@@ -205,7 +205,7 @@ export class TeamService {
     const consumes: string[] = [
     ];
 
-        return this.httpClient.get<Array<Team>>(`${this.configuration.basePath}/api/myteams`,
+        return this.httpClient.get<Array<Team>>(`${this.configuration.basePath}/api/my-teams`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
