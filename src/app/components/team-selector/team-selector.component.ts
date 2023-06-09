@@ -1,3 +1,9 @@
+/*
+ Copyright 2023 Carnegie Mellon University. All Rights Reserved.
+ Released under a MIT (SEI)-style license. See LICENSE.md in the
+ project root for license information.
+*/
+
 import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { Team } from 'src/app/generated/api/model/models';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
