@@ -19,12 +19,16 @@
   align-items: center;
 }
 
-.one-cell {
-  flex: 1;
+.button-cell {
+  width: 80px;
 }
 
-.last-cell {
-  text-align: right;
+.selector-cell {
+  flex: 2;
+}
+
+.spacer-cell {
+  flex: 8;
 }
 
 .cards {

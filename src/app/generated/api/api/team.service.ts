@@ -205,15 +205,15 @@ export class TeamService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.get<Array<Team>>(`${this.configuration.basePath}/api/teams/mine`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+        return this.httpClient.get<Array<Team>>(`${this.configuration.basePath}/api/my-teams`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 
   /**
      * Gets a specific Team by id

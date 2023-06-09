@@ -141,10 +141,10 @@ export class UserArticleDataService {
       );
   }
 
-  loadMine(exhibitId: string) {
+  loadByExhibitTeam(exhibitId: string, teamId: string) {
     this.userArticleStore.setLoading(true);
     this.userArticleService
-      .getExhibitUserArticlesMine(exhibitId)
+      .getExhibitTeamUserArticles(exhibitId, teamId)
       .pipe(
         tap(() => {
           this.userArticleStore.setLoading(false);

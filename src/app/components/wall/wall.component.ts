@@ -2,13 +2,13 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnDestroy } from '@angular/core';
-import { TeamCard, UserArticle, ItemStatus } from 'src/app/generated/api/model/models';
+import { Component, EventEmitter, Inject, Input, Output, OnDestroy } from '@angular/core';
+import { Team, TeamCard, UserArticle, ItemStatus } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Section } from 'src/app/utilities/enumerations';
@@ -21,6 +21,8 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 })
 export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
+  @Input() teamList$: Observable<Team[]>;
+  @Output() changeTeam = new EventEmitter<string>();
   isLoading = false;
   cardList: Card[] = [];
   shownCardList: Card[] = [];
@@ -102,6 +104,10 @@ export class WallComponent implements OnDestroy {
       }
     });
     this.shownCardList = shownCardList;
+  }
+
+  changeTeamRequest(teamId: string) {
+    this.changeTeam.emit(teamId);
   }
 
   ngOnDestroy() {

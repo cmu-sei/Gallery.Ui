@@ -3,23 +3,27 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div class="cssLayoutRowSpaceCenter">
+<div class="full-width">
+
   <div class="user-list-container mat-elevation-z8">
+
     <div class="sp-icon">
-        <h4>All Users</h4>
+      <mat-icon
+        class="mdi-24px"
+        fontIcon="mdi-account-multiple"
+      ></mat-icon>
+    <span style="margin-left: 10px">
+      All Users
+    </span>
     </div>
+
     <div>
       <mat-icon
         style="transform: scale(0.85); margin-right: 5px; margin-left: 10px;"
         svgIcon="ic_magnify_search"
       ></mat-icon>
-      <mat-form-field style="width: 80%;">
-        <input
-          matInput
-          [(ngModel)]="filterString"
-          (keyup)="applyFilter($any($event.target).value)"
-          placeholder="Search"
-        />
+      <mat-form-field style="width: 220px;">
+        <input matInput [formControl]="filterControl" placeholder="Search" />
       </mat-form-field>
       <button
         *ngIf="filterString != ''"
@@ -30,7 +34,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       >
         <mat-icon
           style="transform: scale(0.85);"
-          fontIcon="mdi-close-circle-outline"
+          svgIcon="ic_cancel_circle"
         ></mat-icon>
       </button>
     </div>
@@ -84,10 +88,28 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </mat-paginator>
   </div>
 
+  <div class="spacer">&nbsp;</div>
+
   <div class="team-list-container mat-elevation-z8">
+
     <div class="sp-icon">
-      <h4>Team Users</h4>
+      <mat-icon
+          class="mdi-24px"
+          fontIcon="mdi-account-group"
+      ></mat-icon>
+      <span style="margin-left: 10px">
+        Team Users
+      </span>
     </div>
+
+    <mat-card
+      *ngIf="false"
+      style="display: flex; justify-content: center; align-items: center;"
+    >
+      <mat-progress-spinner color="primary" mode="indeterminate">
+      </mat-progress-spinner>
+    </mat-card>
+
     <mat-table
       class="mat-table-all-users"
       #table
@@ -99,8 +121,19 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           >User Name</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
-          <div *ngIf="element.name !== null">{{ element.name }}</div>
-          <div *ngIf="element.name === null">{{ element.id }}</div>
+          <div>{{ getUserName(element.userId) }}</div>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="isObserver">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Observer</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          <mat-checkbox
+            [checked]="element.isObserver"
+            (change)="setObserverValue(element.id, $event.checked)"
+          ></mat-checkbox>
         </mat-cell>
       </ng-container>
 
@@ -115,9 +148,10 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </mat-cell>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedUserColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedUserColumns"></mat-row>
+      <mat-header-row *matHeaderRowDef="displayedTeamUserColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedTeamUserColumns"></mat-row>
     </mat-table>
 
   </div>
+
 </div>

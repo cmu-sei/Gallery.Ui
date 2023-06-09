@@ -66,6 +66,7 @@ import { AdminExhibitArticlesComponent } from './components/admin/admin-exhibit-
 import { AdminExhibitArticleTeamsComponent } from './components/admin/admin-exhibit-article-teams/admin-exhibit-article-teams.component';
 import { AdminExhibitsComponent } from './components/admin/admin-exhibits/admin-exhibits.component';
 import { AdminExhibitEditDialogComponent } from './components/admin/admin-exhibit-edit-dialog/admin-exhibit-edit-dialog.component';
+import { AdminObserversComponent } from './components/admin/admin-observers/admin-observers.component';
 import { AdminTeamCardsComponent } from './components/admin/admin-team-cards/admin-team-cards.component';
 import { AdminTeamCardEditDialogComponent } from './components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
 import { AdminTeamEditDialogComponent } from './components/admin/admin-team-edit-dialog/admin-team-edit-dialog.component';
@@ -93,6 +94,7 @@ import { ArchiveComponent } from './components/archive/archive.component';
 import { WallComponent } from './components/wall/wall.component';
 import { QuillModule } from 'ngx-quill';
 import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+import { TeamSelectorComponent } from './components/team-selector/team-selector.component';
 
 const settings: ComnSettingsConfig = {
   url: 'assets/config/settings.json',
@@ -120,6 +122,7 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AdminExhibitArticleTeamsComponent,
     AdminExhibitsComponent,
     AdminExhibitEditDialogComponent,
+    AdminObserversComponent,
     AdminTeamCardsComponent,
     AdminTeamCardEditDialogComponent,
     AdminTeamEditDialogComponent,
@@ -136,7 +139,8 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     DisplayOrderPipe,
     SortByPipe,
     ArchiveComponent,
-    WallComponent
+    WallComponent,
+    TeamSelectorComponent
   ],
   imports: [
     AkitaNgDevtools,

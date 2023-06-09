@@ -3,7 +3,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { EntityActions } from '@datorama/akita';
 import { ComnSettingsService, Theme, ComnAuthQuery } from '@cmusei/crucible-common';
@@ -19,6 +19,7 @@ import { CardDataService } from 'src/app/data/card/card-data.service';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
+import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { Section } from 'src/app/utilities/enumerations';
 import { XApiService } from 'src/app/generated/api';
@@ -40,13 +41,15 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   currentMove = -1;
   currentInject = -1;
   selectedSection: string = Section.none;
-  loggedInUserId = '';
+  loggedInUser = { id: '', name: '' };
   userList: User[] = [];
   collectionList: Collection[] = [];
   collectionLoadCount = 0;
   allExhibits: Exhibit[] = [];
   exhibitList: Exhibit[] = [];
   teamList: Team[] = [];
+  teamList$ = new BehaviorSubject<Team[]>([]);
+  selectedTeamId = '';
   isContentDeveloper$ = this.userDataService.isContentDeveloper.asObservable();
   isAuthorizedUser = false;
   isSidebarOpen = true;
@@ -71,6 +74,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
     private teamDataService: TeamDataService,
+    private teamQuery: TeamQuery,
     private teamCardDataService: TeamCardDataService,
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
@@ -93,7 +97,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.setExhibitAndCollection();
       if (this.selectedSection === 'archive') {
         this.xApiService.viewedExhibitArchive(exhibitId).pipe(take(1)).subscribe();
-        if (cardId) {
+        if (cardId && cardId !== 'all') {
           this.xApiService.viewedCard(exhibitId, cardId).pipe(take(1)).subscribe();
         }
       } else if (this.selectedSection === 'wall') {
@@ -127,14 +131,17 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
       this.userList = users;
     });
-
     this.userDataService.getUsersFromApi();
-
+    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
+      this.teamList = teams;
+      this.setMyTeam();
+    });
     this.userDataService.loggedInUser
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((user) => {
-        if (user && user.profile && user.profile.sub !== this.loggedInUserId) {
-          this.loggedInUserId = user.profile.sub;
+        if (user && user.profile && user.profile.sub !== this.loggedInUser.id) {
+          this.loggedInUser.id = user.profile.sub;
+          this.loggedInUser.name = user.profile.name;
           this.exhibitDataService.unload();
           this.collectionDataService.unload();
           this.cardDataService.unload();
@@ -143,7 +150,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
           this.userArticleDataService.unload();
         }
       });
-
     this.userDataService.isAuthorizedUser
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((isAuthorized) => {
@@ -151,7 +157,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       });
     this.collectionDataService.loadMine();
     this.exhibitDataService.loadMine();
-
     // Set the display settings from config file
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
@@ -179,6 +184,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.exhibit = this.allExhibits.find(e => e.id === this.exhibitId);
       if (this.exhibit) {
         if (this.collectionId && this.collectionId !== this.exhibit.collectionId) {
+          this.teamDataService.setMyTeam('');
           this.router.navigate([], {
             queryParams: { collection: this.exhibit.collectionId },
             queryParamsHandling: 'merge'
@@ -187,11 +193,36 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.collectionId = this.exhibit.collectionId;
         this.collectionDataService.setActive(this.collectionId);
       }
-      this.reloadCardsAndArticles();
+      this.loadExhibitData();
     } else if (this.collectionId && (!this.collection || this.collection.id !== this.collectionId)) {
       this.collectionDataService.setActive(this.collectionId);
     }
     this.exhibitList = this.allExhibits.filter(e => e.collectionId === this.collectionId);
+  }
+
+  setMyTeam() {
+    this.teamList.forEach(t => {
+      t.users.forEach(u => {
+        if (u.id === this.loggedInUser.id) {
+          this.teamDataService.setMyTeam(t.id);
+          if (!this.teamQuery.getActiveId()) {
+            this.selectedTeamId = t.id;
+            this.teamDataService.setActive(t.id);
+            this.loadTeamData();
+          }
+        }
+      });
+    });
+  }
+
+  changeTeam(teamId: string) {
+    this.selectedTeamId = teamId;
+    this.teamDataService.setActive(teamId);
+    this.loadTeamData();
+    this.router.navigate([], {
+      queryParams: { team: teamId },
+      queryParamsHandling: 'merge'
+    });
   }
 
   logout() {
@@ -215,9 +246,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     });
   }
 
-  reloadCardsAndArticles() {
-    this.cardDataService.unload();
+  loadExhibitData() {
     this.teamDataService.unload();
+    this.cardDataService.unload();
     this.teamCardDataService.unload();
     this.userArticleDataService.unload();
     // process the change
@@ -226,10 +257,19 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.exhibitDataService.setActive(this.exhibitId);
       this.currentMove = this.exhibit.currentMove;
       this.currentInject = this.exhibit.currentInject;
-      this.cardDataService.loadMine(this.exhibitId);
       this.teamDataService.loadByExhibitId(this.exhibitId);
-      this.teamCardDataService.loadMineByExhibit(this.exhibit.id);
-      this.userArticleDataService.loadMine(this.exhibitId);
+    }
+  }
+
+  loadTeamData() {
+    this.cardDataService.unload();
+    this.teamCardDataService.unload();
+    this.userArticleDataService.unload();
+    // process the change
+    if (this.selectedTeamId) {
+      this.cardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
+      this.teamCardDataService.loadByExhibitTeam(this.exhibit.id, this.selectedTeamId);
+      this.userArticleDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
     }
   }
 

@@ -355,15 +355,15 @@ export class ExhibitService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.get<Array<Exhibit>>(`${this.configuration.basePath}/api/collections/${encodeURIComponent(String(collectionId))}/exhibits/mine`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+        return this.httpClient.get<Array<Exhibit>>(`${this.configuration.basePath}/api/collections/${encodeURIComponent(String(collectionId))}/my-exhibits`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 
   /**
      * Get User&#39;s Exhibits
@@ -401,15 +401,15 @@ export class ExhibitService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.get<Array<Exhibit>>(`${this.configuration.basePath}/api/exhibits/mine`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+        return this.httpClient.get<Array<Exhibit>>(`${this.configuration.basePath}/api/my-exhibits`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 
   /**
      * Updates an Exhibit&#39;s current move and inject

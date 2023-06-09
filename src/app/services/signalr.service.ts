@@ -14,7 +14,7 @@ import { CollectionDataService } from 'src/app/data/collection/collection-data.s
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
-import { TeamUserDataService } from '../data/user/team-user-data.service';
+import { TeamUserDataService } from '../data/team-user/team-user-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

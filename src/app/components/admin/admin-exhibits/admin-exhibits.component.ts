@@ -16,6 +16,7 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminExhibitEditDialogComponent } from '../admin-exhibit-edit-dialog/admin-exhibit-edit-dialog.component';
+import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 
 @Component({
   selector: 'app-admin-exhibits',
@@ -51,7 +52,8 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     public dialogService: DialogService,
     private collectionQuery: CollectionQuery,
     private exhibitDataService: ExhibitDataService,
-    private exhibitQuery: ExhibitQuery
+    private exhibitQuery: ExhibitQuery,
+    private teamUserDataService: TeamUserDataService
   ) {
     this.exhibitDataService.unload();
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
@@ -107,6 +109,12 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
 
   togglePanel(exhibit: Exhibit) {
     this.editExhibit = this.editExhibit.id === exhibit.id ? this.editExhibit = {} : this.editExhibit = { ...exhibit};
+    this.exhibitDataService.setActive(this.editExhibit.id);
+    // if an exhibit has been selected, load the exhibit, so that we have its details
+    if (this.editExhibit.id) {
+      this.exhibitDataService.loadById(this.editExhibit.id);
+      this.teamUserDataService.loadByExhibit(this.editExhibit.id);
+    }
   }
 
   selectCollection(collectionId: string) {

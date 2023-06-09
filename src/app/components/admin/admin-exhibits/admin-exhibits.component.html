@@ -106,7 +106,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
         </app-admin-team-cards>
       </mat-expansion-panel>
-      <mat-expansion-panel>
+      <mat-expansion-panel class="bottom-space">
         <mat-expansion-panel-header>
           <h4>Article Teams</h4>
         </mat-expansion-panel-header>
@@ -115,6 +115,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           [teamList]="teamList"
         >
         </app-admin-exhibit-articles>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <h4>Observers</h4>
+        </mat-expansion-panel-header>
+        <app-admin-observers
+          [exhibitId]="exhibit.id"
+        >
+        </app-admin-observers>
       </mat-expansion-panel>
     </div>
   </mat-expansion-panel>

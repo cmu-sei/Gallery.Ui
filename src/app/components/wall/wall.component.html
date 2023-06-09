@@ -5,7 +5,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div class="wall-container">
   <div class="top-row">
-    <div class="one-cell last-cell">
+    <div class="spacer-cell">&nbsp;</div>
+    <div class="selector-cell">
+      <app-team-selector
+        (changeTeam)="changeTeamRequest($event)"
+        style="float: right;"
+      ></app-team-selector>
+    </div>
+    <div class="button-cell">
       <button
         mat-icon-button
         (click)="gotoArchive(null)"

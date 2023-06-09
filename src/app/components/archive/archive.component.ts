@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, OnDestroy } from '@angular/core';
 import { Article, Card, ItemStatus, Team, TeamCard, Exhibit, UserArticle, SourceType } from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
@@ -11,6 +11,7 @@ import { UserDataService } from 'src/app/data/user/user-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
+import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import {
@@ -37,6 +38,8 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 })
 export class ArchiveComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
+  @Input() teamList$: Observable<Team[]>;
+  @Output() changeTeam = new EventEmitter<string>();
   apiIsSick = false;
   apiMessage = 'The GALLERY API web service is not responding.';
   cardId = 'all';
@@ -48,7 +51,6 @@ export class ArchiveComponent implements OnDestroy {
   cardList: Card[] = [];
   moveList: number[] = [];
   teamList: Team[] = [];
-  myTeam: Team = {} as Team;
   postCardList: Card[] = [];
   showCardList: Card[] = [];
   teamCardList: TeamCard[] = [];
@@ -85,6 +87,7 @@ export class ArchiveComponent implements OnDestroy {
     private cardQuery: CardQuery,
     private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
+    private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
     private teamCardQuery: TeamCardQuery,
     private userDataService: UserDataService,
@@ -96,6 +99,7 @@ export class ArchiveComponent implements OnDestroy {
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
     this.userArticleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(userArticles => {
       this.userArticleList = [];
+      this.filteredUserArticleList = [];
       let unreadCount = 0;
       userArticles.forEach(ua => {
         unreadCount = ua.isRead ? unreadCount : ++unreadCount;
@@ -139,6 +143,7 @@ export class ArchiveComponent implements OnDestroy {
       .subscribe((params) => {
         const cardId  = params.get('card');
         const exhibitId  = params.get('exhibit');
+        const teamId = params.get('team');
         if (!exhibitId) {
           this.router.navigate([''], {
             queryParams: { },
@@ -156,10 +161,6 @@ export class ArchiveComponent implements OnDestroy {
         this.filterString = term;
         this.sortChanged(this.sort);
       });
-    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
-      this.teamList = teams;
-      this.setMyTeam();
-    });
     this.teamCardQuery.selectAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(teamCards => {
@@ -167,25 +168,6 @@ export class ArchiveComponent implements OnDestroy {
         this.setCardLists();
         this.sortChanged(this.sort);
       });
-    this.userDataService.loggedInUser
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((user) => {
-        if (user && user.profile) {
-          this.username = user.profile.name;
-          this.userId = user.profile.sub;
-          this.setMyTeam();
-        }
-      });
-  }
-
-  setMyTeam() {
-    this.teamList.forEach(t => {
-      t.users.forEach(u => {
-        if (u.id === this.userId) {
-          this.myTeam = t;
-        }
-      });
-    });
   }
 
   getCardName(id: string) {
@@ -200,6 +182,13 @@ export class ArchiveComponent implements OnDestroy {
     }
 
     return itemStatus.toString();
+  }
+
+  changeCard(cardId: string) {
+    this.router.navigate([], {
+      queryParams: { card: cardId },
+      queryParamsHandling: 'merge'
+    });
   }
 
   applyFilter(filterValue: string) {
@@ -358,8 +347,18 @@ export class ArchiveComponent implements OnDestroy {
     }
   }
 
+  myTeamIsSelected(): boolean {
+    return this.teamQuery.getActiveId() === this.teamDataService.getMyTeamId();
+  }
+
   canAddArticles() {
-    return this.postCardList.length > 0 && this.exhibit && this.exhibit.collectionId;
+    return this.postCardList.length > 0 &&
+      this.exhibit && this.exhibit.collectionId &&
+      this.myTeamIsSelected();
+  }
+
+  sourceIsMe(sourceName: string): boolean {
+    return sourceName === (this.teamQuery.getActive() as Team).shortName;
   }
 
   addOrEditArticle(article: Article) {
@@ -377,7 +376,7 @@ export class ArchiveComponent implements OnDestroy {
         inject: this.exhibit.currentInject,
         status: ItemStatus.Unused,
         sourceType: SourceType.Reporting,
-        sourceName: this.myTeam.shortName,
+        sourceName: this.teamDataService.getMyTeam().shortName,
         datePosted: datePosted
       };
     } else {
@@ -429,6 +428,10 @@ export class ArchiveComponent implements OnDestroy {
     }
 
     return classes;
+  }
+
+  changeTeamRequest(teamId: string) {
+    this.changeTeam.emit(teamId);
   }
 
   ngOnDestroy() {
