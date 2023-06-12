@@ -173,7 +173,7 @@ export class ExhibitDataService {
   loadByCollection(collectionId: string) {
     this.exhibitStore.setLoading(true);
     this.exhibitService
-      .getMyCollectionExhibits(collectionId)
+      .getCollectionExhibits(collectionId)
       .pipe(
         tap(() => {
           this.exhibitStore.setLoading(false);
