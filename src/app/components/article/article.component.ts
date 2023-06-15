@@ -5,7 +5,7 @@ import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
-import { Article } from 'src/app/generated/api/model/models';
+import { Article, Exhibit } from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -20,6 +20,7 @@ import { XApiService } from 'src/app/generated/api';
 export class ArticleComponent implements OnDestroy {
   safeContent: SafeHtml = '';
   article: Article = {} as Article;
+  exhibit: Exhibit = {} as Exhibit;
   private unsubscribe$ = new Subject();
 
   constructor(
@@ -34,11 +35,13 @@ export class ArticleComponent implements OnDestroy {
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Article';
     // subscribe to route changes
     this.activatedRoute.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      const articleId = params.get('id');
+      const articleId = params.get('articleId');
+      const exhibitId = params.get('exhibitId');
+
       if (articleId) {
         this.articleDataService.loadById(articleId);
         this.articleDataService.setActive(articleId);
-        this.xApiService.viewedArticle(articleId).pipe(take(1)).subscribe();
+        this.xApiService.viewedArticle(exhibitId, articleId).pipe(take(1)).subscribe();
       } else {
         this.articleDataService.setActive('');
       }

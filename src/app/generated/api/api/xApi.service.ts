@@ -68,14 +68,18 @@ export class XApiService {
   /**
      * Logs xAPI viewed statement for Article by id
      * Returns status
+     * @param exhibitId The id of the Exhibit
      * @param articleId The id of the Article
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public viewedArticle(articleId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-  public viewedArticle(articleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-  public viewedArticle(articleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-  public viewedArticle(articleId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+  public viewedArticle(exhibitId: string, articleId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public viewedArticle(exhibitId: string, articleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public viewedArticle(exhibitId: string, articleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public viewedArticle(exhibitId: string, articleId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling viewedArticle.');
+    }
     if (articleId === null || articleId === undefined) {
       throw new Error('Required parameter articleId was null or undefined when calling viewedArticle.');
     }
@@ -103,7 +107,7 @@ export class XApiService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/viewed/article/${encodeURIComponent(String(articleId))}`,
+    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/viewed/exhibit/${encodeURIComponent(String(exhibitId))}/article/${encodeURIComponent(String(articleId))}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
