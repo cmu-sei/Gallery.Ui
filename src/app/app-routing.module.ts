@@ -23,7 +23,7 @@ export const ROUTES: Routes = [
     canActivate: [ComnAuthGuardService],
   },
   {
-    path: 'article/:id',
+    path: 'exhibit/:exhibitId/article/:articleId',
     component: ArticleComponent,
     canActivate: [ComnAuthGuardService],
   },

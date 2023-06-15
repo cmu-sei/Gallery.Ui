@@ -34,11 +34,13 @@ export class ArticleComponent implements OnDestroy {
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Article';
     // subscribe to route changes
     this.activatedRoute.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      const articleId = params.get('id');
+      const articleId = params.get('articleId');
+      const exhibitId = params.get('exhibitId');
+
       if (articleId) {
         this.articleDataService.loadById(articleId);
         this.articleDataService.setActive(articleId);
-        this.xApiService.viewedArticle(articleId).pipe(take(1)).subscribe();
+        this.xApiService.viewedArticle(exhibitId, articleId).pipe(take(1)).subscribe();
       } else {
         this.articleDataService.setActive('');
       }
