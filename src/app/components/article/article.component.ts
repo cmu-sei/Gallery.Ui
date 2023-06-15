@@ -5,7 +5,7 @@ import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
-import { Article, Exhibit } from 'src/app/generated/api/model/models';
+import { Article } from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -20,7 +20,6 @@ import { XApiService } from 'src/app/generated/api';
 export class ArticleComponent implements OnDestroy {
   safeContent: SafeHtml = '';
   article: Article = {} as Article;
-  exhibit: Exhibit = {} as Exhibit;
   private unsubscribe$ = new Subject();
 
   constructor(
