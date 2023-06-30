@@ -176,10 +176,10 @@ export class TeamDataService {
       );
   }
 
-  loadMine() {
+  loadMine(exhibitId: string) {
     this.teamStore.setLoading(true);
     this.teamService
-      .getMyTeams()
+      .getMyExhibitTeams(exhibitId)
       .pipe(
         tap(() => {
           this.teamStore.setLoading(false);
