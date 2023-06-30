@@ -142,12 +142,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         if (user && user.profile && user.profile.sub !== this.loggedInUser.id) {
           this.loggedInUser.id = user.profile.sub;
           this.loggedInUser.name = user.profile.name;
-          this.exhibitDataService.unload();
-          this.collectionDataService.unload();
-          this.cardDataService.unload();
-          this.teamDataService.unload();
-          this.teamCardDataService.unload();
-          this.userArticleDataService.unload();
         }
       });
     this.userDataService.isAuthorizedUser
@@ -203,7 +197,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   setMyTeam() {
     this.teamList.forEach(t => {
       t.users.forEach(u => {
-        if (u.id === this.loggedInUser.id) {
+        if (u && u.id === this.loggedInUser.id) {
           this.teamDataService.setMyTeam(t.id);
           if (!this.teamQuery.getActiveId()) {
             this.selectedTeamId = t.id;
@@ -257,7 +251,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.exhibitDataService.setActive(this.exhibitId);
       this.currentMove = this.exhibit.currentMove;
       this.currentInject = this.exhibit.currentInject;
-      this.teamDataService.loadByExhibitId(this.exhibitId);
+      this.teamDataService.loadMine(this.exhibitId);
     }
   }
 

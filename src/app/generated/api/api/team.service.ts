@@ -169,43 +169,43 @@ export class TeamService {
     );
   }
 
-  /**
-     * Gets Teams for the current user
-     * Returns a list of the current user&#39;s Teams.
+    /**
+     * Gets Exhibit Teams for the current user
+     * Returns a list of the current user&#39;s Exhibit Teams.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public getMyTeams(observe?: 'body', reportProgress?: boolean): Observable<Array<Team>>;
-  public getMyTeams(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Team>>>;
-  public getMyTeams(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Team>>>;
-  public getMyTeams(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getMyExhibitTeams(exhibitId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<Team>>;
+    public getMyExhibitTeams(exhibitId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Team>>>;
+    public getMyExhibitTeams(exhibitId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Team>>>;
+    public getMyExhibitTeams(exhibitId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-    let headers = this.defaultHeaders;
+        let headers = this.defaultHeaders;
 
-    // authentication (oauth2) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
+        // authentication (oauth2) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
 
-    // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
 
-    // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
 
-        return this.httpClient.get<Array<Team>>(`${this.configuration.basePath}/api/my-teams`,
+        return this.httpClient.get<Array<Team>>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/my-teams`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
