@@ -6,7 +6,6 @@ import { UntypedFormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Team, TeamCard } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
-import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
@@ -48,14 +47,11 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
     public dialogService: DialogService,
-    private cardDataService: CardDataService,
     private cardQuery: CardQuery,
     private teamQuery: TeamQuery,
     private teamCardDataService: TeamCardDataService,
     private teamCardQuery: TeamCardQuery
   ) {
-    this.teamCardDataService.unload();
-    this.cardDataService.unload();
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
