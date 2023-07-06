@@ -41,7 +41,6 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
     private articleTeamDataService: ArticleTeamDataService
   ) {}
@@ -65,8 +64,6 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
       this.exhibitTeams = teams;
       this.setDataSources();
     });
-    this.articleTeamDataService.getTeamArticlesFromApi(this.exhibitId);
-    this.teamDataService.loadByExhibitId(this.exhibitId);
   }
 
   setDataSources() {

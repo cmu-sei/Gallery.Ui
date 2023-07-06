@@ -1,27 +1,24 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
 import { Team, TeamCard } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
-import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import {
   AdminTeamCardEditDialogComponent
 } from 'src/app/components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-team-cards',
@@ -48,14 +45,11 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
 
   constructor(
-    activatedRoute: ActivatedRoute,
-    private router: Router,
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
     public dialogService: DialogService,
     private cardDataService: CardDataService,
     private cardQuery: CardQuery,
-    private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
     private teamCardDataService: TeamCardDataService,
     private teamCardQuery: TeamCardQuery
@@ -84,7 +78,6 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.cardDataService.loadByCollection(this.collectionId);
     this.teamCardDataService.loadByExhibit(this.exhibitId);
     this.filterControl.setValue(this.filterString);
     this.sortChanged(this.sort);
