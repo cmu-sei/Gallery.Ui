@@ -7,10 +7,9 @@ import { Sort } from '@angular/material/sort';
 import { Article, Exhibit, ItemStatus, SourceType, Team} from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
+import { ArticleTeamDataService } from 'src/app/data/team/article-team-data.service';
 import { Card } from 'src/app/data/card/card.store';
-import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
-import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
@@ -55,12 +54,10 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     public dialogService: DialogService,
     private articleDataService: ArticleDataService,
     private articleQuery: ArticleQuery,
-    private cardDataService: CardDataService,
-    private cardQuery: CardQuery,
-    private teamDataService: TeamDataService
+    private articleTeamDataService: ArticleTeamDataService,
+    private cardQuery: CardQuery
   ) {
     this.articleDataService.unload();
-    this.cardDataService.unload();
     this.sortChanged(this.sort);
     this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
       this.cardList = cards;
@@ -80,8 +77,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   ngOnInit() {
     if (this.exhibit && this.exhibit.collectionId) {
       this.articleDataService.loadByCollection(this.exhibit.collectionId);
-      this.cardDataService.loadByCollection(this.exhibit.collectionId);
-      this.teamDataService.loadByExhibitId(this.exhibit.id);
+      this.articleTeamDataService.getTeamArticlesFromApi(this.exhibit.id);
     }
     this.filterControl.setValue(this.filterString);
   }
@@ -158,11 +154,10 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
       const filterString = this.filterString.toLowerCase();
       filteredArticles = articles
         .filter((a) => (!this.filterString ||
-                          a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-                          this.getCardName(a.cardId).toLowerCase().includes(this.filterString.toLowerCase()) ||
-                          a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
-                        )
-        );
+          a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
+          this.getCardName(a.cardId).toLowerCase().includes(this.filterString.toLowerCase()) ||
+          a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
+        ));
     }
     return filteredArticles;
   }

@@ -69,7 +69,6 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.filterControl.setValue(this.filterString);
-    this.teamDataService.loadByExhibitId(this.exhibitId);
   }
 
   addOrEditTeam(team: Team) {

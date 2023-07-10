@@ -14,8 +14,6 @@ import { LegacyPageEvent as PageEvent, MatLegacyPaginator as MatPaginator } from
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { Team } from 'src/app/generated/api';
-import { ArticleTeamDataService } from 'src/app/data/team/article-team-data.service';
-import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -42,9 +40,7 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    private teamDataService: TeamDataService,
-    private teamQuery: TeamQuery,
-    private articleTeamDataService: ArticleTeamDataService
+    private teamQuery: TeamQuery
   ) {}
 
   ngOnInit() {
@@ -53,7 +49,6 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
       this.exhibitTeams = teams;
       this.setDataSources();
     });
-    this.teamDataService.loadByExhibitId(this.exhibitId);
   }
 
   setDataSources() {

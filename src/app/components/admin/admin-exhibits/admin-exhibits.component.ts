@@ -6,6 +6,8 @@ import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
 import { Collection, Exhibit, Team, User } from 'src/app/generated/api/model/models';
+import { CardDataService } from 'src/app/data/card/card-data.service';
+import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
@@ -16,6 +18,7 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminExhibitEditDialogComponent } from '../admin-exhibit-edit-dialog/admin-exhibit-edit-dialog.component';
+import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 
 @Component({
@@ -50,9 +53,12 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
     public dialogService: DialogService,
+    private cardDataService: CardDataService,
+    private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
     private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
+    private teamDataService: TeamDataService,
     private teamUserDataService: TeamUserDataService
   ) {
     this.exhibitDataService.unload();
@@ -73,6 +79,10 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     });
     activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.selectedCollectionId = params.get('collection');
+      if (this.selectedCollectionId) {
+        this.cardDataService.loadByCollection(this.selectedCollectionId);
+        this.collectionDataService.setActive(this.selectedCollectionId);
+      }
     });
   }
 
@@ -114,6 +124,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     if (this.editExhibit.id) {
       this.exhibitDataService.loadById(this.editExhibit.id);
       this.teamUserDataService.loadByExhibit(this.editExhibit.id);
+      this.teamDataService.loadByExhibitId(this.editExhibit.id);
     }
   }
 
