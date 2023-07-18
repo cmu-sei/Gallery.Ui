@@ -21,7 +21,6 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 })
 export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
-  @Input() teamList$: Observable<Team[]>;
   @Output() changeTeam = new EventEmitter<string>();
   isLoading = false;
   cardList: Card[] = [];

@@ -38,7 +38,6 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 })
 export class ArchiveComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
-  @Input() teamList$: Observable<Team[]>;
   @Output() changeTeam = new EventEmitter<string>();
   apiIsSick = false;
   apiMessage = 'The GALLERY API web service is not responding.';
@@ -97,6 +96,7 @@ export class ArchiveComponent implements OnDestroy {
   ) {
     this._document.getElementById('appFavicon').setAttribute('href', '/assets/img/archive-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
+    // subscribe to userArticles
     this.userArticleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(userArticles => {
       this.userArticleList = [];
       this.filteredUserArticleList = [];
@@ -121,6 +121,7 @@ export class ArchiveComponent implements OnDestroy {
             this.settingsService.settings.AppTitle + ' Archive (' + unreadCount.toString() + ')';
       }
     });
+    // subscribe to cards
     this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
       this.cardList = [];
       cards.forEach(card => {
@@ -129,6 +130,7 @@ export class ArchiveComponent implements OnDestroy {
       this.sortChanged(this.sort);
       this.setCardLists();
     });
+    // subscribe to active exhibit
     (this.exhibitQuery.selectActive() as Observable<Exhibit>).pipe(takeUntil(this.unsubscribe$)).subscribe(e => {
       if (!e) {
         if (this.exhibitId) {
@@ -138,6 +140,7 @@ export class ArchiveComponent implements OnDestroy {
         this.exhibit = e;
       }
     });
+    // subscribe to url query parameters
     this.activatedRoute.queryParamMap
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((params) => {
@@ -155,12 +158,14 @@ export class ArchiveComponent implements OnDestroy {
         this.cardId = cardId ? cardId : 'all';
         this.sortChanged(this.sort);
       });
+    // subscribe to filter control changes
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
         this.filterString = term;
         this.sortChanged(this.sort);
       });
+    // subscribe to teamCards
     this.teamCardQuery.selectAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(teamCards => {
@@ -168,6 +173,10 @@ export class ArchiveComponent implements OnDestroy {
         this.setCardLists();
         this.sortChanged(this.sort);
       });
+    // subscribe to teams
+    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
+      this.teamList = teams;
+    });
   }
 
   getCardName(id: string) {
