@@ -48,7 +48,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   allExhibits: Exhibit[] = [];
   exhibitList: Exhibit[] = [];
   teamList: Team[] = [];
-  teamList$ = new BehaviorSubject<Team[]>([]);
   selectedTeamId = '';
   isContentDeveloper$ = this.userDataService.isContentDeveloper.asObservable();
   isAuthorizedUser = false;
