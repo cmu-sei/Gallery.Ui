@@ -93,7 +93,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.collectionId = collectionId ? collectionId : this.collectionId;
       this.exhibitDataService.setActive(this.exhibitId);
       this.collectionDataService.setActive(this.collectionId);
-      if (this.selectedTeamId !== this.teamDataService.getMyTeamId()) {
+      if (this.selectedTeamId && (this.selectedTeamId !== this.teamDataService.getMyTeamId())) {
         // observed
         if (this.selectedSection === 'archive') {
           this.xApiService.observedExhibitArchive(exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
