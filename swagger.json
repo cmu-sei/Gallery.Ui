@@ -654,19 +654,29 @@
         }
       }
     },
-    "/api/exhibits/{exhibitId}/cards/mine": {
+    "/api/exhibits/{exhibitId}/teams/{teamId}/cards": {
       "get": {
         "tags": [
           "Card"
         ],
         "summary": "Gets Cards for an exhibit for the user",
         "description": "Returns a list of Cards based on the exhibit's current move and current inject for the user.",
-        "operationId": "getExhibitCardsMine",
+        "operationId": "getExhibitCardsByTeam",
         "parameters": [
           {
             "name": "exhibitId",
             "in": "path",
             "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "The id of the Team",
             "required": true,
             "schema": {
               "type": "string",
@@ -989,7 +999,7 @@
         }
       }
     },
-    "/api/collections/mine": {
+    "/api/my-collections": {
       "get": {
         "tags": [
           "Collection"
@@ -1312,7 +1322,7 @@
         }
       }
     },
-    "/api/exhibits/mine": {
+    "/api/my-exhibits": {
       "get": {
         "tags": [
           "Exhibit"
@@ -1426,7 +1436,7 @@
         }
       }
     },
-    "/api/collections/{collectionId}/exhibits/mine": {
+    "/api/collections/{collectionId}/my-exhibits": {
       "get": {
         "tags": [
           "Exhibit"
@@ -2271,7 +2281,7 @@
         }
       }
     },
-    "/api/permissions/mine": {
+    "/api/my-permissions": {
       "get": {
         "tags": [
           "Permission"
@@ -2656,14 +2666,25 @@
         }
       }
     },
-    "/api/teams/mine": {
+    "/api/exhibits/{exhibitId}/my-teams": {
       "get": {
         "tags": [
           "Team"
         ],
-        "summary": "Gets Teams for the current user",
-        "description": "Returns a list of the current user's Teams.",
-        "operationId": "getMyTeams",
+        "summary": "Gets Exhibit Teams for the current user",
+        "description": "Returns a list of the current user's Exhibit Teams.",
+        "operationId": "getMyExhibitTeams",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -3687,19 +3708,29 @@
         }
       }
     },
-    "/api/exhibits/{exhibitId}/teamcards/mine": {
+    "/api/exhibits/{exhibitId}/teams/{teamId}/teamcards": {
       "get": {
         "tags": [
           "TeamCard"
         ],
-        "summary": "Gets all TeamCards for an exhibit for the current user",
-        "description": "Returns a list of all of the TeamCards for the exhibit for the current user.",
-        "operationId": "getMyExhibitTeamCards",
+        "summary": "Gets all TeamCards for an exhibit team",
+        "description": "Returns a list of all of the TeamCards for the exhibit team.",
+        "operationId": "getByExhibitTeam",
         "parameters": [
           {
             "name": "exhibitId",
             "in": "path",
-            "description": "The id of the TeamCard",
+            "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "The id of the Team",
             "required": true,
             "schema": {
               "type": "string",
@@ -3958,14 +3989,25 @@
         }
       }
     },
-    "/api/teamusers": {
+    "/api/exhibits/{exhibitId}/teamusers": {
       "get": {
         "tags": [
           "TeamUser"
         ],
-        "summary": "Gets all TeamUsers in the system",
-        "description": "Returns a list of all of the TeamUsers in the system.\r\n<para />\r\nOnly accessible to a SuperUser",
-        "operationId": "getTeamUsers",
+        "summary": "Gets TeamUsers for the specified exhibit",
+        "description": "Returns a list of the specified exhibit's TeamUsers.\r\n<para />\r\nOnly accessible to an exhibit user",
+        "operationId": "getExhibitTeamUsers",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -4007,51 +4049,53 @@
             }
           }
         }
-      },
-      "post": {
+      }
+    },
+    "/api/teams/{teamId}/teamusers": {
+      "get": {
         "tags": [
           "TeamUser"
         ],
-        "summary": "Creates a new TeamUser",
-        "description": "Creates a new TeamUser with the attributes specified\r\n<para />\r\nAccessible only to a SuperUser",
-        "operationId": "createTeamUser",
-        "requestBody": {
-          "description": "The data to create the TeamUser with",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TeamUser"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TeamUser"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/TeamUser"
-              }
+        "summary": "Gets TeamUsers for the specified team",
+        "description": "Returns a list of the specified team's TeamUsers.\r\n<para />\r\nOnly accessible to an exhibit user",
+        "operationId": "getTeamTeamUsers",
+        "parameters": [
+          {
+            "name": "teamId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
-        },
+        ],
         "responses": {
-          "201": {
+          "200": {
             "description": "Success",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TeamUser"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamUser"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TeamUser"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamUser"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TeamUser"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamUser"
+                  }
                 }
               }
             }
@@ -4144,6 +4188,176 @@
         "responses": {
           "204": {
             "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teamusers": {
+      "post": {
+        "tags": [
+          "TeamUser"
+        ],
+        "summary": "Creates a new TeamUser",
+        "description": "Creates a new TeamUser with the attributes specified\r\n<para />\r\nAccessible only to a SuperUser",
+        "operationId": "createTeamUser",
+        "requestBody": {
+          "description": "The data to create the TeamUser with",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamUser"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamUser"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamUser"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamUser"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamUser"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teamusers/{id}/observer/set": {
+      "put": {
+        "tags": [
+          "TeamUser"
+        ],
+        "summary": "Sets the selected TeamUser observer flag",
+        "description": "Sets the TeamUser to an observer.",
+        "operationId": "setObserver",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the TeamUser to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamUser"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamUser"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamUser"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teamusers/{id}/observer/clear": {
+      "put": {
+        "tags": [
+          "TeamUser"
+        ],
+        "summary": "Clears the selected TeamUser observer flag",
+        "description": "Clears the TeamUser from being an observer.",
+        "operationId": "clearObserver",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the TeamUser to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamUser"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamUser"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamUser"
+                }
+              }
+            }
           },
           "default": {
             "description": "Problem response",
@@ -4603,19 +4817,29 @@
         }
       }
     },
-    "/api/exhibits/{exhibitId}/userarticles/mine": {
+    "/api/exhibits/{exhibitId}/teams/{teamId}/userarticles": {
       "get": {
         "tags": [
           "UserArticle"
         ],
-        "summary": "Gets UserArticles for an exhibit for the user",
-        "description": "Returns a list of UserArticles based on the exhibit's current move and current inject for the user.",
-        "operationId": "getExhibitUserArticlesMine",
+        "summary": "Gets UserArticles for an exhibit team",
+        "description": "Returns a list of UserArticles based on the exhibit's current move and current inject for the team.",
+        "operationId": "getExhibitTeamUserArticles",
         "parameters": [
           {
             "name": "exhibitId",
             "in": "path",
             "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "The id of the Team",
             "required": true,
             "schema": {
               "type": "string",
@@ -5308,7 +5532,7 @@
         }
       }
     },
-    "/api/xapi/viewed/exhibit/{id}/archive": {
+    "/api/xapi/viewed/exhibit/{exhibitId}/archive": {
       "get": {
         "tags": [
           "XApi"
@@ -5319,19 +5543,12 @@
         "parameters": [
           {
             "name": "exhibitId",
-            "in": "query",
+            "in": "path",
             "description": "The id of the Exhibit",
+            "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
             }
           }
         ],
@@ -5352,7 +5569,7 @@
         }
       }
     },
-    "/api/xapi/viewed/article/{articleId}": {
+    "/api/xapi/viewed/exhibit/{exhibitId}/article/{articleId}": {
       "get": {
         "tags": [
           "XApi"
@@ -5362,9 +5579,160 @@
         "operationId": "viewedArticle",
         "parameters": [
           {
+            "name": "exhibitId",
+            "in": "path",
+            "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
             "name": "articleId",
             "in": "path",
             "description": "The id of the Article",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/xapi/previewed/exhibit/{exhibitId}/article/{articleId}": {
+      "get": {
+        "tags": [
+          "XApi"
+        ],
+        "summary": "Logs xAPI previewed statement for Article by id",
+        "description": "Returns status",
+        "operationId": "previewedArticle",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "path",
+            "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "articleId",
+            "in": "path",
+            "description": "The id of the Article",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/xapi/observed/exhibit/{exhibitId}/team/{teamId}/wall": {
+      "get": {
+        "tags": [
+          "XApi"
+        ],
+        "summary": "Logs xAPI observed statement for Wall by Exhibit id and Team  id",
+        "description": "Returns status",
+        "operationId": "observedExhibitWall",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "path",
+            "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "The id of the Team",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Problem response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/xapi/observed/exhibit/{exhibitId}/team/{teamId}/archive": {
+      "get": {
+        "tags": [
+          "XApi"
+        ],
+        "summary": "Logs xAPI observed statement for Archive by Exhibit id and Team id",
+        "description": "Returns status",
+        "operationId": "observedExhibitArchive",
+        "parameters": [
+          {
+            "name": "exhibitId",
+            "in": "path",
+            "description": "The id of the Exhibit",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "The id of the Team",
             "required": true,
             "schema": {
               "type": "string",
@@ -7237,6 +7605,9 @@
           },
           "team": {
             "$ref": "#/components/schemas/Team"
+          },
+          "isObserver": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

@@ -7,7 +7,6 @@ import { Article, Card, ItemStatus, Team, TeamCard, Exhibit, UserArticle, Source
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
-import { UserDataService } from 'src/app/data/user/user-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
@@ -89,7 +88,6 @@ export class ArchiveComponent implements OnDestroy {
     private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
     private teamCardQuery: TeamCardQuery,
-    private userDataService: UserDataService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private settingsService: ComnSettingsService
