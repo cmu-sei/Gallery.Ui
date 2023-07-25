@@ -111,8 +111,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
           this.xApiService.viewedExhibitWall(exhibitId).pipe(take(1)).subscribe();
         }
       }
-
-
     });
     // subscribe to the collections
     (this.collectionQuery.selectAll() as Observable<Collection[]>).pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
@@ -261,12 +259,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.exhibitDataService.setActive(this.exhibitId);
       this.currentMove = this.exhibit.currentMove;
       this.currentInject = this.exhibit.currentInject;
+      this.cardDataService.loadByExhibit(this.exhibitId);
       this.teamDataService.loadMine(this.exhibitId);
     }
   }
 
   loadTeamData() {
-    this.cardDataService.unload();
     this.teamCardDataService.unload();
     this.userArticleDataService.unload();
     // process the change
