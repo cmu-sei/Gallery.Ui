@@ -93,15 +93,26 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.collectionId = collectionId ? collectionId : this.collectionId;
       this.exhibitDataService.setActive(this.exhibitId);
       this.collectionDataService.setActive(this.collectionId);
-      this.setExhibitAndCollection();
-      if (this.selectedSection === 'archive') {
-        this.xApiService.viewedExhibitArchive(exhibitId).pipe(take(1)).subscribe();
-        if (cardId && cardId !== 'all') {
-          this.xApiService.viewedCard(exhibitId, cardId).pipe(take(1)).subscribe();
+      if (this.selectedTeamId !== this.teamDataService.getMyTeamId()) {
+        // observed
+        if (this.selectedSection === 'archive') {
+          this.xApiService.observedExhibitArchive(exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
+        } else if (this.selectedSection === 'wall') {
+          this.xApiService.observedExhibitWall(exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
         }
-      } else if (this.selectedSection === 'wall') {
-        this.xApiService.viewedExhibitWall(exhibitId).pipe(take(1)).subscribe();
+      } else {
+        // viewed
+        if (this.selectedSection === 'archive') {
+          this.xApiService.viewedExhibitArchive(exhibitId).pipe(take(1)).subscribe();
+          if (cardId && cardId !== 'all') {
+            this.xApiService.viewedCard(exhibitId, cardId).pipe(take(1)).subscribe();
+          }
+        } else if (this.selectedSection === 'wall') {
+          this.xApiService.viewedExhibitWall(exhibitId).pipe(take(1)).subscribe();
+        }
       }
+
+
     });
     // subscribe to the collections
     (this.collectionQuery.selectAll() as Observable<Collection[]>).pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
@@ -260,8 +271,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.userArticleDataService.unload();
     // process the change
     if (this.selectedTeamId) {
-      this.cardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
-      this.teamCardDataService.loadByExhibitTeam(this.exhibit.id, this.selectedTeamId);
+      this.teamCardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
       this.userArticleDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
     }
   }
