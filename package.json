@@ -1,6 +1,6 @@
 {
   "name": "gallery-ui",
-  "version": "1.4.3",
+  "version": "1.5.0-rc1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
