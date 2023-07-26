@@ -29,6 +29,7 @@ import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dial
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
+import { XApiService } from 'src/app/generated/api';
 
 @Component({
   selector: 'app-archive',
@@ -90,7 +91,8 @@ export class ArchiveComponent implements OnDestroy {
     private teamCardQuery: TeamCardQuery,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private settingsService: ComnSettingsService
+    private settingsService: ComnSettingsService,
+    private xApiService: XApiService
   ) {
     this._document.getElementById('appFavicon').setAttribute('href', '/assets/img/archive-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
@@ -280,10 +282,12 @@ export class ArchiveComponent implements OnDestroy {
     if (useUrl && userArticle.article.openInNewTab) {
       window.open(userArticle.article.url);
     } else {
+      this.xApiService.previewedArticle(this.exhibitId, userArticle.articleId).pipe(take(1)).subscribe();
       const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
         data: {
           article: userArticle.article,
-          useUrl: useUrl
+          useUrl: useUrl,
+          exhibitId: this.exhibitId
         },
       });
       dialogRef.componentInstance.editComplete.subscribe((result) => {
