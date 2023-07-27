@@ -7,7 +7,6 @@ import { Article, Card, ItemStatus, Team, TeamCard, Exhibit, UserArticle, Source
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
-import { UserDataService } from 'src/app/data/user/user-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
@@ -30,6 +29,7 @@ import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dial
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
+import { XApiService } from 'src/app/generated/api';
 
 @Component({
   selector: 'app-archive',
@@ -89,10 +89,10 @@ export class ArchiveComponent implements OnDestroy {
     private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
     private teamCardQuery: TeamCardQuery,
-    private userDataService: UserDataService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private settingsService: ComnSettingsService
+    private settingsService: ComnSettingsService,
+    private xApiService: XApiService
   ) {
     this._document.getElementById('appFavicon').setAttribute('href', '/assets/img/archive-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
@@ -282,10 +282,12 @@ export class ArchiveComponent implements OnDestroy {
     if (useUrl && userArticle.article.openInNewTab) {
       window.open(userArticle.article.url);
     } else {
+      this.xApiService.previewedArticle(this.exhibitId, userArticle.articleId).pipe(take(1)).subscribe();
       const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
         data: {
           article: userArticle.article,
-          useUrl: useUrl
+          useUrl: useUrl,
+          exhibitId: this.exhibitId
         },
       });
       dialogRef.componentInstance.editComplete.subscribe((result) => {

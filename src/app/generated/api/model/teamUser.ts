@@ -20,14 +20,14 @@ import { User } from './user';
 
 
 export interface TeamUser {
-    dateCreated?: Date;
-    dateModified?: Date;
-    createdBy?: string;
-    modifiedBy?: string;
-    id?: string;
-    userId?: string;
-    user?: User;
-    teamId?: string;
-    team?: Team;
-    isObserver?: boolean;
+  dateCreated?: Date;
+  dateModified?: Date;
+  createdBy?: string;
+  modifiedBy?: string;
+  id?: string;
+  userId?: string;
+  user?: User;
+  teamId?: string;
+  team?: Team;
+  isObserver?: boolean;
 }

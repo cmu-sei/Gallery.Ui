@@ -184,29 +184,6 @@ export class CardDataService {
       );
   }
 
-  loadByExhibitTeam(exhibitId: string, teamId: string) {
-    this.cardStore.setLoading(true);
-    this.cardService
-      .getExhibitTeamCards(exhibitId, teamId)
-      .pipe(
-        tap(() => {
-          this.cardStore.setLoading(false);
-        }),
-        take(1)
-      )
-      .subscribe(
-        (cards) => {
-          cards.forEach(a => {
-            this.setAsDates(a);
-          });
-          this.cardStore.set(cards);
-        },
-        (error) => {
-          this.cardStore.set([]);
-        }
-      );
-  }
-
   loadById(id: string) {
     this.cardStore.setLoading(true);
     return this.cardService

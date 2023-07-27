@@ -66,6 +66,162 @@ export class XApiService {
 
 
   /**
+     * Logs xAPI observed statement for Archive by Exhibit id and Team id
+     * Returns status
+     * @param exhibitId The id of the Exhibit
+     * @param teamId The id of the Team
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+  public observedExhibitArchive(exhibitId: string, teamId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public observedExhibitArchive(exhibitId: string, teamId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public observedExhibitArchive(exhibitId: string, teamId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public observedExhibitArchive(exhibitId: string, teamId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling observedExhibitArchive.');
+    }
+    if (teamId === null || teamId === undefined) {
+      throw new Error('Required parameter teamId was null or undefined when calling observedExhibitArchive.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/observed/exhibit/${encodeURIComponent(String(exhibitId))}/team/${encodeURIComponent(String(teamId))}/archive`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
+     * Logs xAPI observed statement for Wall by Exhibit id and Team  id
+     * Returns status
+     * @param exhibitId The id of the Exhibit
+     * @param teamId The id of the Team
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+  public observedExhibitWall(exhibitId: string, teamId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public observedExhibitWall(exhibitId: string, teamId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public observedExhibitWall(exhibitId: string, teamId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public observedExhibitWall(exhibitId: string, teamId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling observedExhibitWall.');
+    }
+    if (teamId === null || teamId === undefined) {
+      throw new Error('Required parameter teamId was null or undefined when calling observedExhibitWall.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/observed/exhibit/${encodeURIComponent(String(exhibitId))}/team/${encodeURIComponent(String(teamId))}/wall`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
+     * Logs xAPI previewed statement for Article by id
+     * Returns status
+     * @param exhibitId The id of the Exhibit
+     * @param articleId The id of the Article
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+  public previewedArticle(exhibitId: string, articleId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public previewedArticle(exhibitId: string, articleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public previewedArticle(exhibitId: string, articleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public previewedArticle(exhibitId: string, articleId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling previewedArticle.');
+    }
+    if (articleId === null || articleId === undefined) {
+      throw new Error('Required parameter articleId was null or undefined when calling previewedArticle.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/previewed/exhibit/${encodeURIComponent(String(exhibitId))}/article/${encodeURIComponent(String(articleId))}`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
      * Logs xAPI viewed statement for Article by id
      * Returns status
      * @param exhibitId The id of the Exhibit
@@ -76,7 +232,7 @@ export class XApiService {
   public viewedArticle(exhibitId: string, articleId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
   public viewedArticle(exhibitId: string, articleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
   public viewedArticle(exhibitId: string, articleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-  public viewedArticle(exhibitId: string, articleId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public viewedArticle(exhibitId: string, articleId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
     if (exhibitId === null || exhibitId === undefined) {
       throw new Error('Required parameter exhibitId was null or undefined when calling viewedArticle.');
     }
@@ -172,22 +328,16 @@ export class XApiService {
   /**
      * Logs xAPI viewed statement for Archive by Exhibit id
      * Returns status
-     * @param id
      * @param exhibitId The id of the Exhibit
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  public viewedExhibitArchive(id: string, exhibitId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-  public viewedExhibitArchive(id: string, exhibitId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-  public viewedExhibitArchive(id: string, exhibitId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-  public viewedExhibitArchive(id: string, exhibitId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-    if (id === null || id === undefined) {
-      throw new Error('Required parameter id was null or undefined when calling viewedExhibitArchive.');
-    }
-
-    let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-    if (exhibitId !== undefined && exhibitId !== null) {
-      queryParameters = queryParameters.set('exhibitId', <any>exhibitId);
+  public viewedExhibitArchive(exhibitId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public viewedExhibitArchive(exhibitId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public viewedExhibitArchive(exhibitId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public viewedExhibitArchive(exhibitId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling viewedExhibitArchive.');
     }
 
     let headers = this.defaultHeaders;
@@ -213,9 +363,8 @@ export class XApiService {
     const consumes: string[] = [
     ];
 
-    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/viewed/exhibit/${encodeURIComponent(String(id))}/archive`,
+    return this.httpClient.get<any>(`${this.configuration.basePath}/api/xapi/viewed/exhibit/${encodeURIComponent(String(exhibitId))}/archive`,
       {
-        params: queryParameters,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

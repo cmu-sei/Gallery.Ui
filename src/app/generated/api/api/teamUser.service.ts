@@ -66,58 +66,58 @@ export class TeamUserService {
   }
 
 
-    /**
+  /**
      * Clears the selected TeamUser observer flag
      * Clears the TeamUser from being an observer.
      * @param id The Id of the TeamUser to update
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public clearObserver(id: string, observe?: 'body', reportProgress?: boolean): Observable<TeamUser>;
-    public clearObserver(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TeamUser>>;
-    public clearObserver(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TeamUser>>;
-    public clearObserver(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling clearObserver.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (oauth2) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.put<TeamUser>(`${this.configuration.basePath}/api/teamusers/${encodeURIComponent(String(id))}/observer/clear`,
-            null,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+  public clearObserver(id: string, observe?: 'body', reportProgress?: boolean): Observable<TeamUser>;
+  public clearObserver(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TeamUser>>;
+  public clearObserver(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TeamUser>>;
+  public clearObserver(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling clearObserver.');
     }
 
-    /**
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.put<TeamUser>(`${this.configuration.basePath}/api/teamusers/${encodeURIComponent(String(id))}/observer/clear`,
+      null,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
      * Creates a new TeamUser
      * Creates a new TeamUser with the attributes specified  &lt;para /&gt;  Accessible only to a SuperUser
      * @param TeamUser The data to create the TeamUser with
@@ -272,106 +272,107 @@ export class TeamUserService {
     );
   }
 
-    /**
+  /**
      * Gets TeamUsers for the specified exhibit
      * Returns a list of the specified exhibit&#39;s TeamUsers.  &lt;para /&gt;  Only accessible to an exhibit user
      * @param exhibitId
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getExhibitTeamUsers(exhibitId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<TeamUser>>;
-    public getExhibitTeamUsers(exhibitId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TeamUser>>>;
-    public getExhibitTeamUsers(exhibitId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TeamUser>>>;
-    public getExhibitTeamUsers(exhibitId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (exhibitId === null || exhibitId === undefined) {
-            throw new Error('Required parameter exhibitId was null or undefined when calling getExhibitTeamUsers.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (oauth2) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.get<Array<TeamUser>>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/teamusers`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+  public getExhibitTeamUsers(exhibitId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<TeamUser>>;
+  public getExhibitTeamUsers(exhibitId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TeamUser>>>;
+  public getExhibitTeamUsers(exhibitId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TeamUser>>>;
+  public getExhibitTeamUsers(exhibitId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (exhibitId === null || exhibitId === undefined) {
+      throw new Error('Required parameter exhibitId was null or undefined when calling getExhibitTeamUsers.');
     }
 
-    /**
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.get<Array<TeamUser>>(`${this.configuration.basePath}/api/exhibits/${encodeURIComponent(String(exhibitId))}/teamusers`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
      * Gets TeamUsers for the specified team
      * Returns a list of the specified team&#39;s TeamUsers.  &lt;para /&gt;  Only accessible to an exhibit user
      * @param teamId
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTeamTeamUsers(teamId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<TeamUser>>;
-    public getTeamTeamUsers(teamId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TeamUser>>>;
-    public getTeamTeamUsers(teamId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TeamUser>>>;
-    public getTeamTeamUsers(teamId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (teamId === null || teamId === undefined) {
-            throw new Error('Required parameter teamId was null or undefined when calling getTeamTeamUsers.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (oauth2) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.get<Array<TeamUser>>(`${this.configuration.basePath}/api/teams/${encodeURIComponent(String(teamId))}/teamusers`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+  public getTeamTeamUsers(teamId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<TeamUser>>;
+  public getTeamTeamUsers(teamId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TeamUser>>>;
+  public getTeamTeamUsers(teamId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TeamUser>>>;
+  public getTeamTeamUsers(teamId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (teamId === null || teamId === undefined) {
+      throw new Error('Required parameter teamId was null or undefined when calling getTeamTeamUsers.');
     }
-    /**
+
+    let headers = this.defaultHeaders;
+
+    // authentication (oauth2) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+    ];
+
+    return this.httpClient.get<Array<TeamUser>>(`${this.configuration.basePath}/api/teams/${encodeURIComponent(String(teamId))}/teamusers`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
      * Gets a specific TeamUser by id
      * Returns the TeamUser with the id specified  &lt;para /&gt;  Only accessible to a SuperUser
      * @param id The id of the TeamUser
@@ -421,20 +422,20 @@ export class TeamUserService {
     );
   }
 
-    /**
+  /**
      * Sets the selected TeamUser observer flag
      * Sets the TeamUser to an observer.
      * @param id The Id of the TeamUser to update
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public setObserver(id: string, observe?: 'body', reportProgress?: boolean): Observable<TeamUser>;
-    public setObserver(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TeamUser>>;
-    public setObserver(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TeamUser>>;
-    public setObserver(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling setObserver.');
-        }
+  public setObserver(id: string, observe?: 'body', reportProgress?: boolean): Observable<TeamUser>;
+  public setObserver(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TeamUser>>;
+  public setObserver(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TeamUser>>;
+  public setObserver(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling setObserver.');
+    }
 
     let headers = this.defaultHeaders;
 
@@ -461,15 +462,15 @@ export class TeamUserService {
     const consumes: string[] = [
     ];
 
-        return this.httpClient.put<TeamUser>(`${this.configuration.basePath}/api/teamusers/${encodeURIComponent(String(id))}/observer/set`,
-            null,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
+    return this.httpClient.put<TeamUser>(`${this.configuration.basePath}/api/teamusers/${encodeURIComponent(String(id))}/observer/set`,
+      null,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
 
 }
