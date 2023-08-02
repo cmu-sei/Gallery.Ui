@@ -91,6 +91,23 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       const cardId = params.get('card');
       this.exhibitId = exhibitId ? exhibitId : this.exhibitId;
       this.collectionId = collectionId ? collectionId : this.collectionId;
+      if (!exhibitId && !collectionId) {
+        this.collectionDataService.loadMine();
+      } else {
+        if (exhibitId) {
+          console.log(exhibitId);
+          if (!this.exhibit || this.exhibit.id !== exhibitId) {
+            this.exhibitDataService.loadById(exhibitId);
+            this.exhibitDataService.setActive(exhibitId);
+          }
+        } else {
+          if (!this.collection || this.collectionId !== collectionId) {
+            this.collectionDataService.loadById(collectionId);
+            this.collectionDataService.setActive(collectionId);
+            this.exhibitDataService.loadMineByCollection(collectionId);
+          }
+        }
+      }
       this.exhibitDataService.setActive(this.exhibitId);
       this.collectionDataService.setActive(this.collectionId);
       if (this.selectedTeamId && (this.selectedTeamId !== this.teamDataService.getMyTeamId())) {
@@ -113,27 +130,19 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       }
     });
     // subscribe to the collections
-    (this.collectionQuery.selectAll() as Observable<Collection[]>).pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
+    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.collectionList = collections;
-      if ((!collections || collections.length === 0) && this.collectionLoadCount < 5) {
-        this.collectionDataService.loadMine();
-        this.collectionLoadCount++;
-        console.log('Attempt to load collections #' + this.collectionLoadCount);
-      }
-      this.setExhibitAndCollection();
     });
     // subscribe to the exhibits
-    (this.exhibitQuery.selectAll() as Observable<Exhibit[]>).pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
-      this.allExhibits = exhibits;
-      this.setExhibitAndCollection();
+    this.exhibitQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
+      this.exhibitList = exhibits;
     });
-    // subscribe to an exhibit update
-    this.exhibitQuery.selectEntityAction(EntityActions.Update).pipe(takeUntil(this.unsubscribe$)).subscribe(entities => {
-      const exhibit = this.exhibitQuery.getActive() as Exhibit;
-      if (exhibit && entities.includes(exhibit.id)) {
-        this.exhibit = null;
-        this.setExhibitAndCollection();
-      }
+    // subscribe to the active exhibit
+    (this.exhibitQuery.selectActive() as Observable<Exhibit>).pipe(takeUntil(this.unsubscribe$)).subscribe(exhibit => {
+      if (!this.exhibit || this.exhibit.id !== exhibit.id) {
+        this.exhibit = exhibit;
+        this.loadExhibitData();
+      };
     });
     // subscribe to the user list
     this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
@@ -157,8 +166,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .subscribe((isAuthorized) => {
         this.isAuthorizedUser = isAuthorized;
       });
-    this.collectionDataService.loadMine();
-    this.exhibitDataService.loadMine();
     // Set the display settings from config file
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
@@ -179,27 +186,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .catch((err) => {
         console.log(err);
       });
-  }
-
-  setExhibitAndCollection() {
-    if (this.exhibitId && (!this.exhibit || this.exhibit.id !== this.exhibitId)) {
-      this.exhibit = this.allExhibits.find(e => e.id === this.exhibitId);
-      if (this.exhibit) {
-        if (this.collectionId && this.collectionId !== this.exhibit.collectionId) {
-          this.teamDataService.setMyTeam('');
-          this.router.navigate([], {
-            queryParams: { collection: this.exhibit.collectionId },
-            queryParamsHandling: 'merge'
-          });
-        }
-        this.collectionId = this.exhibit.collectionId;
-        this.collectionDataService.setActive(this.collectionId);
-      }
-      this.loadExhibitData();
-    } else if (this.collectionId && (!this.collection || this.collection.id !== this.collectionId)) {
-      this.collectionDataService.setActive(this.collectionId);
-    }
-    this.exhibitList = this.allExhibits.filter(e => e.collectionId === this.collectionId);
   }
 
   setMyTeam() {
@@ -249,10 +235,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   loadExhibitData() {
-    this.teamDataService.unload();
-    this.cardDataService.unload();
-    this.teamCardDataService.unload();
-    this.userArticleDataService.unload();
     // process the change
     if (this.exhibit) {
       this.collectionId = this.exhibit.collectionId;
@@ -265,8 +247,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   loadTeamData() {
-    this.teamCardDataService.unload();
-    this.userArticleDataService.unload();
     // process the change
     if (this.selectedTeamId) {
       this.teamCardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
@@ -275,9 +255,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   selectCollection(collectionId: string) {
-    this.exhibitDataService.loadByCollection(collectionId);
     this.collectionId = collectionId;
-    this.exhibitList = this.allExhibits.filter(e => e.collectionId === collectionId);
     this.exhibitId = '';
     this.router.navigate([], {
       queryParams: { collection: collectionId, exhibit: '' },
@@ -286,8 +264,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   selectExhibit(exhibitId: string) {
+    const section = this.selectedSection ? this.selectedSection : 'archive';
     this.router.navigate([], {
-      queryParams: { exhibit: exhibitId },
+      queryParams: { exhibit: exhibitId, section: section },
       queryParamsHandling: 'merge',
     });
   }

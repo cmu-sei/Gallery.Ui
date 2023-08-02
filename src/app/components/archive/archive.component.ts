@@ -147,12 +147,6 @@ export class ArchiveComponent implements OnDestroy {
         const cardId  = params.get('card');
         const exhibitId  = params.get('exhibit');
         const teamId = params.get('team');
-        if (!exhibitId) {
-          this.router.navigate([''], {
-            queryParams: { },
-            queryParamsHandling: 'merge'
-          });
-        }
         this.exhibitId = exhibitId;
         this.exhibitDataService.setActive(this.exhibitId);
         this.cardId = cardId ? cardId : 'all';
@@ -369,7 +363,7 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   sourceIsMe(sourceName: string): boolean {
-    return sourceName === (this.teamQuery.getActive() as Team).shortName;
+    return sourceName === (this.teamQuery.getActive() as Team)?.shortName;
   }
 
   addOrEditArticle(article: Article) {
