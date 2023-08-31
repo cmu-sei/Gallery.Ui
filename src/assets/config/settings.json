@@ -16,5 +16,6 @@
     "AppTopBarText": "Gallery  -  Keeping you in the know!",
     "AppTopBarImage": "/assets/img/monitor-dashboard-white.png",
     "UseLocalAuthStorage": false,
-    "IsEmailActive": true
+    "IsEmailActive": true,
+    "useAccessTokenExpirationRedirect": true
 }
