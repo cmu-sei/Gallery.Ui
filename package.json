@@ -1,6 +1,6 @@
 {
   "name": "gallery-ui",
-  "version": "1.5.0-rc1",
+  "version": "1.5.0-rc2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -30,7 +30,7 @@
     "@angular/platform-browser": "^15.1.2",
     "@angular/platform-browser-dynamic": "^15.1.2",
     "@angular/router": "^15.1.2",
-    "@cmusei/crucible-common": "^0.2.1",
+    "@cmusei/crucible-common": "^0.3.0",
     "@datorama/akita": "^8.0.0",
     "@datorama/akita-ng-router-store": "^7.0.0",
     "@datorama/akita-ngdevtools": "^7.0.0",
@@ -48,7 +48,7 @@
     "node-forge": "^1.3.1",
     "oidc-client": "^1.11.5",
     "quill": "^1.3.7",
-    "rxjs": "^7.8.0",
+    "rxjs": "^7.8.1",
     "rxjs-compat": "^6.6.7",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
