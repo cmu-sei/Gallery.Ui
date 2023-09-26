@@ -95,7 +95,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.collectionDataService.loadMine();
       } else {
         if (exhibitId) {
-          console.log(exhibitId);
           if (!this.exhibit || this.exhibit.id !== exhibitId) {
             this.exhibitDataService.loadById(exhibitId);
             this.exhibitDataService.setActive(exhibitId);
@@ -110,22 +109,24 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       }
       this.exhibitDataService.setActive(this.exhibitId);
       this.collectionDataService.setActive(this.collectionId);
-      if (this.selectedTeamId && (this.selectedTeamId !== this.teamDataService.getMyTeamId())) {
-        // observed
-        if (this.selectedSection === 'archive') {
-          this.xApiService.observedExhibitArchive(exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
-        } else if (this.selectedSection === 'wall') {
-          this.xApiService.observedExhibitWall(exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
-        }
-      } else {
-        // viewed
-        if (this.selectedSection === 'archive') {
-          this.xApiService.viewedExhibitArchive(exhibitId).pipe(take(1)).subscribe();
-          if (cardId && cardId !== 'all') {
-            this.xApiService.viewedCard(exhibitId, cardId).pipe(take(1)).subscribe();
+      if (this.exhibitId && this.selectedTeamId) {
+        if (this.selectedTeamId !== this.teamDataService.getMyTeamId()) {
+          // observed
+          if (this.selectedSection === 'archive') {
+            this.xApiService.observedExhibitArchive(exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
+          } else if (this.selectedSection === 'wall') {
+            this.xApiService.observedExhibitWall(exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
           }
-        } else if (this.selectedSection === 'wall') {
-          this.xApiService.viewedExhibitWall(exhibitId).pipe(take(1)).subscribe();
+        } else {
+          // viewed
+          if (this.selectedSection === 'archive') {
+            this.xApiService.viewedExhibitArchive(exhibitId).pipe(take(1)).subscribe();
+            if (cardId && cardId !== 'all') {
+              this.xApiService.viewedCard(exhibitId, cardId).pipe(take(1)).subscribe();
+            }
+          } else if (this.selectedSection === 'wall') {
+            this.xApiService.viewedExhibitWall(exhibitId).pipe(take(1)).subscribe();
+          }
         }
       }
     });
@@ -139,7 +140,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     });
     // subscribe to the active exhibit
     (this.exhibitQuery.selectActive() as Observable<Exhibit>).pipe(takeUntil(this.unsubscribe$)).subscribe(exhibit => {
-      if (!this.exhibit || this.exhibit.id !== exhibit.id) {
+      if (exhibit && (!this.exhibit || this.exhibit.id !== exhibit.id)) {
         this.exhibit = exhibit;
         this.loadExhibitData();
       };
