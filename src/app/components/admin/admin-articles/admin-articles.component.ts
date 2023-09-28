@@ -227,7 +227,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
         );
     }
     if (this.selectedMove > -1) {
-      this.filteredArticleList = this.filteredArticleList.filter((a) => (a.move === this.selectedMove));
+      this.filteredArticleList = this.filteredArticleList.filter((a) => (+a.move === +this.selectedMove));
     }
   }
 
