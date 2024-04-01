@@ -311,9 +311,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
 
   //make sure the exhibit options are changed when a user deletes the text, instead of clicking on the cancel icon
   onFilterChange() {
-    // Check if the filter string is empty
     if (!this.filterString) {
-      // If the filter string is empty, clear the filter
       this.clearFilter();
     }
   }

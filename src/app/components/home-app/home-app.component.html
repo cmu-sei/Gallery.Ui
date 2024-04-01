@@ -32,12 +32,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </button>
     </div>
   </div>
-
+  <!-- Exhibits Container -->
   <div *ngIf="!apiIsSick && !exhibitId" class="exhibit-list-container mat-elevation-z8">
     <div class="icon-text-container">
       <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
       <span class="exhibit-title text">My Exhibits</span>
     <div *ngIf="!apiIsSick && !exhibitId && collectionId"class="searchBox d-flex align-items-center">
+      <!-- Search Bar -->
       <mat-icon
         class="text"
         style="transform: scale(0.85); margin-right: 5px"
@@ -66,6 +67,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-form-field>
     </div>
     </div>
+  <!-- Collection Dropdown -->
   <div *ngIf="!apiIsSick && !exhibitId" class="app-header-container background text" autosize>
     <mat-form-field class="width-30">
       <mat-label>Collection</mat-label>
@@ -106,6 +108,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <mat-header-row *matHeaderRowDef="['exhibit', 'createdBy', 'dateCreated']"></mat-header-row>
     <mat-row *matRowDef="let exhibit; columns: ['exhibit', 'createdBy', 'dateCreated']"></mat-row>
   </mat-table>
+   <!-- Filter No Results Found -->
   <div class="text no-results" *ngIf="exhibitList.length === 0">
     No results found
   </div>
