@@ -32,7 +32,42 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </button>
     </div>
   </div>
-
+  <!-- Exhibits Container -->
+  <div *ngIf="!apiIsSick && !exhibitId" class="exhibit-list-container mat-elevation-z8">
+    <div class="icon-text-container">
+      <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
+      <span class="exhibit-title text">My Exhibits</span>
+    <div *ngIf="!apiIsSick && !exhibitId && collectionId"class="searchBox d-flex align-items-center">
+      <!-- Search Bar -->
+      <mat-icon
+        class="text"
+        style="transform: scale(0.85); margin-right: 5px"
+        svgIcon="ic_magnify_search"
+      ></mat-icon>
+      <mat-form-field style="width: 320px">
+        <input
+          matInput
+          [(ngModel)]="filterString"
+          (keyup)="applyFilter($event.target.value)"
+          (input)="onFilterChange()"
+          placeholder="Search"
+        />
+        <button
+          *ngIf="filterString !== ''"
+          mat-icon-button
+          matSuffix
+          (click)="clearFilter()"
+          title="Clear Search"
+        >
+          <mat-icon
+            style="transform: scale(0.85)"
+            svgIcon="ic_clear"
+          ></mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    </div>
+  <!-- Collection Dropdown -->
   <div *ngIf="!apiIsSick && !exhibitId" class="app-header-container background text" autosize>
     <mat-form-field class="width-30">
       <mat-label>Collection</mat-label>
@@ -43,14 +78,41 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-select>
     </mat-form-field>
     <span>&nbsp;&nbsp;</span>
-    <mat-form-field class="width-30">
-      <mat-label>Exhibit</mat-label>
-      <mat-select placeholder="Exhibit" [value]="exhibitId" (selectionChange)="selectExhibit($event.value)">
-        <mat-option *ngFor="let exhibit of exhibitList" [value]="exhibit.id">
+  </div>
+
+  <div *ngIf="!apiIsSick && !exhibitId && collectionId" class="exhibit-container background text" autosize>
+  <mat-table class="width-100 mat-table" [dataSource]="exhibitList" matSort>
+
+     <!-- Exhibit Column -->
+     <ng-container matColumnDef="exhibit">
+      <mat-header-cell *matHeaderCellDef>Exhibit</mat-header-cell>
+      <mat-cell *matCellDef="let exhibit">
+        <a [routerLink]="['/']" [queryParams]="{ exhibit: exhibit.id }">
           {{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }} - {{ getUserName(exhibit.createdBy) }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        </a>
+      </mat-cell>
+    </ng-container>
+  
+    <!-- Created By Column -->
+    <ng-container matColumnDef="createdBy">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Created By</mat-header-cell>
+      <mat-cell *matCellDef="let exhibit">{{ getUserName(exhibit.createdBy) }}</mat-cell>
+    </ng-container>
+
+    <!-- Date Created Column -->
+    <ng-container matColumnDef="dateCreated">
+      <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
+      <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="['exhibit', 'createdBy', 'dateCreated']"></mat-header-row>
+    <mat-row *matRowDef="let exhibit; columns: ['exhibit', 'createdBy', 'dateCreated']"></mat-row>
+  </mat-table>
+   <!-- Filter No Results Found -->
+  <div class="text no-results" *ngIf="exhibitList.length === 0">
+    No results found
+  </div>
+  </div>
   </div>
 
   <span *ngIf="!apiIsSick && exhibit && selectedSection === 'wall'">

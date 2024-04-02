@@ -59,6 +59,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   topbarImage = this.settingsService.settings.AppTopBarImage;
   TopbarView = TopbarView;
   theme$: Observable<Theme>;
+  public filterString: string;
 
   constructor(
     private userDataService: UserDataService,
@@ -187,6 +188,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .catch((err) => {
         console.log(err);
       });
+    this.filterString = '';
   }
 
   setMyTeam() {
@@ -296,6 +298,28 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       queryParams: { section: Section.wall },
       queryParamsHandling: 'merge'
     });
+  }
+
+  //Filter exhibit based on CreatedBy value, since there's no exhibit name
+  applyFilter(filterValue: string) {
+    this.filterString = filterValue.trim().toLowerCase();
+    this.exhibitList = this.exhibitList.filter(exhibit => {
+      const createdBy = this.getUserName(exhibit.createdBy).toLowerCase();
+      return createdBy.includes(this.filterString);
+    });
+  }  
+
+  //make sure the exhibit options are changed when a user deletes the text, instead of clicking on the cancel icon
+  onFilterChange() {
+    if (!this.filterString) {
+      this.clearFilter();
+    }
+  }
+
+  //clear filter
+  clearFilter() {
+    this.filterString = '';
+    this.exhibitDataService.loadMineByCollection(this.collectionId);
   }
 
   ngOnDestroy() {

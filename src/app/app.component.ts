@@ -96,6 +96,12 @@ export class AppComponent implements OnDestroy {
         'assets/svg-icons/ic_magnify_glass.svg'
       )
     );
+    iconRegistry.addSvgIcon(
+      'crucible-icon-gallery',
+      sanitizer.bypassSecurityTrustResourceUrl(
+        'assets/svg-icons/crucible-icon-gallery.svg'
+      )
+    );
   }
 
   setTheme(theme: Theme) {
