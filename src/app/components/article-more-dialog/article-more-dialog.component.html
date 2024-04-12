@@ -37,5 +37,5 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   class="page"
   *ngIf="!data.useUrl && data.article && data.article.description"
 >
-  <quill-view-html [content]="data.article.description" theme="snow"></quill-view-html>
+  <angular-editor class="angular-editor" [ngModel]="data.article.description" [config]="editorConfig"></angular-editor>
 </div>

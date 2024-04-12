@@ -11,6 +11,7 @@ import { ArticleQuery } from 'src/app/data/article/article.query';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { XApiService } from 'src/app/generated/api';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-article-app',
@@ -21,6 +22,21 @@ export class ArticleComponent implements OnDestroy {
   safeContent: SafeHtml = '';
   article: Article = {} as Article;
   private unsubscribe$ = new Subject();
+  editorConfig: AngularEditorConfig = {
+    editable: false,
+    height: 'auto',
+    minHeight: '1200px',
+    width: '100%',
+    minWidth: '0',
+    translate: 'yes',
+    enableToolbar: false,
+    showToolbar: false,
+    placeholder: '',
+    defaultParagraphSeparator: '',
+    defaultFontName: '',
+    defaultFontSize: '',
+    sanitize: true,
+  };
 
   constructor(
     private activatedRoute: ActivatedRoute,

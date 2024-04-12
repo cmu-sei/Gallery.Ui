@@ -31,15 +31,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin left">
     <div>
       <h4>Email Message</h4>
-        <div id="quill">
-          <quill-editor [styles]="editorStyle" placeholder="Enter Text"
-             placeholder="Description" [formControl]="messageFormControl"
-          >
-          </quill-editor>
-          <mat-error *ngIf="messageFormControl.hasError('required')">
-            Message is <strong>required</strong>
-          </mat-error>
-        </div>
+      <angular-editor
+        [placeholder]="'Description'"
+        [formControl]="messageFormControl"
+        [config]="editorConfig"
+      ></angular-editor>
+      <mat-error *ngIf="messageFormControl.hasError('required')">
+        Message is <strong>required</strong>
+      </mat-error>
     </div>
   </div>
   <div class="cssLayoutRowStartCenter bottom-button">
