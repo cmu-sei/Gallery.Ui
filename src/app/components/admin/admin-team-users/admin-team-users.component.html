@@ -67,9 +67,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <div>
-            <button mat-stroked-button (click)="addUserToTeam(element)">
-              Add User
+            <button
+              mat-icon-button
+              (click)="addUserToTeam(element)"
+              style="outline: none;"
+              title="Add {{ element.name }} to Team"
+              *ngIf="!onAnotherTeam(element.id)"
+            >
+              <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle-outline"></mat-icon>
             </button>
+            <label *ngIf="onAnotherTeam(element.id)">{{ getUserTeamName(element.id) }}</label>
           </div>
         </mat-cell>
       </ng-container>

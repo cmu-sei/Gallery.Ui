@@ -1,8 +1,8 @@
 {
     "ApiUrl": "http://localhost:4722",
     "OIDCSettings": {
-        "authority": "http://localhost:5000/",
-        "client_id": "gallery.ui",
+        "authority": "http://localhost:8080/realms/crucible/",
+        "client_id": "gallery-ui",
         "redirect_uri": "http://localhost:4723/auth-callback",
         "post_logout_redirect_uri": "http://localhost:4723",
         "response_type": "code",
