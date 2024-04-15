@@ -5,6 +5,7 @@ import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-article-share-dialog',
@@ -21,9 +22,34 @@ export class ArticleShareDialogComponent {
     this.data.article.name + '</p>&nbsp;<p>' + this.data.article.summary + '</p>&nbsp;<p>' +
     '<a href="' + location.origin + '/article/' + this.data.article.id
           + '" rel="noopener noreferrer" target="_blank">Article Text</a></p>');
-
-  editorStyle = {
-    height: '200px'
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: 'auto',
+    minHeight: '0',
+    maxHeight: 'auto',
+    width: 'auto',
+    minWidth: '0',
+    translate: 'yes',
+    enableToolbar: true,
+    showToolbar: true,
+    placeholder: 'Enter text here...',
+    defaultParagraphSeparator: '',
+    defaultFontName: '',
+    defaultFontSize: '',
+    fonts: [
+      {class: 'arial', name: 'Arial'},
+      {class: 'times-new-roman', name: 'Times New Roman'},
+      {class: 'calibri', name: 'Calibri'},
+      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+    ],
+    uploadUrl: '',
+    uploadWithCredentials: false,
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      ['backgroundColor']
+    ]
   };
 
   constructor(

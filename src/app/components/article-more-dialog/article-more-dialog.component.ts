@@ -5,6 +5,7 @@ import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-article-more-dialog',
@@ -16,6 +17,21 @@ export class ArticleMoreDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
   safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.data.article.url);
   safeContent: SafeHtml = '';
+  editorConfig: AngularEditorConfig = {
+    editable: false,
+    height: 'auto',
+    minHeight: '1200px',
+    width: '100%',
+    minWidth: '0',
+    translate: 'yes',
+    enableToolbar: false,
+    showToolbar: false,
+    placeholder: '',
+    defaultParagraphSeparator: '',
+    defaultFontName: '',
+    defaultFontSize: '',
+    sanitize: true,
+  };
 
   constructor(
     public dialogService: DialogService,
