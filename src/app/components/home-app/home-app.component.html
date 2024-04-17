@@ -12,6 +12,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   [topbarColor]="topbarColor"
   [topbarTextColor]="topbarTextColor"
   [imageFilePath]="topbarImage"
+  (urlNavigate)="topBarNavigate($event)"
   ></app-topbar>
 
   <div *ngIf="apiIsSick" class="app-error-container background text" autosize>

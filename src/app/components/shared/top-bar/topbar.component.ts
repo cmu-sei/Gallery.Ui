@@ -35,6 +35,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
   @Output() sidenavToggle?: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() setTeam?: EventEmitter<string> = new EventEmitter<string>();
   @Output() editView?: EventEmitter<any> = new EventEmitter<any>();
+  @Output() urlNavigate?: EventEmitter<string> = new EventEmitter<string>();
   currentUser$: Observable<AuthUser>;
   theme$: Observable<Theme>;
   unsubscribe$: Subject<null> = new Subject<null>();
@@ -73,6 +74,10 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  goToUrl(url): void {
+    this.urlNavigate.emit(url);
   }
 
   ngOnDestroy(): void {
