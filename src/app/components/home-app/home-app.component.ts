@@ -300,26 +300,29 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     });
   }
 
-  //Filter exhibit based on CreatedBy value, since there's no exhibit name
   applyFilter(filterValue: string) {
     this.filterString = filterValue.trim().toLowerCase();
     this.exhibitList = this.exhibitList.filter(exhibit => {
       const createdBy = this.getUserName(exhibit.createdBy).toLowerCase();
       return createdBy.includes(this.filterString);
     });
-  }  
+  }
 
-  //make sure the exhibit options are changed when a user deletes the text, instead of clicking on the cancel icon
   onFilterChange() {
     if (!this.filterString) {
       this.clearFilter();
     }
   }
 
-  //clear filter
   clearFilter() {
     this.filterString = '';
     this.exhibitDataService.loadMineByCollection(this.collectionId);
+  }
+
+  topBarNavigate(url): void {
+    this.router.navigate(['/']).then(() => {
+      window.location.reload();
+    });
   }
 
   ngOnDestroy() {
