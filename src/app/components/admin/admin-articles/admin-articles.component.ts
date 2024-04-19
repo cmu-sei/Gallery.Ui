@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -29,7 +29,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AdminArticlesComponent implements OnInit, OnDestroy {
   @Input() pageSize: number;
   @Input() pageIndex: number;
-  // @Output() pageChange = new EventEmitter<PageEvent>();
   newArticle: Article = { id: '', name: '' };
   isLoading = false;
   topbarColor = '#ef3a47';
@@ -127,7 +126,6 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.filterControl.setValue(this.filterString);
     this.loadInitialData();
   }
 
@@ -221,10 +219,6 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
       });
   }
 
-  // applyFilter(filterValue: string) {
-  //   this.filterControl.setValue(filterValue);
-  // }
-
   applyFilter() {
     this.filteredArticleList = this.articleList.filter(article =>
       !this.filterString ||
@@ -232,30 +226,19 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
       article.description.toLowerCase().includes(this.filterString) ||
       article.sourceName.toLowerCase().includes(this.filterString)
     );
-    this.sortChanged(this.sort);  // Ensure sorting is applied after filtering
+    this.sortChanged(this.sort);
   }
 
-  // sortChanged(sort: Sort) {
-  //   this.sort = sort;
-  //   if (this.articleList && this.articleList.length > 0) {
-  //     this.filteredArticleList = this.articleList
-  //       .sort((a: Article, b: Article) => this.sortArticles(a, b, sort.active, sort.direction))
-  //       .filter((a) => ((this.selectedCard.id === '') || a.cardId === this.selectedCard.id)
-  //                       && (!this.filterString ||
-  //                             a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-  //                             a.description.toLowerCase().includes(this.filterString.toLowerCase()) ||
-  //                             a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
-  //                       )
-  //       );
-  //   }
-  //   if (this.selectedMove > -1) {
-  //     this.filteredArticleList = this.filteredArticleList.filter((a) => (+a.move === +this.selectedMove));
-  //   }
-  // }
+  clearFilter() {
+    this.filterString = '';
+    this.filterControl.setValue('');
+    this.loadInitialData();
+  }
 
   sortChanged(sort: Sort) {
     this.sort = sort;
     this.filteredArticleList.sort((a, b) => this.sortArticles(a, b, sort.active, sort.direction));
+    this.applyPagination();
   }
 
   private sortArticles(
@@ -317,10 +300,6 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
     return name;
   }
 
-  // paginatorEvent(page: PageEvent) {
-  //   this.pageChange.emit(page);
-  // }
-
   paginatorEvent(page: PageEvent) {
     this.pageIndex = page.pageIndex;
     this.pageSize = page.pageSize;
@@ -330,15 +309,6 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   applyPagination() {
     const startIndex = this.pageIndex * this.pageSize;
     this.articleList = this.filteredArticleList.slice(startIndex, startIndex + this.pageSize);
-  }
-
-  paginateArticles(articles: Article[], pageIndex: number, pageSize: number) {
-    if (!articles) {
-      return [];
-    }
-    const startIndex = pageIndex * pageSize;
-    const copy = articles.slice();
-    return copy.splice(startIndex, pageSize);
   }
 
   ngOnDestroy() {

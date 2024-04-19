@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -27,7 +27,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AdminCardsComponent implements OnInit, OnDestroy {
   @Input() pageSize: number;
   @Input() pageIndex: number;
-  @Output() pageChange = new EventEmitter<PageEvent>();
   collectionList: Collection[] = [];
   selectedCollectionId = '';
   newCard: Card = { id: '', name: '' };
@@ -74,12 +73,14 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
       this.collectionList = collections;
     });
     this.collectionDataService.load();
+
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
-        this.filterString = term;
-        this.sortChanged(this.sort);
+        this.filterString = term.trim().toLowerCase();
+        this.applyFilter();
       });
+
     activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.selectedCollectionId = params.get('collection');
       this.cardDataService.unload();
@@ -90,7 +91,14 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.filterControl.setValue(this.filterString);
+    this.loadInitialData();
+  }
+
+  loadInitialData() {
+    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
+      this.cardList = Array.from(cards);
+      this.applyFilter();
+    });
   }
 
   addOrEditCard(card: Card) {
@@ -165,21 +173,25 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
     this.editCard = { ... this.originalCard };
   }
 
-  applyFilter(filterValue: string) {
-    this.filterControl.setValue(filterValue);
+  applyFilter() {
+    this.filteredCardList = this.cardList.filter(card =>
+      !this.filterString ||
+      card.name.toLowerCase().includes(this.filterString) ||
+      card.description.toLowerCase().includes(this.filterString)
+    );
+    this.sortChanged(this.sort);
+  }
+
+  clearFilter() {
+    this.filterString = '';
+    this.filterControl.setValue('');
+    this.loadInitialData();
   }
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    if (this.cardList && this.cardList.length > 0) {
-      this.filteredCardList = this.cardList
-        .sort((a: Card, b: Card) => this.sortCards(a, b, sort.active, sort.direction))
-        .filter((a) => (
-          !this.filterString ||
-          a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-          a.description.toLowerCase().includes(this.filterString.toLowerCase())
-        ));
-    }
+    this.filteredCardList.sort((a, b) => this.sortCards(a, b, sort.active, sort.direction));
+    this.applyPagination();
   }
 
   private sortCards(
@@ -225,16 +237,14 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   }
 
   paginatorEvent(page: PageEvent) {
-    this.pageChange.emit(page);
+    this.pageIndex = page.pageIndex;
+    this.pageSize = page.pageSize;
+    this.applyPagination();
   }
 
-  paginateCards(cards: Card[], pageIndex: number, pageSize: number) {
-    if (!cards) {
-      return [];
-    }
-    const startIndex = pageIndex * pageSize;
-    const copy = cards.slice();
-    return copy.splice(startIndex, pageSize);
+  applyPagination() {
+    const startIndex = this.pageIndex * this.pageSize;
+    this.cardList = this.filteredCardList.slice(startIndex, startIndex + this.pageSize);
   }
 
   ngOnDestroy() {

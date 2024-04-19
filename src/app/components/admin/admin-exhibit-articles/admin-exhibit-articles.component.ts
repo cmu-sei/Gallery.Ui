@@ -28,7 +28,6 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   isLoading = false;
   articleList: Article[] = [];
   cardList: Card[] = [];
-  // filteredArticleList: Article[] = [];
   sortedArticles: Article[] = [];
   sort: Sort = {active: 'move', direction: 'asc'};
   itemStatusList: ItemStatus[] = [
@@ -69,8 +68,8 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
-        this.filterString = term;
-        this.sortChanged(this.sort);
+        this.filterString = term.trim().toLowerCase();
+        this.applyFilter();
       });
   }
 
@@ -80,6 +79,14 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
       this.articleTeamDataService.getTeamArticlesFromApi(this.exhibit.id);
     }
     this.filterControl.setValue(this.filterString);
+    this.loadInitialData();
+  }
+
+  loadInitialData() {
+    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
+      this.articleList = Array.from(articles);
+      this.applyFilter();
+    });
   }
 
   addArticleTeam(articleId: string, teamId: string) {
@@ -125,27 +132,24 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
       });
   }
 
-  applyFilter(filterValue: string) {
-    this.filterControl.setValue(filterValue);
+  applyFilter() {
+    this.sortedArticles = this.articleList.filter(article =>
+      !this.filterString ||
+      article.name.toLowerCase().includes(this.filterString) ||
+      this.getCardName(article.cardId).toLowerCase().includes(this.filterString) ||
+      article.sourceName.toLowerCase().includes(this.filterString)
+    );
+    this.sortChanged(this.sort);
   }
 
-  // sortChanged(sort: Sort) {
-  //   this.sort = sort;
-  //   if (this.articleList && this.articleList.length > 0) {
-  //     this.filteredArticleList = this.articleList
-  //       .sort((a: Article, b: Article) => this.sortArticles(a, b, sort.active, sort.direction))
-  //       .filter((a) => (!this.filterString ||
-  //                         a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-  //                         this.getCardName(a.cardId).includes(this.filterString.toLowerCase()) ||
-  //                         a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
-  //                       )
-  //             );
-  //   }
-  // }
+  clearFilter() {
+    this.filterString = '';
+    this.loadInitialData();
+  }
 
   sortChanged(sort: Sort) {
-    this.sort = sort && sort.direction ? sort : {active: 'move', direction: 'asc'};
-    this.sortedArticles = this.getSortedArticles(this.getFilteredArticles(this.articleList));
+    this.sort = sort;
+    this.sortedArticles.sort((a, b) => this.sortArticles(a, b, sort.active, sort.direction));
   }
 
   getFilteredArticles(articles: Article[]): Article[] {
@@ -265,5 +269,4 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }
