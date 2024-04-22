@@ -31,6 +31,7 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   selectedCollectionId = '';
   newCard: Card = { id: '', name: '' };
   cardList: Card[];
+  displayedCards: Card[];
   isLoading = false;
   topbarColor = '#ef3a47';
   addingNewCard = false;
@@ -244,7 +245,7 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
 
   applyPagination() {
     const startIndex = this.pageIndex * this.pageSize;
-    this.cardList = this.filteredCardList.slice(startIndex, startIndex + this.pageSize);
+    this.displayedCards = this.filteredCardList.slice(startIndex, startIndex + this.pageSize);
   }
 
   ngOnDestroy() {

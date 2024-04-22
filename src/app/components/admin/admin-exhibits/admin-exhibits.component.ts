@@ -183,7 +183,9 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   applyFilter() {
     this.filteredExhibitList = this.exhibitList.filter(exhibit =>
       !this.filterString ||
-      exhibit.createdBy.toLowerCase().includes(this.filterString)
+      exhibit.createdBy.toLowerCase().includes(this.filterString) ||
+      exhibit.currentMove.toString().toLowerCase().includes(this.filterString) ||
+      exhibit.currentInject.toString().toLowerCase().includes(this.filterString)
     );
     this.sortChanged(this.sort);
   }
@@ -191,9 +193,8 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   sortChanged(sort: Sort) {
     this.sort = sort;
     this.filteredExhibitList.sort((a, b) => this.sortExhibits(a, b, sort.active, sort.direction));
-    this.applyPagination();
+    this.paginateExhibits();
   }
-
 
   private sortExhibits(
     a: Exhibit,
@@ -204,19 +205,18 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     const isAsc = direction !== 'desc';
     switch (column) {
       case 'dateCreated':
+        const dateA = a.dateCreated instanceof Date ? a.dateCreated : new Date(a.dateCreated);
+        const dateB = b.dateCreated instanceof Date ? b.dateCreated : new Date(b.dateCreated);
         return (
-          (a.dateCreated.getTime() < b.dateCreated.getTime() ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (dateA.getTime() - dateB.getTime()) * (isAsc ? 1 : -1)
         );
       case 'currentMove':
         return (
-          (a.currentMove < b.currentMove ? -1 : 1) *
-            (isAsc ? 1 : -1)
+          (a.currentMove - b.currentMove) * (isAsc ? 1 : -1)
         );
       case 'currentInject':
         return (
-          (a.currentInject < b.currentInject ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (a.currentInject - b.currentInject) * (isAsc ? 1 : -1)
         );
       default:
         return 0;
@@ -238,12 +238,13 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   paginatorEvent(page: PageEvent) {
     this.pageIndex = page.pageIndex;
     this.pageSize = page.pageSize;
-    this.applyPagination();
+    this.paginateExhibits();
   }
 
-  applyPagination() {
+
+  paginateExhibits(): Exhibit[] {
     const startIndex = this.pageIndex * this.pageSize;
-    this.exhibitList = this.filteredExhibitList.slice(startIndex, startIndex + this.pageSize);
+    return this.filteredExhibitList.slice(startIndex, startIndex + this.pageSize);
   }
 
   getExhibitId(index: number, exhibit: Exhibit) {
@@ -256,3 +257,4 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
 }
+

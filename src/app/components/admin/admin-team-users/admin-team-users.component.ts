@@ -81,9 +81,6 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   }
 
   setDataSources() {
-    // Now that all of the observables are returned, process accordingly.
-    // get users from the TeamUsers
-    // sort the list and add it as the data source
     this.teamUserDataSource.data = this.teamUsers.sort((a, b) => {
       const aName = this.getUserName(a.userId).toLowerCase();
       const bName = this.getUserName(b.userId).toLowerCase();
@@ -120,10 +117,6 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
     this.teamUserDataService.add(teamUser);
   }
 
-  /**
-   * Removes a user from the current team
-   * @param user The user to remove from team
-   */
   removeUserFromTeam(teamUser: TeamUser): void {
     this.teamUserDataService.delete(teamUser.id);
   }

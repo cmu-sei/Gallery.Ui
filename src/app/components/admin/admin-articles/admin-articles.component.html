@@ -89,7 +89,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 </section>
 
   <mat-expansion-panel
-    *ngFor="let article of articleList"
+    *ngFor="let article of displayedArticles"
     [expanded]="editArticle.id === article.id"
   >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(article); $event.stopPropagation()">

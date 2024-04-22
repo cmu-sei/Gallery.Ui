@@ -63,7 +63,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <span class="mat-header-cell five-cell" mat-sort-header="description">Description</span>
   </section>
 
-  <mat-expansion-panel *ngFor="let card of cardList" disabled >
+  <mat-expansion-panel *ngFor="let card of displayedCards" disabled >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(card)">
       <span class="mat-cell three-cell">
         <button

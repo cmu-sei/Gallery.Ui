@@ -40,6 +40,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   selectedMove = -1;
   moveList: number[] = [];
   addingNewArticle = false;
+  displayedArticles: Article[] = [];
   newArticleName = '';
   editArticle: Article = {};
   originalArticle: Article = {};
@@ -308,7 +309,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
 
   applyPagination() {
     const startIndex = this.pageIndex * this.pageSize;
-    this.articleList = this.filteredArticleList.slice(startIndex, startIndex + this.pageSize);
+    this.displayedArticles = this.filteredArticleList.slice(startIndex, startIndex + this.pageSize);
   }
 
   ngOnDestroy() {

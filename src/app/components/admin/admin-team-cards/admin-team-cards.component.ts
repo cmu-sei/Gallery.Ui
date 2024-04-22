@@ -126,25 +126,23 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     this.teamCardDataService.delete(teamCard.id);
   }
 
+
   applyFilter(filterValue: string) {
-    this.filterControl.setValue(filterValue);
-    this.sortChanged(this.sort);
+    this.filterString = filterValue.trim().toLowerCase();
+    this.filteredTeamCardList = this.teamCardList.filter(teamCard => {
+      const teamName = this.getTeamName(teamCard.teamId).toLowerCase();
+      const cardName = this.getCardName(teamCard.cardId).toLowerCase();
+      return (
+        (this.selectedTeamId === '' || teamCard.teamId === this.selectedTeamId) &&
+        (this.selectedCardId === '' || teamCard.cardId === this.selectedCardId) &&
+        (teamName.includes(this.filterString) || cardName.includes(this.filterString))
+      );
+    }).sort((a: TeamCard, b: TeamCard) => this.sortTeamCards(a, b, this.sort.active, this.sort.direction));
   }
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    if (this.teamCardList && this.teamCardList.length > 0) {
-      this.filteredTeamCardList = this.teamCardList
-        .sort((a: TeamCard, b: TeamCard) => this.sortTeamCards(a, b, sort.active, sort.direction));
-      if (this.selectedTeamId) {
-        this.filteredTeamCardList = this.filteredTeamCardList
-          .filter(tc => tc.teamId === this.selectedTeamId);
-      }
-      if (this.selectedCardId) {
-        this.filteredTeamCardList = this.filteredTeamCardList
-          .filter(tc => tc.cardId === this.selectedCardId);
-      }
-    }
+    this.applyFilter(this.filterString);
   }
 
   private sortTeamCards(

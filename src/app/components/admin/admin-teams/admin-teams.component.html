@@ -32,11 +32,11 @@ project root for license information or contact permission@sei.cmu.edu for full 
     <div class="mat-header-cell four-cell">
       <div class="far-right-cell">
         <mat-form-field class="search-input">
-          <input matInput [formControl]="filterControl" placeholder="Search" />
+          <input matInput [formControl]="filterControl" placeholder="Search" (click)="applyFilter('')" />
         </mat-form-field>
         <button
           mat-icon-button
-          (click)="applyFilter('')"
+          (click)="clearFilter()"
           style="outline: none;"
           title="Clear Search"
         >
