@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -31,7 +31,6 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   @Input() teamList: Team[];
   @Input() pageSize: number;
   @Input() pageIndex: number;
-  @Output() pageChange = new EventEmitter<PageEvent>();
   collectionList: Collection[] = [];
   selectedCollectionId = '';
   exhibitList: Exhibit[];
@@ -84,10 +83,25 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
         this.collectionDataService.setActive(this.selectedCollectionId);
       }
     });
+    this.filterControl.valueChanges
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((term) => {
+        this.filterString = term.trim().toLowerCase();
+        this.applyFilter();
+      });
   }
 
   ngOnInit() {
-    this.filterControl.setValue(this.filterString);
+    this.loadInitialData();
+  }
+
+  loadInitialData() {
+    this.exhibitQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
+      this.exhibitList = Array.from(exhibits);
+      this.applyFilter();
+    });
   }
 
   addOrEditExhibit(exhibit: Exhibit) {
@@ -166,16 +180,20 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     this.editExhibit = { ... this.originalExhibit };
   }
 
-  applyFilter(filterValue: string) {
-    this.filterControl.setValue(filterValue);
+  applyFilter() {
+    this.filteredExhibitList = this.exhibitList.filter(exhibit =>
+      !this.filterString ||
+      exhibit.createdBy.toLowerCase().includes(this.filterString) ||
+      exhibit.currentMove.toString().toLowerCase().includes(this.filterString) ||
+      exhibit.currentInject.toString().toLowerCase().includes(this.filterString)
+    );
+    this.sortChanged(this.sort);
   }
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    if (this.exhibitList && this.exhibitList.length > 0) {
-      this.filteredExhibitList = this.exhibitList
-        .sort((a: Exhibit, b: Exhibit) => this.sortExhibits(a, b, sort.active, sort.direction));
-    }
+    this.filteredExhibitList.sort((a, b) => this.sortExhibits(a, b, sort.active, sort.direction));
+    this.paginateExhibits();
   }
 
   private sortExhibits(
@@ -187,19 +205,18 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     const isAsc = direction !== 'desc';
     switch (column) {
       case 'dateCreated':
+        const dateA = a.dateCreated instanceof Date ? a.dateCreated : new Date(a.dateCreated);
+        const dateB = b.dateCreated instanceof Date ? b.dateCreated : new Date(b.dateCreated);
         return (
-          (a.dateCreated.getTime() < b.dateCreated.getTime() ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (dateA.getTime() - dateB.getTime()) * (isAsc ? 1 : -1)
         );
       case 'currentMove':
         return (
-          (a.currentMove < b.currentMove ? -1 : 1) *
-            (isAsc ? 1 : -1)
+          (a.currentMove - b.currentMove) * (isAsc ? 1 : -1)
         );
       case 'currentInject':
         return (
-          (a.currentInject < b.currentInject ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (a.currentInject - b.currentInject) * (isAsc ? 1 : -1)
         );
       default:
         return 0;
@@ -219,16 +236,15 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   paginatorEvent(page: PageEvent) {
-    this.pageChange.emit(page);
+    this.pageIndex = page.pageIndex;
+    this.pageSize = page.pageSize;
+    this.paginateExhibits();
   }
 
-  paginateExhibits(exhibits: Exhibit[], pageIndex: number, pageSize: number) {
-    if (!exhibits) {
-      return [];
-    }
-    const startIndex = pageIndex * pageSize;
-    const copy = exhibits.slice();
-    return copy.splice(startIndex, pageSize);
+
+  paginateExhibits(): Exhibit[] {
+    const startIndex = this.pageIndex * this.pageSize;
+    return this.filteredExhibitList.slice(startIndex, startIndex + this.pageSize);
   }
 
   getExhibitId(index: number, exhibit: Exhibit) {
@@ -241,3 +257,4 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
 }
+

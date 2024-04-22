@@ -129,7 +129,13 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
   }
 
   applyFilter(filterValue: string) {
-    this.filterControl.setValue(filterValue);
+    this.filterString = filterValue;
+    this.filteredTeamList = this.getFilteredTeams(this.teamList);
+  }
+
+  clearFilter() {
+    this.filterString = '';
+    this.filterControl.setValue('');
   }
 
   sortChanged(sort: Sort) {

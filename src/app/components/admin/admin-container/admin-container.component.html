@@ -173,16 +173,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-users
           [userList]="userList | async"
           [permissionList]="permissionList | async"
-          [filterControl]="filterControl"
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          [filterString]="filterString | async"
           (removeUserPermission)="removeUserPermissionHandler($event)"
           (addUserPermission)="addUserPermissionHandler($event)"
           (addUser)="addUserHandler($event)"
           (deleteUser)="deleteUserHandler($event)"
-          (sortChange)="sortChangeHandler($event)"
-          (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-users>
       </span>
@@ -190,7 +186,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-collections
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-collections>
       </span>
@@ -200,7 +195,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           [teamList]="teamList | async"
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-exhibits>
       </span>
@@ -208,7 +202,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-cards
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-cards>
       </span>
@@ -216,7 +209,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-articles
           [pageSize]="pageSize | async"
           [pageIndex]="pageIndex | async"
-          (pageChange)="pageChangeHandler($event)"
         >
         </app-admin-articles>
       </span>

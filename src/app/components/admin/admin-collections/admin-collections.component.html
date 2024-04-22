@@ -15,6 +15,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     style="margin-left: 20px; transform: scale(0.85); margin-right: 5px;"
     class="icon-color"
     svgIcon="ic_magnify_search"
+    (click)="applyFilter()"
   ></mat-icon>
   <mat-form-field style="width: 300px;">
     <input matInput [formControl]="filterControl" placeholder="Search" />
@@ -22,7 +23,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div style="width: 30px;">
     <button
       mat-icon-button
-      (click)="applyFilter('')"
+      (click)="clearFilter()"
       style="outline: none;"
       title="Clear Search"
     >
@@ -57,7 +58,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </section>
 
   <mat-expansion-panel
-    *ngFor="let collection of paginateCollections(filteredCollectionList, pageIndex, pageSize)"
+    *ngFor="let collection of displayedCollections"
     disabled
   >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(collection)">

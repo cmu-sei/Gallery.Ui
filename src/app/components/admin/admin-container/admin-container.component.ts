@@ -2,9 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
-import { Sort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -39,8 +36,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   isContentDeveloper = false;
   teamList = this.teamQuery.selectAll();
   userList: Observable<User[]>;
-  filterControl: UntypedFormControl = this.userDataService.filterControl;
-  filterString: Observable<string>;
   permissionList: Observable<Permission[]>;
   pageSize: Observable<number>;
   pageIndex: Observable<number>;
@@ -89,9 +84,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.userList = this.userDataService.userList;
     this.permissionList = this.permissionService.getPermissions();
     this.collectionDataService.load();
-    this.filterString = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('filter') || '')
-    );
     this.pageSize = activatedRoute.queryParamMap.pipe(
       map((params) => parseInt(params.get('pagesize') || '20', 10))
     );
@@ -178,20 +170,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
 
   removeUserPermissionHandler(userPermission: UserPermission) {
     this.userDataService.deleteUserPermission(userPermission);
-  }
-
-  sortChangeHandler(sort: Sort) {
-    this.router.navigate([], {
-      queryParams: { sorton: sort.active, sortdir: sort.direction },
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  pageChangeHandler(page: PageEvent) {
-    this.router.navigate([], {
-      queryParams: { pageindex: page.pageIndex, pagesize: page.pageSize },
-      queryParamsHandling: 'merge',
-    });
   }
 
   getSelectedClass(section: string) {

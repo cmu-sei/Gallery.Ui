@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -29,7 +29,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AdminArticlesComponent implements OnInit, OnDestroy {
   @Input() pageSize: number;
   @Input() pageIndex: number;
-  @Output() pageChange = new EventEmitter<PageEvent>();
   newArticle: Article = { id: '', name: '' };
   isLoading = false;
   topbarColor = '#ef3a47';
@@ -41,6 +40,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   selectedMove = -1;
   moveList: number[] = [];
   addingNewArticle = false;
+  displayedArticles: Article[] = [];
   newArticleName = '';
   editArticle: Article = {};
   originalArticle: Article = {};
@@ -102,12 +102,16 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
       }
     });
     this.collectionDataService.load();
+
     this.filterControl.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
       .subscribe((term) => {
-        this.filterString = term;
-        this.sortChanged(this.sort);
+        this.filterString = term.trim().toLowerCase();
+        this.applyFilter();
       });
+
     activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.selectedCollectionId = params.get('collection');
       this.articleDataService.unload();
@@ -123,7 +127,14 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.filterControl.setValue(this.filterString);
+    this.loadInitialData();
+  }
+
+  loadInitialData() {
+    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
+      this.articleList = Array.from(articles);
+      this.applyFilter();
+    });
   }
 
   addOrEditArticle(article: Article) {
@@ -209,26 +220,26 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
       });
   }
 
-  applyFilter(filterValue: string) {
-    this.filterControl.setValue(filterValue);
+  applyFilter() {
+    this.filteredArticleList = this.articleList.filter(article =>
+      !this.filterString ||
+      article.name.toLowerCase().includes(this.filterString) ||
+      article.description.toLowerCase().includes(this.filterString) ||
+      article.sourceName.toLowerCase().includes(this.filterString)
+    );
+    this.sortChanged(this.sort);
+  }
+
+  clearFilter() {
+    this.filterString = '';
+    this.filterControl.setValue('');
+    this.loadInitialData();
   }
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    if (this.articleList && this.articleList.length > 0) {
-      this.filteredArticleList = this.articleList
-        .sort((a: Article, b: Article) => this.sortArticles(a, b, sort.active, sort.direction))
-        .filter((a) => ((this.selectedCard.id === '') || a.cardId === this.selectedCard.id)
-                        && (!this.filterString ||
-                              a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-                              a.description.toLowerCase().includes(this.filterString.toLowerCase()) ||
-                              a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
-                        )
-        );
-    }
-    if (this.selectedMove > -1) {
-      this.filteredArticleList = this.filteredArticleList.filter((a) => (+a.move === +this.selectedMove));
-    }
+    this.filteredArticleList.sort((a, b) => this.sortArticles(a, b, sort.active, sort.direction));
+    this.applyPagination();
   }
 
   private sortArticles(
@@ -291,16 +302,14 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   paginatorEvent(page: PageEvent) {
-    this.pageChange.emit(page);
+    this.pageIndex = page.pageIndex;
+    this.pageSize = page.pageSize;
+    this.applyPagination();
   }
 
-  paginateArticles(articles: Article[], pageIndex: number, pageSize: number) {
-    if (!articles) {
-      return [];
-    }
-    const startIndex = pageIndex * pageSize;
-    const copy = articles.slice();
-    return copy.splice(startIndex, pageSize);
+  applyPagination() {
+    const startIndex = this.pageIndex * this.pageSize;
+    this.displayedArticles = this.filteredArticleList.slice(startIndex, startIndex + this.pageSize);
   }
 
   ngOnDestroy() {

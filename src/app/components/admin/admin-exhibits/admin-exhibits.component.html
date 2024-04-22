@@ -50,7 +50,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </section>
 
   <mat-expansion-panel
-    *ngFor="let exhibit of paginateExhibits(exhibitList, pageIndex, pageSize); trackBy:getExhibitId"
+    *ngFor="let exhibit of paginateExhibits(); trackBy:getExhibitId"
     [expanded]="editExhibit.id === exhibit.id"
   >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(exhibit); $event.stopPropagation()">

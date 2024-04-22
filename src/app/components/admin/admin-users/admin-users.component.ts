@@ -15,6 +15,8 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AdminUserEditDialogComponent } from 'src/app/components/admin/admin-user-edit-dialog/admin-user-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { UserDataService } from 'src/app/data/user/user-data.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable} from 'rxjs';
 
 @Component({
   selector: 'app-admin-users',
@@ -22,8 +24,6 @@ import { UserDataService } from 'src/app/data/user/user-data.service';
   styleUrls: ['./admin-users.component.scss'],
 })
 export class AdminUsersComponent implements OnInit {
-  @Input() filterControl: UntypedFormControl;
-  @Input() filterString: string;
   @Input() userList: User[];
   @Input() permissionList: Permission[];
   @Input() pageSize: number;
@@ -37,9 +37,13 @@ export class AdminUsersComponent implements OnInit {
   addingNewUser = false;
   isLoading = false;
   topbarColor = '#ef3a47';
+  filterControl: UntypedFormControl = this.userDataService.filterControl;
+  filterString: Observable<string>;
 
   constructor(
     private dialog: MatDialog,
+    private router: Router,
+    activatedRoute: ActivatedRoute,
     public dialogService: DialogService,
     private settingsService: ComnSettingsService,
     private userDataService: UserDataService
@@ -110,12 +114,30 @@ export class AdminUsersComponent implements OnInit {
     this.filterControl.setValue(filterValue);
   }
 
-  sortChanged(sort: Sort) {
+  sortChanged(sort?: Sort) {
     this.sortChange.emit(sort);
+    this.handleChange(sort);
   }
 
-  paginatorEvent(page: PageEvent) {
+  paginatorEvent(page?: PageEvent) {
     this.pageChange.emit(page);
+    this.handleChange(undefined, page);
+  }
+
+  handleChange(sort?: Sort, page?: PageEvent) {
+    const queryParams = {};
+    if (sort) {
+      queryParams['sorton'] = sort.active;
+      queryParams['sortdir'] = sort.direction;
+    }
+    if (page) {
+      queryParams['pageindex'] = page.pageIndex;
+      queryParams['pagesize'] = page.pageSize;
+    }
+    this.router.navigate([], {
+      queryParams: queryParams,
+      queryParamsHandling: 'merge',
+    });
   }
 
   paginateUsers(users: User[], pageIndex: number, pageSize: number) {

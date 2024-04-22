@@ -1,9 +1,9 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { MatLegacyPaginator as MatPaginator, LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
 import { Collection } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
@@ -25,7 +25,6 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 export class AdminCollectionsComponent implements OnInit, OnDestroy {
   @Input() pageSize: number;
   @Input() pageIndex: number;
-  @Output() pageChange = new EventEmitter<PageEvent>();
   collectionList: Collection[] = [];
   newCollection: Collection = { id: '', name: '' };
   isLoading = false;
@@ -35,6 +34,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   editCollection: Collection = {};
   originalCollection: Collection = {};
   filteredCollectionList: Collection[] = [];
+  displayedCollections: Collection[] = [];
   filterControl = new UntypedFormControl();
   filterString = '';
   sort: Sort = {active: 'dateCreated', direction: 'desc'};
@@ -64,13 +64,20 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
-        this.filterString = term;
-        this.sortChanged(this.sort);
+        this.filterString = term.trim().toLowerCase();
+        this.applyFilter();
       });
   }
 
   ngOnInit() {
-    this.filterControl.setValue(this.filterString);
+    this.loadInitialData();
+  }
+
+  loadInitialData() {
+    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
+      this.collectionList = Array.from(collections);
+      this.applyFilter();
+    });
   }
 
   addOrEditCollection(collection: Collection) {
@@ -131,21 +138,25 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
     this.editCollection = { ... this.originalCollection };
   }
 
-  applyFilter(filterValue: string) {
-    this.filterControl.setValue(filterValue);
+  applyFilter() {
+    this.filteredCollectionList = this.collectionList.filter(collection =>
+      !this.filterString ||
+      collection.name.toLowerCase().includes(this.filterString) ||
+      collection.description.toLowerCase().includes(this.filterString)
+    );
+    this.sortChanged(this.sort);
+  }
+
+  clearFilter() {
+    this.filterString = '';
+    this.filterControl.setValue('');
+    this.loadInitialData();
   }
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    if (this.collectionList && this.collectionList.length > 0) {
-      this.filteredCollectionList = this.collectionList
-        .sort((a: Collection, b: Collection) => this.sortCollections(a, b, sort.active, sort.direction))
-        .filter((a) => (
-          !this.filterString ||
-          a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-          a.description.toLowerCase().includes(this.filterString.toLowerCase())
-        ));
-    }
+    this.filteredCollectionList.sort((a, b) => this.sortCollections(a, b, sort.active, sort.direction));
+    this.applyPagination();
   }
 
   private sortCollections(
@@ -172,16 +183,14 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   }
 
   paginatorEvent(page: PageEvent) {
-    this.pageChange.emit(page);
+    this.pageIndex = page.pageIndex;
+    this.pageSize = page.pageSize;
+    this.applyPagination();
   }
 
-  paginateCollections(collections: Collection[], pageIndex: number, pageSize: number) {
-    if (!collections) {
-      return [];
-    }
-    const startIndex = pageIndex * pageSize;
-    const copy = collections.slice();
-    return copy.splice(startIndex, pageSize);
+  applyPagination() {
+    const startIndex = this.pageIndex * this.pageSize;
+    this.displayedCollections = this.filteredCollectionList.slice(startIndex, startIndex + this.pageSize);
   }
 
   ngOnDestroy() {
