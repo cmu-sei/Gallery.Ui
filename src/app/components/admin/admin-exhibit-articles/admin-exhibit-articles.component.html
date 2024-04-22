@@ -20,7 +20,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <input
             matInput
             [(ngModel)]="filterString"
-            (keyup)="applyFilter(); $event.stopPropagation"
+            (keyup)="applyFilter()"
             (keypress)="$event.stopPropagation"
             (blur)="$event.stopPropagation"
             placeholder="Search"
@@ -29,7 +29,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div style="width: 30px;">
           <button
             mat-icon-button
-            (click)="clearFilter(); $event.stopPropagation"
+            (click)="clearFilter();"
             style="outline: none;"
             title="Clear Search"
           >
