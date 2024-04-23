@@ -32,8 +32,8 @@ export class AdminUsersComponent implements OnInit {
   @Output() addUserPermission = new EventEmitter<UserPermission>();
   @Output() addUser = new EventEmitter<User>();
   @Output() deleteUser = new EventEmitter<User>();
-  @Output() sortChange = new EventEmitter<Sort>();
-  @Output() pageChange = new EventEmitter<PageEvent>();
+  // @Output() sortChange = new EventEmitter<Sort>();
+  // @Output() pageChange = new EventEmitter<PageEvent>();
   addingNewUser = false;
   isLoading = false;
   topbarColor = '#ef3a47';
@@ -115,12 +115,10 @@ export class AdminUsersComponent implements OnInit {
   }
 
   sortChanged(sort?: Sort) {
-    this.sortChange.emit(sort);
     this.handleChange(sort);
   }
 
   paginatorEvent(page?: PageEvent) {
-    this.pageChange.emit(page);
     this.handleChange(undefined, page);
   }
 

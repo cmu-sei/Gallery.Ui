@@ -23,8 +23,8 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
   styleUrls: ['./admin-collections.component.scss'],
 })
 export class AdminCollectionsComponent implements OnInit, OnDestroy {
-  @Input() pageSize: number;
-  @Input() pageIndex: number;
+  pageSize = 10;
+  pageIndex = 0;
   collectionList: Collection[] = [];
   newCollection: Collection = { id: '', name: '' };
   isLoading = false;
@@ -32,6 +32,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   addingNewCollection = false;
   newCollectionName = '';
   editCollection: Collection = {};
+  filteredCollectionCount = 0;
   originalCollection: Collection = {};
   filteredCollectionList: Collection[] = [];
   displayedCollections: Collection[] = [];
@@ -144,6 +145,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
       collection.name.toLowerCase().includes(this.filterString) ||
       collection.description.toLowerCase().includes(this.filterString)
     );
+    this.filteredCollectionCount = this.filteredCollectionList.length;
     this.sortChanged(this.sort);
   }
 

@@ -184,8 +184,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </span>
       <span *ngIf="isContentDeveloper && displayedSection === section.collections">
         <app-admin-collections
-          [pageSize]="pageSize | async"
-          [pageIndex]="pageIndex | async"
         >
         </app-admin-collections>
       </span>
@@ -193,22 +191,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-exhibits
           [userList]="userList | async"
           [teamList]="teamList | async"
-          [pageSize]="pageSize | async"
-          [pageIndex]="pageIndex | async"
         >
         </app-admin-exhibits>
       </span>
       <span *ngIf="isContentDeveloper && displayedSection === section.cards">
         <app-admin-cards
-          [pageSize]="pageSize | async"
-          [pageIndex]="pageIndex | async"
         >
         </app-admin-cards>
       </span>
       <span *ngIf="isContentDeveloper && displayedSection === section.articles">
         <app-admin-articles
-          [pageSize]="pageSize | async"
-          [pageIndex]="pageIndex | async"
         >
         </app-admin-articles>
       </span>

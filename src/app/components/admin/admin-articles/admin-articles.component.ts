@@ -27,8 +27,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./admin-articles.component.scss'],
 })
 export class AdminArticlesComponent implements OnInit, OnDestroy {
-  @Input() pageSize: number;
-  @Input() pageIndex: number;
+  pageSize = 10;
+  pageIndex = 0;
   newArticle: Article = { id: '', name: '' };
   isLoading = false;
   topbarColor = '#ef3a47';
