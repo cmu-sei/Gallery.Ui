@@ -15,7 +15,6 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AdminUserEditDialogComponent } from 'src/app/components/admin/admin-user-edit-dialog/admin-user-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { UserDataService } from 'src/app/data/user/user-data.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable} from 'rxjs';
 
 @Component({
@@ -26,14 +25,12 @@ import { Observable} from 'rxjs';
 export class AdminUsersComponent implements OnInit {
   @Input() userList: User[];
   @Input() permissionList: Permission[];
-  @Input() pageSize: number;
-  @Input() pageIndex: number;
+  pageSize = 10;
+  pageIndex = 0;
   @Output() removeUserPermission = new EventEmitter<UserPermission>();
   @Output() addUserPermission = new EventEmitter<UserPermission>();
   @Output() addUser = new EventEmitter<User>();
   @Output() deleteUser = new EventEmitter<User>();
-  // @Output() sortChange = new EventEmitter<Sort>();
-  // @Output() pageChange = new EventEmitter<PageEvent>();
   addingNewUser = false;
   isLoading = false;
   topbarColor = '#ef3a47';
@@ -42,8 +39,6 @@ export class AdminUsersComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private router: Router,
-    activatedRoute: ActivatedRoute,
     public dialogService: DialogService,
     private settingsService: ComnSettingsService,
     private userDataService: UserDataService
@@ -114,36 +109,31 @@ export class AdminUsersComponent implements OnInit {
     this.filterControl.setValue(filterValue);
   }
 
-  sortChanged(sort?: Sort) {
-    this.handleChange(sort);
-  }
-
-  paginatorEvent(page?: PageEvent) {
-    this.handleChange(undefined, page);
-  }
-
-  handleChange(sort?: Sort, page?: PageEvent) {
-    const queryParams = {};
-    if (sort) {
-      queryParams['sorton'] = sort.active;
-      queryParams['sortdir'] = sort.direction;
-    }
-    if (page) {
-      queryParams['pageindex'] = page.pageIndex;
-      queryParams['pagesize'] = page.pageSize;
-    }
-    this.router.navigate([], {
-      queryParams: queryParams,
-      queryParamsHandling: 'merge',
+  sortChanged(sort: Sort) {
+    this.userList.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      const compareResult = this.compare(a.name.toLowerCase(), b.name.toLowerCase());
+      return isAsc ? compareResult : -compareResult;
     });
   }
 
-  paginateUsers(users: User[], pageIndex: number, pageSize: number) {
-    if (!users) {
-      return [];
+  paginatorEvent(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
+    this.pageSize = page.pageSize;
+  }
+
+  paginateUsers() {
+    const startIndex = this.pageIndex * this.pageSize;
+    return this.userList.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  private compare(a: string, b: string) {
+    if (a < b) {
+      return -1;
     }
-    const startIndex = pageIndex * pageSize;
-    const copy = users.slice();
-    return copy.splice(startIndex, pageSize);
+    if (a > b) {
+      return 1;
+    }
+    return 0;
   }
 }
