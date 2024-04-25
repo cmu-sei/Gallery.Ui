@@ -23,8 +23,8 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
   styleUrls: ['./admin-collections.component.scss'],
 })
 export class AdminCollectionsComponent implements OnInit, OnDestroy {
-  @Input() pageSize: number;
-  @Input() pageIndex: number;
+  pageSize = 10;
+  pageIndex = 0;
   collectionList: Collection[] = [];
   newCollection: Collection = { id: '', name: '' };
   isLoading = false;
