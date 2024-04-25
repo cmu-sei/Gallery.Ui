@@ -32,7 +32,6 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   addingNewCollection = false;
   newCollectionName = '';
   editCollection: Collection = {};
-  filteredCollectionCount = 0;
   originalCollection: Collection = {};
   filteredCollectionList: Collection[] = [];
   displayedCollections: Collection[] = [];
@@ -145,7 +144,6 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
       collection.name.toLowerCase().includes(this.filterString) ||
       collection.description.toLowerCase().includes(this.filterString)
     );
-    this.filteredCollectionCount = this.filteredCollectionList.length;
     this.sortChanged(this.sort);
   }
 
