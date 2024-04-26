@@ -12,7 +12,8 @@ import {
   CollectionService,
 } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,7 @@ export class CollectionDataService {
   readonly pageEvent = new BehaviorSubject<PageEvent>(this._pageEvent);
   private pageSize: Observable<number>;
   private pageIndex: Observable<number>;
+  public uploadProgress = new Subject<number>();
 
   constructor(
     private collectionStore: CollectionStore,
@@ -192,6 +194,24 @@ export class CollectionDataService {
       });
   }
 
+  copy(id: string) {
+    this.collectionStore.setLoading(true);
+    this.collectionService
+      .copyCollection(id)
+      .pipe(
+        tap(() => {
+          this.collectionStore.setLoading(false);
+        }),
+        take(1)
+      )
+      .subscribe((s) => {
+        this.collectionStore.add(s);
+      },
+      (error) => {
+        this.collectionStore.setLoading(false);
+      });
+  }
+
   updateCollection(collection: Collection) {
     this.collectionStore.setLoading(true);
     this.collectionService
@@ -216,6 +236,32 @@ export class CollectionDataService {
       });
   }
 
+  downloadJson(id: string) {
+    return this.collectionService.downloadJson(id);
+  }
+
+  uploadJson(file: File, observe: any, reportProgress: boolean) {
+    this.collectionStore.setLoading(true);
+    this.collectionService
+      .uploadJson(file, observe, reportProgress)
+      .subscribe((event) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const uploadProgress = Math.round((100 * event.loaded) / event.total);
+          this.uploadProgress.next(uploadProgress);
+        } else if (event instanceof HttpResponse) {
+          this.uploadProgress.next(0);
+          this.collectionStore.setLoading(false);
+          if (event.status === 200) {
+            const collection = event.body;
+            this.collectionStore.upsert(collection.id, collection);
+          }
+        }
+      },
+      (error) => {
+        this.collectionStore.setLoading(false);
+        this.uploadProgress.next(0);
+      });
+  }
   setActive(id: string) {
     this.collectionStore.setActive(id);
   }
