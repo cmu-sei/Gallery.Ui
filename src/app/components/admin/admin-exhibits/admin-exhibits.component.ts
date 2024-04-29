@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -47,6 +47,9 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   showTeams = false;
   showArticles = false;
   private unsubscribe$ = new Subject();
+  isBusy = false;
+  uploadProgress = 0;
+  @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
 
   constructor(
     activatedRoute: ActivatedRoute,
@@ -66,6 +69,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
+    // observe exhibits
     this.exhibitQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
       this.exhibitList = [];
       exhibits.forEach(exhibit => {
@@ -73,18 +77,21 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
         if (exhibit.id === this.editExhibit.id) {
           this.editExhibit = { ...exhibit};
         }
+        if (!this.collectionList.some(c => c.id === exhibit.collectionId)) {
+          this.collectionDataService.load();
+        }
       });
+      this.applyFilter();
     });
+    // observe collections
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.collectionList = collections;
     });
-    activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.selectedCollectionId = params.get('collection');
-      if (this.selectedCollectionId) {
-        this.cardDataService.loadByCollection(this.selectedCollectionId);
-        this.collectionDataService.setActive(this.selectedCollectionId);
-      }
+    // observe active collection id
+    this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
+      this.selectedCollectionId = activeId;
     });
+    // observe filter string
     this.filterControl.valueChanges
       .pipe(
         takeUntil(this.unsubscribe$)
@@ -93,6 +100,17 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
         this.filterString = term.trim().toLowerCase();
         this.applyFilter();
       });
+    // observe exhibits loading
+    this.exhibitQuery.selectLoading().pipe(takeUntil(this.unsubscribe$)).subscribe((isLoading) => {
+      this.isBusy = isLoading;
+      if (!isLoading && !this.selectedCollectionId) {
+        this.router.navigate([], {
+          queryParams: {
+            section: 'exhibits'
+          }
+        });
+      }
+    });
   }
 
   ngOnInit() {
@@ -184,10 +202,12 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
 
   applyFilter() {
     this.filteredExhibitList = this.exhibitList.filter(exhibit =>
-      !this.filterString ||
-      exhibit.createdBy.toLowerCase().includes(this.filterString) ||
-      exhibit.currentMove.toString().toLowerCase().includes(this.filterString) ||
-      exhibit.currentInject.toString().toLowerCase().includes(this.filterString)
+      exhibit.collectionId === this.selectedCollectionId &&
+      (!this.filterString ||
+        exhibit.createdBy.toLowerCase().includes(this.filterString) ||
+        exhibit.currentMove.toString().toLowerCase().includes(this.filterString) ||
+        exhibit.currentInject.toString().toLowerCase().includes(this.filterString)
+      )
     );
     this.sortChanged(this.sort);
   }
@@ -235,6 +255,58 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
       return user ? user.name : '';
     }
     return '';
+  }
+
+  copyExhibit(id: string): void {
+    this.exhibitDataService.copy(id);
+  }
+
+  downloadExhibit(exhibit: Exhibit) {
+    this.isBusy = true;
+    this.exhibitDataService.downloadJson(exhibit.id).subscribe(
+      (data) => {
+        const url = window.URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        const year = exhibit.dateCreated.getFullYear();
+        const month = ('0' + (exhibit.dateCreated.getMonth() + 1)).slice(-2);
+        const day = ('0' + exhibit.dateCreated.getDate()).slice(-2);
+        link.download = this.getCollectionName(this.selectedCollectionId) +
+          '-' + this.getUserName(exhibit.createdBy) +
+          '-' + year + month + day + '.json';
+        link.click();
+        this.isBusy = false;
+      },
+      (err) => {
+        this.isBusy = false;
+        window.alert('Error downloading file');
+      },
+      () => {
+        this.isBusy = false;
+      }
+    );
+  }
+
+  uploadFile(fileType: string, mselId: string, teamId: string) {
+    this.collectionDataService.setActive('');
+    this.exhibitList = [];
+    this.isBusy = true;
+  }
+
+  /**
+   * Selects the file(s) to be uploaded. Called when file selection is changed
+   */
+  selectFile(e) {
+    const file = e.target.files[0];
+    if (!file) {
+      this.isBusy = false;
+      return;
+    }
+    this.uploadProgress = 0;
+    this.isBusy = true;
+    this.exhibitDataService.uploadJson(file, 'events', true);
+    this.jsonInput.nativeElement.value = null;
   }
 
   paginatorEvent(page: PageEvent) {

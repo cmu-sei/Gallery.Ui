@@ -84,6 +84,16 @@
   margin-top: 12px;
 }
 
+.first-cell {
+  flex: 2;
+  min-width: 160px;
+}
+
+.name-cell {
+  flex: 3;
+  min-width: 200px;
+}
+
 .five-cell {
   flex: 5;
 }

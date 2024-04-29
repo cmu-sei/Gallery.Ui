@@ -13,7 +13,8 @@ import {
   ItemStatus
 } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +33,7 @@ export class ExhibitDataService {
   readonly pageEvent = new BehaviorSubject<PageEvent>(this._pageEvent);
   private pageSize: Observable<number>;
   private pageIndex: Observable<number>;
+  public uploadProgress = new Subject<number>();
 
   constructor(
     private exhibitStore: ExhibitStore,
@@ -171,26 +173,30 @@ export class ExhibitDataService {
   }
 
   loadByCollection(collectionId: string) {
-    this.exhibitStore.setLoading(true);
-    this.exhibitService
-      .getCollectionExhibits(collectionId)
-      .pipe(
-        tap(() => {
-          this.exhibitStore.setLoading(false);
-        }),
-        take(1)
-      )
-      .subscribe(
-        (exhibits) => {
-          exhibits.forEach(a => {
-            this.setAsDates(a);
-          });
-          this.exhibitStore.set(exhibits);
-        },
-        (error) => {
-          this.exhibitStore.set([]);
-        }
-      );
+    if (collectionId) {
+      this.exhibitStore.setLoading(true);
+      this.exhibitService
+        .getCollectionExhibits(collectionId)
+        .pipe(
+          tap(() => {
+            this.exhibitStore.setLoading(false);
+          }),
+          take(1)
+        )
+        .subscribe(
+          (exhibits) => {
+            exhibits.forEach(a => {
+              this.setAsDates(a);
+            });
+            this.exhibitStore.set(exhibits);
+          },
+          (error) => {
+            this.exhibitStore.set([]);
+          }
+        );
+    } else {
+      this.exhibitStore.set([]);
+    }
   }
 
   loadMineByCollection(collectionId: string) {
@@ -250,6 +256,24 @@ export class ExhibitDataService {
       });
   }
 
+  copy(id: string) {
+    this.exhibitStore.setLoading(true);
+    this.exhibitService
+      .copyExhibit(id)
+      .pipe(
+        tap(() => {
+          this.exhibitStore.setLoading(false);
+        }),
+        take(1)
+      )
+      .subscribe((s) => {
+        this.exhibitStore.add(s);
+      },
+      (error) => {
+        this.exhibitStore.setLoading(false);
+      });
+  }
+
   updateExhibit(exhibit: Exhibit) {
     this.exhibitStore.setLoading(true);
     this.exhibitService
@@ -274,6 +298,32 @@ export class ExhibitDataService {
       });
   }
 
+  downloadJson(id: string) {
+    return this.exhibitService.downloadJson(id);
+  }
+
+  uploadJson(file: File, observe: any, reportProgress: boolean) {
+    this.exhibitStore.setLoading(true);
+    this.exhibitService
+      .uploadJson(file, observe, reportProgress)
+      .subscribe((event) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const uploadProgress = Math.round((100 * event.loaded) / event.total);
+          this.uploadProgress.next(uploadProgress);
+        } else if (event instanceof HttpResponse) {
+          this.uploadProgress.next(0);
+          this.exhibitStore.setLoading(false);
+          if (event.status === 200) {
+            const exhibit = event.body;
+            this.exhibitStore.upsert(exhibit.id, exhibit);
+          }
+        }
+      },
+      (error) => {
+        this.exhibitStore.setLoading(false);
+        this.uploadProgress.next(0);
+      });
+  }
   setActive(id: string) {
     this.exhibitStore.setActive(id);
   }

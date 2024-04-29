@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -39,6 +39,9 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   filterString = '';
   sort: Sort = {active: 'dateCreated', direction: 'desc'};
   private unsubscribe$ = new Subject();
+  isBusy = false;
+  uploadProgress = 0;
+  @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private settingsService: ComnSettingsService,
@@ -67,6 +70,10 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
         this.filterString = term.trim().toLowerCase();
         this.applyFilter();
       });
+    // subscribe to scoring models loading
+    this.collectionQuery.selectLoading().pipe(takeUntil(this.unsubscribe$)).subscribe((isLoading) => {
+      this.isBusy = isLoading;
+    });
   }
 
   ngOnInit() {
@@ -180,6 +187,51 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
       default:
         return 0;
     }
+  }
+
+  copyCollection(id: string): void {
+    this.collectionDataService.copy(id);
+  }
+
+  downloadCollection(collection: Collection) {
+    this.isBusy = true;
+    this.collectionDataService.downloadJson(collection.id).subscribe(
+      (data) => {
+        const url = window.URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.download = collection.description.endsWith('.json') ? collection.description : collection.description + '.json';
+        link.click();
+        this.isBusy = false;
+      },
+      (err) => {
+        this.isBusy = false;
+        window.alert('Error downloading file');
+      },
+      () => {
+        this.isBusy = false;
+      }
+    );
+  }
+
+  uploadFile(fileType: string, mselId: string, teamId: string) {
+    this.isBusy = true;
+  }
+
+  /**
+   * Selects the file(s) to be uploaded. Called when file selection is changed
+   */
+  selectFile(e) {
+    const file = e.target.files[0];
+    if (!file) {
+      this.isBusy = false;
+      return;
+    }
+    this.uploadProgress = 0;
+    this.isBusy = true;
+    this.collectionDataService.uploadJson(file, 'events', true);
+    this.jsonInput.nativeElement.value = null;
   }
 
   paginatorEvent(page: PageEvent) {

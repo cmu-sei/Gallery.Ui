@@ -15,6 +15,7 @@ import { UserDataService } from 'src/app/data/user/user-data.service';
 import { TopbarView } from 'src/app/components/shared/top-bar/topbar.models';
 import { ComnSettingsService, ComnAuthQuery, Theme } from '@cmusei/crucible-common';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
+import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
@@ -55,6 +56,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     private router: Router,
     private signalRService: SignalRService,
     private collectionDataService: CollectionDataService,
+    private collectionQuery: CollectionQuery,
     private exhibitDataService: ExhibitDataService,
     private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
@@ -95,9 +97,14 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       const collectionId = params.get('collection');
       if (collectionId) {
         this.exhibitDataService.loadByCollection(collectionId);
+        const routeCollectionId = '' + params.get('collection');
+        this.collectionDataService.setActive(routeCollectionId);
       }
     });
-
+    // observe active collection id
+    this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
+      this.exhibitDataService.loadByCollection(activeId);
+    });
     this.teamDataService.load();
     this.userDataService.getUsersFromApi();
     this.userDataService
