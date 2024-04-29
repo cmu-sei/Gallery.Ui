@@ -29,8 +29,6 @@ import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.servi
 export class AdminExhibitsComponent implements OnInit, OnDestroy {
   @Input() userList: User[];
   @Input() teamList: Team[];
-  // @Input() pageSize: number;
-  // @Input() pageIndex: number;
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];
