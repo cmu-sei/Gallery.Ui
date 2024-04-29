@@ -184,9 +184,7 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   }
 
   clearFilter() {
-    this.filterString = '';
     this.filterControl.setValue('');
-    this.loadInitialData();
   }
 
   sortChanged(sort: Sort) {

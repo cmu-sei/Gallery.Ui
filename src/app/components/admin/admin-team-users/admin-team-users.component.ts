@@ -8,8 +8,8 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { LegacyPageEvent as PageEvent, MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
-import { MatSort, MatSortable } from '@angular/material/sort';
+import { LegacyPageEvent as PageEvent} from '@angular/material/legacy-paginator';
+import { Sort, MatSortable } from '@angular/material/sort';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { Team, TeamUser, User } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
@@ -18,6 +18,7 @@ import { TeamUserQuery } from 'src/app/data/team-user/team-user.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-team-users',
@@ -35,13 +36,12 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   displayedTeamColumns: string[] = ['name', 'user'];
   userDataSource = new MatTableDataSource<User>(new Array<User>());
   teamUserDataSource = new MatTableDataSource<TeamUser>(new Array<TeamUser>());
-  filterControl = this.userDataService.filterControl;
+  filterControl = new UntypedFormControl();
   filterString = '';
   defaultPageSize = 100;
   pageEvent: PageEvent;
   private unsubscribe$ = new Subject();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  sort: Sort = {active: 'name', direction: 'asc'};
 
   constructor(
     private teamQuery: TeamQuery,
@@ -68,8 +68,14 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
-    this.userDataSource.sort = this.sort;
+    this.filterControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      this.filterString = this.filterControl.value;
+      this.applyFilter();
+    });
+    this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
+      this.userList = users;
+      this.applyFilter();
+    });
     this.filterControl.setValue('');
     this.teamUsers = this.teamUserQuery.getAll().filter(tu => tu.teamId === this.teamId);
     this.otherTeamUsers = this.teamUserQuery.getAll().filter(tu => tu.teamId !== this.teamId);
@@ -100,8 +106,60 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
       }
     });
     this.userDataSource = new MatTableDataSource(newAllUsers);
-    this.userDataSource.sort = this.sort;
-    this.userDataSource.paginator = this.paginator;
+  }
+
+  applyFilter() {
+    const searchTerm = this.filterControl.value ? this.filterControl.value.toLowerCase() : '';
+    const filteredData = this.userList.filter(user =>
+      !searchTerm || user.name.toLowerCase().includes(searchTerm)
+    );
+    this.sortUserData(filteredData);
+  }
+
+  sortUserData(data: User[]) {
+    data.sort((a, b) => {
+      const isAsc = this.sort.direction === 'asc';
+      switch (this.sort.active) {
+        case 'name':
+          return this.compare(a.name, b.name, isAsc);
+        case 'id':
+          return this.compare(a.id, b.id, isAsc);
+        default:
+          return 0;
+      }
+    });
+    this.userDataSource.data = data;
+  }
+
+  sortTeamUserData(teamUserData: TeamUser[]) {
+    teamUserData.sort((a, b) => {
+      const aName = this.getUserName(a.userId).toLowerCase(); // Assumption: getUserName resolves the user's name by ID
+      const bName = this.getUserName(b.userId).toLowerCase();
+      const isAsc = this.sort.direction === 'asc';
+      switch (this.sort.active) {
+        case 'name':
+          return this.compare(aName, bName, isAsc);
+        case 'isObserver':
+          return this.compare(String(a.isObserver), String(b.isObserver), isAsc);
+        default:
+          return 0;
+      }
+    });
+    this.teamUserDataSource.data = teamUserData;
+  }
+
+  compare(a: string, b: string, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  onSortChange(sort: Sort) {
+    this.sort = sort;
+    this.applyFilter();
+  }
+
+  onSortTeamChange(sort: Sort) {
+    this.sort = sort;
+    this.sortTeamUserData(this.teamUsers);
   }
 
   getUserName(id: string) {
@@ -123,14 +181,6 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
 
   setObserverValue(teamUserId: string, value: boolean) {
     this.teamUserDataService.setObserverValue(teamUserId, value);
-  }
-
-  compare(a: string, b: string, isAsc: boolean) {
-    if (a === null || b === null) {
-      return 0;
-    } else {
-      return (a.toLowerCase() < b.toLowerCase() ? -1 : 1) * (isAsc ? 1 : -1);
-    }
   }
 
   onAnotherTeam(userId: string): boolean {
