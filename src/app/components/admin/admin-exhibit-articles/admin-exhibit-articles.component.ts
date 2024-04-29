@@ -143,8 +143,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   }
 
   clearFilter() {
-    this.filterString = '';
-    this.loadInitialData();
+    this.filterControl.setValue('');
   }
 
   sortChanged(sort: Sort) {

@@ -134,7 +134,6 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
   }
 
   clearFilter() {
-    this.filterString = '';
     this.filterControl.setValue('');
   }
 

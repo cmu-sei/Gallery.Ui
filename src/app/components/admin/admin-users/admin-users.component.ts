@@ -16,6 +16,7 @@ import { AdminUserEditDialogComponent } from 'src/app/components/admin/admin-use
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { Observable} from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-admin-users',
@@ -27,6 +28,7 @@ export class AdminUsersComponent implements OnInit {
   @Input() permissionList: Permission[];
   pageSize = 10;
   pageIndex = 0;
+  filteredUserList: User [] = [];
   @Output() removeUserPermission = new EventEmitter<UserPermission>();
   @Output() addUserPermission = new EventEmitter<UserPermission>();
   @Output() addUser = new EventEmitter<User>();
@@ -34,8 +36,11 @@ export class AdminUsersComponent implements OnInit {
   addingNewUser = false;
   isLoading = false;
   topbarColor = '#ef3a47';
-  filterControl: UntypedFormControl = this.userDataService.filterControl;
-  filterString: Observable<string>;
+  private unsubscribe$ = new Subject();
+  sort: Sort = { active: 'name', direction: 'asc' };
+  filterControl = new UntypedFormControl();
+  filterString = '';
+  displayedUsers: User [] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -46,10 +51,18 @@ export class AdminUsersComponent implements OnInit {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
+    this.filterControl.valueChanges
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((term) => {
+        this.filterString = term.trim().toLowerCase();
+        this.applyFilter();
+      });
   }
 
   ngOnInit() {
-    this.filterControl.setValue(this.filterString);
+    this.applyFilter();
   }
 
   hasPermission(permissionId: string, user: User) {
@@ -105,35 +118,47 @@ export class AdminUsersComponent implements OnInit {
     this.userDataService.deleteUser(user);
   }
 
-  applyFilter(filterValue: string) {
-    this.filterControl.setValue(filterValue);
+  applyFilter() {
+    this.filteredUserList = this.userList.filter(user =>
+      !this.filterString ||
+      user.name.toLowerCase().includes(this.filterString)
+    );
+
+    this.sortChanged(this.sort);
+  }
+
+  clearFilter() {
+    this.filterControl.setValue('');
   }
 
   sortChanged(sort: Sort) {
-    this.userList.sort((a, b) => {
-      const isAsc = sort.direction === 'asc';
-      const compareResult = this.compare(a.name.toLowerCase(), b.name.toLowerCase());
-      return isAsc ? compareResult : -compareResult;
-    });
+    this.sort = sort;
+    this.filteredUserList.sort((a, b) => this.sortUsers(a, b, sort.active, sort.direction));
+    this.paginateUsers();
+  }
+
+  sortUsers(a: User, b: User, column: string, direction: string) {
+    const isAsc = direction !== 'desc';
+    switch (column) {
+      case 'name':
+        return (
+          (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
+          (isAsc ? 1 : -1)
+        );
+      default:
+        return 0;
+    }
   }
 
   paginatorEvent(page: PageEvent) {
     this.pageIndex = page.pageIndex;
     this.pageSize = page.pageSize;
+    this.paginateUsers();
   }
 
   paginateUsers() {
     const startIndex = this.pageIndex * this.pageSize;
-    return this.userList.slice(startIndex, startIndex + this.pageSize);
+    this.displayedUsers = this.filteredUserList.slice(startIndex, startIndex + this.pageSize);
   }
 
-  private compare(a: string, b: string) {
-    if (a < b) {
-      return -1;
-    }
-    if (a > b) {
-      return 1;
-    }
-    return 0;
-  }
 }
