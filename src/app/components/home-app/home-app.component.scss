@@ -10,16 +10,18 @@
   bottom: 0;
   left: 0;
   right: 0;
-  position: fixed;
+  position: absolute;
   height: 100%;
-  text-align:center;
+  text-align: center;
+  overflow: hidden;
 }
 
 .app-header-container {
   display: flex;
-  flex-flow: row;
+  flex-flow: column;
   justify-content: center;
   text-align: center;
+  height: 59px;
 }
 
 .app-error-container {
@@ -31,17 +33,22 @@
 
 .app-content-container {
   display: flex;
-  flex-flow: row;
+  flex-flow: column;
   justify-content: center;
   text-align: center;
+  height: auto;
+  height: 59px;
 }
 
 .app-model-container {
   display: flex;
   flex-flow: column;
+  overflow: hidden;
   justify-content: left;
   text-align: left;
-  flex: 70
+  flex: 70;
+  overflow: auto;
+  height: calc(100% - 57px);
 }
 
 .app-score-container {
@@ -94,13 +101,12 @@ a {
 }
 
 .exhibit-list-container {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  justify-content: center;
-  max-height: 800px;
+  margin: auto;
   min-width: 300px;
-  margin-top: 40px;
   width: 80%;
+  max-height: calc(100% - 50px);
 }
 
 .exhibit-title {
@@ -111,7 +117,7 @@ a {
 
 .crucible-icon-gallery {
   transform: scale(2);
-  height: auto;
+  margin-bottom: 10px;
   margin-right: 10px;
 }
 
@@ -123,8 +129,8 @@ a {
 }
 
 .mat-table {
-  overflow: auto;
-  max-height: 700px;
+  overflow-y: auto;
+  max-height: calc(100vh - 300px);
 }
 
 .searchBox {
