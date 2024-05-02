@@ -199,7 +199,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
         const link = document.createElement('a');
         link.href = url;
         link.target = '_blank';
-        link.download = collection.description.endsWith('.json') ? collection.description : collection.description + '.json';
+        link.download = collection.name + '-collection.json';
         link.click();
         this.isBusy = false;
       },
@@ -211,10 +211,6 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
         this.isBusy = false;
       }
     );
-  }
-
-  uploadFile(fileType: string, mselId: string, teamId: string) {
-    this.isBusy = true;
   }
 
   /**

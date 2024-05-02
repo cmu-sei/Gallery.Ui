@@ -271,7 +271,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
         const month = ('0' + (exhibit.dateCreated.getMonth() + 1)).slice(-2);
         const day = ('0' + exhibit.dateCreated.getDate()).slice(-2);
         link.download = this.getCollectionName(this.selectedCollectionId) +
-          '-' + this.getUserName(exhibit.createdBy) +
+          '-exhibit-' + this.getUserName(exhibit.createdBy) +
           '-' + year + month + day + '.json';
         link.click();
         this.isBusy = false;
@@ -286,12 +286,6 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     );
   }
 
-  uploadFile(fileType: string, mselId: string, teamId: string) {
-    this.collectionDataService.setActive('');
-    this.exhibitList = [];
-    this.isBusy = true;
-  }
-
   /**
    * Selects the file(s) to be uploaded. Called when file selection is changed
    */
@@ -303,6 +297,8 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     }
     this.uploadProgress = 0;
     this.isBusy = true;
+    this.collectionDataService.setActive('');
+    this.exhibitList = [];
     this.exhibitDataService.uploadJson(file, 'events', true);
     this.jsonInput.nativeElement.value = null;
   }
