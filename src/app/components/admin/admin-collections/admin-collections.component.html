@@ -60,7 +60,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </button>
       <button
         mat-icon-button
-        (click)="uploadFile('json', '', ''); jsonInput.click(); $event.stopPropagation()"
+        (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
         title="Upload Collection"
         [disabled]="isBusy"
       >
@@ -136,6 +136,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 <input
   hidden
   (change)="selectFile($event)"
+  (cancel)="isBusy = false"
   #jsonInput
   type="file"
   accept=".json"
