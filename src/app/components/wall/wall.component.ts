@@ -22,6 +22,7 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
   @Output() changeTeam = new EventEmitter<string>();
+  @Output() sectionSelected = new EventEmitter<string>();
   isLoading = false;
   cardList: Card[] = [];
   shownCardList: Card[] = [];
@@ -67,10 +68,7 @@ export class WallComponent implements OnDestroy {
   }
 
   gotoArchive(cardId: string) {
-    this.router.navigate([''], {
-      queryParams: { card: cardId, section: Section.archive },
-      queryParamsHandling: 'merge',
-    });
+    this.sectionSelected.emit(cardId);
   }
 
   getDisplayedStatus(itemStatus: ItemStatus) {

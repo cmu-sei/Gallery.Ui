@@ -95,6 +95,7 @@ import { WallComponent } from './components/wall/wall.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 import { TeamSelectorComponent } from './components/team-selector/team-selector.component';
+import { UIDataService } from './data/ui/ui-data.service';
 
 const settings: ComnSettingsConfig = {
   url: 'assets/config/settings.json',
@@ -202,6 +203,7 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
   providers: [
     DialogService,
     SystemMessageService,
+    UIDataService,
     UserDataService,
     {
       provide: BASE_PATH,

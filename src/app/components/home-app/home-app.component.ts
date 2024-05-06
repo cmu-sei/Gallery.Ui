@@ -5,7 +5,6 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { EntityActions } from '@datorama/akita';
 import { ComnSettingsService, Theme, ComnAuthQuery } from '@cmusei/crucible-common';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { TopbarView } from './../shared/top-bar/topbar.models';
@@ -21,6 +20,7 @@ import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
+import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { Section } from 'src/app/utilities/enumerations';
 import { XApiService } from 'src/app/generated/api';
 
@@ -78,6 +78,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     private teamCardDataService: TeamCardDataService,
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
+    private uiDataService: UIDataService,
     private xApiService: XApiService
   ) {
     this.healthCheck();
@@ -86,47 +87,55 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.hideTopbar = this.inIframe();
     // subscribe to route changes
     this.activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.selectedSection = params.get('section');
+      // section
+      this.selectedSection = params.get('section') as Section;
+      this.uiDataService.setSection(this.selectedSection);
+      // exhibit and collection
       const exhibitId = params.get('exhibit');
+      console.log('exhibitId from query params is ' + exhibitId);
       const collectionId = params.get('collection');
-      const cardId = params.get('card');
-      this.exhibitId = exhibitId ? exhibitId : this.exhibitId;
-      this.collectionId = collectionId ? collectionId : this.collectionId;
-      if (!exhibitId && !collectionId) {
-        this.collectionDataService.loadMine();
-      } else {
-        if (exhibitId) {
-          if (!this.exhibit || this.exhibit.id !== exhibitId) {
-            this.exhibitDataService.loadById(exhibitId);
-            this.exhibitDataService.setActive(exhibitId);
-          }
-        } else {
-          if (!this.collection || this.collectionId !== collectionId) {
-            this.collectionDataService.loadById(collectionId);
-            this.collectionDataService.setActive(collectionId);
-            this.exhibitDataService.loadMineByCollection(collectionId);
-          }
+      if (exhibitId) {
+        if (!this.exhibit || this.exhibit.id !== exhibitId) {
+          this.exhibitDataService.loadById(exhibitId);
+          this.exhibitDataService.setActive(exhibitId);
+          this.uiDataService.setExhibit(exhibitId);
         }
+      } else if (collectionId) {
+        this.collectionId = collectionId;
+        this.loadCollectionData();
+      } else {
+        this.exhibitId = this.uiDataService.getExhibit();
+        console.log('exhibitId from local storage is ' + exhibitId);
+        this.collectionDataService.loadMine();
       }
       this.exhibitDataService.setActive(this.exhibitId);
       this.collectionDataService.setActive(this.collectionId);
+      // card
+      const cardId = params.get('card');
+      if (exhibitId && cardId) {
+        this.cardDataService.setActive(cardId);
+        this.uiDataService.setCard(exhibitId, cardId);
+      }
+      // team
       if (this.exhibitId && this.selectedTeamId) {
+        this.uiDataService.setTeam(exhibitId, this.selectedTeamId);
+        // xAPI
         if (this.selectedTeamId !== this.teamDataService.getMyTeamId()) {
           // observed
-          if (this.selectedSection === 'archive') {
-            this.xApiService.observedExhibitArchive(exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
-          } else if (this.selectedSection === 'wall') {
-            this.xApiService.observedExhibitWall(exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
+          if (this.selectedSection === Section.archive) {
+            this.xApiService.observedExhibitArchive(this.exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
+          } else if (this.selectedSection === Section.wall) {
+            this.xApiService.observedExhibitWall(this.exhibitId, this.selectedTeamId).pipe(take(1)).subscribe();
           }
         } else {
           // viewed
-          if (this.selectedSection === 'archive') {
-            this.xApiService.viewedExhibitArchive(exhibitId).pipe(take(1)).subscribe();
+          if (this.selectedSection === Section.archive) {
+            this.xApiService.viewedExhibitArchive(this.exhibitId).pipe(take(1)).subscribe();
             if (cardId && cardId !== 'all') {
-              this.xApiService.viewedCard(exhibitId, cardId).pipe(take(1)).subscribe();
+              this.xApiService.viewedCard(this.exhibitId, cardId).pipe(take(1)).subscribe();
             }
-          } else if (this.selectedSection === 'wall') {
-            this.xApiService.viewedExhibitWall(exhibitId).pipe(take(1)).subscribe();
+          } else if (this.selectedSection === Section.wall) {
+            this.xApiService.viewedExhibitWall(this.exhibitId).pipe(take(1)).subscribe();
           }
         }
       }
@@ -141,9 +150,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     });
     // subscribe to the active exhibit
     (this.exhibitQuery.selectActive() as Observable<Exhibit>).pipe(takeUntil(this.unsubscribe$)).subscribe(exhibit => {
-      if (exhibit && (!this.exhibit || this.exhibit.id !== exhibit.id)) {
+      if (exhibit && exhibit.id) {
         this.exhibit = exhibit;
-        this.loadExhibitData();
+        this.collectionId = this.exhibit.collectionId;
+        this.currentMove = this.exhibit.currentMove;
+        this.currentInject = this.exhibit.currentInject;
       };
     });
     // subscribe to the user list
@@ -151,10 +162,19 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       this.userList = users;
     });
     this.userDataService.getUsersFromApi();
+    // subscribe to teams
     this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
       this.teamList = teams;
       this.setMyTeam();
     });
+    // subscribe to the active team
+    (this.teamQuery.selectActive() as Observable<Team>).pipe(takeUntil(this.unsubscribe$)).subscribe(team => {
+      if (team && (!this.exhibit || this.exhibit.id !== team.id)) {
+        this.selectedTeamId = team.id;
+        this.loadTeamData();
+      };
+    });
+    // subscribe to the logged in user
     this.userDataService.loggedInUser
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((user) => {
@@ -192,28 +212,28 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   setMyTeam() {
+    console.log('setMyTeam()');
+    let myTeamId = '';
     this.teamList.forEach(t => {
       t.users.forEach(u => {
         if (u && u.id === this.loggedInUser.id) {
+          myTeamId = t.id;
           this.teamDataService.setMyTeam(t.id);
-          if (!this.teamQuery.getActiveId()) {
-            this.selectedTeamId = t.id;
-            this.teamDataService.setActive(t.id);
-            this.loadTeamData();
-          }
         }
       });
     });
+    if (!this.teamQuery.getActiveId()) {
+      this.selectedTeamId = myTeamId;
+      this.teamDataService.setActive(myTeamId);
+    }
+    this.uiDataService.setTeam(this.exhibitId, myTeamId);
   }
 
   changeTeam(teamId: string) {
     this.selectedTeamId = teamId;
     this.teamDataService.setActive(teamId);
+    console.log('changeTeam()');
     this.loadTeamData();
-    this.router.navigate([], {
-      queryParams: { team: teamId },
-      queryParamsHandling: 'merge'
-    });
   }
 
   logout() {
@@ -237,19 +257,22 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     });
   }
 
+  loadCollectionData() {
+    this.collectionDataService.loadById(this.collectionId);
+    this.collectionDataService.setActive(this.collectionId);
+    this.uiDataService.setCollection(this.collectionId);
+    this.exhibitDataService.loadMineByCollection(this.collectionId);
+  }
+
   loadExhibitData() {
     // process the change
-    if (this.exhibit) {
-      this.collectionId = this.exhibit.collectionId;
-      this.exhibitDataService.setActive(this.exhibitId);
-      this.currentMove = this.exhibit.currentMove;
-      this.currentInject = this.exhibit.currentInject;
-      this.cardDataService.loadByExhibit(this.exhibitId);
-      this.teamDataService.loadMine(this.exhibitId);
-    }
+    this.exhibitDataService.setActive(this.exhibitId);
+    this.cardDataService.loadByExhibit(this.exhibitId);
+    this.teamDataService.loadMine(this.exhibitId);
   }
 
   loadTeamData() {
+    console.log('loadTeamData() for team ' + this.selectedTeamId);
     // process the change
     if (this.selectedTeamId) {
       this.teamCardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
@@ -260,18 +283,13 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   selectCollection(collectionId: string) {
     this.collectionId = collectionId;
     this.exhibitId = '';
-    this.router.navigate([], {
-      queryParams: { collection: collectionId, exhibit: '' },
-      queryParamsHandling: 'merge',
-    });
+    this.loadCollectionData();
   }
 
   selectExhibit(exhibitId: string) {
-    const section = this.selectedSection ? this.selectedSection : 'archive';
-    this.router.navigate([], {
-      queryParams: { exhibit: exhibitId, section: section },
-      queryParamsHandling: 'merge',
-    });
+    this.selectedSection = this.selectedSection ? this.selectedSection : Section.archive;
+    this.exhibitId = exhibitId;
+    this.loadExhibitData();
   }
 
   getUserName(userId: string) {
@@ -281,23 +299,23 @@ export class HomeAppComponent implements OnDestroy, OnInit {
 
   gotoAdmin() {
     this.router.navigate(['/admin'], {
-      queryParams: { section: Section.exhibits },
-      queryParamsHandling: 'merge',
+      queryParams: { section: Section.exhibits }
     });
   }
 
-  gotoArchiveSection() {
-    this.router.navigate([], {
-      queryParams: { section: Section.archive },
-      queryParamsHandling: 'merge'
-    });
-  }
-
-  gotoWallSection() {
-    this.router.navigate([], {
-      queryParams: { section: Section.wall },
-      queryParamsHandling: 'merge'
-    });
+  gotoSection(section: string) {
+    switch (section) {
+      case 'wall':
+      case 'archive':
+        this.selectedSection = section;
+        this.cardDataService.setActive('');
+        break;
+      default:
+        this.selectedSection = Section.archive;
+        console.log('setting active card ID to ' + section);
+        this.cardDataService.setActive(section);
+        break;
+    }
   }
 
   applyFilter(filterValue: string) {

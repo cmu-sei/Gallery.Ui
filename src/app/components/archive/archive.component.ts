@@ -7,8 +7,8 @@ import { Article, Card, ItemStatus, Team, TeamCard, Exhibit, UserArticle, Source
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
+import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
-import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
@@ -19,7 +19,7 @@ import {
   take,
   takeUntil
 } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
 import { UntypedFormControl } from '@angular/forms';
 import { Section } from 'src/app/utilities/enumerations';
@@ -29,6 +29,7 @@ import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dial
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
+import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/generated/api';
 
 @Component({
@@ -39,14 +40,15 @@ import { XApiService } from 'src/app/generated/api';
 export class ArchiveComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
   @Output() changeTeam = new EventEmitter<string>();
+  @Output() sectionSelected = new EventEmitter<string>();
   apiIsSick = false;
   apiMessage = 'The GALLERY API web service is not responding.';
-  cardId = 'all';
   exhibitId = '';
   exhibit: Exhibit = {};
   sourceTypeList = '';
   isLoading = false;
   userArticleList: UserArticle[] = [];
+  cardId = 'all';
   cardList: Card[] = [];
   moveList: number[] = [];
   teamList: Team[] = [];
@@ -84,12 +86,11 @@ export class ArchiveComponent implements OnDestroy {
     private userArticleQuery: UserArticleQuery,
     private userArticleDataService: UserArticleDataService,
     private cardQuery: CardQuery,
-    private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
     private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
     private teamCardQuery: TeamCardQuery,
-    private activatedRoute: ActivatedRoute,
+    private uiDataService: UIDataService,
     private router: Router,
     private settingsService: ComnSettingsService,
     private xApiService: XApiService
@@ -112,6 +113,7 @@ export class ArchiveComponent implements OnDestroy {
           this.moveList.push(move);
         }
       }
+      console.log('userArticleQuery sortChanged');
       this.sortChanged(this.sort);
       // put unread article count in the browser tab
       if (unreadCount === 0) {
@@ -127,36 +129,32 @@ export class ArchiveComponent implements OnDestroy {
       cards.forEach(card => {
         this.cardList.push({ ...card });
       });
+      console.log('cardQuery sortChanged');
       this.sortChanged(this.sort);
       this.setCardLists();
+    });
+    // subscribe to active card
+    this.cardQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(id => {
+      this.cardId = id ? id : 'all';
+      console.log('activeCard sortChanged ' + this.cardId);
+      this.sortChanged(this.sort);
     });
     // subscribe to active exhibit
     (this.exhibitQuery.selectActive() as Observable<Exhibit>).pipe(takeUntil(this.unsubscribe$)).subscribe(e => {
       if (!e) {
-        if (this.exhibitId) {
-          this.exhibitDataService.setActive(this.exhibitId);
-        }
+        this.exhibitId = '';
+        this.exhibit = {};
       } else {
+        this.exhibitId = e.id;
         this.exhibit = e;
       }
     });
-    // subscribe to url query parameters
-    this.activatedRoute.queryParamMap
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((params) => {
-        const cardId  = params.get('card');
-        const exhibitId  = params.get('exhibit');
-        const teamId = params.get('team');
-        this.exhibitId = exhibitId;
-        this.exhibitDataService.setActive(this.exhibitId);
-        this.cardId = cardId ? cardId : 'all';
-        this.sortChanged(this.sort);
-      });
     // subscribe to filter control changes
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
         this.filterString = term;
+        console.log('filterControl sortChanged');
         this.sortChanged(this.sort);
       });
     // subscribe to teamCards
@@ -165,6 +163,7 @@ export class ArchiveComponent implements OnDestroy {
       .subscribe(teamCards => {
         this.teamCardList = teamCards;
         this.setCardLists();
+        console.log('teamCardQuery sortChanged');
         this.sortChanged(this.sort);
       });
     // subscribe to teams
@@ -188,10 +187,10 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   changeCard(cardId: string) {
-    this.router.navigate([], {
-      queryParams: { card: cardId },
-      queryParamsHandling: 'merge'
-    });
+    this.cardId = cardId;
+    this.uiDataService.setCard(this.exhibitId, cardId);
+    console.log('changeCard sortChanged');
+    this.sortChanged(this.sort);
   }
 
   applyFilter(filterValue: string) {
@@ -214,6 +213,8 @@ export class ArchiveComponent implements OnDestroy {
                         )
         );
     }
+    console.log('userArticleList length is ' + this.userArticleList.length);
+    console.log('filteredserArticleList length is ' + this.filteredUserArticleList.length);
   }
 
   private sortArticles(
@@ -265,6 +266,7 @@ export class ArchiveComponent implements OnDestroy {
     } else {
       this.sourceTypeList = this.sourceTypeList + sourceType;
     }
+    console.log('filterBySourceType sortChanged');
     this.sortChanged(this.sort);
   }
 
@@ -326,16 +328,12 @@ export class ArchiveComponent implements OnDestroy {
 
   gotoAdmin() {
     this.router.navigate(['/admin'], {
-      queryParams: { section: Section.exhibits },
-      queryParamsHandling: 'merge',
+      queryParams: { section: Section.exhibits }
     });
   }
 
   gotoWallSection() {
-    this.router.navigate([], {
-      queryParams: { section: Section.wall },
-      queryParamsHandling: 'merge'
-    });
+    this.sectionSelected.emit(Section.wall);
   }
 
   setCardLists() {
