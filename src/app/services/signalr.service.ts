@@ -18,12 +18,19 @@ import { TeamUserDataService } from '../data/team-user/team-user-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+export enum ApplicationArea {
+  home = '',
+  admin = 'Admin'
+}
 @Injectable({
   providedIn: 'root',
 })
 export class SignalRService implements OnDestroy {
   private hubConnection: signalR.HubConnection;
+  private applicationArea: ApplicationArea;
   private connectionPromise: Promise<void>;
+  private isJoined = false;
+  private teamId = '';
   private token = '';
   private unsubscribe$ = new Subject();
 
@@ -45,12 +52,12 @@ export class SignalRService implements OnDestroy {
     });
   }
 
-  public startConnection(): Promise<void> {
-    if (this.connectionPromise) {
+  public startConnection(applicationArea: ApplicationArea): Promise<void> {
+    if (this.connectionPromise && this.applicationArea === applicationArea) {
       return this.connectionPromise;
     }
 
-    const accessToken = this.authService.getAuthorizationToken();
+    this.applicationArea = applicationArea;
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.getHubUrlWithAuth())
       .withAutomaticReconnect(new RetryPolicy(120, 0, 5))
@@ -98,12 +105,30 @@ export class SignalRService implements OnDestroy {
 
   public join() {
     if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
-      this.hubConnection.invoke('Join');
+      this.hubConnection.invoke('Join' + this.applicationArea);
+      this.isJoined = true;
+      if (this.teamId) {
+        setTimeout(() => this.switchTeam(this.teamId, this.teamId), 100);
+      }
     }
   }
 
   public leave() {
-    this.hubConnection.invoke('Leave');
+    if (this.isJoined) {
+      this.hubConnection.invoke('Leave' + this.applicationArea);
+    }
+    this.isJoined = false;
+  }
+
+  public switchTeam(oldTeamId: string, newTeamId: string) {
+    if (this.hubConnection.state !== signalR.HubConnectionState.Connected) {
+      setTimeout(() => this.switchTeam(oldTeamId, newTeamId), 500);
+    } else if (this.isJoined) {
+      if (this.applicationArea !== ApplicationArea.admin) {
+        this.hubConnection.invoke('switchTeam', [oldTeamId, newTeamId]);
+        this.teamId = newTeamId;
+      }
+    }
   }
 
   private addHandlers() {

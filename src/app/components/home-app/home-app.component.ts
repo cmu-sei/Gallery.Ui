@@ -9,7 +9,7 @@ import { ComnSettingsService, Theme, ComnAuthQuery } from '@cmusei/crucible-comm
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { TopbarView } from './../shared/top-bar/topbar.models';
 import { HealthCheckService } from 'src/app/generated/api';
-import { SignalRService } from 'src/app/services/signalr.service';
+import { ApplicationArea, SignalRService } from 'src/app/services/signalr.service';
 import { Collection, Exhibit, Team, User } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
@@ -89,7 +89,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       // exhibit and collection
       const exhibitId = params.get('exhibit');
-      console.log('exhibitId from query params is ' + exhibitId);
       const collectionId = params.get('collection');
       if (exhibitId) {
         this.exhibitId = exhibitId;
@@ -203,7 +202,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.signalRService
-      .startConnection()
+      .startConnection(ApplicationArea.home)
       .then(() => {
         this.signalRService.join();
       })
@@ -214,7 +213,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   setMyTeam() {
-    console.log('setMyTeam()');
     let myTeamId = '';
     this.teamList.forEach(t => {
       t.users.forEach(u => {
@@ -232,6 +230,13 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   changeTeam(teamId: string) {
+    let oldTeamId = this.selectedTeamId;
+    if (oldTeamId !== teamId) {
+      // make sure to send a Guid for old team ID
+      oldTeamId = oldTeamId ? oldTeamId : teamId;
+      // signalR hub: leave the old team and join the new team
+      this.signalRService.switchTeam(oldTeamId, teamId);
+    }
     this.selectedTeamId = teamId;
     this.teamDataService.setActive(teamId);
     this.uiDataService.setTeam(this.exhibitId, teamId);
@@ -305,7 +310,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
 
   gotoAdmin() {
     this.router.navigate(['/admin'], {
-      queryParams: { section: Section.exhibits }
+      queryParams: { exhibit: this.exhibitId }
     });
   }
 
@@ -316,6 +321,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.selectedSection = sectionOrCardId;
         this.cardDataService.setActive('');
         this.uiDataService.setSection(this.exhibitId, sectionOrCardId);
+        break;
+      case 'admin':
+        this.gotoAdmin();
         break;
       default:
         this.selectedSection = Section.archive;

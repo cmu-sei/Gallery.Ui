@@ -113,7 +113,6 @@ export class ArchiveComponent implements OnDestroy {
           this.moveList.push(move);
         }
       }
-      console.log('userArticleQuery sortChanged');
       this.sortChanged(this.sort);
       // put unread article count in the browser tab
       if (unreadCount === 0) {
@@ -129,14 +128,12 @@ export class ArchiveComponent implements OnDestroy {
       cards.forEach(card => {
         this.cardList.push({ ...card });
       });
-      console.log('cardQuery sortChanged');
       this.sortChanged(this.sort);
       this.setCardLists();
     });
     // subscribe to active card
     this.cardQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(id => {
       this.cardId = id ? id : 'all';
-      console.log('activeCard sortChanged ' + this.cardId);
       this.sortChanged(this.sort);
     });
     // subscribe to active exhibit
@@ -154,7 +151,6 @@ export class ArchiveComponent implements OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
         this.filterString = term;
-        console.log('filterControl sortChanged');
         this.sortChanged(this.sort);
       });
     // subscribe to teamCards
@@ -163,7 +159,6 @@ export class ArchiveComponent implements OnDestroy {
       .subscribe(teamCards => {
         this.teamCardList = teamCards;
         this.setCardLists();
-        console.log('teamCardQuery sortChanged');
         this.sortChanged(this.sort);
       });
     // subscribe to teams
@@ -211,8 +206,6 @@ export class ArchiveComponent implements OnDestroy {
                         )
         );
     }
-    console.log('userArticleList length is ' + this.userArticleList.length);
-    console.log('filteredserArticleList length is ' + this.filteredUserArticleList.length);
   }
 
   private sortArticles(
@@ -264,7 +257,6 @@ export class ArchiveComponent implements OnDestroy {
     } else {
       this.sourceTypeList = this.sourceTypeList + sourceType;
     }
-    console.log('filterBySourceType sortChanged');
     this.sortChanged(this.sort);
   }
 
@@ -325,9 +317,7 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   gotoAdmin() {
-    this.router.navigate(['/admin'], {
-      queryParams: { section: Section.exhibits }
-    });
+    this.sectionSelected.emit('admin');
   }
 
   gotoWallSection() {

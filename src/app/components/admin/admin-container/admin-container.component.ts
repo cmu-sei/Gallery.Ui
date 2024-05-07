@@ -19,7 +19,7 @@ import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
-import { SignalRService } from 'src/app/services/signalr.service';
+import { ApplicationArea, SignalRService } from 'src/app/services/signalr.service';
 import { Section } from 'src/app/utilities/enumerations';
 import { environment } from 'src/environments/environment';
 import { HealthCheckService } from 'src/app/generated/api/api/api';
@@ -124,7 +124,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.signalRService
-      .startConnection()
+      .startConnection(ApplicationArea.admin)
       .then(() => {
         this.signalRService.join();
       })

@@ -61,10 +61,7 @@ export class WallComponent implements OnDestroy {
   }
 
   gotoAdmin() {
-    this.router.navigate(['/admin'], {
-      queryParams: { section: Section.exhibits },
-      queryParamsHandling: 'merge',
-    });
+    this.sectionSelected.emit('admin');
   }
 
   gotoArchive(cardId: string) {
