@@ -4,7 +4,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div mat-dialog-title>
-  Edit Collection
+  <span *ngIf="data && data.collection && data.collection.id">Edit Collection</span>
+  <span *ngIf="!data || !data.collection || !data.collection.id">New Collection</span>
   <button
     mat-icon-button
     (click)="handleEditComplete(false)"

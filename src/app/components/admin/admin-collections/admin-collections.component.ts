@@ -122,7 +122,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
 
   saveCollection(collection: Collection) {
     if (collection.id) {
-      this.collectionDataService.updateCollection(this.editCollection);
+      this.collectionDataService.updateCollection(collection);
     } else {
       this.collectionDataService.add(collection);
     }
