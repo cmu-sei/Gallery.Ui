@@ -34,7 +34,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
   <!-- Collection Dropdown -->
-  <div *ngIf="!apiIsSick && !collectionId" class="app-header-container background text" autosize>
+  <div *ngIf="!apiIsSick && !collectionId && !exhibitId" class="app-header-container background text" autosize>
     <mat-form-field class="width-30">
       <mat-label>Collection</mat-label>
       <mat-select placeholder="Collection" [value]="collectionId" (selectionChange)="selectCollection($event.value)">
@@ -47,7 +47,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </div>
 
   <!-- Exhibits Container -->
-  <div *ngIf="!apiIsSick && !exhibitId" class="exhibit-list-container mat-elevation-z8">
+  <div *ngIf="!apiIsSick && collectionId && !exhibitId" class="exhibit-list-container mat-elevation-z8">
     <div class="icon-text-container">
       <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
       <span class="exhibit-title text">My Exhibits</span>

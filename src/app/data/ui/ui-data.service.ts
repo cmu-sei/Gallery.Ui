@@ -10,9 +10,8 @@ export class UIState {
   selectedTheme = '';
   selectedCollection = '';
   selectedExhibit = '';
-  exhibitCard: {[ key: string ]: string} = {};
   expandedItems: string[] = [];
-  section = 'wall';
+  exhibitSection: {[ key: string ]: string} = {};
   exhibitTeam: {[ key: string ]: string} = {};
 }
 
@@ -20,9 +19,12 @@ export class UIState {
   providedIn: 'root',
 })
 export class UIDataService {
-  private uiState = JSON.parse(localStorage.getItem('uiState')) as UIState || new UIState();
+  private uiState = new UIState();
 
-  constructor() {}
+  constructor() {
+    const savedState = JSON.parse(localStorage.getItem('uiState'));
+    this.uiState = Object.assign(this.uiState, savedState);
+  }
 
   //
   // Item Expansion
@@ -70,13 +72,13 @@ export class UIDataService {
 
   //
   // section selection
-  setSection(section: string) {
-    this.uiState.section = section;
+  setSection(exhibitId: string, section: string) {
+    this.uiState.exhibitSection[exhibitId] = section;
     this.saveChanges();
   }
 
-  getSection(): string {
-    return this.uiState.section;
+  getSection(exhibitId: string): string {
+    return this.uiState.exhibitSection[exhibitId];
   }
   // end section selection
 
@@ -92,17 +94,6 @@ export class UIDataService {
   }
   // end Team selection
 
-  //
-  // Card selection
-  setCard(exhibitId: string, cardId: string) {
-    cardId = cardId ? cardId : 'blank';
-    this.uiState.exhibitCard[exhibitId] = cardId;
-    this.saveChanges();
-  }
-
-  getCard(exhibitId: string): string {
-    return this.uiState.exhibitCard[exhibitId];
-  }
   // end Exhibit selection
 
   //

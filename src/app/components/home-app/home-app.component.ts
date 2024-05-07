@@ -87,34 +87,36 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.hideTopbar = this.inIframe();
     // subscribe to route changes
     this.activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      // section
-      this.selectedSection = params.get('section') as Section;
-      this.uiDataService.setSection(this.selectedSection);
       // exhibit and collection
       const exhibitId = params.get('exhibit');
       console.log('exhibitId from query params is ' + exhibitId);
       const collectionId = params.get('collection');
       if (exhibitId) {
-        if (!this.exhibit || this.exhibit.id !== exhibitId) {
-          this.exhibitDataService.loadById(exhibitId);
-          this.exhibitDataService.setActive(exhibitId);
-          this.uiDataService.setExhibit(exhibitId);
+        this.exhibitId = exhibitId;
+        this.exhibitDataService.loadById(exhibitId);
+        this.exhibitDataService.setActive(exhibitId);
+        this.uiDataService.setExhibit(exhibitId);
+        // section
+        this.selectedSection = params.get('section') as Section;
+        if (this.selectedSection) {
+          this.uiDataService.setSection(exhibitId, this.selectedSection);
+        } else {
+          this.selectedSection = this.uiDataService.getSection(exhibitId);
         }
+        this.loadExhibitData();
       } else if (collectionId) {
+        this.exhibitId = '';
         this.collectionId = collectionId;
         this.loadCollectionData();
       } else {
-        this.exhibitId = this.uiDataService.getExhibit();
-        console.log('exhibitId from local storage is ' + exhibitId);
+        this.exhibitId = '';
         this.collectionDataService.loadMine();
       }
-      this.exhibitDataService.setActive(this.exhibitId);
       this.collectionDataService.setActive(this.collectionId);
       // card
       const cardId = params.get('card');
       if (exhibitId && cardId) {
         this.cardDataService.setActive(cardId);
-        this.uiDataService.setCard(exhibitId, cardId);
       }
       // team
       if (this.exhibitId && this.selectedTeamId) {
@@ -232,7 +234,8 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   changeTeam(teamId: string) {
     this.selectedTeamId = teamId;
     this.teamDataService.setActive(teamId);
-    console.log('changeTeam()');
+    this.uiDataService.setTeam(this.exhibitId, teamId);
+    this.cardDataService.setActive('');
     this.loadTeamData();
   }
 
@@ -272,9 +275,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   loadTeamData() {
-    console.log('loadTeamData() for team ' + this.selectedTeamId);
     // process the change
     if (this.selectedTeamId) {
+      this.cardDataService.setActive('all');
       this.teamCardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
       this.userArticleDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
     }
@@ -287,9 +290,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   selectExhibit(exhibitId: string) {
-    this.selectedSection = this.selectedSection ? this.selectedSection : Section.archive;
     this.exhibitId = exhibitId;
-    this.loadExhibitData();
+    this.uiDataService.setExhibit(exhibitId);
+    this.uiDataService.setSection(exhibitId, Section.archive);
+    this.router.navigate([], {
+      queryParams: { exhibit: exhibitId },
+    });
   }
 
   getUserName(userId: string) {
@@ -303,17 +309,18 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     });
   }
 
-  gotoSection(section: string) {
-    switch (section) {
+  gotoSection(sectionOrCardId: string) {
+    switch (sectionOrCardId) {
       case 'wall':
       case 'archive':
-        this.selectedSection = section;
+        this.selectedSection = sectionOrCardId;
         this.cardDataService.setActive('');
+        this.uiDataService.setSection(this.exhibitId, sectionOrCardId);
         break;
       default:
         this.selectedSection = Section.archive;
-        console.log('setting active card ID to ' + section);
-        this.cardDataService.setActive(section);
+        this.cardDataService.setActive(sectionOrCardId);
+        this.uiDataService.setSection(this.exhibitId, this.selectedSection);
         break;
     }
   }

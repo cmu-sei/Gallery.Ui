@@ -188,8 +188,6 @@ export class ArchiveComponent implements OnDestroy {
 
   changeCard(cardId: string) {
     this.cardId = cardId;
-    this.uiDataService.setCard(this.exhibitId, cardId);
-    console.log('changeCard sortChanged');
     this.sortChanged(this.sort);
   }
 
