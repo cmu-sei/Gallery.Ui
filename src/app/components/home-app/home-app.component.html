@@ -33,24 +33,21 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </button>
     </div>
   </div>
-  <!-- Collection Dropdown -->
-  <div *ngIf="!apiIsSick && !collectionId && !exhibitId" class="app-header-container background text" autosize>
-    <mat-form-field class="width-30">
-      <mat-label>Collection</mat-label>
-      <mat-select placeholder="Collection" [value]="collectionId" (selectionChange)="selectCollection($event.value)">
-        <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
-          {{ collection.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <span>&nbsp;&nbsp;</span>
-  </div>
-
   <!-- Exhibits Container -->
-  <div *ngIf="!apiIsSick && collectionId && !exhibitId" class="exhibit-list-container mat-elevation-z8">
+  <div *ngIf="!apiIsSick && !exhibitId" class="exhibit-list-container mat-elevation-z8">
     <div class="icon-text-container">
       <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
       <span class="exhibit-title text">My Exhibits</span>
+        <!-- Collection Dropdown -->
+      <mat-form-field class="width-30 collection-container">
+        <mat-label>Collection</mat-label>
+        <mat-select placeholder="Collection" [value]="collectionId" (selectionChange)="selectCollection($event.value)">
+          <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
+            {{ collection.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span>&nbsp;&nbsp;</span>
     <div *ngIf="!apiIsSick && !exhibitId && collectionId"class="searchBox d-flex align-items-center">
       <!-- Search Bar -->
       <mat-icon
@@ -80,7 +77,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </button>
       </mat-form-field>
     </div>
-  </div>
+    </div>
   <div *ngIf="!apiIsSick && !exhibitId && collectionId" class="exhibit-container background text" autosize>
   <mat-table class="width-100 mat-table" [dataSource]="exhibitList" matSort>
 
@@ -88,12 +85,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
      <ng-container matColumnDef="exhibit">
       <mat-header-cell *matHeaderCellDef>Exhibit</mat-header-cell>
       <mat-cell *matCellDef="let exhibit">
-        <button mat-stroked-button (click)="selectExhibit(exhibit.id)">
+        <a [routerLink]="['/']" [queryParams]="{ exhibit: exhibit.id }">
           {{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }} - {{ getUserName(exhibit.createdBy) }}
-        </button>
+        </a>
       </mat-cell>
     </ng-container>
-
+  
     <!-- Created By Column -->
     <ng-container matColumnDef="createdBy">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Created By</mat-header-cell>
@@ -116,21 +113,19 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </div>
   </div>
 
-  <span *ngIf="!apiIsSick && exhibitId && selectedSection === 'wall'">
+  <span *ngIf="!apiIsSick && exhibit && selectedSection === 'wall'">
     <div>
       <app-wall
         [showAdminButton]="isContentDeveloper$ | async"
         (changeTeam)="changeTeam($event)"
-        (sectionSelected)="gotoSection($event)"
         ></app-wall>
     </div>
   </span>
 
-  <span *ngIf="!apiIsSick && exhibitId && selectedSection === 'archive'">
+  <span *ngIf="!apiIsSick && exhibit && selectedSection !== 'wall'">
     <app-archive
       [showAdminButton]="isContentDeveloper$ | async"
       (changeTeam)="changeTeam($event)"
-      (sectionSelected)="gotoSection($event)"
       ></app-archive>
   </span>
 
