@@ -294,15 +294,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.loadCollectionData();
   }
 
-  selectExhibit(exhibitId: string) {
-    this.exhibitId = exhibitId;
-    this.uiDataService.setExhibit(exhibitId);
-    this.uiDataService.setSection(exhibitId, Section.archive);
-    this.router.navigate([], {
-      queryParams: { exhibit: exhibitId },
-    });
-  }
-
   getUserName(userId: string) {
     const user = this.userList.find(u => u.id === userId);
     return user ? user.name : ' ';

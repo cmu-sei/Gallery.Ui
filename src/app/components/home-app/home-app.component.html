@@ -7,12 +7,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   class="app-home-container background">
 
   <app-topbar *ngIf="!hideTopbar"
-  [title]="titleText"
-  [topbarView]="TopbarView.GALLERY_HOME"
-  [topbarColor]="topbarColor"
-  [topbarTextColor]="topbarTextColor"
-  [imageFilePath]="topbarImage"
-  (urlNavigate)="topBarNavigate($event)"
+    [title]="titleText"
+    [topbarView]="TopbarView.GALLERY_HOME"
+    [topbarColor]="topbarColor"
+    [topbarTextColor]="topbarTextColor"
+    [imageFilePath]="topbarImage"
+    (urlNavigate)="topBarNavigate($event)"
   ></app-topbar>
 
   <div *ngIf="apiIsSick" class="app-error-container background text" autosize>
@@ -21,7 +21,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <h2>If the problem persists, please contact the site administrator.</h2>
   </div>
 
-  <div *ngIf="!apiIsSick && !exhibit" class="top-row">
+  <div *ngIf="!apiIsSick && !exhibitId" class="top-row">
     <div class="one-cell last-cell">
       <button
         mat-icon-button
@@ -33,24 +33,22 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </button>
     </div>
   </div>
-  <!-- Collection Dropdown -->
-  <div *ngIf="!apiIsSick && !collectionId && !exhibitId" class="app-header-container background text" autosize>
-    <mat-form-field class="width-30">
-      <mat-label>Collection</mat-label>
-      <mat-select placeholder="Collection" [value]="collectionId" (selectionChange)="selectCollection($event.value)">
-        <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
-          {{ collection.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <span>&nbsp;&nbsp;</span>
-  </div>
 
   <!-- Exhibits Container -->
-  <div *ngIf="!apiIsSick && collectionId && !exhibitId" class="exhibit-list-container mat-elevation-z8">
+  <div *ngIf="!apiIsSick && !exhibitId" class="exhibit-list-container mat-elevation-z8">
     <div class="icon-text-container">
       <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
       <span class="exhibit-title text">My Exhibits</span>
+      <!-- Collection Dropdown -->
+      <mat-form-field class="width-30 collection-container">
+        <mat-label>Collection</mat-label>
+        <mat-select placeholder="Collection" [value]="collectionId" (selectionChange)="selectCollection($event.value)">
+          <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
+            {{ collection.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span>&nbsp;&nbsp;</span>
     <div *ngIf="!apiIsSick && !exhibitId && collectionId"class="searchBox d-flex align-items-center">
       <!-- Search Bar -->
       <mat-icon
@@ -88,9 +86,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
      <ng-container matColumnDef="exhibit">
       <mat-header-cell *matHeaderCellDef>Exhibit</mat-header-cell>
       <mat-cell *matCellDef="let exhibit">
-        <button mat-stroked-button (click)="selectExhibit(exhibit.id)">
+        <a [routerLink]="['/']" [queryParams]="{ exhibit: exhibit.id }">
           {{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }} - {{ getUserName(exhibit.createdBy) }}
-        </button>
+        </a>
       </mat-cell>
     </ng-container>
 
