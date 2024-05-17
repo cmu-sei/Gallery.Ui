@@ -110,6 +110,10 @@ a {
   margin-top: 20px;
 }
 
+.collection-container {
+  margin: auto;
+}
+
 .exhibit-title {
   font-size: x-large;
   text-align: left;
@@ -135,6 +139,5 @@ a {
 }
 
 .searchBox {
-  margin-right: 10px;
-  margin-left: auto !important;
+  margin: auto;
 }
