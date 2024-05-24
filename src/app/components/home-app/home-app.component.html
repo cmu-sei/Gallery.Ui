@@ -86,7 +86,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
      <ng-container matColumnDef="exhibit">
       <mat-header-cell *matHeaderCellDef>Exhibit</mat-header-cell>
       <mat-cell *matCellDef="let exhibit">
-        <a [routerLink]="['/']" [queryParams]="{ exhibit: exhibit.id }">
+        <a [routerLink]="['/']" [queryParams]="getQueryParams(exhibit.id)">
           {{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }} - {{ getUserName(exhibit.createdBy) }}
         </a>
       </mat-cell>

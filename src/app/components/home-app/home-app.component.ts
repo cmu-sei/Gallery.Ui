@@ -349,6 +349,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     });
   }
 
+  getQueryParams(exhibitId: string) {
+    const queryParams = { exhibit: exhibitId };
+    this.uiDataService.setSection(exhibitId, Section.archive);
+    return queryParams;
+  }
+
   ngOnDestroy() {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
