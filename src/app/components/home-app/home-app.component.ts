@@ -102,6 +102,10 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         } else {
           this.selectedSection = this.uiDataService.getSection(exhibitId);
         }
+        if (!this.selectedSection) {
+          this.selectedSection = Section.archive;
+          console.log('Section set to the default of archive');
+        }
         this.loadExhibitData();
       } else if (collectionId) {
         this.exhibitId = '';
