@@ -282,7 +282,12 @@ export class ArchiveComponent implements OnDestroy {
           if (result.useUrl) {
             window.open(userArticle.article.url);
           } else {
-            const url = location.origin + '/exhibit/' + this.exhibit.id + '/article/' + userArticle.articleId;
+            const url =
+              document.baseURI +
+              '/exhibit/' +
+              this.exhibit.id +
+              '/article/' +
+              userArticle.articleId;
             window.open(url);
           }
         }
