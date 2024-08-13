@@ -221,8 +221,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((teams) => {
-        this.teamList = teams;
-        this.setMyTeam();
+        // in the initial state, we need to set the team and register with signalr.
+        if (!this.selectedTeamId) {
+          this.teamList = teams;
+          this.setMyTeam();
+        }
       });
     // subscribe to the logged in user
     this.userDataService.loggedInUser
@@ -270,10 +273,10 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         }
       });
     });
-    if (!this.teamQuery.getActiveId()) {
+    if (!this.teamQuery.getActiveId() || !this.selectedTeamId) {
       this.changeTeam(myTeamId);
+      this.uiDataService.setTeam(this.exhibitId, myTeamId);
     }
-    this.uiDataService.setTeam(this.exhibitId, myTeamId);
   }
 
   changeTeam(teamId: string) {
