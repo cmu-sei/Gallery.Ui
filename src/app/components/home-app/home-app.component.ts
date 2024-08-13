@@ -194,10 +194,19 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .subscribe((exhibit) => {
         if (exhibit && exhibit.id) {
           this.exhibit = exhibit;
+          // only handle the changing of move or inject if they are both defined and have actually changed
+          const inIntialState =
+            this.currentMove === -1 || this.currentInject === -1;
+          const moveOrInjectChanged =
+            !inIntialState &&
+            (this.exhibit.currentMove !== this.currentMove ||
+              this.exhibit.currentInject !== this.currentInject);
           this.collectionId = this.exhibit.collectionId;
           this.currentMove = this.exhibit.currentMove;
           this.currentInject = this.exhibit.currentInject;
-          this.handleExhibitMoveOrInjectChange();
+          if (moveOrInjectChanged) {
+            this.handleExhibitMoveOrInjectChange();
+          }
         }
       });
     // subscribe to the user list
@@ -214,15 +223,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .subscribe((teams) => {
         this.teamList = teams;
         this.setMyTeam();
-      });
-    // subscribe to the active team
-    (this.teamQuery.selectActive() as Observable<Team>)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((team) => {
-        if (team && (!this.exhibit || this.exhibit.id !== team.id)) {
-          this.selectedTeamId = team.id;
-          this.loadTeamData();
-        }
       });
     // subscribe to the logged in user
     this.userDataService.loggedInUser
@@ -271,8 +271,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       });
     });
     if (!this.teamQuery.getActiveId()) {
-      this.selectedTeamId = myTeamId;
-      this.teamDataService.setActive(myTeamId);
+      this.changeTeam(myTeamId);
     }
     this.uiDataService.setTeam(this.exhibitId, myTeamId);
   }

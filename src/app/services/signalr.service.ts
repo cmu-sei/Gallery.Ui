@@ -105,11 +105,13 @@ export class SignalRService implements OnDestroy {
 
   public join() {
     if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
-      this.hubConnection.invoke('Join' + this.applicationArea);
-      this.isJoined = true;
-      if (this.teamId) {
-        setTimeout(() => this.switchTeam(this.teamId, this.teamId), 100);
-      }
+      this.hubConnection.invoke('Join' + this.applicationArea).then(() => {
+        this.isJoined = true;
+        // on a reconnect, add back team subscriptions
+        if (this.teamId && this.applicationArea !== ApplicationArea.admin) {
+          this.hubConnection.invoke('switchTeam', [this.teamId, this.teamId]);
+        }
+      });
     }
   }
 
@@ -121,14 +123,10 @@ export class SignalRService implements OnDestroy {
   }
 
   public switchTeam(oldTeamId: string, newTeamId: string) {
-    if (this.hubConnection.state !== signalR.HubConnectionState.Connected) {
-      setTimeout(() => this.switchTeam(oldTeamId, newTeamId), 500);
-    } else if (this.isJoined) {
-      if (this.applicationArea !== ApplicationArea.admin) {
-        this.hubConnection.invoke('switchTeam', [oldTeamId, newTeamId]);
-        this.teamId = newTeamId;
-      }
+    if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
+      this.hubConnection.invoke('switchTeam', [oldTeamId, newTeamId]);
     }
+    this.teamId = newTeamId;
   }
 
   private addHandlers() {
