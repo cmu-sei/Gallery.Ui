@@ -12,12 +12,12 @@ import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class CardDataService {
   private _requestedCardId: string;
   private _requestedCardId$ = this.activatedRoute.queryParamMap.pipe(
-    map((params) => params.get('cardId') || '')
+    map((params) => params.get("cardId") || "")
   );
   readonly CardList: Observable<Card[]>;
   readonly filterControl = new UntypedFormControl();
@@ -37,25 +37,25 @@ export class CardDataService {
     private activatedRoute: ActivatedRoute
   ) {
     this.filterTerm = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('cardmask') || '')
+      map((params) => params.get("cardmask") || "")
     );
     this.filterControl.valueChanges.subscribe((term) => {
       this.router.navigate([], {
         queryParams: { cardmask: term },
-        queryParamsHandling: 'merge',
+        queryParamsHandling: "merge",
       });
     });
     this.sortColumn = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('sorton') || 'name')
+      map((params) => params.get("sorton") || "name")
     );
     this.sortIsAscending = activatedRoute.queryParamMap.pipe(
-      map((params) => (params.get('sortdir') || 'asc') === 'asc')
+      map((params) => (params.get("sortdir") || "asc") === "asc")
     );
     this.pageSize = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pagesize') || '20', 10))
+      map((params) => parseInt(params.get("pagesize") || "20", 10))
     );
     this.pageIndex = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pageindex') || '0', 10))
+      map((params) => parseInt(params.get("pageindex") || "0", 10))
     );
     this.CardList = combineLatest([
       this.cardQuery.selectAll(),
@@ -76,36 +76,29 @@ export class CardDataService {
         ]) =>
           items
             ? (items as Card[])
-              .sort((a: Card, b: Card) =>
-                this.sortCards(a, b, sortColumn, sortIsAscending)
-              )
-              .filter(
-                (card) =>
-                  ('' + card.description)
-                    .toLowerCase()
-                    .includes(filterTerm.toLowerCase()) ||
-                    card.id
+                .sort((a: Card, b: Card) =>
+                  this.sortCards(a, b, sortColumn, sortIsAscending)
+                )
+                .filter(
+                  (card) =>
+                    ("" + card.description)
                       .toLowerCase()
-                      .includes(filterTerm.toLowerCase())
-              )
+                      .includes(filterTerm.toLowerCase()) ||
+                    card.id.toLowerCase().includes(filterTerm.toLowerCase())
+                )
             : []
       )
     );
   }
 
-  private sortCards(
-    a: Card,
-    b: Card,
-    column: string,
-    isAsc: boolean
-  ) {
+  private sortCards(a: Card, b: Card, column: string, isAsc: boolean) {
     switch (column) {
-      case 'description':
+      case "description":
         return (
           (a.description.toLowerCase() < b.description.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case 'dateCreated':
+      case "dateCreated":
         return (
           (a.dateCreated.valueOf() < b.dateCreated.valueOf() ? -1 : 1) *
           (isAsc ? 1 : -1)
@@ -127,7 +120,7 @@ export class CardDataService {
       )
       .subscribe(
         (cards) => {
-          cards.forEach(a => {
+          cards.forEach((a) => {
             this.setAsDates(a);
           });
           this.cardStore.set(cards);
@@ -150,7 +143,7 @@ export class CardDataService {
       )
       .subscribe(
         (cards) => {
-          cards.forEach(a => {
+          cards.forEach((a) => {
             this.setAsDates(a);
           });
           this.cardStore.set(cards);
@@ -173,7 +166,30 @@ export class CardDataService {
       )
       .subscribe(
         (cards) => {
-          cards.forEach(a => {
+          cards.forEach((a) => {
+            this.setAsDates(a);
+          });
+          this.cardStore.set(cards);
+        },
+        (error) => {
+          this.cardStore.set([]);
+        }
+      );
+  }
+
+  loadByExhibitTeam(exhibitId: string, teamId: string) {
+    this.cardStore.setLoading(true);
+    this.cardService
+      .getExhibitCardsByTeam(exhibitId, teamId)
+      .pipe(
+        tap(() => {
+          this.cardStore.setLoading(false);
+        }),
+        take(1)
+      )
+      .subscribe(
+        (cards) => {
+          cards.forEach((a) => {
             this.setAsDates(a);
           });
           this.cardStore.set(cards);
@@ -266,5 +282,4 @@ export class CardDataService {
     card.dateModified = new Date(card.dateModified);
     card.datePosted = new Date(card.datePosted);
   }
-
 }
