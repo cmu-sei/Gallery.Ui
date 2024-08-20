@@ -330,13 +330,13 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   loadExhibitData() {
     // process the change
     this.exhibitDataService.setActive(this.exhibitId);
-    this.cardDataService.loadByExhibit(this.exhibitId);
     this.teamDataService.loadMine(this.exhibitId);
   }
 
   loadTeamData() {
     // process the change
     if (this.selectedTeamId) {
+      this.cardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
       this.cardDataService.setActive('all');
       this.teamCardDataService.loadByExhibitTeam(
         this.exhibitId,
