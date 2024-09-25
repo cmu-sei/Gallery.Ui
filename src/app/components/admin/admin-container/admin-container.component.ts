@@ -69,7 +69,9 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   ) {
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
-    this._document.getElementById('appFavicon').setAttribute('href', '/assets/img/monitor-dashboard-blue.png');
+    this._document
+      .getElementById('appFavicon')
+      .setAttribute('href', 'assets/img/monitor-dashboard-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Admin';
 
     this.userDataService.isSuperUser

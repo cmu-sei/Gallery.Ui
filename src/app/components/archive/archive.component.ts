@@ -95,7 +95,9 @@ export class ArchiveComponent implements OnDestroy {
     private settingsService: ComnSettingsService,
     private xApiService: XApiService
   ) {
-    this._document.getElementById('appFavicon').setAttribute('href', '/assets/img/archive-blue.png');
+    this._document
+      .getElementById('appFavicon')
+      .setAttribute('href', 'assets/img/archive-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
     // subscribe to userArticles
     this.userArticleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(userArticles => {

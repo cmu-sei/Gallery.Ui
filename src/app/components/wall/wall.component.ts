@@ -38,7 +38,9 @@ export class WallComponent implements OnDestroy {
     private router: Router,
     private settingsService: ComnSettingsService
   ) {
-    this._document.getElementById('appFavicon').setAttribute('href', '/assets/img/wall-blue.png');
+    this._document
+      .getElementById('appFavicon')
+      .setAttribute('href', 'assets/img/wall-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Wall';
     this.cardQuery.selectAll()
       .pipe(takeUntil(this.unsubscribe$))
