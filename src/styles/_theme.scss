@@ -1,6 +1,8 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 @use '@angular/material' as mat;
+@use 'sass:map';
+
 @import '@angular/material/theming';
 
 $mat-cmu-tartan: (
@@ -120,27 +122,6 @@ $cmu-dark-theme-foreground: (
 $custom-colors: (
   top-bar-bg: #373739,
 );
-
-// Creates a container object for a light theme to be given to individual component theme mixins.
-@function cmu-theme(
-  $primary,
-  $accent,
-  $warn: mat.define-palette(mat.$red-palette),
-  $foreground: mat.$light-theme-foreground-palette,
-  $background: mat.$dark-theme-background-palette,
-  $isDark: false,
-  $custom: null
-) {
-  @return (
-    primary: $primary,
-    accent: $accent,
-    warn: $warn,
-    is-dark: $isDark,
-    foreground: $foreground,
-    background: $background,
-    custom: $custom
-  );
-}
 
 $custom-typography: mat.define-legacy-typography-config(
   $font-family: '"Open Sans", sans-serif',
@@ -272,22 +253,52 @@ $custom-typography: mat.define-legacy-typography-config(
 
 }
 
-$primary: mat.define-palette($mat-cmu-tartan, A900);
+$primary: mat.define-palette($mat-cmu-tartan);
 $accent: mat.define-palette($mat-cmu-tartan, A400, A200, A700);
 $warn: mat.define-palette(mat.$red-palette);
 
-$light-theme: cmu-theme(
-  $primary,
-  $accent,
-  $warn,
-  $cmu-light-theme-foreground,
-  $cmu-light-theme-background
+@function override-theme($theme, $background, $foreground) {
+  $color: map.get($theme, color);
+  $color: map.merge(
+    $color,
+    (
+      background: $background,
+      foreground: $foreground,
+    )
+  );
+
+  @return map.merge(
+    map.merge($theme, $color),
+    (
+      color: $color,
+    )
+  );
+}
+
+$light-theme: override-theme(
+  mat.define-light-theme(
+    (
+      color: (
+        primary: $primary,
+        accent: $accent,
+        warn: $warn,
+      ),
+    )
+  ),
+  $cmu-light-theme-background,
+  $cmu-light-theme-foreground
 );
-$dark-theme: cmu-theme(
-  $primary,
-  $accent,
-  $warn,
-  $cmu-dark-theme-foreground,
+
+$dark-theme: override-theme(
+  mat.define-dark-theme(
+    (
+      color: (
+        primary: $primary,
+        accent: $accent,
+        warn: $warn,
+      ),
+    )
+  ),
   $cmu-dark-theme-background,
-  true
+  $cmu-dark-theme-foreground
 );
