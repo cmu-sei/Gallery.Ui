@@ -98,7 +98,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </div>
 </div>
 <section class="cards">
-  <mat-card class="card" *ngFor="let userArticle of filteredUserArticleList">
+  <mat-card appearance="outlined" class="card" *ngFor="let userArticle of filteredUserArticleList">
     <mat-card-header [ngClass]="getIsReadClass(userArticle)">
       <div mat-card-avatar>
         <mat-icon style="overflow:visible" fontIcon="{{ sourceIcon[userArticle.article.sourceType] }}" title="{{ userArticle.article.sourceType }}" class="mdi-48px center-self title source-icon"></mat-icon>
@@ -172,6 +172,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </mat-card>
 </section>
 <mat-card
+  appearance="outlined"
   *ngIf="isLoading"
   style="display: flex; justify-content: center; align-items: center;"
 >

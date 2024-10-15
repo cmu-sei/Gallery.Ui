@@ -8,9 +8,9 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { LegacyPageEvent as PageEvent} from '@angular/material/legacy-paginator';
+import { PageEvent} from '@angular/material/paginator';
 import { Sort, MatSortable } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Team, TeamUser, User } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';

@@ -10,9 +10,9 @@ import {
   ViewChild,
   EventEmitter
 } from '@angular/core';
-import { LegacyPageEvent as PageEvent, MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Team } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { Subject } from 'rxjs';

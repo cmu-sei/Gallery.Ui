@@ -8,7 +8,7 @@ import {
 } from './exhibit.store';
 import { Exhibit } from 'src/app/generated/api';
 import { Injectable } from '@angular/core';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 
 @QueryConfig({
