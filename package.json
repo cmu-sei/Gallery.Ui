@@ -1,6 +1,6 @@
 {
   "name": "gallery-ui",
-  "version": "1.6.4-rc2",
+  "version": "1.7.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -35,7 +35,7 @@
     "@datorama/akita-ng-router-store": "^7.0.0",
     "@datorama/akita-ngdevtools": "^7.0.0",
     "@mdi/font": "^7.2.96",
-    "@microsoft/signalr": "^5.0.7",
+    "@microsoft/signalr": "^8.0.7",
     "@ngtools/webpack": "^15.1.2",
     "@kolkov/angular-editor": "^3.0.0-beta.0",
     "ajv": "^8.6.0",
