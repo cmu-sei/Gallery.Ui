@@ -33,7 +33,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
   <section class="cards">
-      <mat-card [ngClass]="'card ' + card.displayedStatus.toLowerCase().replace(' ', '') + '-status'" *ngFor="let card of shownCardList">
+      <mat-card appearance="outlined" [ngClass]="'card ' + card.displayedStatus.toLowerCase().replace(' ', '') + '-status'" *ngFor="let card of shownCardList">
         <mat-card-header>
           <mat-card-title class="card-title-text">{{ card.name }}</mat-card-title>
           <mat-card-subtitle class="card-subtitle-text">{{ card.description }}</mat-card-subtitle>
