@@ -1,9 +1,16 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Collection } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
@@ -11,10 +18,8 @@ import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import {
-  AdminCollectionEditDialogComponent
-} from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 @Component({
@@ -37,7 +42,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   displayedCollections: Collection[] = [];
   filterControl = new UntypedFormControl();
   filterString = '';
-  sort: Sort = {active: 'dateCreated', direction: 'desc'};
+  sort: Sort = { active: 'dateCreated', direction: 'desc' };
   private unsubscribe$ = new Subject();
   isBusy = false;
   uploadProgress = 0;
@@ -53,16 +58,19 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.collectionList = [];
-      collections.forEach(collection => {
-        this.collectionList.push({ ...collection });
-        if (collection.id === this.editCollection.id) {
-          this.editCollection = { ...collection};
-        }
+    this.collectionQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((collections) => {
+        this.collectionList = [];
+        collections.forEach((collection) => {
+          this.collectionList.push({ ...collection });
+          if (collection.id === this.editCollection.id) {
+            this.editCollection = { ...collection };
+          }
+        });
+        this.sortChanged(this.sort);
       });
-      this.sortChanged(this.sort);
-    });
     this.collectionDataService.load();
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
@@ -71,9 +79,12 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
         this.applyFilter();
       });
     // subscribe to scoring models loading
-    this.collectionQuery.selectLoading().pipe(takeUntil(this.unsubscribe$)).subscribe((isLoading) => {
-      this.isBusy = isLoading;
-    });
+    this.collectionQuery
+      .selectLoading()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((isLoading) => {
+        this.isBusy = isLoading;
+      });
   }
 
   ngOnInit() {
@@ -81,25 +92,28 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   }
 
   loadInitialData() {
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.collectionList = Array.from(collections);
-      this.applyFilter();
-    });
+    this.collectionQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((collections) => {
+        this.collectionList = Array.from(collections);
+        this.applyFilter();
+      });
   }
 
   addOrEditCollection(collection: Collection) {
     if (!collection) {
       collection = {
         name: '',
-        description: ''
+        description: '',
       };
     } else {
-      collection = {... collection};
+      collection = { ...collection };
     }
     const dialogRef = this.dialog.open(AdminCollectionEditDialogComponent, {
       width: '480px',
       data: {
-        collection: collection
+        collection: collection,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -111,7 +125,10 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   }
 
   togglePanel(collection: Collection) {
-    this.editCollection = this.editCollection.id === collection.id ? this.editCollection = {} : this.editCollection = { ...collection};
+    this.editCollection =
+      this.editCollection.id === collection.id
+        ? (this.editCollection = {})
+        : (this.editCollection = { ...collection });
   }
 
   selectCollection(collection: Collection) {
@@ -142,14 +159,15 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   }
 
   cancelEdit() {
-    this.editCollection = { ... this.originalCollection };
+    this.editCollection = { ...this.originalCollection };
   }
 
   applyFilter() {
-    this.filteredCollectionList = this.collectionList.filter(collection =>
-      !this.filterString ||
-      collection.name.toLowerCase().includes(this.filterString) ||
-      collection.description.toLowerCase().includes(this.filterString)
+    this.filteredCollectionList = this.collectionList.filter(
+      (collection) =>
+        !this.filterString ||
+        collection.name.toLowerCase().includes(this.filterString) ||
+        collection.description.toLowerCase().includes(this.filterString)
     );
     this.sortChanged(this.sort);
   }
@@ -160,7 +178,9 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    this.filteredCollectionList.sort((a, b) => this.sortCollections(a, b, sort.active, sort.direction));
+    this.filteredCollectionList.sort((a, b) =>
+      this.sortCollections(a, b, sort.active, sort.direction)
+    );
     this.applyPagination();
   }
 
@@ -236,12 +256,14 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
 
   applyPagination() {
     const startIndex = this.pageIndex * this.pageSize;
-    this.displayedCollections = this.filteredCollectionList.slice(startIndex, startIndex + this.pageSize);
+    this.displayedCollections = this.filteredCollectionList.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
   }
 
   ngOnDestroy() {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

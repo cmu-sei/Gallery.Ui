@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -28,7 +28,6 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './admin-exhibit-edit-dialog.component.html',
   styleUrls: ['./admin-exhibit-edit-dialog.component.scss'],
 })
-
 export class AdminExhibitEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
@@ -38,15 +37,11 @@ export class AdminExhibitEditDialogComponent {
   );
   public currentMoveFormControl = new UntypedFormControl(
     this.data.exhibit.currentMove,
-    [
-      Validators.required
-    ]
+    [Validators.required]
   );
   public currentInjectFormControl = new UntypedFormControl(
     this.data.exhibit.currentInject,
-    [
-      Validators.required
-    ]
+    [Validators.required]
   );
 
   constructor(
@@ -92,13 +87,16 @@ export class AdminExhibitEditDialogComponent {
   saveExhibit(changedField): void {
     switch (changedField) {
       case 'scenarioId':
-        this.data.exhibit.scenarioId = this.scenarioIdFormControl.value.toString();
+        this.data.exhibit.scenarioId =
+          this.scenarioIdFormControl.value.toString();
         break;
       case 'currentMove':
-        this.data.exhibit.currentMove = this.currentMoveFormControl.value.toString();
+        this.data.exhibit.currentMove =
+          this.currentMoveFormControl.value.toString();
         break;
       case 'currentInject':
-        this.data.exhibit.currentInject = this.currentInjectFormControl.value.toString();
+        this.data.exhibit.currentInject =
+          this.currentInjectFormControl.value.toString();
         break;
       default:
         break;
@@ -106,7 +104,6 @@ export class AdminExhibitEditDialogComponent {
   }
 
   getUserName(userId: string) {
-    return this.data.userList.find(u => u.id === userId).name;
+    return this.data.userList.find((u) => u.id === userId).name;
   }
-
 }

@@ -3,9 +3,14 @@
 
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { Article, Collection, ItemStatus, SourceType } from 'src/app/generated/api/model/models';
+import {
+  Article,
+  Collection,
+  ItemStatus,
+  SourceType,
+} from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
 import { Card } from 'src/app/data/card/card.store';
@@ -14,7 +19,7 @@ import { CardQuery } from 'src/app/data/card/card.query';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminArticleEditDialogComponent } from 'src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component';
@@ -48,7 +53,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   filteredArticleList: Article[] = [];
   filterControl = new UntypedFormControl();
   filterString = '';
-  sort: Sort = {active: 'datePosted', direction: 'desc'};
+  sort: Sort = { active: 'datePosted', direction: 'desc' };
   private unsubscribe$ = new Subject();
 
   constructor(
@@ -68,62 +73,73 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
-    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
-      this.articleList = [];
-      articles.forEach(article => {
-        this.articleList.push({ ...article });
-        if (article.id === this.editArticle.id) {
-          this.originalArticle = article;
-          this.editArticle = { ...article};
+    this.articleQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((articles) => {
+        this.articleList = [];
+        articles.forEach((article) => {
+          this.articleList.push({ ...article });
+          if (article.id === this.editArticle.id) {
+            this.originalArticle = article;
+            this.editArticle = { ...article };
+          }
+        });
+        const moves: number[] = [];
+        articles.forEach((a) => {
+          if (!moves.includes(+a.move)) {
+            moves.push(+a.move);
+          }
+        });
+        this.moveList = moves;
+        this.sortChanged(this.sort);
+      });
+    this.cardQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cards) => {
+        this.cardList = cards;
+      });
+    this.collectionQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((collections) => {
+        this.collectionList = collections;
+      });
+    (this.cardQuery.selectActive() as Observable<Card>)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((card) => {
+        card = card ? card : ({ id: '' } as Card);
+        this.selectedCard = card;
+        if (card.id) {
+          this.articleDataService.loadByCard(card.id);
+        } else if (this.selectedCollectionId) {
+          this.articleDataService.loadByCollection(this.selectedCollectionId);
         }
       });
-      const moves: number[] = [];
-      articles.forEach(a => {
-        if (!moves.includes(+a.move)) {
-          moves.push(+a.move);
-        }
-      });
-      this.moveList = moves;
-      this.sortChanged(this.sort);
-    });
-    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
-      this.cardList = cards;
-    });
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.collectionList = collections;
-    });
-    (this.cardQuery.selectActive() as Observable<Card>).pipe(takeUntil(this.unsubscribe$)).subscribe(card => {
-      card = card ? card : { id: ''} as Card;
-      this.selectedCard = card;
-      if (card.id) {
-        this.articleDataService.loadByCard(card.id);
-      } else if (this.selectedCollectionId) {
-        this.articleDataService.loadByCollection(this.selectedCollectionId);
-      }
-    });
     this.collectionDataService.load();
 
     this.filterControl.valueChanges
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
         this.filterString = term.trim().toLowerCase();
         this.applyFilter();
       });
 
-    activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.selectedCollectionId = params.get('collection');
-      this.articleDataService.unload();
-      this.cardDataService.unload();
-      this.filteredArticleList = [];
-      this.articleList = [];
-      if (this.selectedCollectionId) {
-        this.articleDataService.loadByCollection(this.selectedCollectionId);
-        this.cardDataService.loadByCollection(this.selectedCollectionId);
-      }
-      this.sortChanged(this.sort);
-    });
+    activatedRoute.queryParamMap
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((params) => {
+        this.selectedCollectionId = params.get('collection');
+        this.articleDataService.unload();
+        this.cardDataService.unload();
+        this.filteredArticleList = [];
+        this.articleList = [];
+        if (this.selectedCollectionId) {
+          this.articleDataService.loadByCollection(this.selectedCollectionId);
+          this.cardDataService.loadByCollection(this.selectedCollectionId);
+        }
+        this.sortChanged(this.sort);
+      });
   }
 
   ngOnInit() {
@@ -131,10 +147,13 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   loadInitialData() {
-    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
-      this.articleList = Array.from(articles);
-      this.applyFilter();
-    });
+    this.articleQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((articles) => {
+        this.articleList = Array.from(articles);
+        this.applyFilter();
+      });
   }
 
   addOrEditArticle(article: Article) {
@@ -149,16 +168,16 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
         status: ItemStatus.Unused,
         sourceType: SourceType.Intel,
         sourceName: '',
-        datePosted: datePosted
+        datePosted: datePosted,
       };
     } else {
-      article = {... article};
+      article = { ...article };
     }
     const dialogRef = this.dialog.open(AdminArticleEditDialogComponent, {
       width: '900px',
       data: {
         article: article,
-        cardList: this.cardList
+        cardList: this.cardList,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -170,7 +189,10 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   togglePanel(article: Article) {
-    this.editArticle = this.editArticle.id === article.id ? this.editArticle = {} : this.editArticle = { ...article};
+    this.editArticle =
+      this.editArticle.id === article.id
+        ? (this.editArticle = {})
+        : (this.editArticle = { ...article });
   }
 
   selectCollection(collectionId: string) {
@@ -221,11 +243,12 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   applyFilter() {
-    this.filteredArticleList = this.articleList.filter(article =>
-      !this.filterString ||
-      article.name.toLowerCase().includes(this.filterString) ||
-      article.description.toLowerCase().includes(this.filterString) ||
-      article.sourceName.toLowerCase().includes(this.filterString)
+    this.filteredArticleList = this.articleList.filter(
+      (article) =>
+        !this.filterString ||
+        article.name.toLowerCase().includes(this.filterString) ||
+        article.description.toLowerCase().includes(this.filterString) ||
+        article.sourceName.toLowerCase().includes(this.filterString)
     );
     this.sortChanged(this.sort);
   }
@@ -236,7 +259,9 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    this.filteredArticleList.sort((a, b) => this.sortArticles(a, b, sort.active, sort.direction));
+    this.filteredArticleList.sort((a, b) =>
+      this.sortArticles(a, b, sort.active, sort.direction)
+    );
     this.applyPagination();
   }
 
@@ -255,19 +280,15 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
         );
       case 'cardId':
         return (
-          (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (this.getCardName(a.cardId).toLowerCase() <
+          this.getCardName(b.cardId).toLowerCase()
+            ? -1
+            : 1) * (isAsc ? 1 : -1)
         );
       case 'move':
-        return (
-          (a.move < b.move ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.move < b.move ? -1 : 1) * (isAsc ? 1 : -1);
       case 'inject':
-        return (
-          (a.inject < b.inject ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.inject < b.inject ? -1 : 1) * (isAsc ? 1 : -1);
       case 'sourceName':
         return (
           (a.sourceName.toLowerCase() < b.sourceName.toLowerCase() ? -1 : 1) *
@@ -294,7 +315,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   getCardName(id: string) {
-    const card = id ? this.cardList.find(item => item.id === id) : null;
+    const card = id ? this.cardList.find((item) => item.id === id) : null;
     const name = card ? card.name : '';
     return name;
   }
@@ -307,12 +328,14 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
 
   applyPagination() {
     const startIndex = this.pageIndex * this.pageSize;
-    this.displayedArticles = this.filteredArticleList.slice(startIndex, startIndex + this.pageSize);
+    this.displayedArticles = this.filteredArticleList.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
   }
 
   ngOnDestroy() {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

@@ -6,13 +6,13 @@ import { UserArticleQuery } from './user-article.query';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { Injectable } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   Article,
   ShareDetails,
   UserArticle,
-  UserArticleService
+  UserArticleService,
 } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
@@ -68,40 +68,34 @@ export class UserArticleDataService {
       this.userArticleQuery.selectAll(),
       this.filterTerm,
       this.sortColumn,
-      this.sortIsAscending
+      this.sortIsAscending,
     ]).pipe(
-      map(
-        ([
-          items,
-          filterTerm,
-          sortColumn,
-          sortIsAscending
-        ]) =>
-          items
-            ? (items as UserArticle[])
+      map(([items, filterTerm, sortColumn, sortIsAscending]) =>
+        items
+          ? (items as UserArticle[])
               .sort((a: UserArticle, b: UserArticle) =>
-                this.sortArticles(a.article, b.article, sortColumn, sortIsAscending)
+                this.sortArticles(
+                  a.article,
+                  b.article,
+                  sortColumn,
+                  sortIsAscending
+                )
               )
               .filter(
                 (userArticle) =>
                   ('' + userArticle.article.description)
                     .toLowerCase()
                     .includes(filterTerm.toLowerCase()) ||
-                    userArticle.id
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase())
+                  userArticle.id
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase())
               )
-            : []
+          : []
       )
     );
   }
 
-  private sortArticles(
-    a: Article,
-    b: Article,
-    column: string,
-    isAsc: boolean
-  ) {
+  private sortArticles(a: Article, b: Article, column: string, isAsc: boolean) {
     switch (column) {
       case 'description':
         return (
@@ -130,7 +124,7 @@ export class UserArticleDataService {
       )
       .subscribe(
         (userArticles) => {
-          userArticles.forEach(a => {
+          userArticles.forEach((a) => {
             this.setAsDates(a);
           });
           this.userArticleStore.set(userArticles);
@@ -153,7 +147,7 @@ export class UserArticleDataService {
       )
       .subscribe(
         (userArticles) => {
-          userArticles.forEach(a => {
+          userArticles.forEach((a) => {
             this.setAsDates(a);
           });
           this.userArticleStore.set(userArticles);
@@ -243,9 +237,10 @@ export class UserArticleDataService {
     userArticle.dateCreated = new Date(userArticle.dateCreated);
     userArticle.dateModified = new Date(userArticle.dateModified);
     userArticle.article.dateCreated = new Date(userArticle.article.dateCreated);
-    userArticle.article.dateModified = new Date(userArticle.article.dateModified);
+    userArticle.article.dateModified = new Date(
+      userArticle.article.dateModified
+    );
     userArticle.actualDatePosted = new Date(userArticle.actualDatePosted);
     userArticle.article.datePosted = new Date(userArticle.article.datePosted);
   }
-
 }

@@ -3,7 +3,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import {
   Permission,
@@ -11,11 +11,11 @@ import {
   UserPermission,
 } from 'src/app/generated/api/model/models';
 import { ComnSettingsService } from '@cmusei/crucible-common';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AdminUserEditDialogComponent } from 'src/app/components/admin/admin-user-edit-dialog/admin-user-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { UserDataService } from 'src/app/data/user/user-data.service';
-import { Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -28,7 +28,7 @@ export class AdminUsersComponent implements OnInit {
   @Input() permissionList: Permission[];
   pageSize = 10;
   pageIndex = 0;
-  filteredUserList: User [] = [];
+  filteredUserList: User[] = [];
   @Output() removeUserPermission = new EventEmitter<UserPermission>();
   @Output() addUserPermission = new EventEmitter<UserPermission>();
   @Output() addUser = new EventEmitter<User>();
@@ -40,7 +40,7 @@ export class AdminUsersComponent implements OnInit {
   sort: Sort = { active: 'name', direction: 'asc' };
   filterControl = new UntypedFormControl();
   filterString = '';
-  displayedUsers: User [] = [];
+  displayedUsers: User[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -52,9 +52,7 @@ export class AdminUsersComponent implements OnInit {
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
     this.filterControl.valueChanges
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
         this.filterString = term.trim().toLowerCase();
         this.applyFilter();
@@ -86,16 +84,16 @@ export class AdminUsersComponent implements OnInit {
       this.addingNewUser = true;
       user = {
         name: '',
-        id: ''
+        id: '',
       };
     } else {
       this.addingNewUser = false;
-      user = {... user};
+      user = { ...user };
     }
     const dialogRef = this.dialog.open(AdminUserEditDialogComponent, {
       width: '480px',
       data: {
-        user: user
+        user: user,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -119,9 +117,10 @@ export class AdminUsersComponent implements OnInit {
   }
 
   applyFilter() {
-    this.filteredUserList = this.userList.filter(user =>
-      !this.filterString ||
-      user.name.toLowerCase().includes(this.filterString)
+    this.filteredUserList = this.userList.filter(
+      (user) =>
+        !this.filterString ||
+        user.name.toLowerCase().includes(this.filterString)
     );
 
     this.sortChanged(this.sort);
@@ -133,7 +132,9 @@ export class AdminUsersComponent implements OnInit {
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    this.filteredUserList.sort((a, b) => this.sortUsers(a, b, sort.active, sort.direction));
+    this.filteredUserList.sort((a, b) =>
+      this.sortUsers(a, b, sort.active, sort.direction)
+    );
     this.paginateUsers();
   }
 
@@ -158,7 +159,9 @@ export class AdminUsersComponent implements OnInit {
 
   paginateUsers() {
     const startIndex = this.pageIndex * this.pageSize;
-    this.displayedUsers = this.filteredUserList.slice(startIndex, startIndex + this.pageSize);
+    this.displayedUsers = this.filteredUserList.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
   }
-
 }
