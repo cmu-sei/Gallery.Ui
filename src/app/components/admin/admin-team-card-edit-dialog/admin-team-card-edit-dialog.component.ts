@@ -21,9 +21,10 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 const MIN_NAME_LENGTH = 3;
 
 @Component({
-  selector: 'app-admin-team-card-edit-dialog',
-  templateUrl: './admin-team-card-edit-dialog.component.html',
-  styleUrls: ['./admin-team-card-edit-dialog.component.scss'],
+    selector: 'app-admin-team-card-edit-dialog',
+    templateUrl: './admin-team-card-edit-dialog.component.html',
+    styleUrls: ['./admin-team-card-edit-dialog.component.scss'],
+    standalone: false
 })
 export class AdminTeamCardEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();

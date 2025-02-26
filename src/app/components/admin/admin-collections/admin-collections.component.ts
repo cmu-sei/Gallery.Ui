@@ -23,9 +23,10 @@ import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/adm
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 @Component({
-  selector: 'app-admin-collections',
-  templateUrl: './admin-collections.component.html',
-  styleUrls: ['./admin-collections.component.scss'],
+    selector: 'app-admin-collections',
+    templateUrl: './admin-collections.component.html',
+    styleUrls: ['./admin-collections.component.scss'],
+    standalone: false
 })
 export class AdminCollectionsComponent implements OnInit, OnDestroy {
   pageSize = 10;

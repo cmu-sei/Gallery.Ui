@@ -19,9 +19,10 @@ import { Observable } from 'rxjs';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-admin-users',
-  templateUrl: './admin-users.component.html',
-  styleUrls: ['./admin-users.component.scss'],
+    selector: 'app-admin-users',
+    templateUrl: './admin-users.component.html',
+    styleUrls: ['./admin-users.component.scss'],
+    standalone: false
 })
 export class AdminUsersComponent implements OnInit {
   @Input() userList: User[];

@@ -30,9 +30,10 @@ const MIN_NAME_LENGTH = 3;
 const MAX_SUMMARY_LENGTH = 300;
 
 @Component({
-  selector: 'app-admin-article-edit-dialog',
-  templateUrl: './admin-article-edit-dialog.component.html',
-  styleUrls: ['./admin-article-edit-dialog.component.scss'],
+    selector: 'app-admin-article-edit-dialog',
+    templateUrl: './admin-article-edit-dialog.component.html',
+    styleUrls: ['./admin-article-edit-dialog.component.scss'],
+    standalone: false
 })
 export class AdminArticleEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();

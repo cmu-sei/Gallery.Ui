@@ -25,9 +25,10 @@ import { environment } from 'src/environments/environment';
 import { HealthCheckService } from 'src/app/generated/api/api/api';
 
 @Component({
-  selector: 'app-admin-container',
-  templateUrl: './admin-container.component.html',
-  styleUrls: ['./admin-container.component.scss'],
+    selector: 'app-admin-container',
+    templateUrl: './admin-container.component.html',
+    styleUrls: ['./admin-container.component.scss'],
+    standalone: false
 })
 export class AdminContainerComponent implements OnDestroy, OnInit {
   titleText = 'GALLERY';

@@ -8,9 +8,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
-  selector: 'app-article-more-dialog',
-  templateUrl: './article-more-dialog.component.html',
-  styleUrls: ['./article-more-dialog.component.scss'],
+    selector: 'app-article-more-dialog',
+    templateUrl: './article-more-dialog.component.html',
+    styleUrls: ['./article-more-dialog.component.scss'],
+    standalone: false
 })
 export class ArticleMoreDialogComponent {
   @Output() editComplete = new EventEmitter<any>();

@@ -27,9 +27,10 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-admin-articles',
-  templateUrl: './admin-articles.component.html',
-  styleUrls: ['./admin-articles.component.scss'],
+    selector: 'app-admin-articles',
+    templateUrl: './admin-articles.component.html',
+    styleUrls: ['./admin-articles.component.scss'],
+    standalone: false
 })
 export class AdminArticlesComponent implements OnInit, OnDestroy {
   pageSize = 10;

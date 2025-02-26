@@ -16,9 +16,10 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-admin-exhibit-articles',
-  templateUrl: './admin-exhibit-articles.component.html',
-  styleUrls: ['./admin-exhibit-articles.component.scss'],
+    selector: 'app-admin-exhibit-articles',
+    templateUrl: './admin-exhibit-articles.component.html',
+    styleUrls: ['./admin-exhibit-articles.component.scss'],
+    standalone: false
 })
 export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   @Input() exhibit: Exhibit;
