@@ -28,25 +28,25 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './admin-exhibit-edit-dialog.component.html',
   styleUrls: ['./admin-exhibit-edit-dialog.component.scss'],
 })
-
 export class AdminExhibitEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
+  public nameFormControl = new UntypedFormControl(this.data.exhibit.name, []);
+  public descriptionFormControl = new UntypedFormControl(
+    this.data.exhibit.description,
+    []
+  );
   public scenarioIdFormControl = new UntypedFormControl(
     this.data.exhibit.scenarioId,
     []
   );
   public currentMoveFormControl = new UntypedFormControl(
     this.data.exhibit.currentMove,
-    [
-      Validators.required
-    ]
+    [Validators.required]
   );
   public currentInjectFormControl = new UntypedFormControl(
     this.data.exhibit.currentInject,
-    [
-      Validators.required
-    ]
+    [Validators.required]
   );
 
   constructor(
@@ -59,6 +59,8 @@ export class AdminExhibitEditDialogComponent {
 
   errorFree() {
     return !(
+      this.nameFormControl.hasError('required') ||
+      this.descriptionFormControl.hasError('required') ||
       this.currentMoveFormControl.hasError('required') ||
       this.currentInjectFormControl.hasError('required')
     );
@@ -71,12 +73,6 @@ export class AdminExhibitEditDialogComponent {
     if (!saveChanges) {
       this.editComplete.emit({ saveChanges: false, exhibit: null });
     } else {
-      this.data.exhibit.name = this.currentMoveFormControl.value
-        .toString()
-        .trim();
-      this.data.exhibit.shortName = this.currentInjectFormControl.value
-        .toString()
-        .trim();
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,
@@ -91,14 +87,23 @@ export class AdminExhibitEditDialogComponent {
    */
   saveExhibit(changedField): void {
     switch (changedField) {
+      case 'name':
+        this.data.exhibit.name = this.nameFormControl.value;
+        break;
+      case 'description':
+        this.data.exhibit.description = this.descriptionFormControl.value;
+        break;
       case 'scenarioId':
-        this.data.exhibit.scenarioId = this.scenarioIdFormControl.value.toString();
+        this.data.exhibit.scenarioId =
+          this.scenarioIdFormControl.value.toString();
         break;
       case 'currentMove':
-        this.data.exhibit.currentMove = this.currentMoveFormControl.value.toString();
+        this.data.exhibit.currentMove =
+          this.currentMoveFormControl.value.toString();
         break;
       case 'currentInject':
-        this.data.exhibit.currentInject = this.currentInjectFormControl.value.toString();
+        this.data.exhibit.currentInject =
+          this.currentInjectFormControl.value.toString();
         break;
       default:
         break;
@@ -106,7 +111,6 @@ export class AdminExhibitEditDialogComponent {
   }
 
   getUserName(userId: string) {
-    return this.data.userList.find(u => u.id === userId).name;
+    return this.data.userList.find((u) => u.id === userId).name;
   }
-
 }

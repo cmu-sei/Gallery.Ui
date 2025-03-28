@@ -20,6 +20,24 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <input type="text" matInput [formControl]="nameFormControl" placeholder="Name" (blur)="saveExhibit('name')"
+          value="{{data.exhibit.name}}">
+      </mat-form-field>
+    </div>
+  </div>
+  
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input type="text" matInput [formControl]="descriptionFormControl" placeholder="Description"
+          (blur)="saveExhibit('description')" value="{{data.exhibit.description}}">
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="currentMoveFormControl" placeholder="Current Move" (blur)="saveExhibit('currentMove')"
           value="{{data.exhibit.currentMove}}">
         <mat-error *ngIf="currentMoveFormControl.hasError('required')">
