@@ -28,7 +28,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <mat-label>Email Subject</mat-label>
     <input matInput [formControl]="subjectFormControl" />
   </mat-form-field>
-  <div class="add-margin left">
+  <div class="add-margin left" *ngIf="data.isEmailActive">
     <div>
       <h4>Email Message</h4>
       <angular-editor

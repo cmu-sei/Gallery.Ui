@@ -82,14 +82,20 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div *ngIf="!apiIsSick && !exhibitId && collectionId" class="exhibit-container background text" autosize>
   <mat-table class="width-100 mat-table" [dataSource]="exhibitList" matSort>
 
-     <!-- Exhibit Column -->
-     <ng-container matColumnDef="exhibit">
-      <mat-header-cell *matHeaderCellDef>Exhibit</mat-header-cell>
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
       <mat-cell *matCellDef="let exhibit">
         <a [routerLink]="['/']" [queryParams]="getQueryParams(exhibit.id)">
-          {{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }} - {{ getUserName(exhibit.createdBy) }}
+          {{ exhibit.name }}
         </a>
       </mat-cell>
+    </ng-container>
+
+    <!-- Description Column -->
+    <ng-container matColumnDef="description">
+      <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+      <mat-cell *matCellDef="let exhibit">{{ exhibit.description }}</mat-cell>
     </ng-container>
 
     <!-- Created By Column -->
@@ -104,8 +110,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }}</mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef="['exhibit', 'createdBy', 'dateCreated']"></mat-header-row>
-    <mat-row *matRowDef="let exhibit; columns: ['exhibit', 'createdBy', 'dateCreated']"></mat-row>
+    <mat-header-row *matHeaderRowDef="['name', 'description', 'createdBy', 'dateCreated']"></mat-header-row>
+    <mat-row *matRowDef="let exhibit; columns: ['name', 'description', 'createdBy', 'dateCreated']"></mat-row>
   </mat-table>
    <!-- Filter No Results Found -->
   <div class="text no-results" *ngIf="exhibitList.length === 0">

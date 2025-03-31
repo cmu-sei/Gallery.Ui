@@ -27,4 +27,6 @@ export interface Exhibit {
   currentInject?: number;
   collectionId?: string;
   scenarioId?: string;
+  name?: string;
+  description?: string;
 }
