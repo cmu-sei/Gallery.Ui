@@ -23,9 +23,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)" (blur)="saveArticle('name')"
           value="{{data.article.name}}" [errorStateMatcher]="matcher">
-        <mat-error *ngIf="articleNameFormControl.hasError('minlength') && !articleNameFormControl.hasError('required')">
-          Must contain {{ MIN_NAME_LENGTH }} or more characters
-        </mat-error>
         <mat-error *ngIf="articleNameFormControl.hasError('required')">
           Name is <strong>required</strong>
         </mat-error>
@@ -38,12 +35,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field class="full-width">
         <input matInput placeholder="Summary" [formControl]="summaryFormControl"
           (blur)="saveArticle('summary')" value="{{data.article.summary}}" [errorStateMatcher]="matcher" />
-          <mat-error *ngIf="summaryFormControl.hasError('minlength') && !summaryFormControl.hasError('required')">
-            Must contain {{ MIN_NAME_LENGTH }} or more characters
-          </mat-error>
-          <mat-error *ngIf="summaryFormControl.hasError('maxlength')">
-            Must contain less than {{ MAX_SUMMARY_LENGTH }} characters
-          </mat-error>
           <mat-error *ngIf="summaryFormControl.hasError('required')">
             Summary is <strong>required</strong>
           </mat-error>
