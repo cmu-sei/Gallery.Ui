@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the
 // project root for license information.
 
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import {
   UntypedFormControl,
   FormGroupDirective,
@@ -26,16 +26,13 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-const MIN_NAME_LENGTH = 3;
-const MAX_SUMMARY_LENGTH = 300;
-
 @Component({
   selector: 'app-admin-article-edit-dialog',
   templateUrl: './admin-article-edit-dialog.component.html',
   styleUrls: ['./admin-article-edit-dialog.component.scss'],
 })
 
-export class AdminArticleEditDialogComponent {
+export class AdminArticleEditDialogComponent implements OnInit {
   @Output() editComplete = new EventEmitter<any>();
   editorConfig: AngularEditorConfig = {
     editable: true,
@@ -70,20 +67,19 @@ export class AdminArticleEditDialogComponent {
     this.data.article.name,
     [
       Validators.required,
-      Validators.minLength(MIN_NAME_LENGTH),
     ]
   );
   public summaryFormControl = new UntypedFormControl(
-    this.data.article.summary ,
+    this.data.article.summary,
     [
       Validators.required,
-      Validators.minLength(MIN_NAME_LENGTH),
-      Validators.maxLength(MAX_SUMMARY_LENGTH)
     ]
   );
   public descriptionFormControl = new UntypedFormControl(
-    this.data.article.description ,
-    []
+    this.data.article.description,
+    [
+      Validators.required,
+    ]
   );
   public cardIdFormControl = new UntypedFormControl(
     this.data.article.cardId,
@@ -135,8 +131,6 @@ export class AdminArticleEditDialogComponent {
     SourceType.Email,
     SourceType.Orders
   ];
-  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
-  readonly MAX_SUMMARY_LENGTH = MAX_SUMMARY_LENGTH;
 
   constructor(
     public dialogService: DialogService,
@@ -152,13 +146,16 @@ export class AdminArticleEditDialogComponent {
     'overflow': 'auto'
   };
 
+  ngOnInit () {
+    this.articleNameFormControl.markAsTouched();
+    this.summaryFormControl.markAllAsTouched();
+    this.descriptionFormControl.markAllAsTouched();
+  }
+
   errorFree() {
     return !(
       this.articleNameFormControl.hasError('required') ||
-      this.articleNameFormControl.hasError('minlength') ||
       this.summaryFormControl.hasError('required') ||
-      this.summaryFormControl.hasError('minlength') ||
-      this.summaryFormControl.hasError('maxlength') ||
       !this.data.article.cardId
     );
   }
