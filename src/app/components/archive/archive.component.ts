@@ -11,6 +11,7 @@ import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
+import { TeamService } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import {
@@ -52,6 +53,7 @@ export class ArchiveComponent implements OnDestroy {
   cardList: Card[] = [];
   moveList: number[] = [];
   teamList: Team[] = [];
+  shareTeamList: Team[] = [];
   postCardList: Card[] = [];
   showCardList: Card[] = [];
   teamCardList: TeamCard[] = [];
@@ -88,6 +90,7 @@ export class ArchiveComponent implements OnDestroy {
     private cardQuery: CardQuery,
     private exhibitQuery: ExhibitQuery,
     private teamDataService: TeamDataService,
+    private teamService: TeamService,
     private teamQuery: TeamQuery,
     private teamCardQuery: TeamCardQuery,
     private uiDataService: UIDataService,
@@ -146,6 +149,9 @@ export class ArchiveComponent implements OnDestroy {
       } else {
         this.exhibitId = e.id;
         this.exhibit = e;
+        this.teamService.getTeamsByExhibit(e.id).pipe(take(1)).subscribe(teams => {
+          this.shareTeamList = teams;
+        });
       }
     });
     // subscribe to filter control changes
@@ -302,7 +308,7 @@ export class ArchiveComponent implements OnDestroy {
       width: '900px',
       data: {
         article: userArticle.article,
-        teamList: this.teamList,
+        teamList: this.shareTeamList,
         isEmailActive: this.settingsService.settings.IsEmailActive
       },
     });
