@@ -1,9 +1,9 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import {
   ComnSettingsService,
@@ -12,7 +12,6 @@ import {
 } from '@cmusei/crucible-common';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { TopbarView } from './../shared/top-bar/topbar.models';
-import { HealthCheckService } from 'src/app/generated/api';
 import {
   ApplicationArea,
   SignalRService,
@@ -41,9 +40,8 @@ import { XApiService } from 'src/app/generated/api';
   templateUrl: './home-app.component.html',
   styleUrls: ['./home-app.component.scss'],
 })
-export class HomeAppComponent implements OnDestroy, OnInit {
+export class HomeAppComponent implements OnDestroy {
   @ViewChild('sidenav') sidenav: MatSidenav;
-  apiIsSick = false;
   apiMessage =
     'The GALLERY API web service appears to be experiencing technical difficulties.';
   titleText = 'Gallery';
@@ -73,6 +71,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   TopbarView = TopbarView;
   theme$: Observable<Theme>;
   public filterString: string;
+  isStarted = false;
 
   constructor(
     private userDataService: UserDataService,
@@ -81,7 +80,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     private settingsService: ComnSettingsService,
     private authQuery: ComnAuthQuery,
     private signalRService: SignalRService,
-    private healthCheckService: HealthCheckService,
     private userArticleDataService: UserArticleDataService,
     private cardDataService: CardDataService,
     private exhibitDataService: ExhibitDataService,
@@ -94,10 +92,32 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     private uiDataService: UIDataService,
     private xApiService: XApiService
   ) {
-    this.healthCheck();
-
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
+    // Set the display settings from config file
+    this.topbarColor = this.settingsService.settings.AppTopBarHexColor
+      ? this.settingsService.settings.AppTopBarHexColor
+      : this.topbarColor;
+    this.topbarTextColor = this.settingsService.settings.AppTopBarHexTextColor
+      ? this.settingsService.settings.AppTopBarHexTextColor
+      : this.topbarTextColor;
+    this.titleText = this.settingsService.settings.AppTopBarText;
+    // subscribe to the logged in user
+    this.userDataService.loggedInUser.pipe(takeUntil(this.unsubscribe$)).subscribe((user) => {
+      if (user && user.profile && user.profile.sub) {
+        this.loggedInUser.id = user.profile.sub;
+        this.loggedInUser.name = user.profile.name;
+        this.startup();
+      }
+    });
+    setTimeout(() => {
+      if (!this.isStarted) {
+        window.location.reload();
+      }
+    }, 10000);
+  }
+
+  startup() {
     // subscribe to route changes
     this.activatedRoute.queryParamMap
       .pipe(takeUntil(this.unsubscribe$))
@@ -227,31 +247,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
           this.setMyTeam();
         }
       });
-    // subscribe to the logged in user
-    this.userDataService.loggedInUser
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((user) => {
-        if (user && user.profile && user.profile.sub !== this.loggedInUser.id) {
-          this.loggedInUser.id = user.profile.sub;
-          this.loggedInUser.name = user.profile.name;
-        }
-      });
     this.userDataService.isAuthorizedUser
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((isAuthorized) => {
         this.isAuthorizedUser = isAuthorized;
       });
-    // Set the display settings from config file
-    this.topbarColor = this.settingsService.settings.AppTopBarHexColor
-      ? this.settingsService.settings.AppTopBarHexColor
-      : this.topbarColor;
-    this.topbarTextColor = this.settingsService.settings.AppTopBarHexTextColor
-      ? this.settingsService.settings.AppTopBarHexTextColor
-      : this.topbarTextColor;
-    this.titleText = this.settingsService.settings.AppTopBarText;
-  }
-
-  ngOnInit() {
     this.signalRService
       .startConnection(ApplicationArea.home)
       .then(() => {
@@ -261,6 +261,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         console.log(err);
       });
     this.filterString = '';
+    this.isStarted = true;
   }
 
   setMyTeam() {
@@ -304,20 +305,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     } catch (e) {
       return true;
     }
-  }
-
-  healthCheck() {
-    this.healthCheckService
-      .getReadiness()
-      .pipe(take(1))
-      .subscribe(
-        (healthReport) => {
-          this.apiIsSick = false;
-        },
-        (error) => {
-          this.apiIsSick = true;
-        }
-      );
   }
 
   loadCollectionData() {
