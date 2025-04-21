@@ -156,7 +156,7 @@ export class AdminArticleEditDialogComponent implements OnInit {
     return !(
       this.articleNameFormControl.hasError('required') ||
       this.summaryFormControl.hasError('required') ||
-      !this.data.article.cardId
+      this.descriptionFormControl.hasError('required')
     );
   }
 

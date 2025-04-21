@@ -33,7 +33,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
-        <input matInput placeholder="Summary" [formControl]="summaryFormControl"
+        <input matInput placeholder="Summary (required)" [formControl]="summaryFormControl"
           (blur)="saveArticle('summary')" value="{{data.article.summary}}" [errorStateMatcher]="matcher" />
           <mat-error *ngIf="summaryFormControl.hasError('required')">
             Summary is <strong>required</strong>
@@ -45,13 +45,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin left">
     <div>
       <p style="font-size: 13px; font-weight: 400; line-height: 1.125; font-family: Open Sans, sans-serif; letter-spacing: normal;">
-        Description
+        Description (required)*
       </p>
       <div>
         <angular-editor
           [placeholder]="'Description'"
           [formControl]="descriptionFormControl"
           [config]="editorConfig"
+          (focus)="showDescriptionError = true"
           (blur)="saveArticle('description')"
         ></angular-editor>
         <mat-error *ngIf="descriptionFormControl.hasError('required')">
@@ -65,7 +66,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field>
         <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
-          <mat-option>None</mat-option>
+          <mat-option></mat-option>
           <mat-option *ngFor="let card of data.cardList" [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
             {{card.name}}
           </mat-option>

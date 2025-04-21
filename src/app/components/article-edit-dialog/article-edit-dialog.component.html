@@ -24,9 +24,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)" (blur)="saveArticle('name')"
           [value]="data.article.name" [errorStateMatcher]="matcher">
-        <mat-error *ngIf="articleNameFormControl.hasError('minlength') && !articleNameFormControl.hasError('required')">
-          Must contain {{ MIN_NAME_LENGTH }} or more characters
-        </mat-error>
         <mat-error *ngIf="articleNameFormControl.hasError('required')">
           Name is <strong>required</strong>
         </mat-error>
@@ -37,14 +34,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
-        <input matInput placeholder="Summary" [formControl]="summaryFormControl"
+        <input matInput placeholder="Summary (required)" [formControl]="summaryFormControl"
           (blur)="saveArticle('summary')" value="{{data.article.summary}}" [errorStateMatcher]="matcher" />
-          <mat-error *ngIf="summaryFormControl.hasError('minlength') && !summaryFormControl.hasError('required')">
-            Must contain {{ MIN_NAME_LENGTH }} or more characters
-          </mat-error>
-          <mat-error *ngIf="summaryFormControl.hasError('maxlength')">
-            Must contain less than {{ MAX_SUMMARY_LENGTH }} characters
-          </mat-error>
           <mat-error *ngIf="summaryFormControl.hasError('required')">
             Summary is <strong>required</strong>
           </mat-error>
@@ -55,12 +46,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin left">
     <div>
       <p style="font-size: 13px; font-weight: 400; line-height: 1.125; font-family: Open Sans, sans-serif; letter-spacing: normal;">
-        Description
+        Description (required) *
       </p>
         <div style="width: 21.5cm">
           <angular-editor
             [placeholder]="'Description'"
-            [(ngModel)]="data.article.description"
+            [formControl]="descriptionFormControl"
             [config]="editorConfig"
           ></angular-editor>
           <mat-error *ngIf="descriptionFormControl.hasError('required')">
@@ -93,7 +84,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field>
         <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
-          <mat-option>None</mat-option>
           <mat-option *ngFor="let card of data.cardList" [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
             {{card.name}}
           </mat-option>
