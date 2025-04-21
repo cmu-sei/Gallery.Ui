@@ -148,14 +148,12 @@ export class ArticleEditDialogComponent {
   };
 
   errorFree() {
-    const ef = !(
+    return !(
       this.articleNameFormControl.hasError('required') ||
       this.summaryFormControl.hasError('required') ||
       this.descriptionFormControl.hasError('required') ||
       !this.cardIdFormControl.value
     );
-    console.log(ef);
-    return ef;
   }
 
   trimInitialDescription() {
