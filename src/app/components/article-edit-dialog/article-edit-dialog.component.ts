@@ -26,9 +26,6 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-const MIN_NAME_LENGTH = 3;
-const MAX_SUMMARY_LENGTH = 300;
-
 @Component({
   selector: 'app-article-edit-dialog',
   templateUrl: './article-edit-dialog.component.html',
@@ -69,21 +66,20 @@ export class ArticleEditDialogComponent {
   public articleNameFormControl = new UntypedFormControl(
     this.data.article.name,
     [
-      Validators.required,
-      Validators.minLength(MIN_NAME_LENGTH),
+      Validators.required
     ]
   );
   public summaryFormControl = new UntypedFormControl(
     this.data.article.summary ,
     [
-      Validators.required,
-      Validators.minLength(MIN_NAME_LENGTH),
-      Validators.maxLength(MAX_SUMMARY_LENGTH)
+      Validators.required
     ]
   );
   public descriptionFormControl = new UntypedFormControl(
     this.data.article.description ,
-    []
+    [
+      Validators.required
+    ]
   );
   public cardIdFormControl = new UntypedFormControl(
     this.data.article.cardId,
@@ -135,8 +131,6 @@ export class ArticleEditDialogComponent {
     SourceType.Email,
     SourceType.Orders
   ];
-  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
-  readonly MAX_SUMMARY_LENGTH = MAX_SUMMARY_LENGTH;
   teamIdList: string[] = [];
 
   constructor(
@@ -156,11 +150,9 @@ export class ArticleEditDialogComponent {
   errorFree() {
     return !(
       this.articleNameFormControl.hasError('required') ||
-      this.articleNameFormControl.hasError('minlength') ||
       this.summaryFormControl.hasError('required') ||
-      this.summaryFormControl.hasError('minlength') ||
-      this.summaryFormControl.hasError('maxlength') ||
-      !this.data.article.cardId
+      this.descriptionFormControl.hasError('required') ||
+      !this.cardIdFormControl.value
     );
   }
 
