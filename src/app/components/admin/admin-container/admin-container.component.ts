@@ -35,7 +35,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   isSidebarOpen = true;
   isSuperUser = false;
   isContentDeveloper = false;
-  teamList = this.teamQuery.selectAll();
   userList: Observable<User[]>;
   permissionList: Observable<Permission[]>;
   pageSize: Observable<number>;
@@ -107,7 +106,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
       this.exhibitDataService.loadByCollection(activeId);
     });
-    this.teamDataService.load();
     this.userDataService.getUsersFromApi();
     this.userDataService
       .getPermissionsFromApi()
