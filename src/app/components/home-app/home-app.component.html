@@ -15,7 +15,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     (urlNavigate)="topBarNavigate($event)"
   ></app-topbar>
 
-  <span *ngIf="!isStarted">
+  <span *ngIf="!permissions">
     <mat-card>
     <mat-card-header>
       <mat-card-title>Initializing Data</mat-card-title>
@@ -25,12 +25,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-progress-spinner>
     </mat-card>
   </span>
-  <span *ngIf="isStarted">
+  <span *ngIf="permissions">
     <div *ngIf="!exhibitId" class="top-row">
       <div class="one-cell last-cell">
         <button
           mat-icon-button
-          *ngIf="isContentDeveloper$ | async"
           (click)="gotoAdmin()"
           style="outline: none;"
           title="Administration">
@@ -128,7 +127,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <span *ngIf="exhibitId && selectedSection === 'wall'">
       <div>
         <app-wall
-          [showAdminButton]="isContentDeveloper$ | async"
+          [showAdminButton]="canViewAdministration()"
           (changeTeam)="changeTeam($event)"
           (sectionSelected)="gotoSection($event)"
           ></app-wall>
@@ -137,7 +136,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
     <span *ngIf="exhibitId && selectedSection === 'archive'">
       <app-archive
-        [showAdminButton]="isContentDeveloper$ | async"
+        [showAdminButton]="canViewAdministration()"
         (changeTeam)="changeTeam($event)"
         (sectionSelected)="gotoSection($event)"
         ></app-archive>

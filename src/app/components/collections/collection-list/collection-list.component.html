@@ -1,0 +1,137 @@
+<!--
+Copyright 2021 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div class="cssLayoutRowStartCenter">
+  <div class="sp-icon">
+    <mat-icon svgIcon="storage" [ngStyle]="{ color: topbarColor }"></mat-icon>
+  </div>
+  <mat-icon
+    class="icon-color search-icon"
+    svgIcon="ic_magnify_search"
+  ></mat-icon>
+  <mat-form-field class="search-field">
+    <input matInput [(ngModel)]="filterString" (keyup)="applyFilter($event.target.value)" placeholder="Search" />
+  </mat-form-field>
+  <div class="clear-search">
+    <button
+      class="no-outline"
+      mat-icon-button
+      (click)="applyFilter('')"
+      title="Clear Search"
+    >
+      <mat-icon class="scale-85" svgIcon="ic_cancel_circle"></mat-icon>
+    </button>
+  </div>
+  <div class="button-end">
+    <button *ngIf="!adminMode && permissions.includes(SystemPermission.CreateCollections)"
+      mat-stroked-button (click)="editCollection(null)">
+      Add Collection
+    </button>
+  </div>
+  <div class="button-end">
+    <mat-paginator
+    #paginator
+    [length]="totalRows$ | async"
+    [pageIndex]="0"
+    [pageSize]="20"
+    [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
+  ></mat-paginator>
+  </div>
+</div>
+
+<mat-accordion displayMode="flat">
+  <section
+    matSort
+    class="mat-elevation-z2 mat-header-row"
+  >
+    <span class="mat-header-cell four-cell" mat-sort-header="name"><span class="name-header">Name</span></span>
+    <span class="mat-header-cell four-cell" mat-sort-header="description">Description</span>
+    <span class="mat-header-cell one-cell" mat-sort-header="durationHours">Duration</span>
+    <span class="mat-header-cell one-cell" mat-sort-header="dateCreated">Created</span>
+  </section>
+
+  <mat-expansion-panel
+    *ngFor="
+      let item of displayedRows;
+      trackBy: trackByFn
+    "
+    [expanded]="
+      selectedCollection && item.id == selectedCollection.id
+    "
+    (click)="selectCollection($event, item.id)"
+  >
+    <mat-expansion-panel-header
+      class="mat-row"
+      (contextmenu)="onContextMenu($event, item)"
+    >
+      <div class="mat-cell flex-row-cell four-cell">
+        <button
+        *ngIf="!adminMode && permissions.includes(SystemPermission.CreateCollections)"
+          mat-icon-button
+          class="copy-button"
+          ngxClipboard
+          [cbContent]="item.id"
+          (click)="$event.stopPropagation()"
+          title="Copy ID:  {{ item.id }}"
+        >
+          <mat-icon class="mdi-20px copy-icon" fontIcon="mdi-content-copy"></mat-icon>
+        </button>
+        <button
+          *ngIf="!adminMode && canDoAnything(item.id)"
+          mat-icon-button
+          class="menu-button"
+          ngxClipboard
+          (click)="onContextMenu($event, item); $event.stopPropagation()"
+          title="Collection Menu"
+        >
+          <mat-icon class="mdi-24px" fontIcon="mdi-menu"></mat-icon>
+        </button>
+        {{ item.name }}
+      </div>
+      <div class="mat-cell four-cell center-self">{{ item.description }}</div>
+      <div class="mat-cell one-cell center-self">{{ item.durationHours }}</div>
+      <div class="mat-cell one-cell center-self">{{ item.dateCreated | date: 'yyyy-MM-dd' }}</div>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <app-collection-edit
+        [collection]="selectedCollection"
+      ></app-collection-edit>
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<div
+  *ngIf="isLoading"
+>
+  <div flex>
+    <mat-progress-spinner color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+  </div>
+</div>
+
+<div
+  style="visibility: hidden; position: fixed"
+  [style.left]="contextMenuPosition.x"
+  [style.top]="contextMenuPosition.y"
+  [matMenuTriggerFor]="contextMenu"
+></div>
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent let-item="item">
+    <button mat-menu-item (click)="editCollection(item)" *ngIf="canEdit(item.id)">
+      Edit
+    </button>
+    <button mat-menu-item (click)="copyCollection(item)"
+      *ngIf="permissions.includes(SystemPermission.CreateCollections)">
+      Copy
+    </button>
+    <button mat-menu-item (click)="deleteCollection(item)" *ngIf="canManage(item.id)">
+      Delete
+    </button>
+    <button mat-menu-item (click)="createExhibit(item)"
+      *ngIf="permissions.includes(SystemPermission.CreateExhibits)">
+      Create a Exhibit
+    </button>
+  </ng-template>
+</mat-menu>

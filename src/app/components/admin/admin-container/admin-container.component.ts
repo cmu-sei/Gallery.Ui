@@ -5,24 +5,25 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
-import { PermissionService } from 'src/app/generated/api/api/api';
 import {
   Permission,
   User,
-  UserPermission,
 } from 'src/app/generated/api/model/models';
 import { UserDataService } from 'src/app/data/user/user-data.service';
+import { UserQuery } from 'src/app/data/user/user.query';
 import { TopbarView } from 'src/app/components/shared/top-bar/topbar.models';
 import { ComnSettingsService, ComnAuthQuery, Theme } from '@cmusei/crucible-common';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
+import { CurrentUserQuery } from 'src/app/data/user/user.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
-import { TeamDataService } from 'src/app/data/team/team-data.service';
-import { TeamQuery } from 'src/app/data/team/team.query';
+import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { ApplicationArea, SignalRService } from 'src/app/services/signalr.service';
 import { Section } from 'src/app/utilities/enumerations';
 import { environment } from 'src/environments/environment';
-import { HealthCheckService } from 'src/app/generated/api/api/api';
+import { HealthCheckService } from 'src/app/generated/api';
+import { ComnAuthService } from '@cmusei/crucible-common';
+import { SystemPermission } from 'src/app/generated/api';
 
 @Component({
   selector: 'app-admin-container',
@@ -33,8 +34,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   titleText = 'GALLERY';
   displayedSection = '';
   isSidebarOpen = true;
-  isSuperUser = false;
-  isContentDeveloper = false;
   userList: Observable<User[]>;
   permissionList: Observable<Permission[]>;
   pageSize: Observable<number>;
@@ -49,6 +48,9 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   section = Section;
   uiVersion = environment.VERSION;
   apiVersion = 'ERROR!';
+  username = '';
+  permissions: SystemPermission[] = [];
+  readonly SystemPermission = SystemPermission;
 
   constructor(
     @Inject(DOCUMENT) private _document: HTMLDocument,
@@ -57,14 +59,15 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
     private exhibitDataService: ExhibitDataService,
-    private teamDataService: TeamDataService,
-    private teamQuery: TeamQuery,
+    private authService: ComnAuthService,
     private userDataService: UserDataService,
+    private userQuery: UserQuery,
     activatedRoute: ActivatedRoute,
-    private permissionService: PermissionService,
     private healthCheckService: HealthCheckService,
     private settingsService: ComnSettingsService,
-    private authQuery: ComnAuthQuery
+    private authQuery: ComnAuthQuery,
+    private currentUserQuery: CurrentUserQuery,
+    private permissionDataService: PermissionDataService
   ) {
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
@@ -73,19 +76,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       .setAttribute('href', 'assets/img/monitor-dashboard-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Admin';
 
-    this.userDataService.isSuperUser
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((result) => {
-        this.isSuperUser = result;
-        this.isContentDeveloper = this.isContentDeveloper || result;
-      });
-    this.userDataService.isContentDeveloper
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((result) => {
-        this.isContentDeveloper = result || this.isSuperUser;
-      });
-    this.userList = this.userDataService.userList;
-    this.permissionList = this.permissionService.getPermissions();
     this.collectionDataService.load();
     this.pageSize = activatedRoute.queryParamMap.pipe(
       map((params) => parseInt(params.get('pagesize') || '20', 10))
@@ -106,11 +96,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
       this.exhibitDataService.loadByCollection(activeId);
     });
-    this.userDataService.getUsersFromApi();
-    this.userDataService
-      .getPermissionsFromApi()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe();
     // Set the display settings from config file
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
@@ -123,6 +108,13 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
+    this.userList = this.userQuery.selectAll();
+    this.userDataService.load().pipe(take(1)).subscribe();
+    this.permissionDataService
+      .load()
+      .subscribe(
+        (x) => (this.permissions = this.permissionDataService.permissions)
+      );
     this.signalRService
       .startConnection(ApplicationArea.admin)
       .then(() => {
@@ -131,6 +123,14 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       .catch((err) => {
         console.log(err);
       });
+    this.currentUserQuery
+      .select()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cu) => {
+        this.username = cu.name;
+      });
+    this.userDataService.setCurrentUser();
+
   }
 
   exitAdmin() {
@@ -153,7 +153,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   }
 
   logout() {
-    this.userDataService.logout();
+    this.authService.logout();
   }
 
   selectUser(userId: string) {
@@ -161,22 +161,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       queryParams: { userId: userId },
       queryParamsHandling: 'merge',
     });
-  }
-
-  addUserHandler(user: User) {
-    this.userDataService.addUser(user);
-  }
-
-  deleteUserHandler(user: User) {
-    this.userDataService.deleteUser(user);
-  }
-
-  addUserPermissionHandler(userPermission: UserPermission) {
-    this.userDataService.addUserPermission(userPermission);
-  }
-
-  removeUserPermissionHandler(userPermission: UserPermission) {
-    this.userDataService.deleteUserPermission(userPermission);
   }
 
   getSelectedClass(section: string) {
@@ -207,6 +191,14 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
           this.apiVersion = 'ERROR!';
         }
       );
+  }
+
+  canViewCollectionList(): boolean {
+    return this.permissionDataService.canViewCollectionList();
+  }
+
+  canViewExhibitList(): boolean {
+    return this.permissionDataService.canViewExhibitList();
   }
 
   ngOnDestroy() {

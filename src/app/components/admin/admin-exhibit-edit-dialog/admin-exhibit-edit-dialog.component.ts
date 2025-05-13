@@ -36,8 +36,8 @@ export class AdminExhibitEditDialogComponent {
     this.data.exhibit.description,
     []
   );
-  public scenarioIdFormControl = new UntypedFormControl(
-    this.data.exhibit.scenarioId,
+  public exhibitIdFormControl = new UntypedFormControl(
+    this.data.exhibit.exhibitId,
     []
   );
   public currentMoveFormControl = new UntypedFormControl(
@@ -93,9 +93,9 @@ export class AdminExhibitEditDialogComponent {
       case 'description':
         this.data.exhibit.description = this.descriptionFormControl.value;
         break;
-      case 'scenarioId':
-        this.data.exhibit.scenarioId =
-          this.scenarioIdFormControl.value.toString();
+      case 'exhibitId':
+        this.data.exhibit.exhibitId =
+          this.exhibitIdFormControl.value.toString();
         break;
       case 'currentMove':
         this.data.exhibit.currentMove =

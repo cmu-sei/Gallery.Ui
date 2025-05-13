@@ -1,14 +1,12 @@
-/*
- Copyright 2023 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license. See LICENSE.md in the
- project root for license information.
-*/
-
 export * from './article';
 export * from './assembly';
 export * from './callingConventions';
 export * from './card';
 export * from './collection';
+export * from './collectionMembership';
+export * from './collectionPermission';
+export * from './collectionPermissionClaim';
+export * from './collectionRole';
 export * from './constructorInfo';
 export * from './customAttributeData';
 export * from './customAttributeNamedArgument';
@@ -17,15 +15,19 @@ export * from './eventAttributes';
 export * from './eventInfo';
 export * from './exception';
 export * from './exhibit';
+export * from './exhibitMembership';
+export * from './exhibitPermission';
+export * from './exhibitPermissionClaim';
+export * from './exhibitRole';
 export * from './exhibitTeam';
 export * from './fieldAttributes';
 export * from './fieldInfo';
 export * from './genericParameterAttributes';
+export * from './group';
+export * from './groupMembership';
 export * from './healthReport';
 export * from './healthReportEntry';
 export * from './healthStatus';
-export * from './iCustomAttributeProvider';
-export * from './intPtr';
 export * from './itemStatus';
 export * from './layoutKind';
 export * from './memberInfo';
@@ -49,15 +51,15 @@ export * from './securityRuleSet';
 export * from './shareDetails';
 export * from './sourceType';
 export * from './structLayoutAttribute';
+export * from './systemPermission';
+export * from './systemRole';
 export * from './team';
 export * from './teamArticle';
 export * from './teamCard';
 export * from './teamUser';
-export * from './timeSpan';
 export * from './type';
 export * from './typeAttributes';
 export * from './typeInfo';
 export * from './unreadArticles';
 export * from './user';
 export * from './userArticle';
-export * from './userPermission';

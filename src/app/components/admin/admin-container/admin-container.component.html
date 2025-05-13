@@ -15,7 +15,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   ></app-topbar>
 
   <mat-sidenav-container
-    *ngIf="isContentDeveloper"
     class="tall"
     autosize
   >
@@ -46,7 +45,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <mat-divider></mat-divider>
         </mat-list-item>
         <mat-list-item
-          *ngIf="isSuperUser"
+          *ngIf="permissions.includes(SystemPermission.ViewUsers)"
           [ngClass]="getSelectedClass(section.users)"
           id="wrapper"
           (click)="gotoSection(section.users)"
@@ -55,7 +54,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-icon
               class="mdi-24px"
               fontIcon="mdi-account"
-              [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
           </div>
 
@@ -68,6 +66,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </div>
         </mat-list-item>
         <mat-list-item
+          *ngIf="canViewCollectionList()"
           [ngClass]="getSelectedClass(section.collections)"
           id="wrapper"
           (click)="gotoSection(section.collections)"
@@ -76,7 +75,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-icon
               class="mdi-24px"
               fontIcon="mdi-focus-field"
-              [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
           </div>
 
@@ -89,15 +87,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </div>
         </mat-list-item>
         <mat-list-item
-        [ngClass]="getSelectedClass(section.cards)"
-        id="wrapper"
+          *ngIf="canViewCollectionList()"
+          [ngClass]="getSelectedClass(section.cards)"
+          id="wrapper"
           (click)="gotoSection(section.cards)"
         >
           <div class="lefticon">
             <mat-icon
               class="mdi-24px"
               fontIcon="mdi-border-all-variant"
-              [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
           </div>
 
@@ -110,15 +108,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </div>
         </mat-list-item>
         <mat-list-item
-        [ngClass]="getSelectedClass(section.articles)"
-        id="wrapper"
+          *ngIf="canViewCollectionList()"
+          [ngClass]="getSelectedClass(section.articles)"
+          id="wrapper"
           (click)="gotoSection(section.articles)"
         >
           <div class="lefticon">
             <mat-icon
               class="mdi-24px"
               fontIcon="mdi-format-list-bulleted-type"
-              [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
           </div>
 
@@ -131,15 +129,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </div>
         </mat-list-item>
         <mat-list-item
-        [ngClass]="getSelectedClass(section.exhibits)"
-        id="wrapper"
+          *ngIf="canViewExhibitList()"
+          [ngClass]="getSelectedClass(section.exhibits)"
+          id="wrapper"
           (click)="gotoSection(section.exhibits)"
         >
           <div class="lefticon">
             <mat-icon
               class="mdi-24px"
               fontIcon="mdi-monitor-dashboard"
-              [ngStyle]="{ color: topbarColor }"
             ></mat-icon>
           </div>
 
@@ -149,6 +147,36 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <button aria-labelledby="exhibitsText" mat-icon-button>
               <mat-icon class="icon-color" svgIcon="ic_chevron_right"></mat-icon>
             </button>
+          </div>
+        </mat-list-item>
+        <mat-list-item *ngIf="permissions.includes(SystemPermission.ViewRoles)">
+          <div class="showhand" id="wrapper" (click)="gotoSection(section.roles)">
+            <div id="lefticon">
+              <mat-icon class="mdi-24px" fontIcon="mdi-lock"></mat-icon>
+            </div>
+
+            <div id="content">Roles</div>
+
+            <div class="pull-right" id="rightcontext">
+              <button mat-icon-button style="outline: none">
+                <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-list-item>
+        <mat-list-item *ngIf="permissions.includes(SystemPermission.ViewGroups)">
+          <div class="showhand" id="wrapper" (click)="gotoSection(section.groups)">
+            <div id="lefticon">
+              <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
+            </div>
+
+            <div id="content">Groups</div>
+
+            <div class="pull-right" id="rightcontext">
+              <button mat-icon-button style="outline: none">
+                <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
+              </button>
+            </div>
           </div>
         </mat-list-item>
       </mat-nav-list>
@@ -169,37 +197,23 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       />
     </mat-sidenav>
     <mat-sidenav-content>
-      <span *ngIf="isSuperUser && displayedSection === section.users">
-        <app-admin-users
-          [userList]="userList | async"
-          [permissionList]="permissionList | async"
-          (removeUserPermission)="removeUserPermissionHandler($event)"
-          (addUserPermission)="addUserPermissionHandler($event)"
-          (addUser)="addUserHandler($event)"
-          (deleteUser)="deleteUserHandler($event)"
-        >
-        </app-admin-users>
+      <span *ngIf="permissions.includes(SystemPermission.ViewUsers) && displayedSection === section.users">
+        <app-admin-users></app-admin-users>
       </span>
-      <span *ngIf="isContentDeveloper && displayedSection === section.collections">
-        <app-admin-collections
-        >
-        </app-admin-collections>
+      <span *ngIf="canViewCollectionList() && displayedSection === section.collections">
+        <app-admin-collections></app-admin-collections>
       </span>
-      <span *ngIf="isContentDeveloper && displayedSection === section.exhibits">
+      <span *ngIf="canViewExhibitList() && displayedSection === section.exhibits">
         <app-admin-exhibits
           [userList]="userList | async"
         >
         </app-admin-exhibits>
       </span>
-      <span *ngIf="isContentDeveloper && displayedSection === section.cards">
-        <app-admin-cards
-        >
-        </app-admin-cards>
+      <span *ngIf="canViewCollectionList() && displayedSection === section.cards">
+        <app-admin-cards></app-admin-cards>
       </span>
-      <span *ngIf="isContentDeveloper && displayedSection === section.articles">
-        <app-admin-articles
-        >
-        </app-admin-articles>
+      <span *ngIf="canViewCollectionList() && displayedSection === section.articles">
+        <app-admin-articles></app-admin-articles>
       </span>
     </mat-sidenav-content>
   </mat-sidenav-container>

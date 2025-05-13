@@ -305,19 +305,9 @@ export class ExhibitDataService {
   uploadJson(file: File, observe: any, reportProgress: boolean) {
     this.exhibitStore.setLoading(true);
     this.exhibitService
-      .uploadJson(file, observe, reportProgress)
-      .subscribe((event) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          const uploadProgress = Math.round((100 * event.loaded) / event.total);
-          this.uploadProgress.next(uploadProgress);
-        } else if (event instanceof HttpResponse) {
-          this.uploadProgress.next(0);
-          this.exhibitStore.setLoading(false);
-          if (event.status === 200) {
-            const exhibit = event.body;
-            this.exhibitStore.upsert(exhibit.id, exhibit);
-          }
-        }
+      .uploadJsonFiles(file, observe, reportProgress)
+      .subscribe((exhibit) => {
+        this.exhibitStore.upsert(exhibit.id, exhibit);
       },
       (error) => {
         this.exhibitStore.setLoading(false);

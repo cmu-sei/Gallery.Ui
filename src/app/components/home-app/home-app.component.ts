@@ -1,16 +1,21 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import {
+  ComnAuthService,
   ComnSettingsService,
   Theme,
   ComnAuthQuery,
 } from '@cmusei/crucible-common';
 import { UserDataService } from 'src/app/data/user/user-data.service';
+import { UserQuery } from 'src/app/data/user/user.query';
+import { CurrentUserQuery } from 'src/app/data/user/user.query';
+import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
+import { SystemPermission } from 'src/app/generated/api';
 import { TopbarView } from './../shared/top-bar/topbar.models';
 import {
   ApplicationArea,
@@ -40,7 +45,7 @@ import { XApiService } from 'src/app/generated/api';
   templateUrl: './home-app.component.html',
   styleUrls: ['./home-app.component.scss'],
 })
-export class HomeAppComponent implements OnDestroy {
+export class HomeAppComponent implements OnDestroy, OnInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
   apiMessage =
     'The GALLERY API web service appears to be experiencing technical difficulties.';
@@ -60,7 +65,6 @@ export class HomeAppComponent implements OnDestroy {
   exhibitList: Exhibit[] = [];
   teamList: Team[] = [];
   selectedTeamId = '';
-  isContentDeveloper$ = this.userDataService.isContentDeveloper.asObservable();
   isAuthorizedUser = false;
   isSidebarOpen = true;
   private unsubscribe$ = new Subject();
@@ -71,10 +75,16 @@ export class HomeAppComponent implements OnDestroy {
   TopbarView = TopbarView;
   theme$: Observable<Theme>;
   public filterString: string;
-  isStarted = false;
+  username = '';
+  permissions: SystemPermission[] = [];
+  readonly SystemPermission = SystemPermission;
 
   constructor(
+    private authService: ComnAuthService,
     private userDataService: UserDataService,
+    private userQuery: UserQuery,
+    private currentUserQuery: CurrentUserQuery,
+    private permissionDataService: PermissionDataService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private settingsService: ComnSettingsService,
@@ -102,19 +112,22 @@ export class HomeAppComponent implements OnDestroy {
       ? this.settingsService.settings.AppTopBarHexTextColor
       : this.topbarTextColor;
     this.titleText = this.settingsService.settings.AppTopBarText;
-    // subscribe to the logged in user
-    this.userDataService.loggedInUser.pipe(takeUntil(this.unsubscribe$)).subscribe((user) => {
-      if (user && user.profile && user.profile.sub) {
-        this.loggedInUser.id = user.profile.sub;
-        this.loggedInUser.name = user.profile.name;
-        this.startup();
-      }
-    });
-    setTimeout(() => {
-      if (!this.isStarted) {
-        window.location.reload();
-      }
-    }, 10000);
+  }
+
+  ngOnInit() {
+    this.currentUserQuery
+      .select()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cu) => {
+        this.username = cu.name;
+        this.isAuthorizedUser = !!cu.id;
+      });
+    this.userDataService.setCurrentUser();
+    this.permissionDataService
+      .load()
+      .subscribe(
+        (x) => (this.permissions = this.permissionDataService.permissions)
+      );
   }
 
   startup() {
@@ -230,12 +243,12 @@ export class HomeAppComponent implements OnDestroy {
         }
       });
     // subscribe to the user list
-    this.userDataService.userList
+    this.userQuery.selectAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((users) => {
         this.userList = users;
       });
-    this.userDataService.getUsersFromApi();
+    this.userDataService.load().pipe(take(1)).subscribe();
     // subscribe to teams
     this.teamQuery
       .selectAll()
@@ -247,11 +260,6 @@ export class HomeAppComponent implements OnDestroy {
           this.setMyTeam();
         }
       });
-    this.userDataService.isAuthorizedUser
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((isAuthorized) => {
-        this.isAuthorizedUser = isAuthorized;
-      });
     this.signalRService
       .startConnection(ApplicationArea.home)
       .then(() => {
@@ -261,7 +269,6 @@ export class HomeAppComponent implements OnDestroy {
         console.log(err);
       });
     this.filterString = '';
-    this.isStarted = true;
   }
 
   setMyTeam() {
@@ -296,7 +303,7 @@ export class HomeAppComponent implements OnDestroy {
   }
 
   logout() {
-    this.userDataService.logout();
+    this.authService.logout();
   }
 
   inIframe() {
@@ -412,6 +419,18 @@ export class HomeAppComponent implements OnDestroy {
     const queryParams = { exhibit: exhibitId };
     this.uiDataService.setSection(exhibitId, Section.archive);
     return queryParams;
+  }
+
+  canViewCollectionList(): boolean {
+    return this.permissionDataService.canViewCollectionList();
+  }
+
+  canViewExhibitList(): boolean {
+    return this.permissionDataService.canViewExhibitList();
+  }
+
+  canViewAdministration() {
+    return this.permissionDataService.canViewAdiminstration();
   }
 
   ngOnDestroy() {
