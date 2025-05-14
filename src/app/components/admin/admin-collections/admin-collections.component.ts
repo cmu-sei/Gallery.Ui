@@ -33,6 +33,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   newCollectionName = '';
   editCollection: Collection = {};
   originalCollection: Collection = {};
+  selectedCollectionId = '';
   filteredCollectionList: Collection[] = [];
   displayedCollections: Collection[] = [];
   filterControl = new UntypedFormControl();
