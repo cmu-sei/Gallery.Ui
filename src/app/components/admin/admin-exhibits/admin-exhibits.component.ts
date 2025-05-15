@@ -63,23 +63,12 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     private teamDataService: TeamDataService,
     private teamUserDataService: TeamUserDataService
   ) {
-    this.exhibitDataService.unload();
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
     // observe exhibits
     this.exhibitQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
-      this.exhibitList = [];
-      exhibits.forEach(exhibit => {
-        this.exhibitList.push({ ...exhibit });
-        if (exhibit.id === this.editExhibit.id) {
-          this.editExhibit = { ...exhibit};
-        }
-        if (!this.collectionList.some(c => c.id === exhibit.collectionId)) {
-          this.collectionDataService.load();
-        }
-      });
-      this.applyFilter();
+      this.setExhibitList(exhibits);
     });
     // observe collections
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
@@ -101,25 +90,25 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     // observe exhibits loading
     this.exhibitQuery.selectLoading().pipe(takeUntil(this.unsubscribe$)).subscribe((isLoading) => {
       this.isBusy = isLoading;
-      if (!isLoading && !this.selectedCollectionId) {
-        this.router.navigate([], {
-          queryParams: {
-            section: 'exhibits'
-          }
-        });
+      if (!isLoading) {
+        const exhibits = this.exhibitQuery.getAll();
+        this.setExhibitList(exhibits);
       }
     });
   }
 
-  ngOnInit() {
-    this.loadInitialData();
+  setExhibitList(exhibits: Exhibit[]) {
+    this.exhibitList = [];
+    exhibits.forEach(exhibit => {
+      this.exhibitList.push({ ...exhibit });
+      if (exhibit.id === this.editExhibit.id) {
+        this.editExhibit = { ...exhibit};
+      }
+    });
+    this.applyFilter();
   }
 
-  loadInitialData() {
-    this.exhibitQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
-      this.exhibitList = Array.from(exhibits);
-      this.applyFilter();
-    });
+  ngOnInit() {
   }
 
   addOrEditExhibit(exhibit: Exhibit) {
@@ -244,12 +233,12 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   getCollectionName(collectionId: string) {
-    return this.collectionList.find(c => c.id === collectionId).name;
+    return this.collectionList?.find(c => c.id === collectionId).name;
   }
 
   getUserName(userId: string) {
     if (this.userList && this.userList.length > 0) {
-      const user = this.userList.find(item => item.id === userId);
+      const user = this.userList?.find(item => item.id === userId);
       return user ? user.name : '';
     }
     return '';

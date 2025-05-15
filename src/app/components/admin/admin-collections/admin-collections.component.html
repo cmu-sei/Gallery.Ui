@@ -52,7 +52,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <span class="mat-header-cell first-cell">
         <button
           mat-icon-button
-          (click)="addOrEditCollection(null)"
+          (click)="addOrEditCollection(null); $event.stopPropagation()"
           style="outline: none; margin-left: 20px;"
           title="Add Collection"
           [disabled]="isBusy"
@@ -81,7 +81,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <div class="panel-div">
             <button
               mat-icon-button
-              (click)="addOrEditCollection(collection)"
+              (click)="addOrEditCollection(collection); $event.stopPropagation()"
               style="outline: none;"
               title="Edit {{ collection.name }}"
               [disabled]="isBusy"
@@ -106,7 +106,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
               </button>
             <button
               mat-icon-button
-              (click)="deleteCollection(collection)"
+              (click)="deleteCollection(collection); $event.stopPropagation()"
               style="outline: none;"
               title="Delete {{ collection.name }}"
               [disabled]="isBusy"

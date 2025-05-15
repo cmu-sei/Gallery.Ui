@@ -140,6 +140,7 @@ export class ExhibitDataService {
           this.exhibitStore.set(sortedExhibits);
         },
         (error) => {
+          console.log(error);
           this.exhibitStore.set([]);
         }
       );
@@ -167,6 +168,7 @@ export class ExhibitDataService {
           this.exhibitStore.set(sortedExhibits);
         },
         (error) => {
+          console.log(error);
           this.exhibitStore.set([]);
         }
       );
@@ -191,11 +193,10 @@ export class ExhibitDataService {
             this.exhibitStore.set(exhibits);
           },
           (error) => {
+            console.log(error);
             this.exhibitStore.set([]);
           }
         );
-    } else {
-      this.exhibitStore.set([]);
     }
   }
 
@@ -217,6 +218,7 @@ export class ExhibitDataService {
           this.exhibitStore.set(exhibits);
         },
         (error) => {
+          console.log(error);
           this.exhibitStore.set([]);
         }
       );

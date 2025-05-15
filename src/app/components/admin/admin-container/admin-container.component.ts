@@ -17,6 +17,7 @@ import { CollectionDataService } from 'src/app/data/collection/collection-data.s
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { CurrentUserQuery } from 'src/app/data/user/user.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
+import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { ApplicationArea, SignalRService } from 'src/app/services/signalr.service';
 import { Section } from 'src/app/utilities/enumerations';
@@ -59,6 +60,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
     private exhibitDataService: ExhibitDataService,
+    private exhibitQuery: ExhibitQuery,
     private authService: ComnAuthService,
     private userDataService: UserDataService,
     private userQuery: UserQuery,

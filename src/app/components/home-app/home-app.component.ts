@@ -1,6 +1,8 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
@@ -80,6 +82,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   readonly SystemPermission = SystemPermission;
 
   constructor(
+    @Inject(DOCUMENT) private _document: HTMLDocument,
     private authService: ComnAuthService,
     private userDataService: UserDataService,
     private userQuery: UserQuery,
@@ -112,6 +115,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       ? this.settingsService.settings.AppTopBarHexTextColor
       : this.topbarTextColor;
     this.titleText = this.settingsService.settings.AppTopBarText;
+    this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle;
   }
 
   ngOnInit() {
@@ -121,6 +125,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .subscribe((cu) => {
         this.username = cu.name;
         this.isAuthorizedUser = !!cu.id;
+        this.startup();
       });
     this.userDataService.setCurrentUser();
     this.permissionDataService
@@ -324,6 +329,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   loadExhibitData() {
     // process the change
     this.exhibitDataService.setActive(this.exhibitId);
+    console.log('load my exhibit teams');
     this.teamDataService.loadMine(this.exhibitId);
   }
 
