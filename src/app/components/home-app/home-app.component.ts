@@ -59,7 +59,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   currentMove = -1;
   currentInject = -1;
   selectedSection: string = Section.none;
-  loggedInUser = { id: '', name: '' };
+  loggedInUserId = '';
   userList: User[] = [];
   collectionList: Collection[] = [];
   collectionLoadCount = 0;
@@ -123,9 +123,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .select()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((cu) => {
-        this.username = cu.name;
-        this.isAuthorizedUser = !!cu.id;
-        this.startup();
+        if (cu.name) {
+          this.username = cu.name;
+          this.isAuthorizedUser = !!cu.id;
+          this.loggedInUserId = cu.id;
+          this.startup();
+        }
       });
     this.userDataService.setCurrentUser();
     this.permissionDataService
@@ -280,7 +283,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     let myTeamId = '';
     this.teamList.forEach((t) => {
       t.users.forEach((u) => {
-        if (u && u.id === this.loggedInUser.id) {
+        if (u && u.id === this.loggedInUserId) {
           myTeamId = t.id;
           this.teamDataService.setMyTeam(t.id);
         }
@@ -329,7 +332,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   loadExhibitData() {
     // process the change
     this.exhibitDataService.setActive(this.exhibitId);
-    console.log('load my exhibit teams');
     this.teamDataService.loadMine(this.exhibitId);
   }
 
