@@ -6,6 +6,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { Team, TeamCard } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
+import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
@@ -47,6 +48,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
     public dialogService: DialogService,
+    private cardDataService: CardDataService,
     private cardQuery: CardQuery,
     private teamQuery: TeamQuery,
     private teamCardDataService: TeamCardDataService,
@@ -74,6 +76,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.cardDataService.loadByExhibit(this.exhibitId);
     this.teamCardDataService.loadByExhibit(this.exhibitId);
     this.filterControl.setValue(this.filterString);
     this.sortChanged(this.sort);
@@ -184,12 +187,12 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   }
 
   getCardName(cardId: string) {
-    const card = this.cardList.find(t => t.id === cardId);
+    const card = this.cardList?.find(t => t.id === cardId);
     return card ? card.name : ' ';
   }
 
   getTeamName(teamId: string) {
-    const team = this.teamList.find(t => t.id === teamId);
+    const team = this.teamList?.find(t => t.id === teamId);
     return team ? team.name : ' ';
   }
 

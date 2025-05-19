@@ -13,7 +13,7 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class GroupMembershipService {
+export class GroupMembershipDataService {
   private groupMembershipSubject = new BehaviorSubject<GroupMembership[]>([]);
   groupMemberships$ = this.groupMembershipSubject.asObservable();
 

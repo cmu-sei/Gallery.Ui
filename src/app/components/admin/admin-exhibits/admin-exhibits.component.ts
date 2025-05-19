@@ -36,7 +36,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   exhibitList: Exhibit[];
   isLoading = false;
   topbarColor = '#ef3a47';
-  editExhibit: Exhibit = {};
+  selectedExhibit: Exhibit = {};
   originalExhibit: Exhibit = {};
   filteredExhibitList: Exhibit[] = [];
   filterControl = new UntypedFormControl();
@@ -101,8 +101,8 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     this.exhibitList = [];
     exhibits.forEach(exhibit => {
       this.exhibitList.push({ ...exhibit });
-      if (exhibit.id === this.editExhibit.id) {
-        this.editExhibit = { ...exhibit};
+      if (exhibit.id === this.selectedExhibit.id) {
+        this.selectedExhibit = { ...exhibit};
       }
     });
     this.applyFilter();
@@ -139,13 +139,13 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   togglePanel(exhibit: Exhibit) {
-    this.editExhibit = this.editExhibit.id === exhibit.id ? this.editExhibit = {} : this.editExhibit = { ...exhibit};
-    this.exhibitDataService.setActive(this.editExhibit.id);
+    this.selectedExhibit = this.selectedExhibit.id === exhibit.id ? this.selectedExhibit = {} : this.selectedExhibit = { ...exhibit};
+    this.exhibitDataService.setActive(this.selectedExhibit.id);
     // if an exhibit has been selected, load the exhibit, so that we have its details
-    if (this.editExhibit.id) {
-      this.exhibitDataService.loadById(this.editExhibit.id);
-      this.teamUserDataService.loadByExhibit(this.editExhibit.id);
-      this.teamDataService.loadByExhibitId(this.editExhibit.id);
+    if (this.selectedExhibit.id) {
+      this.exhibitDataService.loadById(this.selectedExhibit.id);
+      this.teamUserDataService.loadByExhibit(this.selectedExhibit.id);
+      this.teamDataService.loadByExhibitId(this.selectedExhibit.id);
     }
   }
 
@@ -157,7 +157,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   selectExhibit(exhibit: Exhibit) {
-    this.editExhibit = { ...exhibit };
+    this.selectedExhibit = { ...exhibit };
     this.originalExhibit = { ...exhibit };
     return false;
   }
@@ -184,7 +184,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   cancelEdit() {
-    this.editExhibit = { ... this.originalExhibit };
+    this.selectedExhibit = { ... this.originalExhibit };
   }
 
   applyFilter() {

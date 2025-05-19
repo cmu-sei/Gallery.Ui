@@ -55,7 +55,6 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
     private cardDataService: CardDataService,
     private cardQuery: CardQuery
   ) {
-    this.cardDataService.unload();
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
@@ -84,7 +83,6 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
 
     activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.selectedCollectionId = params.get('collection');
-      this.cardDataService.unload();
       if (this.selectedCollectionId) {
         this.cardDataService.loadByCollection(this.selectedCollectionId);
       }

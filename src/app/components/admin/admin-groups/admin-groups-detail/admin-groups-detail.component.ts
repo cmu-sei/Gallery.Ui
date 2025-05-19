@@ -6,7 +6,7 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { combineLatest, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GroupMembershipService } from 'src/app/data/group/group-membership.service';
+import { GroupMembershipDataService } from 'src/app/data/group/group-membership.service';
 import { SignalRService } from 'src/app/services/signalr.service';
 import { UserQuery } from 'src/app/data/user/user.query';
 
@@ -26,16 +26,16 @@ export class AdminGroupsDetailComponent implements OnInit, OnChanges {
 
   constructor(
     private userQuery: UserQuery,
-    private groupMembershipService: GroupMembershipService,
+    private groupMembershipDataService: GroupMembershipDataService,
     private signalRService: SignalRService
   ) {}
 
   ngOnInit(): void {
-    this.groupMembershipService.loadMemberships(this.groupId).subscribe();
+    this.groupMembershipDataService.loadMemberships(this.groupId).subscribe();
   }
 
   ngOnChanges() {
-    this.memberships$ = this.groupMembershipService.selectMemberships(
+    this.memberships$ = this.groupMembershipDataService.selectMemberships(
       this.groupId
     );
 
@@ -64,12 +64,12 @@ export class AdminGroupsDetailComponent implements OnInit, OnChanges {
   }
 
   createMembership(userId) {
-    this.groupMembershipService
+    this.groupMembershipDataService
       .createMembership(this.groupId, { groupId: this.groupId, userId: userId })
       .subscribe();
   }
 
   deleteMembership(id: string) {
-    this.groupMembershipService.deleteMembership(id).subscribe();
+    this.groupMembershipDataService.deleteMembership(id).subscribe();
   }
 }

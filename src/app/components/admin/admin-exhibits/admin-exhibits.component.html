@@ -67,7 +67,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
   <mat-expansion-panel
     *ngFor="let exhibit of paginateExhibits(); trackBy:getExhibitId"
-    [expanded]="editExhibit.id === exhibit.id"
+    [expanded]="selectedExhibit.id === exhibit.id"
   >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(exhibit); $event.stopPropagation()">
       <span class="mat-cell first-cell center-self">
@@ -119,7 +119,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         {{ getUserName(exhibit.createdBy) }}
       </span>
       <span class="mat-cell three-cell center-self">
-        {{ exhibit.exhibitId }}
+        {{ exhibit.scenarioId }}
       </span>
       <span class="mat-cell one-cell center-self">
         {{ exhibit.currentMove }}
@@ -128,7 +128,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         {{ exhibit.currentInject }}
       </span>
     </mat-expansion-panel-header>
-    <div class="sub-container" *ngIf="editExhibit.id === exhibit.id">
+    <div class="sub-container" *ngIf="selectedExhibit.id === exhibit.id">
       <mat-expansion-panel class="bottom-space">
         <mat-expansion-panel-header>
           <h4>Exhibit Teams</h4>
@@ -144,7 +144,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-team-cards
           [teamList]="teamList"
           [collectionId]="selectedCollectionId"
-          [exhibitId]="editExhibit.id"
+          [exhibitId]="selectedExhibit.id"
         >
         </app-admin-team-cards>
       </mat-expansion-panel>
@@ -158,7 +158,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         >
         </app-admin-exhibit-articles>
       </mat-expansion-panel>
-      <mat-expansion-panel>
+      <mat-expansion-panel class="bottom-space">
         <mat-expansion-panel-header>
           <h4>Observers</h4>
         </mat-expansion-panel-header>
@@ -166,6 +166,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           [exhibitId]="exhibit.id"
         >
         </app-admin-observers>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <h4>Memberships</h4>
+        </mat-expansion-panel-header>
+        <app-exhibit-memberships [exhibitId]="selectedExhibit.id" [embedded]="false" ></app-exhibit-memberships>
       </mat-expansion-panel>
     </div>
   </mat-expansion-panel>

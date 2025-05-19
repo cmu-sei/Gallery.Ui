@@ -114,8 +114,6 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
 
     activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.selectedCollectionId = params.get('collection');
-      this.articleDataService.unload();
-      this.cardDataService.unload();
       this.filteredArticleList = [];
       this.articleList = [];
       if (this.selectedCollectionId) {
