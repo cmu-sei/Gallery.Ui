@@ -21,7 +21,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="nameFormControl" placeholder="Name" (blur)="saveExhibit('name')"
-          value="{{data.exhibit.name}}">
+          value="{{data.exhibit.name}}" [disabled]="!data.canEdit">
       </mat-form-field>
     </div>
   </div>
@@ -30,7 +30,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="descriptionFormControl" placeholder="Description"
-          (blur)="saveExhibit('description')" value="{{data.exhibit.description}}">
+          (blur)="saveExhibit('description')" value="{{data.exhibit.description}}" [disabled]="!data.canEdit">
       </mat-form-field>
     </div>
   </div>
@@ -39,7 +39,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="currentMoveFormControl" placeholder="Current Move" (blur)="saveExhibit('currentMove')"
-          value="{{data.exhibit.currentMove}}">
+          value="{{data.exhibit.currentMove}}" [disabled]="!data.canEdit">
         <mat-error *ngIf="currentMoveFormControl.hasError('required')">
           Current Move is <strong>required</strong>
         </mat-error>
@@ -51,7 +51,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="currentInjectFormControl" placeholder="Current Inject" (blur)="saveExhibit('currentInject')"
-          value="{{data.exhibit.currentInject}}">
+          value="{{data.exhibit.currentInject}}" [disabled]="!data.canEdit">
         <mat-error *ngIf="currentInjectFormControl.hasError('required')">
           Current Inject is <strong>required</strong>
         </mat-error>
@@ -63,14 +63,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="exhibitIdFormControl" placeholder="Scenario ID" (blur)="saveExhibit('scenarioId')"
-          value="{{data.exhibit.scenarioId}}">
+          value="{{data.exhibit.scenarioId}}" [disabled]="!data.canEdit">
       </mat-form-field>
     </div>
   </div>
 
   <div class="cssLayoutRowStartCenter bottom-button">
     <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
+      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree() || !data.canEdit" style="margin-left: 40px;">Save</button>
     </div>
     <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>

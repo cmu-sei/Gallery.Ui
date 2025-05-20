@@ -27,6 +27,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./admin-articles.component.scss'],
 })
 export class AdminArticlesComponent implements OnInit, OnDestroy {
+  @Input() canEdit: boolean;
   pageSize = 10;
   pageIndex = 0;
   newArticle: Article = { id: '', name: '' };

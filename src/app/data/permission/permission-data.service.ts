@@ -47,18 +47,6 @@ export class PermissionDataService {
     );
   }
 
-  canViewAdiminstration() {
-    return this._permissions.some((y) => y.startsWith('View'));
-  }
-
-  canViewCollectionList() {
-    return this._permissions.some((y) => y.endsWith('Collections'));
-  }
-
-  canViewExhibitList() {
-    return this._permissions.some((y) => y.endsWith('Exhibits'));
-  }
-
   hasPermission(permission: SystemPermission) {
     return this._permissions.includes(permission);
   }

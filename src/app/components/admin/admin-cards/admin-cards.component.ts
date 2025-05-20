@@ -25,6 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./admin-cards.component.scss'],
 })
 export class AdminCardsComponent implements OnInit, OnDestroy {
+  @Input() canEdit: boolean;
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];

@@ -30,6 +30,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   @Input() teamList: Team[];
   @Input() collectionId: string;
   @Input() exhibitId: string;
+  @Input() canEdit: boolean;
   cardList: Card[] = [];
   teamCardList: TeamCard[] = [];
   selectedTeamId = '';

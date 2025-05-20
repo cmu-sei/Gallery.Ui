@@ -127,7 +127,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <span *ngIf="exhibitId && selectedSection === 'wall'">
       <div>
         <app-wall
-          [showAdminButton]="canViewAdministration()"
+          [showAdminButton]="canViewAdministration"
           (changeTeam)="changeTeam($event)"
           (sectionSelected)="gotoSection($event)"
           ></app-wall>
@@ -136,7 +136,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
     <span *ngIf="exhibitId && selectedSection === 'archive'">
       <app-archive
-        [showAdminButton]="canViewAdministration()"
+        [showAdminButton]="canViewAdministration"
         (changeTeam)="changeTeam($event)"
         (sectionSelected)="gotoSection($event)"
         ></app-archive>

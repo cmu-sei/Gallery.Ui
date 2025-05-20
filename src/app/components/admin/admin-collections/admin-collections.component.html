@@ -55,7 +55,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (click)="addOrEditCollection(null); $event.stopPropagation()"
           style="outline: none; margin-left: 20px;"
           title="Add Collection"
-          [disabled]="isBusy"
+          [disabled]="isBusy || !canCreate"
         >
           <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
         </button>
@@ -63,7 +63,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           mat-icon-button
           (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
           title="Upload Collection"
-          [disabled]="isBusy"
+          [disabled]="isBusy || !canCreate"
         >
           <mat-icon class="mdi-24px" fontIcon="mdi-upload" alt="Upload"></mat-icon>
         </button>
@@ -84,7 +84,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
               (click)="addOrEditCollection(collection); $event.stopPropagation()"
               style="outline: none;"
               title="Edit {{ collection.name }}"
-              [disabled]="isBusy"
+              [disabled]="isBusy || !canEdit"
               >
               <mat-icon class="mdi-18px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
             </button>
@@ -92,7 +92,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
                 mat-icon-button
                 (click)="copyCollection(collection.id); $event.stopPropagation();"
                 title="Copy {{ collection.description }}"
-                [disabled]="isBusy"
+                [disabled]="isBusy || !canCreate"
               >
                 <mat-icon class="mdi-18px" fontIcon="mdi-content-copy" alt="Copy"></mat-icon>
               </button>
@@ -109,7 +109,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
               (click)="deleteCollection(collection); $event.stopPropagation()"
               style="outline: none;"
               title="Delete {{ collection.name }}"
-              [disabled]="isBusy"
+              [disabled]="isBusy || !canEdit"
             >
               <mat-icon class="mdi-18px self-center" fontIcon="mdi-trash-can"></mat-icon>
             </button>

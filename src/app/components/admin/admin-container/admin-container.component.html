@@ -34,7 +34,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-divider></mat-divider>
       </mat-list-item>
       <mat-list-item
-        *ngIf="canViewCollectionList()"
+        *ngIf="canViewCollections"
         [ngClass]="getSelectedClass(section.collections)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.collections)">
@@ -53,7 +53,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-list-item>
       <mat-list-item
-        *ngIf="canViewCollectionList()"
+        *ngIf="canViewCollections"
         [ngClass]="getSelectedClass(section.cards)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.cards)">
@@ -72,7 +72,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-list-item>
       <mat-list-item
-        *ngIf="canViewCollectionList()"
+        *ngIf="canViewCollections"
         [ngClass]="getSelectedClass(section.articles)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.articles)">
@@ -91,7 +91,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-list-item>
       <mat-list-item
-        *ngIf="canViewExhibitList()"
+        *ngIf="canViewExhibits"
         [ngClass]="getSelectedClass(section.exhibits)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.exhibits)">
@@ -189,20 +189,25 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       [topbarTextColor]="topbarTextColor"
       [imageFilePath]="topbarImage"
     ></app-topbar>
-    <span *ngIf="canViewCollectionList() && displayedSection === section.collections">
-      <app-admin-collections></app-admin-collections>
+    <span *ngIf="canViewCollections && displayedSection === section.collections">
+      <app-admin-collections
+        [canEdit]="canEditCollections"
+        [canCreate]="canCreateCollections"
+      ></app-admin-collections>
     </span>
-    <span *ngIf="canViewExhibitList() && displayedSection === section.exhibits">
+    <span *ngIf="canViewExhibits && displayedSection === section.exhibits">
       <app-admin-exhibits
         [userList]="userList | async"
+        [canEdit]="canEditExhibits"
+        [canCreate]="canCreateExhibits"
       >
       </app-admin-exhibits>
     </span>
-    <span *ngIf="canViewCollectionList() && displayedSection === section.cards">
-      <app-admin-cards></app-admin-cards>
+    <span *ngIf="canViewCollections && displayedSection === section.cards">
+      <app-admin-cards [canEdit]="canEditCollections"></app-admin-cards>
     </span>
-    <span *ngIf="canViewCollectionList() && displayedSection === section.articles">
-      <app-admin-articles></app-admin-articles>
+    <span *ngIf="canViewCollections && displayedSection === section.articles">
+      <app-admin-articles [canEdit]="canEditCollections"></app-admin-articles>
     </span>
     <span *ngIf="permissions.includes(SystemPermission.ViewUsers) && displayedSection === section.users">
       <app-admin-users></app-admin-users>

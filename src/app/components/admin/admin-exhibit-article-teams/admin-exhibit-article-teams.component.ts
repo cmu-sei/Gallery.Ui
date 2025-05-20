@@ -27,6 +27,7 @@ import { takeUntil } from 'rxjs/operators';
 export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;
   @Input() articleId: string;
+  @Input() canEdit: boolean;
   articleTeams: Team[] = [];
   exhibitTeams: Team[] = [];
 

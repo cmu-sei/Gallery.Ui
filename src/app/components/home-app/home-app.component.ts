@@ -79,6 +79,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   public filterString: string;
   username = '';
   permissions: SystemPermission[] = [];
+  canViewAdministration = false;
   readonly SystemPermission = SystemPermission;
 
   constructor(
@@ -134,7 +135,10 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.permissionDataService
       .load()
       .subscribe(
-        (x) => (this.permissions = this.permissionDataService.permissions)
+        (x) => {
+          this.permissions = this.permissionDataService.permissions;
+          this.canViewAdministration = this.permissions.some((y) => y.startsWith('View'));
+        }
       );
   }
 
@@ -427,18 +431,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     const queryParams = { exhibit: exhibitId };
     this.uiDataService.setSection(exhibitId, Section.archive);
     return queryParams;
-  }
-
-  canViewCollectionList(): boolean {
-    return this.permissionDataService.canViewCollectionList();
-  }
-
-  canViewExhibitList(): boolean {
-    return this.permissionDataService.canViewExhibitList();
-  }
-
-  canViewAdministration() {
-    return this.permissionDataService.canViewAdiminstration();
   }
 
   ngOnDestroy() {

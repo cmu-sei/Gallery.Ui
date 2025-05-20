@@ -17,7 +17,6 @@ import { CollectionDataService } from 'src/app/data/collection/collection-data.s
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { CurrentUserQuery } from 'src/app/data/user/user.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
-import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { ApplicationArea, SignalRService } from 'src/app/services/signalr.service';
 import { Section } from 'src/app/utilities/enumerations';
@@ -51,6 +50,12 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   apiVersion = 'ERROR!';
   username = '';
   permissions: SystemPermission[] = [];
+  canViewCollections = false;
+  canEditCollections = false;
+  canCreateCollections = false;
+  canViewExhibits = false;
+  canEditExhibits = false;
+  canCreateExhibits = false;
   readonly SystemPermission = SystemPermission;
 
   constructor(
@@ -60,7 +65,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
     private exhibitDataService: ExhibitDataService,
-    private exhibitQuery: ExhibitQuery,
     private authService: ComnAuthService,
     private userDataService: UserDataService,
     private userQuery: UserQuery,
@@ -115,7 +119,15 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.permissionDataService
       .load()
       .subscribe(
-        (x) => (this.permissions = this.permissionDataService.permissions)
+        (x) => {
+          this.permissions = this.permissionDataService.permissions;
+          this.canViewCollections = this.permissions.some((y) => y === 'ViewCollections');
+          this.canEditCollections = this.permissions.some((y) => y === 'EditCollections');
+          this.canCreateCollections = this.permissions.some((y) => y === 'CreateCollections');
+          this.canViewExhibits = this.permissions.some((y) => y === 'ViewExhibits');
+          this.canEditExhibits = this.permissions.some((y) => y === 'EditExhibits');
+          this.canCreateExhibits = this.permissions.some((y) => y === 'CreateExhibits');
+        }
       );
     this.signalRService
       .startConnection(ApplicationArea.admin)
@@ -193,14 +205,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
           this.apiVersion = 'ERROR!';
         }
       );
-  }
-
-  canViewCollectionList(): boolean {
-    return this.permissionDataService.canViewCollectionList();
-  }
-
-  canViewExhibitList(): boolean {
-    return this.permissionDataService.canViewExhibitList();
   }
 
   ngOnDestroy() {

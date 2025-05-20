@@ -28,6 +28,8 @@ import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.servi
 })
 export class AdminExhibitsComponent implements OnInit, OnDestroy {
   @Input() userList: User[];
+  @Input() canEdit: boolean;
+  @Input() canCreate: boolean;
   teamList: Team[];
   pageSize = 10;
   pageIndex = 0;
@@ -127,7 +129,8 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
       data: {
         exhibit: exhibit,
         exhibitList: this.exhibitList,
-        userList: this.userList
+        userList: this.userList,
+        canEdit: this.canEdit
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {

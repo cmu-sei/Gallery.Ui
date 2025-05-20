@@ -43,7 +43,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         (click)="addOrEditExhibit(null)"
         style="outline: none; margin-left: 20px;"
         title="Add Exhibit"
-        [disabled]="isBusy"
+        [disabled]="isBusy || !canCreate"
       >
         <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
@@ -51,7 +51,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         mat-icon-button
         (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
         title="Upload Exhibit"
-        [disabled]="isBusy"
+        [disabled]="isBusy || !canCreate"
       >
         <mat-icon class="mdi-24px" fontIcon="mdi-upload" alt="Upload"></mat-icon>
       </button>
@@ -84,7 +84,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           mat-icon-button
           (click)="copyExhibit(exhibit.id); $event.stopPropagation();"
           title="Copy {{ exhibit.dateCreated | date }}"
-          [disabled]="isBusy"
+          [disabled]="isBusy || !canCreate"
         >
           <mat-icon class="mdi-18px" fontIcon="mdi-content-copy" alt="Copy"></mat-icon>
         </button>
@@ -101,7 +101,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (click)="deleteExhibit(exhibit); $event.stopPropagation()"
           style="outline: none;"
           title="Delete Exhibit"
-          [disabled]="isBusy"
+          [disabled]="isBusy || !canEdit"
         >
           <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can"></mat-icon>
         </button>
@@ -135,6 +135,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </mat-expansion-panel-header>
         <app-admin-teams
           [exhibitId]="exhibit.id"
+          [canEdit]="canEdit"
         ></app-admin-teams>
       </mat-expansion-panel>
       <mat-expansion-panel class="bottom-space">
@@ -145,6 +146,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           [teamList]="teamList"
           [collectionId]="selectedCollectionId"
           [exhibitId]="selectedExhibit.id"
+          [canEdit]="canEdit"
         >
         </app-admin-team-cards>
       </mat-expansion-panel>
@@ -155,6 +157,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-exhibit-articles
           [exhibit]="exhibit"
           [teamList]="teamList"
+          [canEdit]="canEdit"
         >
         </app-admin-exhibit-articles>
       </mat-expansion-panel>
@@ -164,6 +167,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </mat-expansion-panel-header>
         <app-admin-observers
           [exhibitId]="exhibit.id"
+          [canEdit]="canEdit"
         >
         </app-admin-observers>
       </mat-expansion-panel>
@@ -171,7 +175,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-expansion-panel-header>
           <h4>Memberships</h4>
         </mat-expansion-panel-header>
-        <app-exhibit-memberships [exhibitId]="selectedExhibit.id" [embedded]="false" ></app-exhibit-memberships>
+        <app-exhibit-memberships [exhibitId]="selectedExhibit.id" [embedded]="false"></app-exhibit-memberships>
       </mat-expansion-panel>
     </div>
   </mat-expansion-panel>

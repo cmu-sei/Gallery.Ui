@@ -23,6 +23,7 @@ import { Router } from '@angular/router';
 export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   @Input() exhibit: Exhibit;
   @Input() teamList: Team[];
+  @Input() canEdit: boolean;
   filterControl: UntypedFormControl = new UntypedFormControl();
   filterString = '';
   isLoading = false;

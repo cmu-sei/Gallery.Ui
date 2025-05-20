@@ -74,6 +74,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
               style="outline: none;"
               title="Add {{ element.name }} to Team"
               *ngIf="!onAnotherTeam(element.id)"
+              [disabled]="!canEdit"
             >
               <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle-outline"></mat-icon>
             </button>
@@ -135,6 +136,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <mat-checkbox
             [checked]="element.isObserver"
             (change)="setObserverValue(element.id, $event.checked)"
+            [disabled]="!canEdit"
           ></mat-checkbox>
         </mat-cell>
       </ng-container>
@@ -143,7 +145,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <div>
-            <button mat-stroked-button (click)="removeUserFromTeam(element)">
+            <button mat-stroked-button (click)="removeUserFromTeam(element)" [disabled]="!canEdit">
               Remove
             </button>
           </div>

@@ -24,6 +24,7 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 })
 export class AdminTeamsComponent implements OnInit, OnDestroy {
   @Input() exhibitId: string;
+  @Input() canEdit: boolean;
   filterControl: UntypedFormControl = new UntypedFormControl();
   filterString = '';
   newTeam: Team = { id: '', name: '' };

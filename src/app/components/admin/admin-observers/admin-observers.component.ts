@@ -27,6 +27,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AdminObserversComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;
+  @Input() canEdit: boolean;
   userList: User[] = [];
   teamUsers: TeamUser[] = [];
   displayedObserverColumns: string[] = ['team', 'name', 'id'];
