@@ -76,26 +76,13 @@ export class PermissionDataService {
   }
 
   canEditExhibit(ExhibitId: string): boolean {
-    return this.canExhibit(
-        SystemPermission.EditExhibits,
-        ExhibitId,
-        ExhibitPermission.EditExhibit) ||
-      this.canExhibit(
-        SystemPermission.ManageExhibits,
-        ExhibitId,
-        ExhibitPermission.ManageExhibit);
+    return this.canExhibit(SystemPermission.EditExhibits, ExhibitId, ExhibitPermission.EditExhibit) ||
+      this.canExhibit(SystemPermission.ManageExhibits, ExhibitId, ExhibitPermission.ManageExhibit);
   }
 
   canEditCollection(collectionId: string): boolean {
-    return this.canCollection(
-        SystemPermission.EditCollections,
-        collectionId,
-        CollectionPermission.EditCollection) ||
-      this.canCollection(
-        SystemPermission.ManageCollections,
-        collectionId,
-        CollectionPermission.ManageCollection
-      );
+    return this.canCollection(SystemPermission.EditCollections, collectionId, CollectionPermission.EditCollection) ||
+      this.canCollection(SystemPermission.ManageCollections, collectionId, CollectionPermission.ManageCollection);
   }
 
   canManageExhibit(ExhibitId: string): boolean {

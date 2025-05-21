@@ -76,7 +76,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       *ngFor="let collection of displayedCollections"
       disabled
     >
-      <mat-expansion-panel-header class="mat-row showhand" *ngIf="!isLoading" (click)="selectedCollectionId = collection.id">
+      <mat-expansion-panel-header class="mat-row showhand" *ngIf="!isLoading" (click)="showMemberships(collection.id)">
         <div class="mat-cell first-cell">
           <div class="panel-div">
             <button

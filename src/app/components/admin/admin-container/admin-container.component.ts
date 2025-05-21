@@ -17,6 +17,7 @@ import { CollectionDataService } from 'src/app/data/collection/collection-data.s
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { CurrentUserQuery } from 'src/app/data/user/user.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
+import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { ApplicationArea, SignalRService } from 'src/app/services/signalr.service';
 import { Section } from 'src/app/utilities/enumerations';
@@ -65,6 +66,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
     private exhibitDataService: ExhibitDataService,
+    private exhibitQuery: ExhibitQuery,
     private authService: ComnAuthService,
     private userDataService: UserDataService,
     private userQuery: UserQuery,
@@ -83,24 +85,20 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Admin';
 
     this.collectionDataService.load();
-    this.pageSize = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pagesize') || '20', 10))
-    );
-    this.pageIndex = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pageindex') || '0', 10))
-    );
     activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.displayedSection = params.get('section');
-      const collectionId = params.get('collection');
-      if (collectionId) {
-        this.exhibitDataService.loadByCollection(collectionId);
-        const routeCollectionId = '' + params.get('collection');
-        this.collectionDataService.setActive(routeCollectionId);
-      }
+    });
+    // observe the collections
+    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
+      this.canViewCollections = this.canViewCollections || collections.length > 0;
     });
     // observe active collection id
     this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
       this.exhibitDataService.loadByCollection(activeId);
+    });
+    // observe the exhibits
+    this.exhibitQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
+      this.canViewExhibits = this.canViewExhibits || exhibits.length > 0;
     });
     // Set the display settings from config file
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
@@ -121,12 +119,12 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       .subscribe(
         (x) => {
           this.permissions = this.permissionDataService.permissions;
-          this.canViewCollections = this.permissions.some((y) => y === 'ViewCollections');
-          this.canEditCollections = this.permissions.some((y) => y === 'EditCollections');
-          this.canCreateCollections = this.permissions.some((y) => y === 'CreateCollections');
-          this.canViewExhibits = this.permissions.some((y) => y === 'ViewExhibits');
-          this.canEditExhibits = this.permissions.some((y) => y === 'EditExhibits');
-          this.canCreateExhibits = this.permissions.some((y) => y === 'CreateExhibits');
+          this.canViewCollections = this.canViewCollections || this.permissionDataService.hasPermission(SystemPermission.ViewCollections);
+          this.canEditCollections = this.permissionDataService.hasPermission(SystemPermission.EditCollections);
+          this.canCreateCollections = this.permissionDataService.hasPermission(SystemPermission.CreateCollections);
+          this.canViewExhibits = this.canViewExhibits || this.permissionDataService.hasPermission(SystemPermission.ViewExhibits);
+          this.canEditExhibits = this.permissionDataService.hasPermission(SystemPermission.EditExhibits);
+          this.canCreateExhibits = this.permissionDataService.hasPermission(SystemPermission.CreateExhibits);
         }
       );
     this.signalRService
@@ -158,9 +156,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.displayedSection = section;
     this.router.navigate([], {
       queryParams: {
-        section: section,
-        filter: '',
-        pageindex: ''
+        section: section
       },
       queryParamsHandling: 'merge',
     });
@@ -168,13 +164,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
 
   logout() {
     this.authService.logout();
-  }
-
-  selectUser(userId: string) {
-    this.router.navigate([], {
-      queryParams: { userId: userId },
-      queryParamsHandling: 'merge',
-    });
   }
 
   getSelectedClass(section: string) {

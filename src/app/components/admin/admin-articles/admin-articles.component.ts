@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -19,14 +19,13 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminArticleEditDialogComponent } from 'src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-articles',
   templateUrl: './admin-articles.component.html',
   styleUrls: ['./admin-articles.component.scss'],
 })
-export class AdminArticlesComponent implements OnInit, OnDestroy {
+export class AdminArticlesComponent implements OnDestroy {
   @Input() canEdit: boolean;
   pageSize = 10;
   pageIndex = 0;
@@ -34,7 +33,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   isLoading = false;
   topbarColor = '#ef3a47';
   articleList: Article[] = [];
-  selectedCard: Card = { id: '', name: '' };
+  selectedCardId = '';
   cardList: Card[] = [];
   selectedCollectionId = '';
   collectionList: Collection[] = [];
@@ -53,8 +52,6 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
 
   constructor(
-    activatedRoute: ActivatedRoute,
-    private router: Router,
     private dialog: MatDialog,
     public dialogService: DialogService,
     private settingsService: ComnSettingsService,
@@ -78,6 +75,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
           this.editArticle = { ...article};
         }
       });
+      this.applyFilter();
       const moves: number[] = [];
       articles.forEach(a => {
         if (!moves.includes(+a.move)) {
@@ -87,22 +85,35 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
       this.moveList = moves;
       this.sortChanged(this.sort);
     });
+    // observe the card list
     this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
       this.cardList = cards;
     });
+    // get initial selectedCollectionId value
+    this.selectedCollectionId = this.collectionQuery.getActiveId();
+    if (this.selectedCollectionId) {
+      this.loadCollectionData();
+    }
+    // observe active collection changes
+    this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(collectionId => {
+      if (collectionId && collectionId !== this.selectedCollectionId) {
+        this.selectedCollectionId = collectionId;
+        this.loadCollectionData();
+      }
+    });
+    // get the initial collectionList
+    this.collectionList = this.collectionQuery.getAll();
+    // observe collection list changes
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.collectionList = collections;
     });
-    (this.cardQuery.selectActive() as Observable<Card>).pipe(takeUntil(this.unsubscribe$)).subscribe(card => {
-      card = card ? card : { id: ''} as Card;
-      this.selectedCard = card;
-      if (card.id) {
-        this.articleDataService.loadByCard(card.id);
-      } else if (this.selectedCollectionId) {
-        this.articleDataService.loadByCollection(this.selectedCollectionId);
+    // observe the active card
+    this.cardQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(cardId => {
+      if (cardId && this.selectedCardId !== cardId) {
+        this.selectedCardId = cardId;
+        this.loadArticleData();
       }
     });
-    this.collectionDataService.load();
 
     this.filterControl.valueChanges
       .pipe(
@@ -113,27 +124,23 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
         this.applyFilter();
       });
 
-    activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.selectedCollectionId = params.get('collection');
-      this.filteredArticleList = [];
-      this.articleList = [];
-      if (this.selectedCollectionId) {
-        this.articleDataService.loadByCollection(this.selectedCollectionId);
-        this.cardDataService.loadByCollection(this.selectedCollectionId);
-      }
-      this.sortChanged(this.sort);
-    });
   }
 
-  ngOnInit() {
-    this.loadInitialData();
+  loadCollectionData() {
+    this.cardDataService.loadByCollection(this.selectedCollectionId);
+    this.selectedCardId = '';
+    this.loadArticleData();
   }
 
-  loadInitialData() {
-    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
-      this.articleList = Array.from(articles);
-      this.applyFilter();
-    });
+  loadArticleData() {
+    this.filteredArticleList = [];
+    this.articleList = [];
+    if (this.selectedCardId) {
+      this.articleDataService.loadByCard(this.selectedCardId);
+    } else if (this.selectedCollectionId) {
+      this.articleDataService.loadByCollection(this.selectedCollectionId);
+    }
+    this.sortChanged(this.sort);
   }
 
   addOrEditArticle(article: Article) {
@@ -173,10 +180,7 @@ export class AdminArticlesComponent implements OnInit, OnDestroy {
   }
 
   selectCollection(collectionId: string) {
-    this.router.navigate([], {
-      queryParams: { collection: collectionId },
-      queryParamsHandling: 'merge',
-    });
+    this.collectionDataService.setActive(collectionId);
   }
 
   selectCard(cardId: string) {

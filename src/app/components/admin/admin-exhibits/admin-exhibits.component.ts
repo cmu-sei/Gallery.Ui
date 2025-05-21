@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -16,8 +16,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { AdminExhibitEditDialogComponent } from '../admin-exhibit-edit-dialog/admin-exhibit-edit-dialog.component';
+import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 
@@ -26,7 +26,7 @@ import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.servi
   templateUrl: './admin-exhibits.component.html',
   styleUrls: ['./admin-exhibits.component.scss'],
 })
-export class AdminExhibitsComponent implements OnInit, OnDestroy {
+export class AdminExhibitsComponent implements OnDestroy {
   @Input() userList: User[];
   @Input() canEdit: boolean;
   @Input() canCreate: boolean;
@@ -49,11 +49,10 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   isBusy = false;
   uploadProgress = 0;
+  canManageExhibit = false;
   @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
 
   constructor(
-    activatedRoute: ActivatedRoute,
-    private router: Router,
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
     public dialogService: DialogService,
@@ -62,6 +61,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     private collectionQuery: CollectionQuery,
     private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
+    private permissionDataService: PermissionDataService,
     private teamDataService: TeamDataService,
     private teamUserDataService: TeamUserDataService
   ) {
@@ -78,7 +78,10 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     });
     // observe active collection id
     this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
-      this.selectedCollectionId = activeId;
+      if (activeId && this.selectedCollectionId !== activeId) {
+        this.selectedCollectionId = activeId;
+        this.exhibitDataService.loadByCollection(activeId);
+      }
     });
     // observe filter string
     this.filterControl.valueChanges
@@ -110,9 +113,6 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     this.applyFilter();
   }
 
-  ngOnInit() {
-  }
-
   addOrEditExhibit(exhibit: Exhibit) {
     if (!exhibit) {
       exhibit = {
@@ -142,10 +142,12 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   togglePanel(exhibit: Exhibit) {
+    this.canManageExhibit = false;
     this.selectedExhibit = this.selectedExhibit.id === exhibit.id ? this.selectedExhibit = {} : this.selectedExhibit = { ...exhibit};
     this.exhibitDataService.setActive(this.selectedExhibit.id);
     // if an exhibit has been selected, load the exhibit, so that we have its details
     if (this.selectedExhibit.id) {
+      this.canManageExhibit = this.permissionDataService.canManageExhibit(this.selectedExhibit.id);
       this.exhibitDataService.loadById(this.selectedExhibit.id);
       this.teamUserDataService.loadByExhibit(this.selectedExhibit.id);
       this.teamDataService.loadByExhibitId(this.selectedExhibit.id);
@@ -153,10 +155,9 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   selectCollection(collectionId: string) {
-    this.router.navigate([], {
-      queryParams: { collection: collectionId },
-      queryParamsHandling: 'merge',
-    });
+    this.exhibitList = [];
+    this.isBusy = true;
+    this.collectionDataService.setActive(collectionId);
   }
 
   selectExhibit(exhibit: Exhibit) {

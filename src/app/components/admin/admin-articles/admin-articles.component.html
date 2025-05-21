@@ -23,7 +23,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </mat-form-field>
     <mat-form-field *ngIf="cardList && cardList.length > 0">
       <mat-label>Card</mat-label>
-      <mat-select placeholder="Card" [value]="selectedCard.id" (selectionChange)="selectCard($event.value)">
+      <mat-select placeholder="Card" [value]="selectedCardId" (selectionChange)="selectCard($event.value)">
         <mat-option [value]="''">All Cards</mat-option>
         <mat-option *ngFor="let card of cardList" [value]="card.id">
           {{ card.name }}
