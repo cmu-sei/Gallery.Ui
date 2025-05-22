@@ -76,7 +76,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (click)="addOrEditExhibit(exhibit); $event.stopPropagation()"
           style="outline: none;"
           title="Edit Exhibit"
-          [disabled]="isBusy"
+          [disabled]="isBusy || !canEditExhibit(exhibit.id)"
         >
           <mat-icon class="mdi-18px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
         </button>

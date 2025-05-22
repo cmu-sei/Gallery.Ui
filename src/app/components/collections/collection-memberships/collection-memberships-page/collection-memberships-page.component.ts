@@ -21,7 +21,7 @@ export class CollectionMembershipsPageComponent implements OnInit {
   ngOnInit(): void {
     this.collectionId = this.activatedRoute.snapshot.paramMap.get('id');
     this.permissionDataService
-      .loadCollectionPermissions(this.collectionId)
+      .loadCollectionPermissions()
       .subscribe();
   }
 }

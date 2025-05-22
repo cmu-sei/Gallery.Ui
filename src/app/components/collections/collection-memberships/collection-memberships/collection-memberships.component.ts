@@ -73,7 +73,7 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
       this.groupDataService.load(),
     ]).subscribe();
     this.permissionDataService
-      .loadCollectionPermissions(this.collectionId)
+      .loadCollectionPermissions()
       .subscribe((x) =>
         this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId)));
   }

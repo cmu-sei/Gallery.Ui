@@ -21,7 +21,7 @@ export class ExhibitMembershipsPageComponent implements OnInit {
   ngOnInit(): void {
     this.exhibitId = this.activatedRoute.snapshot.paramMap.get('id');
     this.permissionDataService
-      .loadExhibitPermissions(this.exhibitId)
+      .loadExhibitPermissions()
       .subscribe();
   }
 }

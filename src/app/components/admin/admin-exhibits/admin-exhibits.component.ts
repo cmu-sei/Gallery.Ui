@@ -130,7 +130,7 @@ export class AdminExhibitsComponent implements OnDestroy {
         exhibit: exhibit,
         exhibitList: this.exhibitList,
         userList: this.userList,
-        canEdit: this.canEdit
+        canEdit: exhibit.id ? this.permissionDataService.canEditExhibit(exhibit.id) : true
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -164,6 +164,10 @@ export class AdminExhibitsComponent implements OnDestroy {
     this.selectedExhibit = { ...exhibit };
     this.originalExhibit = { ...exhibit };
     return false;
+  }
+
+  canEditExhibit(exhibitId: string): boolean {
+    return this.permissionDataService.canEditExhibit(exhibitId);
   }
 
   saveExhibit(exhibit: Exhibit) {

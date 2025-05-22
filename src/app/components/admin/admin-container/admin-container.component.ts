@@ -91,14 +91,11 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     // observe the collections
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.canViewCollections = this.canViewCollections || collections.length > 0;
+      this.canViewExhibits = collections.length > 0;
     });
     // observe active collection id
     this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
       this.exhibitDataService.loadByCollection(activeId);
-    });
-    // observe the exhibits
-    this.exhibitQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
-      this.canViewExhibits = this.canViewExhibits || exhibits.length > 0;
     });
     // Set the display settings from config file
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
@@ -114,19 +111,17 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this.userList = this.userQuery.selectAll();
     this.userDataService.load().pipe(take(1)).subscribe();
-    this.permissionDataService
-      .load()
-      .subscribe(
-        (x) => {
-          this.permissions = this.permissionDataService.permissions;
-          this.canViewCollections = this.canViewCollections || this.permissionDataService.hasPermission(SystemPermission.ViewCollections);
-          this.canEditCollections = this.permissionDataService.hasPermission(SystemPermission.EditCollections);
-          this.canCreateCollections = this.permissionDataService.hasPermission(SystemPermission.CreateCollections);
-          this.canViewExhibits = this.canViewExhibits || this.permissionDataService.hasPermission(SystemPermission.ViewExhibits);
-          this.canEditExhibits = this.permissionDataService.hasPermission(SystemPermission.EditExhibits);
-          this.canCreateExhibits = this.permissionDataService.hasPermission(SystemPermission.CreateExhibits);
-        }
-      );
+    this.permissionDataService.load().subscribe((x) => {
+      this.permissions = this.permissionDataService.permissions;
+      this.canViewCollections = this.canViewCollections || this.permissionDataService.hasPermission(SystemPermission.ViewCollections);
+      this.canEditCollections = this.permissionDataService.hasPermission(SystemPermission.EditCollections);
+      this.canCreateCollections = this.permissionDataService.hasPermission(SystemPermission.CreateCollections);
+      this.canViewExhibits = this.canViewExhibits || this.permissionDataService.hasPermission(SystemPermission.ViewExhibits);
+      this.canEditExhibits = this.permissionDataService.hasPermission(SystemPermission.EditExhibits);
+      this.canCreateExhibits = this.permissionDataService.hasPermission(SystemPermission.CreateExhibits);
+    });
+    this.permissionDataService.loadCollectionPermissions().subscribe();
+    this.permissionDataService.loadExhibitPermissions().subscribe();
     this.signalRService
       .startConnection(ApplicationArea.admin)
       .then(() => {

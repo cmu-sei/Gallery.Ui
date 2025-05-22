@@ -51,22 +51,18 @@ export class PermissionDataService {
     return this._permissions.includes(permission);
   }
 
-  loadExhibitPermissions(
-    ExhibitId?: string
-  ): Observable<ExhibitPermissionClaim[]> {
+  loadExhibitPermissions(): Observable<ExhibitPermissionClaim[]> {
     return this.exhibitPermissionsService
-      .getMyExhibitPermissions(ExhibitId)
+      .getMyExhibitPermissions()
       .pipe(
         take(1),
         tap((x) => (this._ExhibitPermissions = x))
       );
   }
 
-  loadCollectionPermissions(
-    collectionId?: string
-  ): Observable<CollectionPermissionClaim[]> {
+  loadCollectionPermissions(): Observable<CollectionPermissionClaim[]> {
     return this.collectionPermissionsService
-      .getMyCollectionPermissions(collectionId)
+      .getMyCollectionPermissions()
       .pipe(
         take(1),
         tap((x) => {
