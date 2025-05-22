@@ -9,6 +9,7 @@ import { Team, User } from 'src/app/generated/api';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
+import { UserQuery } from 'src/app/data/user/user.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,6 +24,7 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 })
 export class AdminTeamsComponent implements OnInit, OnDestroy {
   @Input() exhibitId: string;
+  @Input() canEdit: boolean;
   filterControl: UntypedFormControl = new UntypedFormControl();
   filterString = '';
   newTeam: Team = { id: '', name: '' };
@@ -47,7 +49,8 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
     public dialogService: DialogService,
     private teamDataService: TeamDataService,
     private teamQuery: TeamQuery,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private userQuery: UserQuery
   ) {
     this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
       this.teamList = teams ? teams : [];
@@ -56,7 +59,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
-    this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
+    this.userQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
       this.userList = users;
     });
     this.filterControl.valueChanges

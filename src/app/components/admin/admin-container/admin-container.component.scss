@@ -1,6 +1,10 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+.appitems-container .mat-list-item {
+  height: auto;
+}
+
 .appslist {
   margin-top: 10px;
   margin-bottom: 20px;
@@ -8,6 +12,20 @@
 
 .nolink {
   text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.appcontent-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.appbarmenu-container {
+  min-width: 50px;
 }
 
 .app-admin-container {
@@ -19,18 +37,8 @@
   height: 100%;
 }
 
-.appbarmenu-container {
-  min-width: 50px;
-}
-
 .tall {
   height: calc(100% - 44px);
-}
-;
-.cmu-logo {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
 }
 
 .app-versions {
@@ -52,23 +60,10 @@
   cursor: pointer;
 }
 
-.lefticon {
-  padding: 0.5em;
-}
-
-.righticon {
-  align-self: flex-end;
-}
-
-.application-name {
-  width: 120px;
-}
-
-.cmu-logo {
+.crucible-logo {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 100%;
 }
 
 .icon-text {
@@ -76,15 +71,42 @@
   font-family: open_sansbold;
 }
 
-.gallery-icon {
-  transform: scale(0.8);
-  width: 60px;
+.pull-right {
+  position: absolute;
+  right: 35px;
 }
 
-.selected-section {
-  background-color: darkgray;
+#wrapper {
+  display: table;
+  table-layout: fixed;
+  width: 220px;
+  margin-top: 5px;
+  border-width: 0.25pt;
+  border-color: darkgray;
+}
+#wrapper > div {
+  display: table-cell;
 }
 
-.font-35px {
-  font-size: 35px;
+#lefticon {
+  width: 30px;
+  font-size: 75%;
+  padding: 0.5em;
+}
+#lefticon > img {
+  height: 35px;
+  width: 35px;
+  text-align: center;
+  cursor: pointer;
+}
+#rightcontext {
+  width: 30px;
+  font-size: 75%;
+}
+#content {
+  text-align: left;
+  vertical-align: middle;
+  width: 160px;
+  font-size: 90%;
+  padding: 0.5em;
 }

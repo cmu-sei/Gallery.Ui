@@ -1,0 +1,18 @@
+<!--
+Copyright 2021 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div class="component-container mat-elevation-z8">
+  <div class="add-margin">
+    <div>
+      <app-collection-list
+        [collectionList]="collectionList | async"
+        [selectedCollection]="selectedCollection | async"
+        [isLoading]="isLoading | async"
+        (itemSelected)="setActive($event)"
+        (saveCollection)="saveCollection($event)"
+      ></app-collection-list>
+    </div>
+  </div>
+</div>

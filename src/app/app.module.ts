@@ -79,8 +79,26 @@ import { ArticleEditDialogComponent } from './components/article-edit-dialog/art
 import { ArticleMoreDialogComponent } from './components/article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from './components/article-share-dialog/article-share-dialog.component';
 import { ArticleTeamsComponent } from './components/article-teams/article-teams.component';
+import { AdminGroupsComponent } from './components/admin/admin-groups/admin-groups.component';
+import { AdminGroupsDetailComponent } from './components/admin/admin-groups/admin-groups-detail/admin-groups-detail.component';
+import { AdminGroupsMemberListComponent } from './components/admin/admin-groups/admin-groups-member-list/admin-groups-member-list.component';
+import { AdminGroupsMembershipListComponent } from './components/admin/admin-groups/admin-groups-membership-list/admin-groups-membership-list.component';
+import { AdminRolesComponent } from './components/admin/admin-roles/admin-roles.component';
+import { AdminExhibitRolesComponent } from './components/admin/admin-roles/admin-exhibit-roles/admin-exhibit-roles.component';
+import { AdminCollectionRolesComponent } from './components/admin/admin-roles/admin-collection-roles/admin-collection-roles.component';
+import { CollectionMembershipsComponent } from './components/collections/collection-memberships/collection-memberships/collection-memberships.component';
+import { CollectionMemberListComponent } from './components/collections/collection-memberships/collection-member-list/collection-member-list.component';
+import { CollectionMembershipsPageComponent } from './components/collections/collection-memberships/collection-memberships-page/collection-memberships-page.component';
+import { CollectionMembershipListComponent } from './components/collections/collection-memberships/collection-membership-list/collection-membership-list.component';
+import { ExhibitMembershipsComponent } from './components/exhibits/exhibit-memberships/exhibit-memberships/exhibit-memberships.component';
+import { ExhibitMemberListComponent } from './components/exhibits/exhibit-memberships/exhibit-member-list/exhibit-member-list.component';
+import { ExhibitMembershipsPageComponent } from './components/exhibits/exhibit-memberships/exhibit-memberships-page/exhibit-memberships-page.component';
+import { ExhibitMembershipListComponent } from './components/exhibits/exhibit-memberships/exhibit-membership-list/exhibit-membership-list.component';
+import { AdminSystemRolesComponent } from './components/admin/admin-roles/admin-system-roles/admin-system-roles.component';
+import { AdminUserListComponent } from './components/admin/admin-users/admin-user-list/admin-user-list.component';
 import { HomeAppComponent } from './components/home-app/home-app.component';
-import { ConfirmDialogComponent } from './components/shared/confirm-dialog/confirm-dialog.component';
+import { CwdDialogsModule } from './components/shared/confirm-dialog/cwd-dialogs.module';
+import { NameDialogComponent } from './components/shared/name-dialog/name-dialog.component';
 import { SystemMessageComponent } from './components/shared/system-message/system-message.component';
 import { TopbarComponent } from './components/shared/top-bar/topbar.component';
 import { UserDataService } from './data/user/user-data.service';
@@ -111,7 +129,7 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AppComponent,
     HomeAppComponent,
     SystemMessageComponent,
-    ConfirmDialogComponent,
+    NameDialogComponent,
     AdminContainerComponent,
     AdminArticleEditDialogComponent,
     AdminArticlesComponent,
@@ -131,11 +149,30 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AdminTeamUsersComponent,
     AdminUsersComponent,
     AdminUserEditDialogComponent,
+    AdminUserListComponent,
+    AdminGroupsComponent,
+    AdminGroupsDetailComponent,
+    AdminGroupsMemberListComponent,
+    AdminGroupsMembershipListComponent,
+    AdminRolesComponent,
+    AdminExhibitRolesComponent,
+    AdminCollectionRolesComponent,
+    AdminExhibitsComponent,
+    AdminCollectionsComponent,
+    AdminSystemRolesComponent,
     ArticleComponent,
     ArticleEditDialogComponent,
     ArticleMoreDialogComponent,
     ArticleShareDialogComponent,
     ArticleTeamsComponent,
+    CollectionMemberListComponent,
+    CollectionMembershipListComponent,
+    CollectionMembershipsComponent,
+    CollectionMembershipsPageComponent,
+    ExhibitMemberListComponent,
+    ExhibitMembershipListComponent,
+    ExhibitMembershipsComponent,
+    ExhibitMembershipsPageComponent,
     TopbarComponent,
     DisplayOrderPipe,
     SortByPipe,
@@ -149,6 +186,7 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    CwdDialogsModule,
     SwaggerCodegenApiModule,
     HttpClientModule,
     FormsModule,

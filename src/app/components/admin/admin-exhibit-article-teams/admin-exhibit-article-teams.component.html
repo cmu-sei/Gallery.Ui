@@ -33,7 +33,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <ng-container matColumnDef="id">
           <mat-cell *matCellDef="let element">
             <div class="push-right">
-              <button mat-stroked-button (click)="addTeamToArticle(element.id)">
+              <button mat-stroked-button (click)="addTeamToArticle(element.id)" [disabled]="!canEdit">
                 Add
               </button>
             </div>
@@ -72,7 +72,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <ng-container matColumnDef="id">
           <mat-cell *matCellDef="let element">
             <div class="push-right">
-              <button mat-stroked-button (click)="removeTeamFromArticle(element.id)">
+              <button mat-stroked-button (click)="removeTeamFromArticle(element.id)" [disabled]="!canEdit">
                 Remove
               </button>
             </div>

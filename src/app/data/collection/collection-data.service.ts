@@ -243,19 +243,9 @@ export class CollectionDataService {
   uploadJson(file: File, observe: any, reportProgress: boolean) {
     this.collectionStore.setLoading(true);
     this.collectionService
-      .uploadJson(file, observe, reportProgress)
-      .subscribe((event) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          const uploadProgress = Math.round((100 * event.loaded) / event.total);
-          this.uploadProgress.next(uploadProgress);
-        } else if (event instanceof HttpResponse) {
-          this.uploadProgress.next(0);
-          this.collectionStore.setLoading(false);
-          if (event.status === 200) {
-            const collection = event.body;
-            this.collectionStore.upsert(collection.id, collection);
-          }
-        }
+      .uploadJsonFiles(file, observe, reportProgress)
+      .subscribe((collection) => {
+        this.collectionStore.upsert(collection.id, collection);
       },
       (error) => {
         this.collectionStore.setLoading(false);

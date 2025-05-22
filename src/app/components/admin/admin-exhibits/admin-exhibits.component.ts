@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -16,8 +16,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { AdminExhibitEditDialogComponent } from '../admin-exhibit-edit-dialog/admin-exhibit-edit-dialog.component';
+import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 
@@ -26,9 +26,11 @@ import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.servi
   templateUrl: './admin-exhibits.component.html',
   styleUrls: ['./admin-exhibits.component.scss'],
 })
-export class AdminExhibitsComponent implements OnInit, OnDestroy {
+export class AdminExhibitsComponent implements OnDestroy {
   @Input() userList: User[];
-  @Input() teamList: Team[];
+  @Input() canEdit: boolean;
+  @Input() canCreate: boolean;
+  teamList: Team[];
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];
@@ -36,7 +38,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   exhibitList: Exhibit[];
   isLoading = false;
   topbarColor = '#ef3a47';
-  editExhibit: Exhibit = {};
+  selectedExhibit: Exhibit = {};
   originalExhibit: Exhibit = {};
   filteredExhibitList: Exhibit[] = [];
   filterControl = new UntypedFormControl();
@@ -47,11 +49,10 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   isBusy = false;
   uploadProgress = 0;
+  canManageExhibit = false;
   @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
 
   constructor(
-    activatedRoute: ActivatedRoute,
-    private router: Router,
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
     public dialogService: DialogService,
@@ -60,26 +61,16 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     private collectionQuery: CollectionQuery,
     private exhibitDataService: ExhibitDataService,
     private exhibitQuery: ExhibitQuery,
+    private permissionDataService: PermissionDataService,
     private teamDataService: TeamDataService,
     private teamUserDataService: TeamUserDataService
   ) {
-    this.exhibitDataService.unload();
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
     // observe exhibits
     this.exhibitQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
-      this.exhibitList = [];
-      exhibits.forEach(exhibit => {
-        this.exhibitList.push({ ...exhibit });
-        if (exhibit.id === this.editExhibit.id) {
-          this.editExhibit = { ...exhibit};
-        }
-        if (!this.collectionList.some(c => c.id === exhibit.collectionId)) {
-          this.collectionDataService.load();
-        }
-      });
-      this.applyFilter();
+      this.setExhibitList(exhibits);
     });
     // observe collections
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
@@ -87,7 +78,10 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     });
     // observe active collection id
     this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
-      this.selectedCollectionId = activeId;
+      if (activeId && this.selectedCollectionId !== activeId) {
+        this.selectedCollectionId = activeId;
+        this.exhibitDataService.loadByCollection(activeId);
+      }
     });
     // observe filter string
     this.filterControl.valueChanges
@@ -101,25 +95,22 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
     // observe exhibits loading
     this.exhibitQuery.selectLoading().pipe(takeUntil(this.unsubscribe$)).subscribe((isLoading) => {
       this.isBusy = isLoading;
-      if (!isLoading && !this.selectedCollectionId) {
-        this.router.navigate([], {
-          queryParams: {
-            section: 'exhibits'
-          }
-        });
+      if (!isLoading) {
+        const exhibits = this.exhibitQuery.getAll();
+        this.setExhibitList(exhibits);
       }
     });
   }
 
-  ngOnInit() {
-    this.loadInitialData();
-  }
-
-  loadInitialData() {
-    this.exhibitQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(exhibits => {
-      this.exhibitList = Array.from(exhibits);
-      this.applyFilter();
+  setExhibitList(exhibits: Exhibit[]) {
+    this.exhibitList = [];
+    exhibits.forEach(exhibit => {
+      this.exhibitList.push({ ...exhibit });
+      if (exhibit.id === this.selectedExhibit.id) {
+        this.selectedExhibit = { ...exhibit};
+      }
     });
+    this.applyFilter();
   }
 
   addOrEditExhibit(exhibit: Exhibit) {
@@ -138,7 +129,8 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
       data: {
         exhibit: exhibit,
         exhibitList: this.exhibitList,
-        userList: this.userList
+        userList: this.userList,
+        canEdit: exhibit.id ? this.permissionDataService.canEditExhibit(exhibit.id) : true
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -150,27 +142,32 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   togglePanel(exhibit: Exhibit) {
-    this.editExhibit = this.editExhibit.id === exhibit.id ? this.editExhibit = {} : this.editExhibit = { ...exhibit};
-    this.exhibitDataService.setActive(this.editExhibit.id);
+    this.canManageExhibit = false;
+    this.selectedExhibit = this.selectedExhibit.id === exhibit.id ? this.selectedExhibit = {} : this.selectedExhibit = { ...exhibit};
+    this.exhibitDataService.setActive(this.selectedExhibit.id);
     // if an exhibit has been selected, load the exhibit, so that we have its details
-    if (this.editExhibit.id) {
-      this.exhibitDataService.loadById(this.editExhibit.id);
-      this.teamUserDataService.loadByExhibit(this.editExhibit.id);
-      this.teamDataService.loadByExhibitId(this.editExhibit.id);
+    if (this.selectedExhibit.id) {
+      this.canManageExhibit = this.permissionDataService.canManageExhibit(this.selectedExhibit.id);
+      this.exhibitDataService.loadById(this.selectedExhibit.id);
+      this.teamUserDataService.loadByExhibit(this.selectedExhibit.id);
+      this.teamDataService.loadByExhibitId(this.selectedExhibit.id);
     }
   }
 
   selectCollection(collectionId: string) {
-    this.router.navigate([], {
-      queryParams: { collection: collectionId },
-      queryParamsHandling: 'merge',
-    });
+    this.exhibitList = [];
+    this.isBusy = true;
+    this.collectionDataService.setActive(collectionId);
   }
 
   selectExhibit(exhibit: Exhibit) {
-    this.editExhibit = { ...exhibit };
+    this.selectedExhibit = { ...exhibit };
     this.originalExhibit = { ...exhibit };
     return false;
+  }
+
+  canEditExhibit(exhibitId: string): boolean {
+    return this.permissionDataService.canEditExhibit(exhibitId);
   }
 
   saveExhibit(exhibit: Exhibit) {
@@ -195,7 +192,7 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   cancelEdit() {
-    this.editExhibit = { ... this.originalExhibit };
+    this.selectedExhibit = { ... this.originalExhibit };
   }
 
   applyFilter() {
@@ -244,12 +241,12 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
   getCollectionName(collectionId: string) {
-    return this.collectionList.find(c => c.id === collectionId).name;
+    return this.collectionList?.find(c => c.id === collectionId).name;
   }
 
   getUserName(userId: string) {
     if (this.userList && this.userList.length > 0) {
-      const user = this.userList.find(item => item.id === userId);
+      const user = this.userList?.find(item => item.id === userId);
       return user ? user.name : '';
     }
     return '';
@@ -325,4 +322,3 @@ export class AdminExhibitsComponent implements OnInit, OnDestroy {
   }
 
 }
-

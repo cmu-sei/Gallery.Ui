@@ -1,0 +1,101 @@
+<!--
+Copyright 2021 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<div
+  mat-dialog-content
+  *ngIf="
+    !!data &&
+    data.collection !== undefined &&
+    data.collection !== null
+  "
+>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input
+          type="text"
+          matInput
+          [formControl]="collectionNameFormControl"
+          placeholder="Name (required)"
+          value="{{ data.collection.name }}"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error
+          *ngIf="
+            collectionNameFormControl.hasError('required') ||
+            collectionNameFormControl.hasError('minlength')
+          "
+        >
+          Name is <strong>required</strong> and must contain 4 or more
+          characters
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <textarea
+          matInput
+          placeholder="Collection Description (required)"
+          [formControl]="descriptionFormControl"
+          value="{{ data.collection.description }}"
+          [errorStateMatcher]="matcher"
+          (focus)="trimInitialDescription()"
+        ></textarea>
+        <mat-error
+          *ngIf="
+            descriptionFormControl.hasError('required') ||
+            descriptionFormControl.hasError('minlength')
+          "
+        >
+          Description is <strong>required</strong> and must contain 4 or more
+          characters
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input
+          matInput
+          type="number"
+          placeholder="Duration Hours (required)"
+          [formControl]="durationHoursFormControl"
+          [errorStateMatcher]="notAnIntegerErrorState"
+        />
+        <mat-error
+          *ngIf="
+            durationHoursFormControl.hasError('required') ||
+            durationHoursFormControl.hasError('notAnInteger')
+          "
+        >
+          Duration Hours must be an <strong>integer greater than 0</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="cssLayoutRowStartCenter bottom-button">
+    <div class="delete-button">
+      <button
+        mat-stroked-button
+        (click)="handleEditComplete(true)"
+        [disabled]="!errorFree()"
+        style="margin-left: 40px"
+      >
+        Save
+      </button>
+    </div>
+    <div class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(false)">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

@@ -16,6 +16,7 @@ import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 import { TeamUserQuery } from 'src/app/data/team-user/team-user.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
+import { UserQuery } from 'src/app/data/user/user.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
@@ -27,6 +28,7 @@ import { UntypedFormControl } from '@angular/forms';
 })
 export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   @Input() teamId: string;
+  @Input() canEdit: boolean;
   userList: User[] = [];
   teamUsers: TeamUser[] = [];
   otherTeamUsers: TeamUser[] = [];
@@ -47,11 +49,13 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
     private teamQuery: TeamQuery,
     private teamUserDataService: TeamUserDataService,
     private teamUserQuery: TeamUserQuery,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private userQuery: UserQuery
   ) {
-    this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
+    this.userQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
       this.userList = users;
       this.setDataSources();
+      this.applyFilter();
     });
     this.teamUserQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(tUsers => {
       this.teamUsers = tUsers.filter(tu => tu.teamId === this.teamId);
@@ -70,10 +74,6 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this.filterControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.filterString = this.filterControl.value;
-      this.applyFilter();
-    });
-    this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
-      this.userList = users;
       this.applyFilter();
     });
     this.filterControl.setValue('');

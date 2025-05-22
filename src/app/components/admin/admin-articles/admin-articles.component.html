@@ -23,7 +23,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </mat-form-field>
     <mat-form-field *ngIf="cardList && cardList.length > 0">
       <mat-label>Card</mat-label>
-      <mat-select placeholder="Card" [value]="selectedCard.id" (selectionChange)="selectCard($event.value)">
+      <mat-select placeholder="Card" [value]="selectedCardId" (selectionChange)="selectCard($event.value)">
         <mat-option [value]="''">All Cards</mat-option>
         <mat-option *ngFor="let card of cardList" [value]="card.id">
           {{ card.name }}
@@ -61,7 +61,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </button>
   </div>
   <div class="button-margins" *ngIf="selectedCollectionId">
-    <button mat-stroked-button (click)="addOrEditArticle(null)">Add Article</button>
+    <button mat-stroked-button (click)="addOrEditArticle(null)" [disabled]="!canEdit">Add Article</button>
   </div>
   <div *ngIf="selectedCollectionId">
     <mat-paginator
@@ -100,6 +100,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             (click)="addOrEditArticle(article); $event.stopPropagation()"
             style="outline: none;"
             title="Edit {{ article.name }}"
+            [disabled]="!canEdit"
           >
             <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
           </button>
@@ -108,6 +109,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             (click)="deleteArticle(article); $event.stopPropagation()"
             style="outline: none;"
             title="Delete {{ article.name }}"
+            [disabled]="!canEdit"
           >
             <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
           </button>

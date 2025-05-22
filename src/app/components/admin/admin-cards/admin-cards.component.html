@@ -39,7 +39,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </button>
   </div>
   <div class="button-margins">
-    <button mat-stroked-button (click)="addOrEditCard(null)">Add Card</button>
+    <button mat-stroked-button (click)="addOrEditCard(null)" [disabled]="!canEdit">Add Card</button>
   </div>
   <div>
     <mat-paginator
@@ -71,6 +71,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (click)="addOrEditCard(card)"
           style="outline: none;"
           title="Edit {{ card.name }}"
+          [disabled]="!canEdit"
         >
           <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
         </button>
@@ -79,6 +80,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (click)="deleteCard(card)"
           style="outline: none;"
           title="Delete {{ card.name }}"
+          [disabled]="!canEdit"
         >
           <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
         </button>

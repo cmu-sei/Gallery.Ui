@@ -27,7 +27,13 @@
                 "output": "./assets/fonts/"
               }
             ],
-            "styles": ["src/styles/styles.scss"],
+            "styles": [
+              "src/styles/styles.scss",
+              "./node_modules/bootstrap/scss/bootstrap-utilities.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/styles", "./node_modules/bootstrap/scss"]
+            },
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
