@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -17,14 +17,14 @@ import { takeUntil } from 'rxjs/operators';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AdminCardEditDialogComponent } from 'src/app/components/admin/admin-card-edit-dialog/admin-card-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-cards',
   templateUrl: './admin-cards.component.html',
   styleUrls: ['./admin-cards.component.scss'],
 })
-export class AdminCardsComponent implements OnInit, OnDestroy {
+export class AdminCardsComponent implements OnDestroy {
+  @Input() canEdit: boolean;
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];
@@ -45,8 +45,6 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
 
   constructor(
-    activatedRoute: ActivatedRoute,
-    private router: Router,
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
     public dialogService: DialogService,
@@ -55,7 +53,6 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
     private cardDataService: CardDataService,
     private cardQuery: CardQuery
   ) {
-    this.cardDataService.unload();
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
@@ -70,10 +67,25 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
         this.sortChanged(this.sort);
       });
     });
+    this.collectionList = this.collectionQuery.getActive() as Collection[];
+    this.selectedCollectionId = this.collectionQuery.getActiveId();
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.collectionList = collections;
     });
-    this.collectionDataService.load();
+    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
+      this.cardList = Array.from(cards);
+      this.applyFilter();
+      this.isLoading = false;
+    });
+    if (this.selectedCollectionId) {
+      this.loadCards();
+    }
+    this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(collectionId => {
+      if (collectionId && this.selectedCollectionId !== collectionId) {
+        this.selectedCollectionId = collectionId;
+        this.loadCards();
+      }
+    });
 
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
@@ -81,25 +93,11 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
         this.filterString = term.trim().toLowerCase();
         this.applyFilter();
       });
-
-    activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.selectedCollectionId = params.get('collection');
-      this.cardDataService.unload();
-      if (this.selectedCollectionId) {
-        this.cardDataService.loadByCollection(this.selectedCollectionId);
-      }
-    });
   }
 
-  ngOnInit() {
-    this.loadInitialData();
-  }
-
-  loadInitialData() {
-    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
-      this.cardList = Array.from(cards);
-      this.applyFilter();
-    });
+  loadCards() {
+    this.isLoading = true;
+    this.cardDataService.loadByCollection(this.selectedCollectionId);
   }
 
   addOrEditCard(card: Card) {
@@ -137,10 +135,9 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   }
 
   selectCollection(collectionId: string) {
-    this.router.navigate([], {
-      queryParams: { collection: collectionId },
-      queryParamsHandling: 'merge',
-    });
+    this.cardList = [];
+    this.isLoading = true;
+    this.collectionDataService.setActive(collectionId);
   }
 
   selectCard(card: Card) {

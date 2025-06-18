@@ -13,7 +13,6 @@ import { CardQuery } from 'src/app/data/card/card.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-exhibit-articles',
@@ -23,6 +22,7 @@ import { Router } from '@angular/router';
 export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   @Input() exhibit: Exhibit;
   @Input() teamList: Team[];
+  @Input() canEdit: boolean;
   filterControl: UntypedFormControl = new UntypedFormControl();
   filterString = '';
   isLoading = false;
@@ -49,7 +49,6 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   private unsubscribe$ = new Subject();
 
   constructor(
-    private router: Router,
     public dialogService: DialogService,
     private articleDataService: ArticleDataService,
     private articleQuery: ArticleQuery,
@@ -102,13 +101,6 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
       datePosted: datePosted
     };
     this.saveArticleTeam(articleTeam);
-  }
-
-  selectCollection(collectionId: string) {
-    this.router.navigate([], {
-      queryParams: { collection: collectionId },
-      queryParamsHandling: 'merge',
-    });
   }
 
   saveArticleTeam(article: Article) {

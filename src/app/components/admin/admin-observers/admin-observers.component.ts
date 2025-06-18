@@ -17,6 +17,7 @@ import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 import { TeamUserQuery } from 'src/app/data/team-user/team-user.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
+import { UserQuery } from 'src/app/data/user/user.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 @Component({
@@ -26,6 +27,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AdminObserversComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;
+  @Input() canEdit: boolean;
   userList: User[] = [];
   teamUsers: TeamUser[] = [];
   displayedObserverColumns: string[] = ['team', 'name', 'id'];
@@ -41,9 +43,10 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
     private teamQuery: TeamQuery,
     private teamUserDataService: TeamUserDataService,
     private teamUserQuery: TeamUserQuery,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private userQuery: UserQuery
   ) {
-    this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
+    this.userQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
       this.userList = users;
     });
     this.teamUserQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(tUsers => {

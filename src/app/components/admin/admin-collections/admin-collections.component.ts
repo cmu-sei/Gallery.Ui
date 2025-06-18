@@ -5,7 +5,7 @@ import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@ang
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
-import { Collection } from 'src/app/generated/api/model/models';
+import { Collection, SystemPermission } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
@@ -16,6 +16,7 @@ import {
   AdminCollectionEditDialogComponent
 } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
   selector: 'app-admin-collections',
@@ -23,6 +24,8 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
   styleUrls: ['./admin-collections.component.scss'],
 })
 export class AdminCollectionsComponent implements OnInit, OnDestroy {
+  @Input() canEdit: boolean;
+  @Input() canCreate: boolean;
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];
@@ -33,6 +36,7 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   newCollectionName = '';
   editCollection: Collection = {};
   originalCollection: Collection = {};
+  selectedCollectionId = '';
   filteredCollectionList: Collection[] = [];
   displayedCollections: Collection[] = [];
   filterControl = new UntypedFormControl();
@@ -48,7 +52,8 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     public dialogService: DialogService,
     private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery
+    private collectionQuery: CollectionQuery,
+    private permissionDataService: PermissionDataService
   ) {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
@@ -112,6 +117,13 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
 
   togglePanel(collection: Collection) {
     this.editCollection = this.editCollection.id === collection.id ? this.editCollection = {} : this.editCollection = { ...collection};
+  }
+
+  showMemberships(collectionId: string) {
+    if (this.permissionDataService.canManageCollection(collectionId)) {
+      this.selectedCollectionId = collectionId;
+    }
+    this.collectionDataService.setActive(collectionId);
   }
 
   selectCollection(collection: Collection) {

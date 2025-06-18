@@ -1,115 +1,15 @@
 <!--
 Copyright 2022 Carnegie Mellon University. All Rights Reserved.
-Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+Released under a MIT (SEI)-style license, please see LICENSE.md in the
+project root for license information or contact permission@sei.cmu.edu for full terms.
 -->
 
-<div class="cssLayoutRowStartCenter">
-  <div class="sp-icon">
-    <mat-icon
-      class="mdi-24px"
-      fontIcon="mdi-account"
-      [ngStyle]="{'color': topbarColor}"
-    ></mat-icon>
-  </div>
-  <mat-icon
-    style="margin-left: 20px; transform: scale(0.85); margin-right: 5px;"
-    class="icon-color"
-    svgIcon="ic_magnify_search"
-  ></mat-icon>
-  <mat-form-field style="width: 300px;">
-    <input matInput [formControl]="filterControl" placeholder="Search" class="mat-form-field" (click)="applyFilter()"/>
-  </mat-form-field>
-  <div style="width: 30px;">
-    <button
-      mat-icon-button
-      (click)="clearFilter()"
-      style="outline: none;"
-      title="Clear Search"
-    >
-      <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
-    </button>
-  </div>
-  <div class="button-margins">
-    <button mat-stroked-button (click)="addOrEditUser(null)">Add User</button>
-  </div>
-  <div>
-    <mat-paginator
-      #paginator
-      [length]="filteredUserList?.length"
-      [pageIndex]="pageIndex"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
-      (page)="paginatorEvent($event)"
-    ></mat-paginator>
+<div class="component-container mat-elevation-z8">
+  <div fxLayout="row" class="add-margin">
+    <div fxFlex>
+      <app-admin-user-list [users]="users$ | async" [isLoading]="isLoading$ | async"
+        [canEdit]="canEdit" (create)="create($event)" (delete)="deleteUser($event)">
+      </app-admin-user-list>
+      </div>
   </div>
 </div>
-
-<mat-accordion displayMode="flat" class="mat-table">
-  <section
-    matSort
-    (matSortChange)="sortChanged($event)"
-    class="mat-elevation-z2 mat-header-row"
-  >
-    <div class="mat-header-cell three-cell" mat-sort-header="name">User</div>
-    <div class="mat-header-cell three-cell" mat-sort-header="email">Email</div>
-    <div class="mat-header-cell four-cell">Permissions</div>
-  </section>
-
-  <mat-expansion-panel
-    *ngFor="let user of displayedUsers"
-    [disabled]="true"
-  >
-    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading">
-      <div class="mat-cell two-cell">
-        <div class="panel-div">
-          <button
-            mat-icon-button
-            (click)="addOrEditUser(user)"
-            title="Edit User"
-          >
-            <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            (click)="deleteUserRequest(user)"
-            title="Delete User"
-          >
-            <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
-          </button>
-          {{ user.name }}
-        </div>
-      </div>
-      <div class="mat-cell two-cell center-self">
-        <div class="panel-div">
-          <input
-            matInput
-            placeholder="Email"
-            [(ngModel)]="user.email"
-          />
-        </div>
-      </div>
-      <div class="mat-cell four-cell center-self">
-        <div class="panel-div">
-          <div class="cssLayoutRowStartCenter">
-            <div class="permission-item" *ngFor="let permission of permissionList">
-              <mat-checkbox
-                [checked]="hasPermission(permission.id, user)"
-                (click)="toggleUserPermission(user, permission.id)"
-                style="margin-right: 20px;"
-                >{{ permission.key }}</mat-checkbox
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </mat-expansion-panel-header>
-  </mat-expansion-panel>
-</mat-accordion>
-
-<mat-card
-  *ngIf="isLoading"
-  style="display: flex; justify-content: center; align-items: center;"
->
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
-</mat-card>

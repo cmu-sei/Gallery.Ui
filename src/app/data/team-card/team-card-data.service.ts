@@ -132,29 +132,6 @@ export class TeamCardDataService {
       );
   }
 
-  loadByCard(cardId: string) {
-    this.teamCardStore.setLoading(true);
-    this.teamCardService
-      .getCardTeamCards(cardId)
-      .pipe(
-        tap(() => {
-          this.teamCardStore.setLoading(false);
-        }),
-        take(1)
-      )
-      .subscribe(
-        (teamCards) => {
-          teamCards.forEach(a => {
-            this.setAsDates(a);
-          });
-          this.teamCardStore.set(teamCards);
-        },
-        (error) => {
-          this.teamCardStore.set([]);
-        }
-      );
-  }
-
   loadByExhibit(exhibitId: string) {
     this.teamCardStore.setLoading(true);
     this.teamCardService

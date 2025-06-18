@@ -3,7 +3,6 @@
 
 /* VENDER IMPORTS */
 @use '@angular/material' as mat;
-@import '@angular/material/theming';
 // TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
 //  The following line adds:
 //    1. Default typography styles for all components
@@ -18,6 +17,20 @@ $mdi-font-path: '~@mdi/font/fonts';
 @import '@mdi/font/scss/materialdesignicons';
 @import '~material-design-icons/iconfont/material-icons.css';    // added for ngx-mat-datetimepicker
 
+@import '~@fortawesome/fontawesome-free/css/all.css';
+@include mat.core();
+
+/* BOOTSTRAP IMPORTS */
+/* Required */
+@import '../../node_modules/bootstrap/scss/functions';
+@import '../../node_modules/bootstrap/scss/variables';
+@import '../../node_modules/bootstrap/scss/maps';
+@import '../../node_modules/bootstrap/scss/mixins';
+@import '../../node_modules/bootstrap/scss/root';
+
+/* Optional */
+@import '../../node_modules/bootstrap/scss/utilities';
+/* END BOOTSRAP IMPORTS */
 
 /* END VENDER IMPORTS */
 
@@ -50,6 +63,10 @@ $mdi-font-path: '~@mdi/font/fonts';
 
 .mat-datepicker-content .mat-stroked-button {
   font-family: 'Material Icons';
+}
+
+.showhand {
+  cursor: pointer;
 }
 
 /* The following acts as drop in replacement for the deprecation of Angular FlexLayout */

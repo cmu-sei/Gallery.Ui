@@ -1,0 +1,23 @@
+<!--
+Copyright 2021 Carnegie Mellon University. All Rights Reserved.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+-->
+
+<span
+  *ngIf="collection !== undefined && collection !== null"
+  (click)="$event.stopPropagation()"
+>
+  <div class="add-margin">
+    <div>
+      <app-tasks
+        [taskList]="taskList"
+        [collectionId]="collection.id"
+        [isEditable]="true"
+        [isExecutable]="false"
+        [isLoading]="tasksAreLoading"
+        (taskListChanged)="refreshTaskList()"
+        (deleteTaskRequested)="deleteTask($event)"
+      ></app-tasks>
+    </div>
+  </div>
+</span>

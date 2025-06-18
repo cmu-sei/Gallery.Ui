@@ -43,7 +43,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         (click)="addOrEditExhibit(null)"
         style="outline: none; margin-left: 20px;"
         title="Add Exhibit"
-        [disabled]="isBusy"
+        [disabled]="isBusy || !canCreate"
       >
         <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
@@ -51,7 +51,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         mat-icon-button
         (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
         title="Upload Exhibit"
-        [disabled]="isBusy"
+        [disabled]="isBusy || !canCreate"
       >
         <mat-icon class="mdi-24px" fontIcon="mdi-upload" alt="Upload"></mat-icon>
       </button>
@@ -60,14 +60,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <span class="mat-header-cell four-cell center-self" mat-sort-header="description">Description</span>
     <span class="mat-header-cell two-cell center-self" mat-sort-header="dateCreated">Date Created</span>
     <span class="mat-header-cell two-cell center-self" mat-sort-header="createdBy">User</span>
-    <span class="mat-header-cell three-cell center-self" mat-sort-header="scenarioId">Scenario ID</span>
+    <span class="mat-header-cell three-cell center-self" mat-sort-header="exhibitId">Exhibit ID</span>
     <span class="mat-header-cell one-cell center-self" mat-sort-header="currentMove">Current Move</span>
     <span class="mat-header-cell one-cell center-self" mat-sort-header="currentInject">Current Inject</span>
   </section>
 
   <mat-expansion-panel
     *ngFor="let exhibit of paginateExhibits(); trackBy:getExhibitId"
-    [expanded]="editExhibit.id === exhibit.id"
+    [expanded]="selectedExhibit.id === exhibit.id"
   >
     <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(exhibit); $event.stopPropagation()">
       <span class="mat-cell first-cell center-self">
@@ -76,7 +76,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (click)="addOrEditExhibit(exhibit); $event.stopPropagation()"
           style="outline: none;"
           title="Edit Exhibit"
-          [disabled]="isBusy"
+          [disabled]="isBusy || !canEditExhibit(exhibit.id)"
         >
           <mat-icon class="mdi-18px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
         </button>
@@ -84,7 +84,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           mat-icon-button
           (click)="copyExhibit(exhibit.id); $event.stopPropagation();"
           title="Copy {{ exhibit.dateCreated | date }}"
-          [disabled]="isBusy"
+          [disabled]="isBusy || !canCreate"
         >
           <mat-icon class="mdi-18px" fontIcon="mdi-content-copy" alt="Copy"></mat-icon>
         </button>
@@ -101,7 +101,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (click)="deleteExhibit(exhibit); $event.stopPropagation()"
           style="outline: none;"
           title="Delete Exhibit"
-          [disabled]="isBusy"
+          [disabled]="isBusy || !canEdit"
         >
           <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can"></mat-icon>
         </button>
@@ -128,13 +128,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         {{ exhibit.currentInject }}
       </span>
     </mat-expansion-panel-header>
-    <div class="sub-container" *ngIf="editExhibit.id === exhibit.id">
+    <div class="sub-container" *ngIf="selectedExhibit.id === exhibit.id">
       <mat-expansion-panel class="bottom-space">
         <mat-expansion-panel-header>
           <h4>Exhibit Teams</h4>
         </mat-expansion-panel-header>
         <app-admin-teams
           [exhibitId]="exhibit.id"
+          [canEdit]="canEdit"
         ></app-admin-teams>
       </mat-expansion-panel>
       <mat-expansion-panel class="bottom-space">
@@ -144,7 +145,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-team-cards
           [teamList]="teamList"
           [collectionId]="selectedCollectionId"
-          [exhibitId]="editExhibit.id"
+          [exhibitId]="selectedExhibit.id"
+          [canEdit]="canEdit"
         >
         </app-admin-team-cards>
       </mat-expansion-panel>
@@ -155,17 +157,25 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <app-admin-exhibit-articles
           [exhibit]="exhibit"
           [teamList]="teamList"
+          [canEdit]="canEdit"
         >
         </app-admin-exhibit-articles>
       </mat-expansion-panel>
-      <mat-expansion-panel>
+      <mat-expansion-panel class="bottom-space">
         <mat-expansion-panel-header>
           <h4>Observers</h4>
         </mat-expansion-panel-header>
         <app-admin-observers
           [exhibitId]="exhibit.id"
+          [canEdit]="canEdit"
         >
         </app-admin-observers>
+      </mat-expansion-panel>
+      <mat-expansion-panel *ngIf="canManageExhibit">
+        <mat-expansion-panel-header>
+          <h4>Memberships</h4>
+        </mat-expansion-panel-header>
+        <app-exhibit-memberships [exhibitId]="selectedExhibit.id" [embedded]="false"></app-exhibit-memberships>
       </mat-expansion-panel>
     </div>
   </mat-expansion-panel>
