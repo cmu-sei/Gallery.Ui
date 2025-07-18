@@ -22,11 +22,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="teamNameFormControl" placeholder="Name (required)" (blur)="saveTeam('name')"
           value="{{data.team.name}}">
-        <mat-error *ngIf="teamNameFormControl.hasError('minlength') && !teamNameFormControl.hasError('required')">
-          Must contain {{ MIN_NAME_LENGTH }} or more characters
-        </mat-error>
         <mat-error *ngIf="teamNameFormControl.hasError('required')">
-          Name is <strong>required</strong>
+          Name is <strong>required</strong>!
         </mat-error>
       </mat-form-field>
     </div>
@@ -37,9 +34,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="teamShortNameFormControl" placeholder="Short Name (required)" (blur)="saveTeam('shortName')"
           value="{{data.team.shortName}}">
-        <mat-error *ngIf="teamShortNameFormControl.hasError('minlength') && !teamShortNameFormControl.hasError('required')">
-          Must contain {{ MIN_NAME_LENGTH }} or more characters
-        </mat-error>
         <mat-error *ngIf="teamShortNameFormControl.hasError('required')">
           Short Name is <strong>required</strong>
         </mat-error>

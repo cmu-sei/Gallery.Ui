@@ -25,6 +25,7 @@ import { environment } from 'src/environments/environment';
 import { HealthCheckService } from 'src/app/generated/api';
 import { ComnAuthService } from '@cmusei/crucible-common';
 import { SystemPermission } from 'src/app/generated/api';
+import { System } from 'typescript';
 
 @Component({
   selector: 'app-admin-container',
@@ -50,13 +51,8 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   uiVersion = environment.VERSION;
   apiVersion = 'ERROR!';
   username = '';
-  permissions: SystemPermission[] = [];
   canViewCollections = false;
-  canEditCollections = false;
-  canCreateCollections = false;
   canViewExhibits = false;
-  canEditExhibits = false;
-  canCreateExhibits = false;
   readonly SystemPermission = SystemPermission;
 
   constructor(
@@ -92,6 +88,9 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.canViewCollections = this.canViewCollections || collections.length > 0;
       this.canViewExhibits = collections.length > 0;
+      this.permissionDataService.load().subscribe();
+      this.permissionDataService.loadCollectionPermissions().subscribe();
+      this.permissionDataService.loadExhibitPermissions().subscribe();
     });
     // observe active collection id
     this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
@@ -111,15 +110,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this.userList = this.userQuery.selectAll();
     this.userDataService.load().pipe(take(1)).subscribe();
-    this.permissionDataService.load().subscribe((x) => {
-      this.permissions = this.permissionDataService.permissions;
-      this.canViewCollections = this.canViewCollections || this.permissionDataService.hasPermission(SystemPermission.ViewCollections);
-      this.canEditCollections = this.permissionDataService.hasPermission(SystemPermission.EditCollections);
-      this.canCreateCollections = this.permissionDataService.hasPermission(SystemPermission.CreateCollections);
-      this.canViewExhibits = this.canViewExhibits || this.permissionDataService.hasPermission(SystemPermission.ViewExhibits);
-      this.canEditExhibits = this.permissionDataService.hasPermission(SystemPermission.EditExhibits);
-      this.canCreateExhibits = this.permissionDataService.hasPermission(SystemPermission.CreateExhibits);
-    });
+    this.permissionDataService.load().subscribe();
     this.permissionDataService.loadCollectionPermissions().subscribe();
     this.permissionDataService.loadExhibitPermissions().subscribe();
     this.signalRService
@@ -138,6 +129,10 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       });
     this.userDataService.setCurrentUser();
 
+  }
+
+  hasPermission(permission: SystemPermission): boolean {
+    return this.permissionDataService.hasPermission(permission);
   }
 
   exitAdmin() {

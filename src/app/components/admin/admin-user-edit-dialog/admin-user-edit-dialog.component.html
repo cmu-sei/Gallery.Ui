@@ -22,9 +22,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field class="full-width">
         <input type="text" matInput [formControl]="userNameFormControl" placeholder="Name (required)" (blur)="saveUser('name')"
           value="{{data.user.name}}">
-        <mat-error *ngIf="userNameFormControl.hasError('minlength') && !userNameFormControl.hasError('required')">
-          Must contain {{ MIN_NAME_LENGTH }} or more characters
-        </mat-error>
         <mat-error *ngIf="userNameFormControl.hasError('required')">
           Name is <strong>required</strong>
         </mat-error>

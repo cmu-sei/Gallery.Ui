@@ -34,7 +34,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-divider></mat-divider>
       </mat-list-item>
       <mat-list-item
-        *ngIf="canViewCollections"
+        *ngIf="canViewCollections || hasPermission(SystemPermission.CreateCollections)"
         [ngClass]="getSelectedClass(section.collections)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.collections)">
@@ -53,7 +53,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-list-item>
       <mat-list-item
-        *ngIf="canViewCollections"
+        *ngIf="canViewCollections || hasPermission(SystemPermission.CreateCollections)"
         [ngClass]="getSelectedClass(section.cards)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.cards)">
@@ -72,7 +72,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-list-item>
       <mat-list-item
-        *ngIf="canViewCollections"
+        *ngIf="canViewCollections || hasPermission(SystemPermission.CreateCollections)"
         [ngClass]="getSelectedClass(section.articles)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.articles)">
@@ -91,7 +91,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-list-item>
       <mat-list-item
-        *ngIf="canViewExhibits"
+        *ngIf="canViewExhibits || hasPermission(SystemPermission.CreateExhibits)"
         [ngClass]="getSelectedClass(section.exhibits)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.exhibits)">
@@ -110,7 +110,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-list-item>
       <mat-list-item
-        *ngIf="permissions.includes(SystemPermission.ViewUsers)"
+        *ngIf="hasPermission(SystemPermission.ViewUsers)"
         [ngClass]="getSelectedClass(section.users)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.users)">
@@ -129,7 +129,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-list-item>
       <mat-list-item
-        *ngIf="permissions.includes(SystemPermission.ViewRoles)"
+        *ngIf="hasPermission(SystemPermission.ViewRoles)"
         [ngClass]="getSelectedClass(section.roles)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.roles)">
@@ -147,7 +147,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-list-item>
       <mat-list-item
-        *ngIf="permissions.includes(SystemPermission.ViewGroups)"
+        *ngIf="hasPermission(SystemPermission.ViewGroups)"
         [ngClass]="getSelectedClass(section.groups)"
       >
         <div class="showhand" id="wrapper" (click)="gotoSection(section.groups)">
@@ -189,33 +189,28 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       [topbarTextColor]="topbarTextColor"
       [imageFilePath]="topbarImage"
     ></app-topbar>
-    <span *ngIf="canViewCollections && displayedSection === section.collections">
-      <app-admin-collections
-        [canEdit]="canEditCollections"
-        [canCreate]="canCreateCollections"
-      ></app-admin-collections>
+    <span *ngIf="(canViewCollections || hasPermission(SystemPermission.CreateCollections)) && displayedSection === section.collections">
+      <app-admin-collections></app-admin-collections>
     </span>
-    <span *ngIf="canViewExhibits && displayedSection === section.exhibits">
+    <span *ngIf="(canViewExhibits || hasPermission(SystemPermission.CreateExhibits)) && displayedSection === section.exhibits">
       <app-admin-exhibits
         [userList]="userList | async"
-        [canEdit]="canEditExhibits"
-        [canCreate]="canCreateExhibits"
       >
       </app-admin-exhibits>
     </span>
-    <span *ngIf="canViewCollections && displayedSection === section.cards">
-      <app-admin-cards [canEdit]="canEditCollections"></app-admin-cards>
+    <span *ngIf="(canViewCollections || hasPermission(SystemPermission.CreateCollections)) && displayedSection === section.cards">
+      <app-admin-cards></app-admin-cards>
     </span>
-    <span *ngIf="canViewCollections && displayedSection === section.articles">
-      <app-admin-articles [canEdit]="canEditCollections"></app-admin-articles>
+    <span *ngIf="(canViewCollections || hasPermission(SystemPermission.CreateCollections)) && displayedSection === section.articles">
+      <app-admin-articles></app-admin-articles>
     </span>
-    <span *ngIf="permissions.includes(SystemPermission.ViewUsers) && displayedSection === section.users">
+    <span *ngIf="hasPermission(SystemPermission.ViewUsers) && displayedSection === section.users">
       <app-admin-users></app-admin-users>
     </span>
-    <span *ngIf="permissions.includes(SystemPermission.ViewRoles) && displayedSection === section.roles">
+    <span *ngIf="hasPermission(SystemPermission.ViewRoles) && displayedSection === section.roles">
       <app-admin-roles></app-admin-roles>
     </span>
-    <span *ngIf="permissions.includes(SystemPermission.ViewGroups) && displayedSection === section.groups">
+    <span *ngIf="hasPermission(SystemPermission.ViewGroups) && displayedSection === section.groups">
       <app-admin-groups></app-admin-groups>
     </span>
   </mat-sidenav-content>

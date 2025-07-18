@@ -23,8 +23,6 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-const MIN_NAME_LENGTH = 3;
-
 @Component({
   selector: 'app-admin-card-edit-dialog',
   templateUrl: './admin-card-edit-dialog.component.html',
@@ -38,7 +36,6 @@ export class AdminCardEditDialogComponent {
     this.data.card.name,
     [
       Validators.required,
-      Validators.minLength(MIN_NAME_LENGTH),
     ]
   );
   public cardDescriptionFormControl = new UntypedFormControl(
@@ -52,8 +49,6 @@ export class AdminCardEditDialogComponent {
     ]
   );
   public collectionList = this.data.collectionList;
-
-  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
 
   constructor(
     public dialogService: DialogService,

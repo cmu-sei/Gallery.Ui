@@ -23,8 +23,6 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-const MIN_NAME_LENGTH = 3;
-
 @Component({
   selector: 'app-admin-user-edit-dialog',
   templateUrl: './admin-user-edit-dialog.component.html',
@@ -38,7 +36,6 @@ export class AdminUserEditDialogComponent {
     this.data.user.name,
     [
       Validators.required,
-      Validators.minLength(MIN_NAME_LENGTH),
     ]
   );
   public emailFormControl = new UntypedFormControl(
@@ -51,8 +48,6 @@ export class AdminUserEditDialogComponent {
       Validators.required
     ]
   );
-
-  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
 
   constructor(
     public dialogService: DialogService,

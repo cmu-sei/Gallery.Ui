@@ -65,9 +65,7 @@ export class PermissionDataService {
       .getMyCollectionPermissions()
       .pipe(
         take(1),
-        tap((x) => {
-          this._collectionPermissions = x;
-        })
+        tap((x) => (this._collectionPermissions = x))
       );
   }
 

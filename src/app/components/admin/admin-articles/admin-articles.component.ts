@@ -19,6 +19,7 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminArticleEditDialogComponent } from 'src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
   selector: 'app-admin-articles',
@@ -26,7 +27,7 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
   styleUrls: ['./admin-articles.component.scss'],
 })
 export class AdminArticlesComponent implements OnDestroy {
-  @Input() canEdit: boolean;
+  canEdit = false;
   pageSize = 10;
   pageIndex = 0;
   newArticle: Article = { id: '', name: '' };
@@ -60,7 +61,8 @@ export class AdminArticlesComponent implements OnDestroy {
     private cardDataService: CardDataService,
     private cardQuery: CardQuery,
     private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery
+    private collectionQuery: CollectionQuery,
+    private permissionDataService: PermissionDataService
   ) {
     this.articleDataService.unload();
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
@@ -128,6 +130,7 @@ export class AdminArticlesComponent implements OnDestroy {
 
   loadCollectionData() {
     this.cardDataService.loadByCollection(this.selectedCollectionId);
+    this.canEdit = this.permissionDataService.canEditCollection(this.selectedCollectionId);
     this.selectedCardId = '';
     this.loadArticleData();
   }

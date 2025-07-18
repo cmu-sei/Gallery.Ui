@@ -13,7 +13,7 @@ import {
 } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
-import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { PermissionDataService } from '../permission/permission-data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +38,7 @@ export class CollectionDataService {
     private collectionStore: CollectionStore,
     private collectionQuery: CollectionQuery,
     private collectionService: CollectionService,
+    private permissionDataService: PermissionDataService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -180,6 +181,7 @@ export class CollectionDataService {
   }
 
   add(collection: Collection) {
+    console.log('going to add collection id ' + collection.id);
     this.collectionStore.setLoading(true);
     this.collectionService
       .createCollection(collection)
@@ -191,6 +193,7 @@ export class CollectionDataService {
       )
       .subscribe((s) => {
         this.collectionStore.add(s);
+        console.log('the added collection id is ' + s.id);
       });
   }
 

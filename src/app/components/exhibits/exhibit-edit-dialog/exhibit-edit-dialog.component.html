@@ -20,12 +20,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           [errorStateMatcher]="matcher"
         />
         <mat-error
-          *ngIf="
-            exhibitNameFormControl.hasError('minlength') &&
-            !exhibitNameFormControl.hasError('required')
-          "
+          *ngIf="exhibitNameFormControl.hasError('minlength')"
         >
-          Must contain 4 or more characters
+          Name is <strong>required</strong>!
         </mat-error>
         <mat-error *ngIf="exhibitNameFormControl.hasError('required')">
           Name is <strong>required</strong>
