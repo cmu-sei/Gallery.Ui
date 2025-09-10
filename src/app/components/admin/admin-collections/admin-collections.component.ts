@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { Sort } from '@angular/material/sort';
@@ -23,9 +23,7 @@ import { PermissionDataService } from 'src/app/data/permission/permission-data.s
   templateUrl: './admin-collections.component.html',
   styleUrls: ['./admin-collections.component.scss'],
 })
-export class AdminCollectionsComponent implements OnInit, OnDestroy {
-  @Input() canEdit: boolean;
-  @Input() canCreate: boolean;
+export class AdminCollectionsComponent implements OnDestroy {
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];
@@ -66,7 +64,9 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
           this.editCollection = { ...collection};
         }
       });
-      this.sortChanged(this.sort);
+      this.applyFilter();
+      console.log('loading collection permissions from admin-collections');
+      this.permissionDataService.loadCollectionPermissions().subscribe();
     });
     this.collectionDataService.load();
     this.filterControl.valueChanges
@@ -81,15 +81,8 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this.loadInitialData();
-  }
-
-  loadInitialData() {
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.collectionList = Array.from(collections);
-      this.applyFilter();
-    });
+  canCreateCollections(): boolean {
+    return this.permissionDataService.hasPermission(SystemPermission.CreateCollections);
   }
 
   addOrEditCollection(collection: Collection) {
@@ -124,6 +117,14 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
       this.selectedCollectionId = collectionId;
     }
     this.collectionDataService.setActive(collectionId);
+  }
+
+  canEditCollection(collectionId: string): boolean {
+    return this.permissionDataService.canEditCollection(collectionId);
+  }
+
+  canManageCollection(collectionId: string): boolean {
+    return this.permissionDataService.canManageCollection(collectionId);
   }
 
   selectCollection(collection: Collection) {
@@ -200,7 +201,8 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   }
 
   copyCollection(id: string): void {
-    this.collectionDataService.copy(id);
+    this.permissionDataService.loadCollectionPermissions().subscribe();
+    // this.collectionDataService.copy(id);
   }
 
   downloadCollection(collection: Collection) {

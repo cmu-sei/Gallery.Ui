@@ -28,8 +28,7 @@ import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.servi
 })
 export class AdminExhibitsComponent implements OnDestroy {
   @Input() userList: User[];
-  @Input() canEdit: boolean;
-  @Input() canCreate: boolean;
+  canCreate = false;
   teamList: Team[];
   pageSize = 10;
   pageIndex = 0;
@@ -80,6 +79,7 @@ export class AdminExhibitsComponent implements OnDestroy {
     this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
       if (activeId && this.selectedCollectionId !== activeId) {
         this.selectedCollectionId = activeId;
+        this.canCreate = this.permissionDataService.canManageCollection(this.selectedCollectionId);
         this.exhibitDataService.loadByCollection(activeId);
       }
     });

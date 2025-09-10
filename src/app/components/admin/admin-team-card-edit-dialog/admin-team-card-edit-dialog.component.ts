@@ -22,8 +22,6 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-const MIN_NAME_LENGTH = 3;
-
 @Component({
   selector: 'app-admin-team-card-edit-dialog',
   templateUrl: './admin-team-card-edit-dialog.component.html',

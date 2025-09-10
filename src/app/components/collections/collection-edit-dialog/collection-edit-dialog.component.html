@@ -23,13 +23,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           [errorStateMatcher]="matcher"
         />
         <mat-error
-          *ngIf="
-            collectionNameFormControl.hasError('required') ||
-            collectionNameFormControl.hasError('minlength')
-          "
+          *ngIf="collectionNameFormControl.hasError('required')"
         >
-          Name is <strong>required</strong> and must contain 4 or more
-          characters
+          Name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
     </div>
@@ -47,13 +43,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (focus)="trimInitialDescription()"
         ></textarea>
         <mat-error
-          *ngIf="
-            descriptionFormControl.hasError('required') ||
-            descriptionFormControl.hasError('minlength')
-          "
+          *ngIf="descriptionFormControl.hasError('required')"
         >
-          Description is <strong>required</strong> and must contain 4 or more
-          characters
+          Description is <strong>required</strong>
         </mat-error>
       </mat-form-field>
     </div>

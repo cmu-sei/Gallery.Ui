@@ -17,6 +17,7 @@ import { takeUntil } from 'rxjs/operators';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AdminCardEditDialogComponent } from 'src/app/components/admin/admin-card-edit-dialog/admin-card-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
   selector: 'app-admin-cards',
@@ -24,7 +25,7 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
   styleUrls: ['./admin-cards.component.scss'],
 })
 export class AdminCardsComponent implements OnDestroy {
-  @Input() canEdit: boolean;
+  canEdit = false;
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];
@@ -51,7 +52,8 @@ export class AdminCardsComponent implements OnDestroy {
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
     private cardDataService: CardDataService,
-    private cardQuery: CardQuery
+    private cardQuery: CardQuery,
+    private permissionDataService: PermissionDataService
   ) {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
@@ -68,7 +70,6 @@ export class AdminCardsComponent implements OnDestroy {
       });
     });
     this.collectionList = this.collectionQuery.getActive() as Collection[];
-    this.selectedCollectionId = this.collectionQuery.getActiveId();
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.collectionList = collections;
     });
@@ -77,6 +78,7 @@ export class AdminCardsComponent implements OnDestroy {
       this.applyFilter();
       this.isLoading = false;
     });
+    this.selectedCollectionId = this.collectionQuery.getActiveId();
     if (this.selectedCollectionId) {
       this.loadCards();
     }
@@ -98,6 +100,7 @@ export class AdminCardsComponent implements OnDestroy {
   loadCards() {
     this.isLoading = true;
     this.cardDataService.loadByCollection(this.selectedCollectionId);
+    this.canEdit = this.permissionDataService.canEditCollection(this.selectedCollectionId);
   }
 
   addOrEditCard(card: Card) {
