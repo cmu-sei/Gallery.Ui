@@ -128,7 +128,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
         this.username = cu.name;
       });
     this.userDataService.setCurrentUser();
-
   }
 
   hasPermission(permission: SystemPermission): boolean {
