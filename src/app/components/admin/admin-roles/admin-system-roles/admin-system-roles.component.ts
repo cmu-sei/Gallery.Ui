@@ -4,12 +4,9 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 */
 
 import { Component, inject, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  SystemPermission,
-  SystemRole,
-} from 'src/app/generated/api';
+import { SystemPermission, SystemRole } from 'src/app/generated/api';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { RoleDataService } from 'src/app/data/role/role-data.service';
 import { ConfirmDialogService } from 'src/app/components/shared/confirm-dialog/service/confirm-dialog.service';

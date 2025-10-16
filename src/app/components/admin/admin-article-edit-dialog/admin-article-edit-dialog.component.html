@@ -13,16 +13,28 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     class="close-button"
     tabindex="-1"
   >
-    <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+    <mat-icon
+      class="mdi-24px self-center"
+      fontIcon="mdi-close-circle-outline"
+    ></mat-icon>
   </button>
 </div>
-<div mat-dialog-content *ngIf="!!data && data.article !== undefined && data.article !== null">
-
+<div
+  mat-dialog-content
+  *ngIf="!!data && data.article !== undefined && data.article !== null"
+>
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
-        <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)" (blur)="saveArticle('name')"
-          value="{{data.article.name}}" [errorStateMatcher]="matcher">
+        <input
+          type="text"
+          matInput
+          [formControl]="articleNameFormControl"
+          placeholder="Name (required)"
+          (blur)="saveArticle('name')"
+          value="{{ data.article.name }}"
+          [errorStateMatcher]="matcher"
+        />
         <mat-error *ngIf="articleNameFormControl.hasError('required')">
           Name is <strong>required</strong>
         </mat-error>
@@ -33,18 +45,32 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
-        <input matInput placeholder="Summary (required)" [formControl]="summaryFormControl"
-          (blur)="saveArticle('summary')" value="{{data.article.summary}}" [errorStateMatcher]="matcher" />
-          <mat-error *ngIf="summaryFormControl.hasError('required')">
-            Summary is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
+        <input
+          matInput
+          placeholder="Summary (required)"
+          [formControl]="summaryFormControl"
+          (blur)="saveArticle('summary')"
+          value="{{ data.article.summary }}"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error *ngIf="summaryFormControl.hasError('required')">
+          Summary is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
     </div>
   </div>
 
   <div class="add-margin left">
     <div>
-      <p style="font-size: 13px; font-weight: 400; line-height: 1.125; font-family: Open Sans, sans-serif; letter-spacing: normal;">
+      <p
+        style="
+          font-size: 13px;
+          font-weight: 400;
+          line-height: 1.125;
+          font-family: Open Sans, sans-serif;
+          letter-spacing: normal;
+        "
+      >
         Description (required)*
       </p>
       <div>
@@ -65,10 +91,19 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field>
-        <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
+        <mat-select
+          placeholder="Card"
+          [formControl]="cardIdFormControl"
+          (selectionChange)="saveArticle('cardId')"
+        >
           <mat-option></mat-option>
-          <mat-option *ngFor="let card of data.cardList" [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
-            {{card.name}}
+          <mat-option
+            *ngFor="let card of data.cardList"
+            [value]="card.id"
+            [matTooltip]="card.id"
+            matTooltipPosition="right"
+          >
+            {{ card.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -78,8 +113,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field>
-        <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
-          <mat-option *ngFor="let itemStatusOption of itemStatusList" [value]="itemStatusOption" >
+        <mat-select
+          placeholder="Status"
+          [formControl]="statusFormControl"
+          (selectionChange)="saveArticle('status')"
+        >
+          <mat-option
+            *ngFor="let itemStatusOption of itemStatusList"
+            [value]="itemStatusOption"
+          >
             {{ itemStatusOption }}
           </mat-option>
         </mat-select>
@@ -90,8 +132,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field>
-        <mat-select placeholder="Source Type" [formControl]="sourceTypeFormControl" (selectionChange)="saveArticle('sourceType')">
-          <mat-option *ngFor="let sourceTypeOption of sourceTypeList" [value]="sourceTypeOption" >
+        <mat-select
+          placeholder="Source Type"
+          [formControl]="sourceTypeFormControl"
+          (selectionChange)="saveArticle('sourceType')"
+        >
+          <mat-option
+            *ngFor="let sourceTypeOption of sourceTypeList"
+            [value]="sourceTypeOption"
+          >
             {{ sourceTypeOption }}
           </mat-option>
         </mat-select>
@@ -102,8 +151,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
-        <input matInput placeholder="Source Name" [formControl]="sourceNameFormControl"
-          (blur)="saveArticle('sourceName')" value="{{data.article.sourceName}}" />
+        <input
+          matInput
+          placeholder="Source Name"
+          [formControl]="sourceNameFormControl"
+          (blur)="saveArticle('sourceName')"
+          value="{{ data.article.sourceName }}"
+        />
       </mat-form-field>
     </div>
   </div>
@@ -111,17 +165,20 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
-        <input matInput placeholder="URL for more info" [formControl]="urlFormControl"
-          (blur)="saveArticle('url')" value="{{data.article.url}}" />
+        <input
+          matInput
+          placeholder="URL for more info"
+          [formControl]="urlFormControl"
+          (blur)="saveArticle('url')"
+          value="{{ data.article.url }}"
+        />
       </mat-form-field>
     </div>
   </div>
 
   <div class="add-margin">
     <div class="full-width">
-      <mat-checkbox
-        [(ngModel)]="data.article.openInNewTab"
-      >
+      <mat-checkbox [(ngModel)]="data.article.openInNewTab">
         Open URL in new tab
       </mat-checkbox>
     </div>
@@ -130,8 +187,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
-        <input matInput placeholder="Move" [formControl]="moveFormControl"
-          (blur)="saveArticle('move')" value="{{data.article.move}}" />
+        <input
+          matInput
+          placeholder="Move"
+          [formControl]="moveFormControl"
+          (blur)="saveArticle('move')"
+          value="{{ data.article.move }}"
+        />
       </mat-form-field>
     </div>
   </div>
@@ -139,8 +201,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
-        <input matInput placeholder="Inject" [formControl]="injectFormControl"
-          (blur)="saveArticle('inject')" value="{{data.article.inject}}" />
+        <input
+          matInput
+          placeholder="Inject"
+          [formControl]="injectFormControl"
+          (blur)="saveArticle('inject')"
+          value="{{ data.article.inject }}"
+        />
       </mat-form-field>
     </div>
   </div>
@@ -150,38 +217,30 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field>
         <input
           matInput
-          [ngxMatDatetimePicker]="postedDatePicker"
           placeholder="Posted Date / Time"
           [formControl]="datePostedFormControl"
           (inputChange)="saveArticle('datePosted')"
           (dateChange)="saveArticle('datePosted')"
-          >
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="$any(postedDatePicker)">
-        </mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #postedDatePicker
-          [showSpinners]=true
-          [showSeconds]=true
-          [stepHour]=1
-          [stepMinute]=1
-          [stepSecond]=1
-          [touchUi]=false
-          [enableMeridian]=true
-          [disableMinute]=false
-          [hideTime]=false>
-        </ngx-mat-datetime-picker>
+        />
       </mat-form-field>
     </div>
   </div>
 
   <div class="cssLayoutRowStartCenter bottom-button">
     <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
+      <button
+        mat-stroked-button
+        (click)="handleEditComplete(true)"
+        [disabled]="!errorFree()"
+        style="margin-left: 40px"
+      >
+        Save
+      </button>
     </div>
     <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
+      <button mat-stroked-button (click)="handleEditComplete(false)">
+        Cancel
+      </button>
     </div>
   </div>
-
 </div>

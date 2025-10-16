@@ -2,13 +2,9 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import {
-  UntypedFormControl,
-  FormGroupDirective,
-  NgForm,
-} from '@angular/forms';
+import { UntypedFormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SystemMessageService } from 'src/app/services/system-message/system-message.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -27,7 +23,6 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './admin-team-card-edit-dialog.component.html',
   styleUrls: ['./admin-team-card-edit-dialog.component.scss'],
 })
-
 export class AdminTeamCardEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
@@ -39,10 +34,7 @@ export class AdminTeamCardEditDialogComponent {
     this.data.teamCard.cardId,
     []
   );
-  public moveFormControl = new UntypedFormControl(
-    this.data.teamCard.move,
-    []
-  );
+  public moveFormControl = new UntypedFormControl(this.data.teamCard.move, []);
   public injectFormControl = new UntypedFormControl(
     this.data.teamCard.inject,
     []
@@ -64,18 +56,16 @@ export class AdminTeamCardEditDialogComponent {
   }
 
   errorFree() {
-    return !(
-      !this.data.teamCard.teamId ||
-      !this.data.teamCard.cardId
-    );
+    return !(!this.data.teamCard.teamId || !this.data.teamCard.cardId);
   }
 
   isDuplicateTeamCard() {
     const existingTeamCard = this.data.teamCardList.find(
-      tc => tc.teamId === this.data.teamCard.teamId  &&
-      tc.cardId === this.data.teamCard.cardId
+      (tc) =>
+        tc.teamId === this.data.teamCard.teamId &&
+        tc.cardId === this.data.teamCard.cardId
     );
-    return (existingTeamCard && existingTeamCard.id !== this.data.teamCard.id);
+    return existingTeamCard && existingTeamCard.id !== this.data.teamCard.id;
   }
 
   /**
@@ -87,11 +77,10 @@ export class AdminTeamCardEditDialogComponent {
     } else {
       if (this.errorFree) {
         if (this.isDuplicateTeamCard()) {
-          this.systemMessage
-            .displayMessage(
-              'This Team Card already exists!',
-              'Please select a different combination of Team and Card.'
-            );
+          this.systemMessage.displayMessage(
+            'This Team Card already exists!',
+            'Please select a different combination of Team and Card.'
+          );
         } else {
           this.editComplete.emit({
             saveChanges: saveChanges,
@@ -109,7 +98,9 @@ export class AdminTeamCardEditDialogComponent {
     switch (changedField) {
       case 'teamId': {
         let addAllTeams = false;
-        const allTeamsIsChecked = this.teamIdFormControl.value.includes(this.ALL_TEAMS);
+        const allTeamsIsChecked = this.teamIdFormControl.value.includes(
+          this.ALL_TEAMS
+        );
         // remove "All Teams" from the selected values
         if (allTeamsIsChecked) {
           const index = this.teamIdFormControl.value.indexOf(this.ALL_TEAMS, 0);
@@ -125,7 +116,10 @@ export class AdminTeamCardEditDialogComponent {
         } else if (this.allTeamsWasChecked && !allTeamsIsChecked) {
           // user unselected All Teams
           newValue = [];
-        } else if (!allTeamsIsChecked && this.teamIdFormControl.value.length === this.teamIdList.length) {
+        } else if (
+          !allTeamsIsChecked &&
+          this.teamIdFormControl.value.length === this.teamIdList.length
+        ) {
           // all of the teams were selected individually
           newValue = Object.assign([], this.teamIdFormControl.value);
           addAllTeams = true;
@@ -153,5 +147,4 @@ export class AdminTeamCardEditDialogComponent {
         break;
     }
   }
-
 }

@@ -3,9 +3,14 @@
 
 import { Component, Input, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { Article, Collection, ItemStatus, SourceType } from 'src/app/generated/api/model/models';
+import {
+  Article,
+  Collection,
+  ItemStatus,
+  SourceType,
+} from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
 import { Card } from 'src/app/data/card/card.store';
@@ -14,7 +19,7 @@ import { CardQuery } from 'src/app/data/card/card.query';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminArticleEditDialogComponent } from 'src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component';
@@ -49,7 +54,7 @@ export class AdminArticlesComponent implements OnDestroy {
   filteredArticleList: Article[] = [];
   filterControl = new UntypedFormControl();
   filterString = '';
-  sort: Sort = {active: 'datePosted', direction: 'desc'};
+  sort: Sort = { active: 'datePosted', direction: 'desc' };
   private unsubscribe$ = new Subject();
 
   constructor(
@@ -68,69 +73,83 @@ export class AdminArticlesComponent implements OnDestroy {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
-    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
-      this.articleList = [];
-      articles.forEach(article => {
-        this.articleList.push({ ...article });
-        if (article.id === this.editArticle.id) {
-          this.originalArticle = article;
-          this.editArticle = { ...article};
-        }
+    this.articleQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((articles) => {
+        this.articleList = [];
+        articles.forEach((article) => {
+          this.articleList.push({ ...article });
+          if (article.id === this.editArticle.id) {
+            this.originalArticle = article;
+            this.editArticle = { ...article };
+          }
+        });
+        this.applyFilter();
+        const moves: number[] = [];
+        articles.forEach((a) => {
+          if (!moves.includes(+a.move)) {
+            moves.push(+a.move);
+          }
+        });
+        this.moveList = moves;
+        this.sortChanged(this.sort);
       });
-      this.applyFilter();
-      const moves: number[] = [];
-      articles.forEach(a => {
-        if (!moves.includes(+a.move)) {
-          moves.push(+a.move);
-        }
-      });
-      this.moveList = moves;
-      this.sortChanged(this.sort);
-    });
     // observe the card list
-    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
-      this.cardList = cards;
-    });
+    this.cardQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cards) => {
+        this.cardList = cards;
+      });
     // get initial selectedCollectionId value
     this.selectedCollectionId = this.collectionQuery.getActiveId();
     if (this.selectedCollectionId) {
       this.loadCollectionData();
     }
     // observe active collection changes
-    this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(collectionId => {
-      if (collectionId && collectionId !== this.selectedCollectionId) {
-        this.selectedCollectionId = collectionId;
-        this.loadCollectionData();
-      }
-    });
+    this.collectionQuery
+      .selectActiveId()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((collectionId) => {
+        if (collectionId && collectionId !== this.selectedCollectionId) {
+          this.selectedCollectionId = collectionId;
+          this.loadCollectionData();
+        }
+      });
     // get the initial collectionList
     this.collectionList = this.collectionQuery.getAll();
     // observe collection list changes
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.collectionList = collections;
-    });
+    this.collectionQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((collections) => {
+        this.collectionList = collections;
+      });
     // observe the active card
-    this.cardQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(cardId => {
-      if (cardId && this.selectedCardId !== cardId) {
-        this.selectedCardId = cardId;
-        this.loadArticleData();
-      }
-    });
+    this.cardQuery
+      .selectActiveId()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cardId) => {
+        if (cardId && this.selectedCardId !== cardId) {
+          this.selectedCardId = cardId;
+          this.loadArticleData();
+        }
+      });
 
     this.filterControl.valueChanges
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
         this.filterString = term.trim().toLowerCase();
         this.applyFilter();
       });
-
   }
 
   loadCollectionData() {
     this.cardDataService.loadByCollection(this.selectedCollectionId);
-    this.canEdit = this.permissionDataService.canEditCollection(this.selectedCollectionId);
+    this.canEdit = this.permissionDataService.canEditCollection(
+      this.selectedCollectionId
+    );
     this.selectedCardId = '';
     this.loadArticleData();
   }
@@ -158,16 +177,16 @@ export class AdminArticlesComponent implements OnDestroy {
         status: ItemStatus.Unused,
         sourceType: SourceType.Intel,
         sourceName: '',
-        datePosted: datePosted
+        datePosted: datePosted,
       };
     } else {
-      article = {... article};
+      article = { ...article };
     }
     const dialogRef = this.dialog.open(AdminArticleEditDialogComponent, {
       width: '900px',
       data: {
         article: article,
-        cardList: this.cardList
+        cardList: this.cardList,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -179,7 +198,10 @@ export class AdminArticlesComponent implements OnDestroy {
   }
 
   togglePanel(article: Article) {
-    this.editArticle = this.editArticle.id === article.id ? this.editArticle = {} : this.editArticle = { ...article};
+    this.editArticle =
+      this.editArticle.id === article.id
+        ? (this.editArticle = {})
+        : (this.editArticle = { ...article });
   }
 
   selectCollection(collectionId: string) {
@@ -227,11 +249,12 @@ export class AdminArticlesComponent implements OnDestroy {
   }
 
   applyFilter() {
-    this.filteredArticleList = this.articleList.filter(article =>
-      !this.filterString ||
-      article.name.toLowerCase().includes(this.filterString) ||
-      article.description.toLowerCase().includes(this.filterString) ||
-      article.sourceName.toLowerCase().includes(this.filterString)
+    this.filteredArticleList = this.articleList.filter(
+      (article) =>
+        !this.filterString ||
+        article.name.toLowerCase().includes(this.filterString) ||
+        article.description.toLowerCase().includes(this.filterString) ||
+        article.sourceName.toLowerCase().includes(this.filterString)
     );
     this.sortChanged(this.sort);
   }
@@ -242,7 +265,9 @@ export class AdminArticlesComponent implements OnDestroy {
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    this.filteredArticleList.sort((a, b) => this.sortArticles(a, b, sort.active, sort.direction));
+    this.filteredArticleList.sort((a, b) =>
+      this.sortArticles(a, b, sort.active, sort.direction)
+    );
     this.applyPagination();
   }
 
@@ -261,19 +286,15 @@ export class AdminArticlesComponent implements OnDestroy {
         );
       case 'cardId':
         return (
-          (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (this.getCardName(a.cardId).toLowerCase() <
+          this.getCardName(b.cardId).toLowerCase()
+            ? -1
+            : 1) * (isAsc ? 1 : -1)
         );
       case 'move':
-        return (
-          (a.move < b.move ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.move < b.move ? -1 : 1) * (isAsc ? 1 : -1);
       case 'inject':
-        return (
-          (a.inject < b.inject ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.inject < b.inject ? -1 : 1) * (isAsc ? 1 : -1);
       case 'sourceName':
         return (
           (a.sourceName.toLowerCase() < b.sourceName.toLowerCase() ? -1 : 1) *
@@ -300,7 +321,7 @@ export class AdminArticlesComponent implements OnDestroy {
   }
 
   getCardName(id: string) {
-    const card = id ? this.cardList.find(item => item.id === id) : null;
+    const card = id ? this.cardList.find((item) => item.id === id) : null;
     const name = card ? card.name : '';
     return name;
   }
@@ -313,12 +334,14 @@ export class AdminArticlesComponent implements OnDestroy {
 
   applyPagination() {
     const startIndex = this.pageIndex * this.pageSize;
-    this.displayedArticles = this.filteredArticleList.slice(startIndex, startIndex + this.pageSize);
+    this.displayedArticles = this.filteredArticleList.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
   }
 
   ngOnDestroy() {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

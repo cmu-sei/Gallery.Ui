@@ -11,12 +11,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
-import {
-  MatLegacyPaginator as MatPaginator,
-  LegacyPageEvent as PageEvent,
-} from '@angular/material/legacy-paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
@@ -97,9 +94,7 @@ export class CollectionListComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.sortEvents$ = fromMatSort(this.sort);
     this.pageEvents$ = fromMatPaginator(this.paginator);
-    const id = this.selectedCollection
-      ? this.selectedCollection.id
-      : '';
+    const id = this.selectedCollection ? this.selectedCollection.id : '';
     // force already expanded collection to refresh details
     if (id) {
       const here = this;
@@ -113,12 +108,8 @@ export class CollectionListComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.permissions = this.permissionDataService.permissions;
-    if (
-      !!changes.collectionList &&
-      !!changes.collectionList.currentValue
-    ) {
-      this.collectionDataSource.data =
-        changes.collectionList.currentValue;
+    if (!!changes.collectionList && !!changes.collectionList.currentValue) {
+      this.collectionDataSource.data = changes.collectionList.currentValue;
       this.filterAndSort();
     }
   }
@@ -194,9 +185,7 @@ export class CollectionListComponent implements OnInit, OnChanges {
       )
       .subscribe((result) => {
         if (result['confirm']) {
-          this.collectionDataService.copy(
-            collection.id
-          );
+          this.collectionDataService.copy(collection.id);
         }
       });
   }
@@ -214,9 +203,7 @@ export class CollectionListComponent implements OnInit, OnChanges {
       )
       .subscribe((result) => {
         if (result['confirm']) {
-          this.exhibitDataService.createExhibitFromCollection(
-            collection.id
-          );
+          this.exhibitDataService.createExhibitFromCollection(collection.id);
         }
       });
   }

@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -28,25 +28,19 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './admin-card-edit-dialog.component.html',
   styleUrls: ['./admin-card-edit-dialog.component.scss'],
 })
-
 export class AdminCardEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
-  public cardNameFormControl = new UntypedFormControl(
-    this.data.card.name,
-    [
-      Validators.required,
-    ]
-  );
+  public cardNameFormControl = new UntypedFormControl(this.data.card.name, [
+    Validators.required,
+  ]);
   public cardDescriptionFormControl = new UntypedFormControl(
     this.data.card.description,
     []
   );
   public collectionIdFormControl = new UntypedFormControl(
-    this.data.card.collectionId ,
-    [
-      Validators.required
-    ]
+    this.data.card.collectionId,
+    [Validators.required]
   );
   public collectionList = this.data.collectionList;
 
@@ -72,9 +66,7 @@ export class AdminCardEditDialogComponent {
     if (!saveChanges) {
       this.editComplete.emit({ saveChanges: false, card: null });
     } else {
-      this.data.card.name = this.cardNameFormControl.value
-        .toString()
-        .trim();
+      this.data.card.name = this.cardNameFormControl.value.toString().trim();
       this.data.card.description = this.cardDescriptionFormControl.value
         .toString()
         .trim();
@@ -99,14 +91,15 @@ export class AdminCardEditDialogComponent {
         this.data.card.name = this.cardNameFormControl.value.toString();
         break;
       case 'description':
-        this.data.card.description = this.cardDescriptionFormControl.value.toString();
+        this.data.card.description =
+          this.cardDescriptionFormControl.value.toString();
         break;
       case 'collectionId':
-        this.data.card.collectionId = this.collectionIdFormControl.value.toString();
+        this.data.card.collectionId =
+          this.collectionIdFormControl.value.toString();
         break;
       default:
         break;
     }
   }
-
 }

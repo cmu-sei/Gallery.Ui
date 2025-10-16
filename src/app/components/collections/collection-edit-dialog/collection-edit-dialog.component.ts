@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -59,9 +59,7 @@ export class CollectionEditDialogComponent {
     [Validators.required, Validators.minLength(4)]
   );
   descriptionFormControl = new UntypedFormControl(
-    this.data.collection.description
-      ? this.data.collection.description
-      : ' ',
+    this.data.collection.description ? this.data.collection.description : ' ',
     [Validators.required, Validators.minLength(4)]
   );
   durationHoursFormControl = new UntypedFormControl(
@@ -118,8 +116,7 @@ export class CollectionEditDialogComponent {
       modifiedCollection.description = this.descriptionFormControl.value
         .toString()
         .trim();
-      modifiedCollection.durationHours =
-        this.durationHoursFormControl.value;
+      modifiedCollection.durationHours = this.durationHoursFormControl.value;
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,

@@ -15,17 +15,14 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import {
-  AdminTeamCardEditDialogComponent
-} from 'src/app/components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AdminTeamCardEditDialogComponent } from 'src/app/components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
 
 @Component({
   selector: 'app-admin-team-cards',
   templateUrl: './admin-team-cards.component.html',
   styleUrls: ['./admin-team-cards.component.scss'],
 })
-
 export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   @Input() teamList: Team[];
   @Input() collectionId: string;
@@ -35,13 +32,20 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   teamCardList: TeamCard[] = [];
   selectedTeamId = '';
   selectedCardId = '';
-  newTeamCard: TeamCard = { id: '', teamId: '', cardId: '', isShownOnWall: true, move: 0, inject: 0 };
+  newTeamCard: TeamCard = {
+    id: '',
+    teamId: '',
+    cardId: '',
+    isShownOnWall: true,
+    move: 0,
+    inject: 0,
+  };
   topbarColor = '#ef3a47';
   addingNewTeamCard = false;
   filteredTeamCardList: TeamCard[] = [];
   filterControl = new UntypedFormControl();
   filterString = '';
-  sort: Sort = {active: 'team', direction: 'asc'};
+  sort: Sort = { active: 'team', direction: 'asc' };
   isLoading = false;
   private unsubscribe$ = new Subject();
 
@@ -58,22 +62,34 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
-    this.teamCardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teamCards => {
-      this.teamCardList = [];
-      teamCards.forEach(teamCard => {
-        this.teamCardList.push({ ...teamCard });
+    this.teamCardQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teamCards) => {
+        this.teamCardList = [];
+        teamCards.forEach((teamCard) => {
+          this.teamCardList.push({ ...teamCard });
+        });
       });
-    });
-    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
-      this.cardList = cards;
-    });
-    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
-      this.teamList = teams;
-    });
-    this.teamCardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teamCards => {
-      this.teamCardList = teamCards;
-      this.sortChanged(this.sort);
-    });
+    this.cardQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cards) => {
+        this.cardList = cards;
+      });
+    this.teamQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teams) => {
+        this.teamList = teams;
+      });
+    this.teamCardQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teamCards) => {
+        this.teamCardList = teamCards;
+        this.sortChanged(this.sort);
+      });
   }
 
   ngOnInit() {
@@ -90,10 +106,10 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
         cardId: this.selectedCardId,
         move: 0,
         inject: 0,
-        isShownOnWall: true
+        isShownOnWall: true,
       };
     } else {
-      teamCard = {... teamCard};
+      teamCard = { ...teamCard };
     }
     const dialogRef = this.dialog.open(AdminTeamCardEditDialogComponent, {
       width: '480px',
@@ -101,13 +117,13 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
         teamCard: teamCard,
         cardList: this.cardList,
         teamList: this.teamList,
-        teamCardList: this.teamCardList
+        teamCardList: this.teamCardList,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
       if (result.saveChanges && result.teamCard) {
         const teamIdList = result.teamCard.teamId.split(',');
-        teamIdList.forEach(teamId => {
+        teamIdList.forEach((teamId) => {
           result.teamCard.teamId = teamId;
           this.saveTeamCard(result.teamCard);
         });
@@ -120,7 +136,11 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     if (teamCard.id) {
       this.teamCardDataService.updateTeamCard(teamCard);
     } else {
-      if (!this.teamCardList.some(tc => tc.teamId === teamCard.teamId && tc.cardId === teamCard.cardId)) {
+      if (
+        !this.teamCardList.some(
+          (tc) => tc.teamId === teamCard.teamId && tc.cardId === teamCard.cardId
+        )
+      ) {
         this.teamCardDataService.add(teamCard);
       }
     }
@@ -130,18 +150,24 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     this.teamCardDataService.delete(teamCard.id);
   }
 
-
   applyFilter(filterValue: string) {
     this.filterString = filterValue.trim().toLowerCase();
-    this.filteredTeamCardList = this.teamCardList.filter(teamCard => {
-      const teamName = this.getTeamName(teamCard.teamId).toLowerCase();
-      const cardName = this.getCardName(teamCard.cardId).toLowerCase();
-      return (
-        (this.selectedTeamId === '' || teamCard.teamId === this.selectedTeamId) &&
-        (this.selectedCardId === '' || teamCard.cardId === this.selectedCardId) &&
-        (teamName.includes(this.filterString) || cardName.includes(this.filterString))
+    this.filteredTeamCardList = this.teamCardList
+      .filter((teamCard) => {
+        const teamName = this.getTeamName(teamCard.teamId).toLowerCase();
+        const cardName = this.getCardName(teamCard.cardId).toLowerCase();
+        return (
+          (this.selectedTeamId === '' ||
+            teamCard.teamId === this.selectedTeamId) &&
+          (this.selectedCardId === '' ||
+            teamCard.cardId === this.selectedCardId) &&
+          (teamName.includes(this.filterString) ||
+            cardName.includes(this.filterString))
+        );
+      })
+      .sort((a: TeamCard, b: TeamCard) =>
+        this.sortTeamCards(a, b, this.sort.active, this.sort.direction)
       );
-    }).sort((a: TeamCard, b: TeamCard) => this.sortTeamCards(a, b, this.sort.active, this.sort.direction));
   }
 
   sortChanged(sort: Sort) {
@@ -159,41 +185,36 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     switch (column) {
       case 'teamId':
         return (
-          (this.getTeamName(a.teamId).toLowerCase() < this.getTeamName(b.teamId).toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (this.getTeamName(a.teamId).toLowerCase() <
+          this.getTeamName(b.teamId).toLowerCase()
+            ? -1
+            : 1) * (isAsc ? 1 : -1)
         );
       case 'cardId':
         return (
-          (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (this.getCardName(a.cardId).toLowerCase() <
+          this.getCardName(b.cardId).toLowerCase()
+            ? -1
+            : 1) * (isAsc ? 1 : -1)
         );
       case 'move':
-        return (
-          (a.move < b.move ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.move < b.move ? -1 : 1) * (isAsc ? 1 : -1);
       case 'inject':
-        return (
-          (a.inject < b.inject ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.inject < b.inject ? -1 : 1) * (isAsc ? 1 : -1);
       case 'isShownOnWall':
-        return (
-          (a.isShownOnWall < b.isShownOnWall ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.isShownOnWall < b.isShownOnWall ? -1 : 1) * (isAsc ? 1 : -1);
       default:
         return 0;
     }
   }
 
   getCardName(cardId: string) {
-    const card = this.cardList?.find(t => t.id === cardId);
+    const card = this.cardList?.find((t) => t.id === cardId);
     return card ? card.name : ' ';
   }
 
   getTeamName(teamId: string) {
-    const team = this.teamList?.find(t => t.id === teamId);
+    const team = this.teamList?.find((t) => t.id === teamId);
     return team ? team.name : ' ';
   }
 
@@ -213,5 +234,4 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

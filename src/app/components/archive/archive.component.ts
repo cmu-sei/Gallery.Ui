@@ -2,8 +2,24 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { DOCUMENT } from '@angular/common';
-import { Component, EventEmitter, Inject, Input, Output, OnDestroy } from '@angular/core';
-import { Article, Card, ItemStatus, Team, TeamCard, Exhibit, UserArticle, SourceType } from 'src/app/generated/api/model/models';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  Output,
+  OnDestroy,
+} from '@angular/core';
+import {
+  Article,
+  Card,
+  ItemStatus,
+  Team,
+  TeamCard,
+  Exhibit,
+  UserArticle,
+  SourceType,
+} from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
@@ -14,12 +30,7 @@ import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamService } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
-import {
-  Observable,
-  Subject,
-  take,
-  takeUntil
-} from 'rxjs';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
 import { UntypedFormControl } from '@angular/forms';
@@ -28,7 +39,7 @@ import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
 import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dialog/article-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/generated/api';
@@ -62,22 +73,22 @@ export class ArchiveComponent implements OnDestroy {
   filterString = '';
   username = 'unknown';
   userId = '';
-  sort: Sort = {active: 'datePosted', direction: 'desc'};
+  sort: Sort = { active: 'datePosted', direction: 'desc' };
   pageSize = 25;
   pageIndex = 0;
-  sourceIcon: {[key: string]: string} = {
+  sourceIcon: { [key: string]: string } = {
     Intel: 'mdi-shield-lock',
     Reporting: 'mdi-file-chart',
     News: 'mdi-television-classic',
     Social: 'mdi-bullhorn',
     Phone: 'mdi-cellphone',
     Email: 'mdi-email',
-    Orders: 'mdi-police-badge'
+    Orders: 'mdi-police-badge',
   };
   private unsubscribe$ = new Subject();
 
   editorStyle = {
-    height: '200px'
+    height: '200px',
   };
 
   constructor(
@@ -101,59 +112,80 @@ export class ArchiveComponent implements OnDestroy {
     this._document
       .getElementById('appFavicon')
       .setAttribute('href', 'assets/img/archive-blue.png');
-    this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
+    this._document.getElementById('appTitle').innerHTML =
+      this.settingsService.settings.AppTitle + ' Archive';
     // subscribe to userArticles
-    this.userArticleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(userArticles => {
-      this.userArticleList = [];
-      this.filteredUserArticleList = [];
-      let unreadCount = 0;
-      userArticles.forEach(ua => {
-        unreadCount = ua.isRead ? unreadCount : ++unreadCount;
-        this.userArticleList.push({ ... ua });
-      });
-      this.moveList = [];
-      if (userArticles.length > 0) {
-        const maxMove = userArticles.sort((a: UserArticle, b: UserArticle) => (b.article.move - a.article.move))[0].article.move;
-        for (let move = maxMove; move >= 0 ; move--) {
-          this.moveList.push(move);
-        }
-      }
-      this.sortChanged(this.sort);
-      // put unread article count in the browser tab
-      if (unreadCount === 0) {
-        this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Archive';
-      } else {
-        this._document.getElementById('appTitle').innerHTML =
-            this.settingsService.settings.AppTitle + ' Archive (' + unreadCount.toString() + ')';
-      }
-    });
-    // subscribe to cards
-    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
-      this.cardList = [];
-      cards.forEach(card => {
-        this.cardList.push({ ...card });
-      });
-      this.sortChanged(this.sort);
-      this.setCardLists();
-    });
-    // subscribe to active card
-    this.cardQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(id => {
-      this.cardId = id ? id : 'all';
-      this.sortChanged(this.sort);
-    });
-    // subscribe to active exhibit
-    (this.exhibitQuery.selectActive() as Observable<Exhibit>).pipe(takeUntil(this.unsubscribe$)).subscribe(e => {
-      if (!e) {
-        this.exhibitId = '';
-        this.exhibit = {};
-      } else {
-        this.exhibitId = e.id;
-        this.exhibit = e;
-        this.teamService.getTeamsByExhibit(e.id).pipe(take(1)).subscribe(teams => {
-          this.shareTeamList = teams;
+    this.userArticleQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((userArticles) => {
+        this.userArticleList = [];
+        this.filteredUserArticleList = [];
+        let unreadCount = 0;
+        userArticles.forEach((ua) => {
+          unreadCount = ua.isRead ? unreadCount : ++unreadCount;
+          this.userArticleList.push({ ...ua });
         });
-      }
-    });
+        this.moveList = [];
+        if (userArticles.length > 0) {
+          const maxMove = userArticles.sort(
+            (a: UserArticle, b: UserArticle) => b.article.move - a.article.move
+          )[0].article.move;
+          for (let move = maxMove; move >= 0; move--) {
+            this.moveList.push(move);
+          }
+        }
+        this.sortChanged(this.sort);
+        // put unread article count in the browser tab
+        if (unreadCount === 0) {
+          this._document.getElementById('appTitle').innerHTML =
+            this.settingsService.settings.AppTitle + ' Archive';
+        } else {
+          this._document.getElementById('appTitle').innerHTML =
+            this.settingsService.settings.AppTitle +
+            ' Archive (' +
+            unreadCount.toString() +
+            ')';
+        }
+      });
+    // subscribe to cards
+    this.cardQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cards) => {
+        this.cardList = [];
+        cards.forEach((card) => {
+          this.cardList.push({ ...card });
+        });
+        this.sortChanged(this.sort);
+        this.setCardLists();
+      });
+    // subscribe to active card
+    this.cardQuery
+      .selectActiveId()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((id) => {
+        this.cardId = id ? id : 'all';
+        this.sortChanged(this.sort);
+      });
+    // subscribe to active exhibit
+    (this.exhibitQuery.selectActive() as Observable<Exhibit>)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((e) => {
+        if (!e) {
+          this.exhibitId = '';
+          this.exhibit = {};
+        } else {
+          this.exhibitId = e.id;
+          this.exhibit = e;
+          this.teamService
+            .getTeamsByExhibit(e.id)
+            .pipe(take(1))
+            .subscribe((teams) => {
+              this.shareTeamList = teams;
+            });
+        }
+      });
     // subscribe to filter control changes
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
@@ -162,21 +194,25 @@ export class ArchiveComponent implements OnDestroy {
         this.sortChanged(this.sort);
       });
     // subscribe to teamCards
-    this.teamCardQuery.selectAll()
+    this.teamCardQuery
+      .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(teamCards => {
+      .subscribe((teamCards) => {
         this.teamCardList = teamCards;
         this.setCardLists();
         this.sortChanged(this.sort);
       });
     // subscribe to teams
-    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
-      this.teamList = teams;
-    });
+    this.teamQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teams) => {
+        this.teamList = teams;
+      });
   }
 
   getCardName(id: string) {
-    const card = id ? this.cardList.find(c => c.id === id) : null;
+    const card = id ? this.cardList.find((c) => c.id === id) : null;
     const name = card ? card.name : '';
     return name;
   }
@@ -202,16 +238,30 @@ export class ArchiveComponent implements OnDestroy {
     this.sort = sort;
     if (this.userArticleList && this.userArticleList.length > 0) {
       this.filteredUserArticleList = this.userArticleList
-        .sort((a: UserArticle, b: UserArticle) => this.sortArticles(a.article, b.article, sort.active, sort.direction))
-        .filter((a) => ((this.cardId === 'all') || a.article.cardId === this.cardId)
-                        && (!this.sourceTypeList || this.sourceTypeList.indexOf(a.article.sourceType) > -1)
-                        && (!this.filterString ||
-                              a.article.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-                              a.article.description.toLowerCase().includes(this.filterString.toLowerCase()) ||
-                              a.article.sourceType.toLowerCase().includes(this.filterString.toLowerCase()) ||
-                              a.article.sourceName.toLowerCase().includes(this.filterString.toLowerCase()) ||
-                              a.article.status.toLowerCase().includes(this.filterString.toLowerCase())
-                        )
+        .sort((a: UserArticle, b: UserArticle) =>
+          this.sortArticles(a.article, b.article, sort.active, sort.direction)
+        )
+        .filter(
+          (a) =>
+            (this.cardId === 'all' || a.article.cardId === this.cardId) &&
+            (!this.sourceTypeList ||
+              this.sourceTypeList.indexOf(a.article.sourceType) > -1) &&
+            (!this.filterString ||
+              a.article.name
+                .toLowerCase()
+                .includes(this.filterString.toLowerCase()) ||
+              a.article.description
+                .toLowerCase()
+                .includes(this.filterString.toLowerCase()) ||
+              a.article.sourceType
+                .toLowerCase()
+                .includes(this.filterString.toLowerCase()) ||
+              a.article.sourceName
+                .toLowerCase()
+                .includes(this.filterString.toLowerCase()) ||
+              a.article.status
+                .toLowerCase()
+                .includes(this.filterString.toLowerCase()))
         );
     }
   }
@@ -241,8 +291,10 @@ export class ArchiveComponent implements OnDestroy {
         );
       case 'cardId':
         return (
-          (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (this.getCardName(a.cardId).toLowerCase() <
+          this.getCardName(b.cardId).toLowerCase()
+            ? -1
+            : 1) * (isAsc ? 1 : -1)
         );
       case 'status':
         return (
@@ -269,19 +321,22 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   getMoveArticles(move: number) {
-    return this.filteredUserArticleList.filter(a => a.article.move === move);
+    return this.filteredUserArticleList.filter((a) => a.article.move === move);
   }
 
   openMoreDialog(userArticle: UserArticle, useUrl: boolean) {
     if (useUrl && userArticle.article.openInNewTab) {
       window.open(userArticle.article.url);
     } else {
-      this.xApiService.previewedArticle(this.exhibitId, userArticle.articleId).pipe(take(1)).subscribe();
+      this.xApiService
+        .previewedArticle(this.exhibitId, userArticle.articleId)
+        .pipe(take(1))
+        .subscribe();
       const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
         data: {
           article: userArticle.article,
           useUrl: useUrl,
-          exhibitId: this.exhibitId
+          exhibitId: this.exhibitId,
         },
       });
       dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -309,13 +364,16 @@ export class ArchiveComponent implements OnDestroy {
       data: {
         article: userArticle.article,
         teamList: this.shareTeamList,
-        isEmailActive: this.settingsService.settings.IsEmailActive
+        isEmailActive: this.settingsService.settings.IsEmailActive,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
       if (result.saveChanges && result.shareDetails) {
         result.shareDetails.exhibitId = this.exhibitId;
-        this.userArticleDataService.shareUserArticle(userArticle.id, result.shareDetails);
+        this.userArticleDataService.shareUserArticle(
+          userArticle.id,
+          result.shareDetails
+        );
       }
       dialogRef.close();
     });
@@ -341,8 +399,8 @@ export class ArchiveComponent implements OnDestroy {
     this.postCardList = [];
     this.showCardList = [];
     if (this.teamCardList.length > 0 && this.cardList.length > 0) {
-      this.teamCardList.forEach(tc => {
-        const card = { ...this.cardList.find(c => c.id === tc.cardId)};
+      this.teamCardList.forEach((tc) => {
+        const card = { ...this.cardList.find((c) => c.id === tc.cardId) };
         this.showCardList.push(card);
         if (tc.canPostArticles) {
           this.postCardList.push(card);
@@ -356,9 +414,12 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   canAddArticles() {
-    return this.postCardList.length > 0 &&
-      this.exhibit && this.exhibit.collectionId &&
-      this.myTeamIsSelected();
+    return (
+      this.postCardList.length > 0 &&
+      this.exhibit &&
+      this.exhibit.collectionId &&
+      this.myTeamIsSelected()
+    );
   }
 
   sourceIsMe(sourceName: string): boolean {
@@ -381,17 +442,17 @@ export class ArchiveComponent implements OnDestroy {
         status: ItemStatus.Unused,
         sourceType: SourceType.Reporting,
         sourceName: this.teamDataService.getMyTeam().shortName,
-        datePosted: datePosted
+        datePosted: datePosted,
       };
     } else {
-      article = {... article};
+      article = { ...article };
     }
     const dialogRef = this.dialog.open(ArticleEditDialogComponent, {
       width: '900px',
       data: {
         article: article,
         cardList: this.postCardList,
-        exhibitId: this.exhibitId
+        exhibitId: this.exhibitId,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -442,5 +503,4 @@ export class ArchiveComponent implements OnDestroy {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

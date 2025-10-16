@@ -8,7 +8,6 @@
     "test": "ng test",
     "lint": "eslint -c .eslintrc.js --ext .ts src/",
     "e2e": "ng e2e",
-    "postinstall": "ngcc",
     "swagger-gen": "curl --insecure http://host.docker.internal:4722/swagger/v1/swagger.json --output swagger.json && node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator generate -i ./swagger.json -g typescript-angular -o src/app/generated/api --additional-properties ngVersion=11.2.1 --additional-properties useRxJS6=true --additional-properties modelPropertyNaming=original --type-mappings=DateTime=Date --skip-validate-spec",
     "swagger-gen-win": "docker run --rm -v %CD%:/local openapitools/openapi-generator-cli:v5.1.0 generate -i http://host.docker.internal:4722/swagger/v1/swagger.json -g typescript-angular -o /local/src/app/generated/api --additional-properties ngVersion=11.2.1 --additional-properties useRxJS6=true --additional-properties modelPropertyNaming=original --type-mappings=DateTime=Date --skip-validate-spec",
     "docker:init": "docker network create identity --driver=overlay",
@@ -19,7 +18,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-material-components/datetime-picker": "^9.0.0",
     "@angular/animations": "^15.1.2",
     "@angular/cdk": "^15.1.1",
     "@angular/common": "^15.1.2",

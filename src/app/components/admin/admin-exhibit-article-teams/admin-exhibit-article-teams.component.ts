@@ -1,16 +1,10 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  Input,
-  ViewChild,
-} from '@angular/core';
-import { LegacyPageEvent as PageEvent, MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Team } from 'src/app/generated/api';
 import { ArticleTeamDataService } from 'src/app/data/team/article-team-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
@@ -23,7 +17,6 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-exhibit-article-teams.component.html',
   styleUrls: ['./admin-exhibit-article-teams.component.scss'],
 })
-
 export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;
   @Input() articleId: string;
@@ -48,23 +41,34 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
-    this.articleTeamDataService.teamArticles.pipe(takeUntil(this.unsubscribe$)).subscribe(teamArticles => {
-      const teams: Team[] = [];
-      if (this.exhibitTeams.length > 0) {
-        teamArticles.filter(ta => ta.exhibitId === this.exhibitId && ta.articleId === this.articleId).forEach(ta => {
-          const team = this.exhibitTeams.find(t => t.id === ta.teamId);
-          if (team) {
-            teams.push(team);
-          }
-        });
-      }
-      this.articleTeams = teams;
-      this.setDataSources();
-    });
-    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
-      this.exhibitTeams = teams;
-      this.setDataSources();
-    });
+    this.articleTeamDataService.teamArticles
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teamArticles) => {
+        const teams: Team[] = [];
+        if (this.exhibitTeams.length > 0) {
+          teamArticles
+            .filter(
+              (ta) =>
+                ta.exhibitId === this.exhibitId &&
+                ta.articleId === this.articleId
+            )
+            .forEach((ta) => {
+              const team = this.exhibitTeams.find((t) => t.id === ta.teamId);
+              if (team) {
+                teams.push(team);
+              }
+            });
+        }
+        this.articleTeams = teams;
+        this.setDataSources();
+      });
+    this.teamQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teams) => {
+        this.exhibitTeams = teams;
+        this.setDataSources();
+      });
   }
 
   setDataSources() {
@@ -87,13 +91,16 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
     this.exhibitTeamDataSource.sort = this.sort;
   }
 
-
   addTeamToArticle(teamId: string): void {
     const index = this.articleTeamDataSource.data.findIndex(
       (tu) => tu.id === teamId
     );
     if (index === -1) {
-      this.articleTeamDataService.addTeamToArticle(this.exhibitId, teamId, this.articleId);
+      this.articleTeamDataService.addTeamToArticle(
+        this.exhibitId,
+        teamId,
+        this.articleId
+      );
     }
   }
 
@@ -122,5 +129,4 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

@@ -10,7 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItemStatus, SourceType } from 'src/app/generated/api';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
@@ -31,7 +31,6 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './admin-article-edit-dialog.component.html',
   styleUrls: ['./admin-article-edit-dialog.component.scss'],
 })
-
 export class AdminArticleEditDialogComponent implements OnInit {
   @Output() editComplete = new EventEmitter<any>();
   editorConfig: AngularEditorConfig = {
@@ -50,45 +49,34 @@ export class AdminArticleEditDialogComponent implements OnInit {
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [
-      {class: 'arial', name: 'Arial'},
-      {class: 'times-new-roman', name: 'Times New Roman'},
-      {class: 'calibri', name: 'Calibri'},
-      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' },
     ],
     uploadUrl: '',
     uploadWithCredentials: false,
     sanitize: true,
     toolbarPosition: 'top',
-    toolbarHiddenButtons: [
-      ['backgroundColor']
-    ]
+    toolbarHiddenButtons: [['backgroundColor']],
   };
   public articleNameFormControl = new UntypedFormControl(
     this.data.article.name,
-    [
-      Validators.required,
-    ]
+    [Validators.required]
   );
   public summaryFormControl = new UntypedFormControl(
     this.data.article.summary,
-    [
-      Validators.required,
-    ]
+    [Validators.required]
   );
   public descriptionFormControl = new UntypedFormControl(
     this.data.article.description,
-    [
-      Validators.required,
-    ]
+    [Validators.required]
   );
   public cardIdFormControl = new UntypedFormControl(
     this.data.article.cardId,
     []
   );
-  public moveFormControl = new UntypedFormControl(
-    this.data.article.move,
-    []
-  );
+  public moveFormControl = new UntypedFormControl(this.data.article.move, []);
   public injectFormControl = new UntypedFormControl(
     this.data.article.inject,
     []
@@ -105,10 +93,7 @@ export class AdminArticleEditDialogComponent implements OnInit {
     this.data.article.sourceName,
     []
   );
-  public urlFormControl = new UntypedFormControl(
-    this.data.article.url,
-    []
-  );
+  public urlFormControl = new UntypedFormControl(this.data.article.url, []);
   public datePostedFormControl = new UntypedFormControl(
     this.data.article.datePosted,
     []
@@ -120,7 +105,7 @@ export class AdminArticleEditDialogComponent implements OnInit {
     ItemStatus.Affected,
     ItemStatus.Closed,
     ItemStatus.Critical,
-    ItemStatus.Open
+    ItemStatus.Open,
   ];
   sourceTypeList: SourceType[] = [
     SourceType.Intel,
@@ -129,7 +114,7 @@ export class AdminArticleEditDialogComponent implements OnInit {
     SourceType.Social,
     SourceType.Phone,
     SourceType.Email,
-    SourceType.Orders
+    SourceType.Orders,
   ];
 
   constructor(
@@ -143,10 +128,10 @@ export class AdminArticleEditDialogComponent implements OnInit {
   editorStyle = {
     'min-height': '100px',
     'max-height': '400px',
-    'overflow': 'auto'
+    overflow: 'auto',
   };
 
-  ngOnInit () {
+  ngOnInit() {
     this.articleNameFormControl.markAsTouched();
     this.summaryFormControl.markAllAsTouched();
     this.descriptionFormControl.markAllAsTouched();
@@ -202,13 +187,19 @@ export class AdminArticleEditDialogComponent implements OnInit {
   saveArticle(changedField): void {
     switch (changedField) {
       case 'name':
-        this.data.article.name = this.articleNameFormControl.value ? this.articleNameFormControl.value.toString() : '';
+        this.data.article.name = this.articleNameFormControl.value
+          ? this.articleNameFormControl.value.toString()
+          : '';
         break;
       case 'summary':
-        this.data.article.summary = this.summaryFormControl.value ? this.summaryFormControl.value.toString() : '';
+        this.data.article.summary = this.summaryFormControl.value
+          ? this.summaryFormControl.value.toString()
+          : '';
         break;
       case 'description':
-        this.data.article.description = this.descriptionFormControl.value ? this.descriptionFormControl.value.toString() : '';
+        this.data.article.description = this.descriptionFormControl.value
+          ? this.descriptionFormControl.value.toString()
+          : '';
         break;
       case 'cardId':
         this.data.article.cardId = this.cardIdFormControl.value;
@@ -226,10 +217,14 @@ export class AdminArticleEditDialogComponent implements OnInit {
         this.data.article.sourceType = this.sourceTypeFormControl.value;
         break;
       case 'sourceName':
-        this.data.article.sourceName = this.sourceNameFormControl.value ? this.sourceNameFormControl.value.toString() : '';
+        this.data.article.sourceName = this.sourceNameFormControl.value
+          ? this.sourceNameFormControl.value.toString()
+          : '';
         break;
       case 'url':
-        this.data.article.url = this.urlFormControl.value ? this.urlFormControl.value.toString() : '';
+        this.data.article.url = this.urlFormControl.value
+          ? this.urlFormControl.value.toString()
+          : '';
         break;
       case 'datePosted': {
         const newPosted = new Date(this.datePostedFormControl.value);
@@ -243,5 +238,4 @@ export class AdminArticleEditDialogComponent implements OnInit {
         break;
     }
   }
-
 }

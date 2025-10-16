@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -28,18 +28,15 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './admin-collection-edit-dialog.component.html',
   styleUrls: ['./admin-collection-edit-dialog.component.scss'],
 })
-
 export class AdminCollectionEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
   public collectionNameFormControl = new UntypedFormControl(
     this.data.collection.name,
-    [
-      Validators.required,
-    ]
+    [Validators.required]
   );
   public descriptionFormControl = new UntypedFormControl(
-    this.data.collection.description ,
+    this.data.collection.description,
     []
   );
 
@@ -97,14 +94,15 @@ export class AdminCollectionEditDialogComponent {
   saveCollection(changedField): void {
     switch (changedField) {
       case 'name':
-        this.data.collection.name = this.collectionNameFormControl.value.toString();
+        this.data.collection.name =
+          this.collectionNameFormControl.value.toString();
         break;
       case 'description':
-        this.data.collection.description = this.descriptionFormControl.value.toString();
+        this.data.collection.description =
+          this.descriptionFormControl.value.toString();
         break;
       default:
         break;
     }
   }
-
 }

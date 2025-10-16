@@ -5,12 +5,9 @@ import { TeamStore } from './team.store';
 import { TeamQuery } from './team.query';
 import { Injectable } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  Team,
-  TeamService
-} from 'src/app/generated/api';
+import { Team, TeamService } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 
@@ -81,29 +78,22 @@ export class TeamDataService {
         ]) =>
           items
             ? (items as Team[])
-              .sort((a: Team, b: Team) =>
-                this.sortTeams(a, b, sortColumn, sortIsAscending)
-              )
-              .filter(
-                (team) =>
-                  ('' + team.name)
-                    .toLowerCase()
-                    .includes(filterTerm.toLowerCase()) ||
-                    team.id
+                .sort((a: Team, b: Team) =>
+                  this.sortTeams(a, b, sortColumn, sortIsAscending)
+                )
+                .filter(
+                  (team) =>
+                    ('' + team.name)
                       .toLowerCase()
-                      .includes(filterTerm.toLowerCase())
-              )
+                      .includes(filterTerm.toLowerCase()) ||
+                    team.id.toLowerCase().includes(filterTerm.toLowerCase())
+                )
             : []
       )
     );
   }
 
-  private sortTeams(
-    a: Team,
-    b: Team,
-    column: string,
-    isAsc: boolean
-  ) {
+  private sortTeams(a: Team, b: Team, column: string, isAsc: boolean) {
     switch (column) {
       case 'name':
         return (
@@ -227,8 +217,8 @@ export class TeamDataService {
   }
 
   setMyTeam(id: string) {
-    const myTeam = this.teamQuery.getAll().find(t => t.id === id);
-    this.myTeam = myTeam ? myTeam : {} as Team;
+    const myTeam = this.teamQuery.getAll().find((t) => t.id === id);
+    this.myTeam = myTeam ? myTeam : ({} as Team);
   }
 
   getMyTeam(): Team {

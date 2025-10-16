@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { UntypedFormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -49,8 +49,7 @@ export class CollectionsComponent {
   selectedCollection = this.collectionDataService.selected;
   collectionPageEvent = this.collectionDataService.pageEvent;
   isLoading = this.collectionQuery.selectLoading();
-  filterControl: UntypedFormControl =
-    this.collectionDataService.filterControl;
+  filterControl: UntypedFormControl = this.collectionDataService.filterControl;
   filterString: Observable<string>;
   pageSize: Observable<number>;
   pageIndex: Observable<number>;
