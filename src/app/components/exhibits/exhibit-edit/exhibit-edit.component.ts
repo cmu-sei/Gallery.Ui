@@ -20,9 +20,10 @@ import {
 } from 'src/app/generated/api/model/models';
 
 @Component({
-  selector: 'app-exhibit-edit',
-  templateUrl: './exhibit-edit.component.html',
-  styleUrls: ['./exhibit-edit.component.scss'],
+    selector: 'app-exhibit-edit',
+    templateUrl: './exhibit-edit.component.html',
+    styleUrls: ['./exhibit-edit.component.scss'],
+    standalone: false
 })
 export class ExhibitEditComponent {
   @Input() exhibit: Exhibit;

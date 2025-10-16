@@ -27,9 +27,10 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-admin-article-edit-dialog',
-  templateUrl: './admin-article-edit-dialog.component.html',
-  styleUrls: ['./admin-article-edit-dialog.component.scss'],
+    selector: 'app-admin-article-edit-dialog',
+    templateUrl: './admin-article-edit-dialog.component.html',
+    styleUrls: ['./admin-article-edit-dialog.component.scss'],
+    standalone: false
 })
 export class AdminArticleEditDialogComponent implements OnInit {
   @Output() editComplete = new EventEmitter<any>();

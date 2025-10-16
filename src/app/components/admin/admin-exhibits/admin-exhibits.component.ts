@@ -33,9 +33,10 @@ import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 
 @Component({
-  selector: 'app-admin-exhibits',
-  templateUrl: './admin-exhibits.component.html',
-  styleUrls: ['./admin-exhibits.component.scss'],
+    selector: 'app-admin-exhibits',
+    templateUrl: './admin-exhibits.component.html',
+    styleUrls: ['./admin-exhibits.component.scss'],
+    standalone: false
 })
 export class AdminExhibitsComponent implements OnDestroy {
   @Input() userList: User[];

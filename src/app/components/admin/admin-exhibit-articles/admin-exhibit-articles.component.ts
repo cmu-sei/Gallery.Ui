@@ -15,9 +15,10 @@ import { takeUntil } from 'rxjs/operators';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 @Component({
-  selector: 'app-admin-exhibit-articles',
-  templateUrl: './admin-exhibit-articles.component.html',
-  styleUrls: ['./admin-exhibit-articles.component.scss'],
+    selector: 'app-admin-exhibit-articles',
+    templateUrl: './admin-exhibit-articles.component.html',
+    styleUrls: ['./admin-exhibit-articles.component.scss'],
+    standalone: false
 })
 export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   @Input() exhibit: Exhibit;

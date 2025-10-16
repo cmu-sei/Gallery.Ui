@@ -19,9 +19,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { AdminTeamCardEditDialogComponent } from 'src/app/components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
 
 @Component({
-  selector: 'app-admin-team-cards',
-  templateUrl: './admin-team-cards.component.html',
-  styleUrls: ['./admin-team-cards.component.scss'],
+    selector: 'app-admin-team-cards',
+    templateUrl: './admin-team-cards.component.html',
+    styleUrls: ['./admin-team-cards.component.scss'],
+    standalone: false
 })
 export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   @Input() teamList: Team[];

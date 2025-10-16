@@ -25,9 +25,10 @@ import {
 } from 'src/app/generated/api';
 
 @Component({
-  selector: 'app-collection-member-list',
-  templateUrl: './collection-member-list.component.html',
-  styleUrls: ['./collection-member-list.component.scss'],
+    selector: 'app-collection-member-list',
+    templateUrl: './collection-member-list.component.html',
+    styleUrls: ['./collection-member-list.component.scss'],
+    standalone: false
 })
 export class CollectionMemberListComponent implements OnInit, OnChanges {
   @Input()

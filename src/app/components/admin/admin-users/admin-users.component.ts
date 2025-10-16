@@ -13,9 +13,10 @@ import { PermissionDataService } from 'src/app/data/permission/permission-data.s
 import { ComnSettingsService } from '@cmusei/crucible-common';
 
 @Component({
-  selector: 'app-admin-users',
-  templateUrl: './admin-users.component.html',
-  styleUrls: ['./admin-users.component.scss'],
+    selector: 'app-admin-users',
+    templateUrl: './admin-users.component.html',
+    styleUrls: ['./admin-users.component.scss'],
+    standalone: false
 })
 export class AdminUsersComponent implements OnInit {
   matcher = new UserErrorStateMatcher();

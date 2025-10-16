@@ -18,9 +18,10 @@ import { AdminTeamEditDialogComponent } from 'src/app/components/admin/admin-tea
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 @Component({
-  selector: 'app-admin-teams',
-  templateUrl: './admin-teams.component.html',
-  styleUrls: ['./admin-teams.component.scss'],
+    selector: 'app-admin-teams',
+    templateUrl: './admin-teams.component.html',
+    styleUrls: ['./admin-teams.component.scss'],
+    standalone: false
 })
 export class AdminTeamsComponent implements OnInit, OnDestroy {
   @Input() exhibitId: string;

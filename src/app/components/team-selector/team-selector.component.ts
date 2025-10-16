@@ -11,9 +11,10 @@ import { TeamQuery } from 'src/app/data/team/team.query';
 import { takeUntil, Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-team-selector',
-  templateUrl: './team-selector.component.html',
-  styleUrls: ['./team-selector.component.scss']
+    selector: 'app-team-selector',
+    templateUrl: './team-selector.component.html',
+    styleUrls: ['./team-selector.component.scss'],
+    standalone: false
 })
 export class TeamSelectorComponent implements OnDestroy {
   @Output() changeTeam = new EventEmitter<string>();

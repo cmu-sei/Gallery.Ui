@@ -45,9 +45,10 @@ import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/generated/api';
 
 @Component({
-  selector: 'app-archive',
-  templateUrl: './archive.component.html',
-  styleUrls: ['./archive.component.scss'],
+    selector: 'app-archive',
+    templateUrl: './archive.component.html',
+    styleUrls: ['./archive.component.scss'],
+    standalone: false
 })
 export class ArchiveComponent implements OnDestroy {
   @Input() showAdminButton: boolean;

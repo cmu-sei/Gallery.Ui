@@ -11,9 +11,10 @@ import { SignalRService } from 'src/app/services/signalr.service';
 import { UserQuery } from 'src/app/data/user/user.query';
 
 @Component({
-  selector: 'app-admin-groups-detail',
-  templateUrl: './admin-groups-detail.component.html',
-  styleUrls: ['./admin-groups-detail.component.scss'],
+    selector: 'app-admin-groups-detail',
+    templateUrl: './admin-groups-detail.component.html',
+    styleUrls: ['./admin-groups-detail.component.scss'],
+    standalone: false
 })
 export class AdminGroupsDetailComponent implements OnInit, OnChanges {
   @Input() groupId: string;

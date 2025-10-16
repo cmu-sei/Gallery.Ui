@@ -20,9 +20,10 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
-  selector: 'app-admin-cards',
-  templateUrl: './admin-cards.component.html',
-  styleUrls: ['./admin-cards.component.scss'],
+    selector: 'app-admin-cards',
+    templateUrl: './admin-cards.component.html',
+    styleUrls: ['./admin-cards.component.scss'],
+    standalone: false
 })
 export class AdminCardsComponent implements OnDestroy {
   canEdit = false;

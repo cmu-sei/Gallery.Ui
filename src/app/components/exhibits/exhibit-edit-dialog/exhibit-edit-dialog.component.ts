@@ -24,9 +24,10 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-exhibit-edit-dialog',
-  templateUrl: './exhibit-edit-dialog.component.html',
-  styleUrls: ['./exhibit-edit-dialog.component.scss'],
+    selector: 'app-exhibit-edit-dialog',
+    templateUrl: './exhibit-edit-dialog.component.html',
+    styleUrls: ['./exhibit-edit-dialog.component.scss'],
+    standalone: false
 })
 export class ExhibitEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();

@@ -8,9 +8,10 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
-  selector: 'app-article-share-dialog',
-  templateUrl: './article-share-dialog.component.html',
-  styleUrls: ['./article-share-dialog.component.scss'],
+    selector: 'app-article-share-dialog',
+    templateUrl: './article-share-dialog.component.html',
+    styleUrls: ['./article-share-dialog.component.scss'],
+    standalone: false
 })
 export class ArticleShareDialogComponent {
   @Output() editComplete = new EventEmitter<any>();

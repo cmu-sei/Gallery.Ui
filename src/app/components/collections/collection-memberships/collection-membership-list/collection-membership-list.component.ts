@@ -20,10 +20,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CollectionMembership, Group, User } from 'src/app/generated/api';
 
 @Component({
-  selector: 'app-collection-membership-list',
-  templateUrl: './collection-membership-list.component.html',
-  styleUrls: ['./collection-membership-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-collection-membership-list',
+    templateUrl: './collection-membership-list.component.html',
+    styleUrls: ['./collection-membership-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CollectionMembershipListComponent implements OnInit, OnChanges {
   @Input()

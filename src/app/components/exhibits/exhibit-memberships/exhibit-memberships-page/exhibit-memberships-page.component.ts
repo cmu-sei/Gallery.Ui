@@ -8,9 +8,10 @@ import { ActivatedRoute } from '@angular/router';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
-  selector: 'app-exhibit-memberships-page',
-  templateUrl: './exhibit-memberships-page.component.html',
-  styleUrls: ['./exhibit-memberships-page.component.scss'],
+    selector: 'app-exhibit-memberships-page',
+    templateUrl: './exhibit-memberships-page.component.html',
+    styleUrls: ['./exhibit-memberships-page.component.scss'],
+    standalone: false
 })
 export class ExhibitMembershipsPageComponent implements OnInit {
   exhibitId: string;

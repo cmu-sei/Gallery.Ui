@@ -20,9 +20,10 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
-  selector: 'app-admin-collections',
-  templateUrl: './admin-collections.component.html',
-  styleUrls: ['./admin-collections.component.scss'],
+    selector: 'app-admin-collections',
+    templateUrl: './admin-collections.component.html',
+    styleUrls: ['./admin-collections.component.scss'],
+    standalone: false
 })
 export class AdminCollectionsComponent implements OnDestroy {
   pageSize = 10;

@@ -15,9 +15,10 @@ import { Section } from 'src/app/utilities/enumerations';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 
 @Component({
-  selector: 'app-wall',
-  templateUrl: './wall.component.html',
-  styleUrls: ['./wall.component.scss'],
+    selector: 'app-wall',
+    templateUrl: './wall.component.html',
+    styleUrls: ['./wall.component.scss'],
+    standalone: false
 })
 export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;

@@ -20,10 +20,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ExhibitMembership, Group, User } from 'src/app/generated/api';
 
 @Component({
-  selector: 'app-exhibit-membership-list',
-  templateUrl: './exhibit-membership-list.component.html',
-  styleUrls: ['./exhibit-membership-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-exhibit-membership-list',
+    templateUrl: './exhibit-membership-list.component.html',
+    styleUrls: ['./exhibit-membership-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ExhibitMembershipListComponent implements OnInit, OnChanges {
   @Input()

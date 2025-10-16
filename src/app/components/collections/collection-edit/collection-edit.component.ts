@@ -13,9 +13,10 @@ import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { Collection } from 'src/app/generated/api';
 
 @Component({
-  selector: 'app-collection-edit',
-  templateUrl: './collection-edit.component.html',
-  styleUrls: ['./collection-edit.component.scss'],
+    selector: 'app-collection-edit',
+    templateUrl: './collection-edit.component.html',
+    styleUrls: ['./collection-edit.component.scss'],
+    standalone: false
 })
 export class CollectionEditComponent {
   @Input() collection: Collection;

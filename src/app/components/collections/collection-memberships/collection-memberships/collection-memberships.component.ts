@@ -28,9 +28,10 @@ import { PermissionDataService } from 'src/app/data/permission/permission-data.s
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-collection-memberships',
-  templateUrl: './collection-memberships.component.html',
-  styleUrls: ['./collection-memberships.component.scss'],
+    selector: 'app-collection-memberships',
+    templateUrl: './collection-memberships.component.html',
+    styleUrls: ['./collection-memberships.component.scss'],
+    standalone: false
 })
 export class CollectionMembershipsComponent implements OnInit, OnChanges {
   @Input() embedded: boolean;

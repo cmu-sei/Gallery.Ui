@@ -8,9 +8,10 @@ import { ActivatedRoute } from '@angular/router';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
-  selector: 'app-collection-memberships-page',
-  templateUrl: './collection-memberships-page.component.html',
-  styleUrls: ['./collection-memberships-page.component.scss'],
+    selector: 'app-collection-memberships-page',
+    templateUrl: './collection-memberships-page.component.html',
+    styleUrls: ['./collection-memberships-page.component.scss'],
+    standalone: false
 })
 export class CollectionMembershipsPageComponent implements OnInit {
   collectionId: string;

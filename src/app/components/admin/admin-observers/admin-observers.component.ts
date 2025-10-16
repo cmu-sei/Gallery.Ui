@@ -15,9 +15,10 @@ import { UserQuery } from 'src/app/data/user/user.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 @Component({
-  selector: 'app-admin-observers',
-  templateUrl: './admin-observers.component.html',
-  styleUrls: ['./admin-observers.component.scss'],
+    selector: 'app-admin-observers',
+    templateUrl: './admin-observers.component.html',
+    styleUrls: ['./admin-observers.component.scss'],
+    standalone: false
 })
 export class AdminObserversComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;

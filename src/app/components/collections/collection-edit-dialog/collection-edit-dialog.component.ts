@@ -47,9 +47,10 @@ export class NotIntegerErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-collection-edit-dialog',
-  templateUrl: './collection-edit-dialog.component.html',
-  styleUrls: ['./collection-edit-dialog.component.scss'],
+    selector: 'app-collection-edit-dialog',
+    templateUrl: './collection-edit-dialog.component.html',
+    styleUrls: ['./collection-edit-dialog.component.scss'],
+    standalone: false
 })
 export class CollectionEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();

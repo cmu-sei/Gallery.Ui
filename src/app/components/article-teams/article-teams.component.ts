@@ -19,9 +19,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-article-teams',
-  templateUrl: './article-teams.component.html',
-  styleUrls: ['./article-teams.component.scss'],
+    selector: 'app-article-teams',
+    templateUrl: './article-teams.component.html',
+    styleUrls: ['./article-teams.component.scss'],
+    standalone: false
 })
 export class ArticleTeamsComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;

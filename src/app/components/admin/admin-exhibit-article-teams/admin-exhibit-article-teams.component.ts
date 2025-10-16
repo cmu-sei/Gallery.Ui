@@ -13,9 +13,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-admin-exhibit-article-teams',
-  templateUrl: './admin-exhibit-article-teams.component.html',
-  styleUrls: ['./admin-exhibit-article-teams.component.scss'],
+    selector: 'app-admin-exhibit-article-teams',
+    templateUrl: './admin-exhibit-article-teams.component.html',
+    styleUrls: ['./admin-exhibit-article-teams.component.scss'],
+    standalone: false
 })
 export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;

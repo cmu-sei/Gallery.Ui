@@ -20,9 +20,10 @@ import { SignalRService } from 'src/app/services/signalr.service';
 const NAME_VALUE = 'nameValue';
 
 @Component({
-  selector: 'app-admin-system-roles',
-  templateUrl: './admin-system-roles.component.html',
-  styleUrls: ['./admin-system-roles.component.scss'],
+    selector: 'app-admin-system-roles',
+    templateUrl: './admin-system-roles.component.html',
+    styleUrls: ['./admin-system-roles.component.scss'],
+    standalone: false
 })
 export class AdminSystemRolesComponent implements OnInit {
   private roleService = inject(RoleDataService);

@@ -28,9 +28,10 @@ import { GroupDataService } from 'src/app/data/group/group-data.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
-  selector: 'app-exhibit-memberships',
-  templateUrl: './exhibit-memberships.component.html',
-  styleUrls: ['./exhibit-memberships.component.scss'],
+    selector: 'app-exhibit-memberships',
+    templateUrl: './exhibit-memberships.component.html',
+    styleUrls: ['./exhibit-memberships.component.scss'],
+    standalone: false
 })
 export class ExhibitMembershipsComponent implements OnInit, OnChanges {
   @Input() embedded: boolean;

@@ -14,9 +14,10 @@ import { map } from 'rxjs/operators';
 import { ExhibitRoleDataService } from 'src/app/data/exhibit/exhibit-role-data.service';
 
 @Component({
-  selector: 'app-admin-exhibit-roles',
-  templateUrl: './admin-exhibit-roles.component.html',
-  styleUrls: ['./admin-exhibit-roles.component.scss'],
+    selector: 'app-admin-exhibit-roles',
+    templateUrl: './admin-exhibit-roles.component.html',
+    styleUrls: ['./admin-exhibit-roles.component.scss'],
+    standalone: false
 })
 export class AdminExhibitRolesComponent implements OnInit {
   private exhibitRoleService = inject(ExhibitRoleDataService);

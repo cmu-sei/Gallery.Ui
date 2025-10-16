@@ -25,9 +25,10 @@ import {
 } from 'src/app/generated/api';
 
 @Component({
-  selector: 'app-exhibit-member-list',
-  templateUrl: './exhibit-member-list.component.html',
-  styleUrls: ['./exhibit-member-list.component.scss'],
+    selector: 'app-exhibit-member-list',
+    templateUrl: './exhibit-member-list.component.html',
+    styleUrls: ['./exhibit-member-list.component.scss'],
+    standalone: false
 })
 export class ExhibitMemberListComponent
   implements OnInit, OnChanges, AfterViewInit

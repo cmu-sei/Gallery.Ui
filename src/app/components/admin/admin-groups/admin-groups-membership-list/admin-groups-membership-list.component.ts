@@ -20,9 +20,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/app/generated/api';
 
 @Component({
-  selector: 'app-admin-groups-membership-list',
-  templateUrl: './admin-groups-membership-list.component.html',
-  styleUrls: ['./admin-groups-membership-list.component.scss'],
+    selector: 'app-admin-groups-membership-list',
+    templateUrl: './admin-groups-membership-list.component.html',
+    styleUrls: ['./admin-groups-membership-list.component.scss'],
+    standalone: false
 })
 export class AdminGroupsMembershipListComponent
   implements OnInit, OnChanges, AfterViewInit

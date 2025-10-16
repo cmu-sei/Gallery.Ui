@@ -24,9 +24,10 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-admin-exhibit-edit-dialog',
-  templateUrl: './admin-exhibit-edit-dialog.component.html',
-  styleUrls: ['./admin-exhibit-edit-dialog.component.scss'],
+    selector: 'app-admin-exhibit-edit-dialog',
+    templateUrl: './admin-exhibit-edit-dialog.component.html',
+    styleUrls: ['./admin-exhibit-edit-dialog.component.scss'],
+    standalone: false
 })
 export class AdminExhibitEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();

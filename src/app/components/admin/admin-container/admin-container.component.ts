@@ -28,9 +28,10 @@ import { SystemPermission } from 'src/app/generated/api';
 import { System } from 'typescript';
 
 @Component({
-  selector: 'app-admin-container',
-  templateUrl: './admin-container.component.html',
-  styleUrls: ['./admin-container.component.scss'],
+    selector: 'app-admin-container',
+    templateUrl: './admin-container.component.html',
+    styleUrls: ['./admin-container.component.scss'],
+    standalone: false
 })
 export class AdminContainerComponent implements OnDestroy, OnInit {
   titleText = 'GALLERY';

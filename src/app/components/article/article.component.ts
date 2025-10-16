@@ -14,9 +14,10 @@ import { XApiService } from 'src/app/generated/api';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
-  selector: 'app-article-app',
-  templateUrl: './article.component.html',
-  styleUrls: ['./article.component.scss'],
+    selector: 'app-article-app',
+    templateUrl: './article.component.html',
+    styleUrls: ['./article.component.scss'],
+    standalone: false
 })
 export class ArticleComponent implements OnDestroy {
   safeContent: SafeHtml = '';

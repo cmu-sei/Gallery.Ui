@@ -41,9 +41,10 @@ export interface Action {
 }
 
 @Component({
-  selector: 'app-collection-list',
-  templateUrl: './collection-list.component.html',
-  styleUrls: ['./collection-list.component.scss'],
+    selector: 'app-collection-list',
+    templateUrl: './collection-list.component.html',
+    styleUrls: ['./collection-list.component.scss'],
+    standalone: false
 })
 export class CollectionListComponent implements OnInit, OnChanges {
   @Input() collectionList: Collection[];
