@@ -74,19 +74,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "gallery-ui:build",
-            "port": 4723
+            "port": 4723,
+            "buildTarget": "gallery-ui:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "gallery-ui:build:production"
+              "buildTarget": "gallery-ui:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "gallery-ui:build"
+            "buildTarget": "gallery-ui:build"
           }
         },
         "test": {
