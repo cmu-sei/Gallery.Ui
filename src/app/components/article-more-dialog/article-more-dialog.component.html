@@ -11,7 +11,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     title="Cancel"
     class="close-button"
     tabindex="-1"
-  >
+    >
     <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
   </button>
   <button
@@ -20,22 +20,24 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     title="Open in new tab"
     class="close-button"
     tabindex="1"
-  >
+    >
     <mat-icon class="mdi-24px self-center" fontIcon="mdi-open-in-new"></mat-icon>
   </button>
 </div>
 
-<div mat-dialog-content
-  class="container"
-  *ngIf="data.useUrl && safeUrl"
->
-  <iframe [src]="safeUrl" class="responsive-iframe"></iframe>
-</div>
+@if (data.useUrl && safeUrl) {
+  <div mat-dialog-content
+    class="container"
+    >
+    <iframe [src]="safeUrl" class="responsive-iframe"></iframe>
+  </div>
+}
 
-<div
-  mat-dialog-content
-  class="page"
-  *ngIf="!data.useUrl && data.article && data.article.description"
->
-  <angular-editor class="angular-editor" [ngModel]="data.article.description" [config]="editorConfig"></angular-editor>
-</div>
+@if (!data.useUrl && data.article && data.article.description) {
+  <div
+    mat-dialog-content
+    class="page"
+    >
+    <angular-editor class="angular-editor" [ngModel]="data.article.description" [config]="editorConfig"></angular-editor>
+  </div>
+}

@@ -11,82 +11,80 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     title="Cancel"
     class="close-button"
     tabindex="-1"
-  >
+    >
     <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
   </button>
 </div>
-<div mat-dialog-content *ngIf="!!data && data.teamCard !== undefined && data.teamCard !== null">
-
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-select placeholder="Team" [formControl]="teamIdFormControl" multiple (selectionChange)="saveTeamCard('teamId')">
-          <mat-option [value]="ALL_TEAMS">All Teams</mat-option>
-          <mat-option *ngFor="let team of data.teamList" [value]="team.id" [matTooltip]="team.id" matTooltipPosition="right">
-            {{ team.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+@if (!!data && data.teamCard !== undefined && data.teamCard !== null) {
+  <div mat-dialog-content>
+    <div class="add-margin">
+      <div>
+        <mat-form-field class="full-width">
+          <mat-select placeholder="Team" [formControl]="teamIdFormControl" multiple (selectionChange)="saveTeamCard('teamId')">
+            <mat-option [value]="ALL_TEAMS">All Teams</mat-option>
+            @for (team of data.teamList; track team) {
+              <mat-option [value]="team.id" [matTooltip]="team.id" matTooltipPosition="right">
+                {{ team.name }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="add-margin">
+      <div fx>
+        <mat-form-field class="full-width">
+          <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveTeamCard('cardId')">
+            @for (card of data.cardList; track card) {
+              <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
+                {{card.name}}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="add-margin">
+      <div>
+        <mat-form-field class="short-width">
+          <input matInput placeholder="Move" [formControl]="moveFormControl"
+            (blur)="saveTeamCard('move')" value="{{data.teamCard.move}}" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="add-margin">
+      <div>
+        <mat-form-field class="short-width">
+          <input matInput placeholder="Inject" [formControl]="injectFormControl"
+            (blur)="saveTeamCard('inject')" value="{{data.teamCard.inject}}" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="add-margin">
+      <div class="full-width">
+        <mat-checkbox
+          [(ngModel)]="data.teamCard.isShownOnWall"
+          >
+          Is Shown On Wall
+        </mat-checkbox>
+      </div>
+    </div>
+    <div class="add-margin">
+      <div class="full-width">
+        <mat-checkbox
+          [(ngModel)]="data.teamCard.canPostArticles"
+          >
+          Can Post New Articles
+        </mat-checkbox>
+      </div>
+    </div>
+    <div class="cssLayoutRowStartCenter bottom-button">
+      <div class="delete-button">
+        <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
+      </div>
+      <div class="delete-button">
+        <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
+      </div>
     </div>
   </div>
-
-  <div class="add-margin">
-    <div fx>
-      <mat-form-field class="full-width">
-        <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveTeamCard('cardId')">
-          <mat-option *ngFor="let card of data.cardList" [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
-            {{card.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="short-width">
-        <input matInput placeholder="Move" [formControl]="moveFormControl"
-          (blur)="saveTeamCard('move')" value="{{data.teamCard.move}}" />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="short-width">
-        <input matInput placeholder="Inject" [formControl]="injectFormControl"
-          (blur)="saveTeamCard('inject')" value="{{data.teamCard.inject}}" />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="add-margin">
-    <div class="full-width">
-      <mat-checkbox
-        [(ngModel)]="data.teamCard.isShownOnWall"
-      >
-        Is Shown On Wall
-      </mat-checkbox>
-    </div>
-  </div>
-
-  <div class="add-margin">
-    <div class="full-width">
-      <mat-checkbox
-        [(ngModel)]="data.teamCard.canPostArticles"
-      >
-        Can Post New Articles
-      </mat-checkbox>
-    </div>
-  </div>
-
-  <div class="cssLayoutRowStartCenter bottom-button">
-    <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
-    </div>
-    <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
-    </div>
-  </div>
-
-</div>
+}

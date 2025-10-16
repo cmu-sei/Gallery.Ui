@@ -14,9 +14,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <mat-form-field class="button-margins">
     <mat-label>Collection</mat-label>
     <mat-select placeholder="Collection" [value]="selectedCollectionId" (selectionChange)="selectCollection($event.value)">
-      <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
-        {{ collection.name }}
-      </mat-option>
+      @for (collection of collectionList; track collection) {
+        <mat-option [value]="collection.id">
+          {{ collection.name }}
+        </mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <mat-icon
@@ -34,7 +36,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       (click)="clearFilter()"
       style="outline: none;"
       title="Clear Search"
-    >
+      >
       <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
     </button>
   </div>
@@ -58,46 +60,51 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     matSort
     (matSortChange)="sortChanged($event)"
     class="mat-elevation-z2 mat-header-row"
-  >
+    >
     <span class="mat-header-cell three-cell" mat-sort-header="name">Name</span>
     <span class="mat-header-cell five-cell" mat-sort-header="description">Description</span>
   </section>
 
-  <mat-expansion-panel *ngFor="let card of displayedCards" disabled >
-    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(card)">
-      <span class="mat-cell three-cell">
-        <button
-          mat-icon-button
-          (click)="addOrEditCard(card)"
-          style="outline: none;"
-          title="Edit {{ card.name }}"
-          [disabled]="!canEdit"
-        >
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          (click)="deleteCard(card)"
-          style="outline: none;"
-          title="Delete {{ card.name }}"
-          [disabled]="!canEdit"
-        >
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
-        </button>
-        {{ card.name }}
-      </span>
-      <span class="mat-cell five-cell center-self pad-top-bottom">
-        {{ card.description }}
-      </span>
-    </mat-expansion-panel-header>
-  </mat-expansion-panel>
+  @for (card of displayedCards; track card) {
+    <mat-expansion-panel disabled >
+      @if (!isLoading) {
+        <mat-expansion-panel-header class="mat-row" (click)="togglePanel(card)">
+          <span class="mat-cell three-cell">
+            <button
+              mat-icon-button
+              (click)="addOrEditCard(card)"
+              style="outline: none;"
+              title="Edit {{ card.name }}"
+              [disabled]="!canEdit"
+              >
+              <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              (click)="deleteCard(card)"
+              style="outline: none;"
+              title="Delete {{ card.name }}"
+              [disabled]="!canEdit"
+              >
+              <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
+            </button>
+            {{ card.name }}
+          </span>
+          <span class="mat-cell five-cell center-self pad-top-bottom">
+            {{ card.description }}
+          </span>
+        </mat-expansion-panel-header>
+      }
+    </mat-expansion-panel>
+  }
 </mat-accordion>
 
-<mat-card
-  appearance="outlined"
-  *ngIf="isLoading"
-  style="display: flex; justify-content: center; align-items: center;"
->
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
-</mat-card>
+@if (isLoading) {
+  <mat-card
+    appearance="outlined"
+    style="display: flex; justify-content: center; align-items: center;"
+    >
+    <mat-progress-spinner color="primary" mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
+}

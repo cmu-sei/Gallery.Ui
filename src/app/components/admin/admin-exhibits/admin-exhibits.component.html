@@ -14,21 +14,25 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <mat-form-field class="button-margins">
     <mat-label>Collection</mat-label>
     <mat-select placeholder="Collection" [value]="selectedCollectionId" (selectionChange)="selectCollection($event.value)">
-      <mat-option *ngFor="let collection of collectionList" [value]="collection.id">
-        {{ collection.name }}
-      </mat-option>
+      @for (collection of collectionList; track collection) {
+        <mat-option [value]="collection.id">
+          {{ collection.name }}
+        </mat-option>
+      }
     </mat-select>
   </mat-form-field>
-  <div *ngIf="selectedCollectionId" style="min-width: 370px;">
-    <mat-paginator
-      #paginator
-      [length]="exhibitList?.length"
-      [pageIndex]="pageIndex"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
-      (page)="paginatorEvent($event)"
-    ></mat-paginator>
-  </div>
+  @if (selectedCollectionId) {
+    <div style="min-width: 370px;">
+      <mat-paginator
+        #paginator
+        [length]="exhibitList?.length"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
+        (page)="paginatorEvent($event)"
+      ></mat-paginator>
+    </div>
+  }
 </div>
 
 <mat-accordion displayMode="flat">
@@ -36,7 +40,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     matSort
     (matSortChange)="sortChanged($event)"
     class="mat-elevation-z2 mat-header-row"
-  >
+    >
     <span class="mat-header-cell first-cell center-self">
       <button
         mat-icon-button
@@ -44,7 +48,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         style="outline: none; margin-left: 20px;"
         title="Add Exhibit"
         [disabled]="isBusy || !canCreate"
-      >
+        >
         <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
       <button
@@ -52,7 +56,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
         title="Upload Exhibit"
         [disabled]="isBusy || !canCreate"
-      >
+        >
         <mat-icon class="mdi-24px" fontIcon="mdi-upload" alt="Upload"></mat-icon>
       </button>
     </span>
@@ -65,130 +69,138 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <span class="mat-header-cell one-cell center-self" mat-sort-header="currentInject">Current Inject</span>
   </section>
 
-  <mat-expansion-panel
-    *ngFor="let exhibit of paginateExhibits(); trackBy:getExhibitId"
-    [expanded]="selectedExhibit.id === exhibit.id"
-  >
-    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(exhibit); $event.stopPropagation()">
-      <span class="mat-cell first-cell center-self">
-        <button
-          mat-icon-button
-          (click)="addOrEditExhibit(exhibit); $event.stopPropagation()"
-          style="outline: none;"
-          title="Edit Exhibit"
-          [disabled]="isBusy || !canEditExhibit(exhibit.id)"
-        >
-          <mat-icon class="mdi-18px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          (click)="copyExhibit(exhibit.id); $event.stopPropagation();"
-          title="Copy {{ exhibit.dateCreated | date }}"
-          [disabled]="isBusy || !canCreate"
-        >
-          <mat-icon class="mdi-18px" fontIcon="mdi-content-copy" alt="Copy"></mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          (click)="downloadExhibit(exhibit); $event.stopPropagation();"
-          title="Download {{ exhibit.dateCreated | date }}"
-          [disabled]="isBusy"
-        >
-          <mat-icon class="mdi-18px" fontIcon="mdi-download" alt="Download"></mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          (click)="deleteExhibit(exhibit); $event.stopPropagation()"
-          style="outline: none;"
-          title="Delete Exhibit"
-          [disabled]="isBusy || !canEditExhibit(exhibit.id)"
-        >
-          <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can"></mat-icon>
-        </button>
-      </span>
-      <span class="mat-cell three-cell center-self">
-        {{ exhibit.name }}
-      </span>
-      <span class="mat-cell four-cell center-self">
-        {{ exhibit.description }}
-      </span>
-      <span class="mat-cell two-cell center-self">
-        {{ exhibit.dateCreated | date: "yyyy-MM-dd HH:mm" }}
-      </span>
-      <span class="mat-cell two-cell center-self">
-        {{ getUserName(exhibit.createdBy) }}
-      </span>
-      <span class="mat-cell three-cell center-self">
-        {{ exhibit.scenarioId }}
-      </span>
-      <span class="mat-cell one-cell center-self">
-        {{ exhibit.currentMove }}
-      </span>
-      <span class="mat-cell one-cell center-self">
-        {{ exhibit.currentInject }}
-      </span>
-    </mat-expansion-panel-header>
-    <div class="sub-container" *ngIf="selectedExhibit.id === exhibit.id">
-      <mat-expansion-panel class="bottom-space">
-        <mat-expansion-panel-header>
-          <h4>Exhibit Teams</h4>
+  @for (exhibit of paginateExhibits(); track getExhibitId($index, exhibit)) {
+    <mat-expansion-panel
+      [expanded]="selectedExhibit.id === exhibit.id"
+      >
+      @if (!isLoading) {
+        <mat-expansion-panel-header class="mat-row" (click)="togglePanel(exhibit); $event.stopPropagation()">
+          <span class="mat-cell first-cell center-self">
+            <button
+              mat-icon-button
+              (click)="addOrEditExhibit(exhibit); $event.stopPropagation()"
+              style="outline: none;"
+              title="Edit Exhibit"
+              [disabled]="isBusy || !canEditExhibit(exhibit.id)"
+              >
+              <mat-icon class="mdi-18px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              (click)="copyExhibit(exhibit.id); $event.stopPropagation();"
+              title="Copy {{ exhibit.dateCreated | date }}"
+              [disabled]="isBusy || !canCreate"
+              >
+              <mat-icon class="mdi-18px" fontIcon="mdi-content-copy" alt="Copy"></mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              (click)="downloadExhibit(exhibit); $event.stopPropagation();"
+              title="Download {{ exhibit.dateCreated | date }}"
+              [disabled]="isBusy"
+              >
+              <mat-icon class="mdi-18px" fontIcon="mdi-download" alt="Download"></mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              (click)="deleteExhibit(exhibit); $event.stopPropagation()"
+              style="outline: none;"
+              title="Delete Exhibit"
+              [disabled]="isBusy || !canEditExhibit(exhibit.id)"
+              >
+              <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can"></mat-icon>
+            </button>
+          </span>
+          <span class="mat-cell three-cell center-self">
+            {{ exhibit.name }}
+          </span>
+          <span class="mat-cell four-cell center-self">
+            {{ exhibit.description }}
+          </span>
+          <span class="mat-cell two-cell center-self">
+            {{ exhibit.dateCreated | date: "yyyy-MM-dd HH:mm" }}
+          </span>
+          <span class="mat-cell two-cell center-self">
+            {{ getUserName(exhibit.createdBy) }}
+          </span>
+          <span class="mat-cell three-cell center-self">
+            {{ exhibit.scenarioId }}
+          </span>
+          <span class="mat-cell one-cell center-self">
+            {{ exhibit.currentMove }}
+          </span>
+          <span class="mat-cell one-cell center-self">
+            {{ exhibit.currentInject }}
+          </span>
         </mat-expansion-panel-header>
-        <app-admin-teams
-          [exhibitId]="exhibit.id"
-          [canEdit]="canEditExhibit(exhibit.id)"
-        ></app-admin-teams>
-      </mat-expansion-panel>
-      <mat-expansion-panel class="bottom-space">
-        <mat-expansion-panel-header>
-          <h4>Card Teams</h4>
-        </mat-expansion-panel-header>
-        <app-admin-team-cards
-          [teamList]="teamList"
-          [collectionId]="selectedCollectionId"
-          [exhibitId]="selectedExhibit.id"
-          [canEdit]="canEditExhibit(exhibit.id)"
-        >
-        </app-admin-team-cards>
-      </mat-expansion-panel>
-      <mat-expansion-panel class="bottom-space">
-        <mat-expansion-panel-header>
-          <h4>Article Teams</h4>
-        </mat-expansion-panel-header>
-        <app-admin-exhibit-articles
-          [exhibit]="exhibit"
-          [teamList]="teamList"
-          [canEdit]="canEditExhibit(exhibit.id)"
-        >
-        </app-admin-exhibit-articles>
-      </mat-expansion-panel>
-      <mat-expansion-panel class="bottom-space">
-        <mat-expansion-panel-header>
-          <h4>Observers</h4>
-        </mat-expansion-panel-header>
-        <app-admin-observers
-          [exhibitId]="exhibit.id"
-          [canEdit]="canEditExhibit(exhibit.id)"
-        >
-        </app-admin-observers>
-      </mat-expansion-panel>
-      <mat-expansion-panel *ngIf="canManageExhibit">
-        <mat-expansion-panel-header>
-          <h4>Memberships</h4>
-        </mat-expansion-panel-header>
-        <app-exhibit-memberships [exhibitId]="selectedExhibit.id" [embedded]="false"></app-exhibit-memberships>
-      </mat-expansion-panel>
-    </div>
-  </mat-expansion-panel>
+      }
+      @if (selectedExhibit.id === exhibit.id) {
+        <div class="sub-container">
+          <mat-expansion-panel class="bottom-space">
+            <mat-expansion-panel-header>
+              <h4>Exhibit Teams</h4>
+            </mat-expansion-panel-header>
+            <app-admin-teams
+              [exhibitId]="exhibit.id"
+              [canEdit]="canEditExhibit(exhibit.id)"
+            ></app-admin-teams>
+          </mat-expansion-panel>
+          <mat-expansion-panel class="bottom-space">
+            <mat-expansion-panel-header>
+              <h4>Card Teams</h4>
+            </mat-expansion-panel-header>
+            <app-admin-team-cards
+              [teamList]="teamList"
+              [collectionId]="selectedCollectionId"
+              [exhibitId]="selectedExhibit.id"
+              [canEdit]="canEditExhibit(exhibit.id)"
+              >
+            </app-admin-team-cards>
+          </mat-expansion-panel>
+          <mat-expansion-panel class="bottom-space">
+            <mat-expansion-panel-header>
+              <h4>Article Teams</h4>
+            </mat-expansion-panel-header>
+            <app-admin-exhibit-articles
+              [exhibit]="exhibit"
+              [teamList]="teamList"
+              [canEdit]="canEditExhibit(exhibit.id)"
+              >
+            </app-admin-exhibit-articles>
+          </mat-expansion-panel>
+          <mat-expansion-panel class="bottom-space">
+            <mat-expansion-panel-header>
+              <h4>Observers</h4>
+            </mat-expansion-panel-header>
+            <app-admin-observers
+              [exhibitId]="exhibit.id"
+              [canEdit]="canEditExhibit(exhibit.id)"
+              >
+            </app-admin-observers>
+          </mat-expansion-panel>
+          @if (canManageExhibit) {
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <h4>Memberships</h4>
+              </mat-expansion-panel-header>
+              <app-exhibit-memberships [exhibitId]="selectedExhibit.id" [embedded]="false"></app-exhibit-memberships>
+            </mat-expansion-panel>
+          }
+        </div>
+      }
+    </mat-expansion-panel>
+  }
 </mat-accordion>
 
-<mat-card
-  appearance="outlined"
-  *ngIf="isLoading"
-  style="display: flex; justify-content: center; align-items: center;"
->
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
-</mat-card>
+@if (isLoading) {
+  <mat-card
+    appearance="outlined"
+    style="display: flex; justify-content: center; align-items: center;"
+    >
+    <mat-progress-spinner color="primary" mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
+}
 
 
 <input
@@ -198,4 +210,4 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   #jsonInput
   type="file"
   accept=".json"
-/>
+  />

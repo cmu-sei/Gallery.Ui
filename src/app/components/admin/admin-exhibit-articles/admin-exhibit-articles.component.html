@@ -8,7 +8,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     matSort
     (matSortChange)="sortChanged($event)"
     class="mat-elevation-z2 mat-header-row"
-  >
+    >
     <div class="mat-header-cell one-cell" mat-sort-header="move">Move</div>
     <div class="mat-header-cell one-cell" mat-sort-header="inject">Inject</div>
     <div class="mat-header-cell two-cell" mat-sort-header="cardId">Card</div>
@@ -24,54 +24,58 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             (keypress)="$event.stopPropagation"
             (blur)="$event.stopPropagation"
             placeholder="Search"
-          />
-        </mat-form-field>
-        <div style="width: 30px;">
-          <button
-            mat-icon-button
-            (click)="clearFilter();"
-            style="outline: none;"
-            title="Clear Search"
-          >
-            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
-          </button>
+            />
+          </mat-form-field>
+          <div style="width: 30px;">
+            <button
+              mat-icon-button
+              (click)="clearFilter();"
+              style="outline: none;"
+              title="Clear Search"
+              >
+              <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  <mat-expansion-panel
-    *ngFor="let article of sortedArticles; trackBy:getArticleId"
-  >
-    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading">
-      <div class="mat-cell one-cell center-self">
-        {{ article.move }}
-      </div>
-      <div class="mat-cell one-cell center-self">
-        {{ article.inject }}
-      </div>
-      <div class="mat-cell two-cell center-self">
-        {{ getCardName(article.cardId) }}
-      </div>
-      <div class="mat-cell two-cell center-self">
-        {{ article.sourceName }}
-      </div>
-      <div class="mat-cell five-cell">
-        {{ article.name }}
-      </div>
-    </mat-expansion-panel-header>
-    <app-admin-exhibit-article-teams
-      [exhibitId]="exhibit.id"
-      [articleId]="article.id"
-      [canEdit]="canEdit"
-    >
-    </app-admin-exhibit-article-teams>
-  </mat-expansion-panel>
-</mat-accordion>
-<mat-card
-  appearance="outlined"
-  *ngIf="isLoading"
-  style="display: flex; justify-content: center; align-items: center;"
->
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
-</mat-card>
+    </section>
+    @for (article of sortedArticles; track getArticleId($index, article)) {
+      <mat-expansion-panel
+        >
+        @if (!isLoading) {
+          <mat-expansion-panel-header class="mat-row">
+            <div class="mat-cell one-cell center-self">
+              {{ article.move }}
+            </div>
+            <div class="mat-cell one-cell center-self">
+              {{ article.inject }}
+            </div>
+            <div class="mat-cell two-cell center-self">
+              {{ getCardName(article.cardId) }}
+            </div>
+            <div class="mat-cell two-cell center-self">
+              {{ article.sourceName }}
+            </div>
+            <div class="mat-cell five-cell">
+              {{ article.name }}
+            </div>
+          </mat-expansion-panel-header>
+        }
+        <app-admin-exhibit-article-teams
+          [exhibitId]="exhibit.id"
+          [articleId]="article.id"
+          [canEdit]="canEdit"
+          >
+        </app-admin-exhibit-article-teams>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+  @if (isLoading) {
+    <mat-card
+      appearance="outlined"
+      style="display: flex; justify-content: center; align-items: center;"
+      >
+      <mat-progress-spinner color="primary" mode="indeterminate">
+      </mat-progress-spinner>
+    </mat-card>
+  }

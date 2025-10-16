@@ -1,19 +1,23 @@
 <!--
 Copyright 2025 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div *ngIf="exhibit$ | async as exhibit" class="d-flex justify-content-center align-items-center">
-  <button *ngIf="embedded" mat-icon-button (click)="goBack.emit()" matTooltip="Return">
-    <mat-icon class="mdi-24px" fontIcon="mdi-keyboard-return"></mat-icon>
-  </button>
-  <h1>{{ exhibit.name }}</h1>
-</div>
+@if (exhibit$ | async; as exhibit) {
+  <div class="d-flex justify-content-center align-items-center">
+    @if (embedded) {
+      <button mat-icon-button (click)="goBack.emit()" matTooltip="Return">
+        <mat-icon class="mdi-24px" fontIcon="mdi-keyboard-return"></mat-icon>
+      </button>
+    }
+    <h1>{{ exhibit.name }}</h1>
+  </div>
+}
 <div class="d-flex gap-5 justify-content-center">
   <app-exhibit-membership-list [users]="nonMembers$ | async" [groups]="groupNonMembers$ | async"
-    [canEdit]="canEdit" (createMembership)="createMembership($event)"></app-exhibit-membership-list>
+  [canEdit]="canEdit" (createMembership)="createMembership($event)"></app-exhibit-membership-list>
 
   <app-exhibit-member-list [memberships]="memberships$ | async" [users]="members$ | async"
     [groups]="groupMembers$ | async" [roles]="roles$ | async" [canEdit]="canEdit"
-    (deleteMembership)="deleteMembership($event)" (editMembership)="editMembership($event)"></app-exhibit-member-list>
+  (deleteMembership)="deleteMembership($event)" (editMembership)="editMembership($event)"></app-exhibit-member-list>
 </div>

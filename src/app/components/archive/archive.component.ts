@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { DOCUMENT } from '@angular/common';
+
 import {
   Component,
   EventEmitter,
@@ -9,6 +9,7 @@ import {
   Input,
   Output,
   OnDestroy,
+  DOCUMENT
 } from '@angular/core';
 import {
   Article,

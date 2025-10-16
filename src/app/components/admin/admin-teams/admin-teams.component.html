@@ -1,6 +1,6 @@
 <!--
 Copyright 2022 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license, please see LICENSE.md in the
+Released under a MIT (SEI)-style license, please see LICENSE.md in the
 project root for license information or contact permission@sei.cmu.edu for full terms.
 -->
 
@@ -9,7 +9,7 @@ project root for license information or contact permission@sei.cmu.edu for full 
     matSort
     (matSortChange)="sortChanged($event)"
     class="mat-elevation-z2 mat-header-row"
-  >
+    >
     <div class="mat-header-cell one-cell">
       <button
         mat-icon-button
@@ -17,7 +17,7 @@ project root for license information or contact permission@sei.cmu.edu for full 
         style="outline: none;"
         title="Add Team"
         [disabled]="!canEdit"
-      >
+        >
         <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
     </div>
@@ -40,68 +40,74 @@ project root for license information or contact permission@sei.cmu.edu for full 
           (click)="clearFilter()"
           style="outline: none;"
           title="Clear Search"
-        >
+          >
           <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
         </button>
       </div>
     </div>
   </section>
 
-  <mat-expansion-panel
-    *ngFor="let team of sortedTeams"
-    [expanded]="editTeam.id === team.id"
-  >
-    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading" (click)="togglePanel(team); $event.stopPropagation()">
-      <div class="mat-cell one-cell">
-        <div class="panel-div">
-          <button
-            mat-icon-button
-            (click)="addOrEditTeam(team); $event.stopPropagation()"
-            style="outline: none;"
-            title="Edit {{ team.name }}"
-            [disabled]="!canEdit"
-          >
-            <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            (click)="deleteTeam(team); $event.stopPropagation()"
-            style="outline: none;"
-            title="Delete {{ team.name }}"
-            [disabled]="!canEdit"
-          >
-            <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
-          </button>
-        </div>
-      </div>
-      <div class="mat-cell one-cell center-self">
-        <div class="panel-div">
-          {{ team.shortName }}
-        </div>
-      </div>
-      <div class="mat-cell two-cell center-self">
-        <div class="panel-div">
-          {{ team.email }}
-        </div>
-      </div>
-      <div class="mat-cell five-cell center-self">
-        <div class="panel-div">
-          {{ team.name }}
-        </div>
-      </div>
-    </mat-expansion-panel-header>
-    <app-admin-team-users *ngIf="team.id === editTeam.id"
-      [teamId]="team.id"
-      [canEdit]="canEdit"
-    ></app-admin-team-users>
-  </mat-expansion-panel>
+  @for (team of sortedTeams; track team) {
+    <mat-expansion-panel
+      [expanded]="editTeam.id === team.id"
+      >
+      @if (!isLoading) {
+        <mat-expansion-panel-header class="mat-row" (click)="togglePanel(team); $event.stopPropagation()">
+          <div class="mat-cell one-cell">
+            <div class="panel-div">
+              <button
+                mat-icon-button
+                (click)="addOrEditTeam(team); $event.stopPropagation()"
+                style="outline: none;"
+                title="Edit {{ team.name }}"
+                [disabled]="!canEdit"
+                >
+                <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                (click)="deleteTeam(team); $event.stopPropagation()"
+                style="outline: none;"
+                title="Delete {{ team.name }}"
+                [disabled]="!canEdit"
+                >
+                <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="mat-cell one-cell center-self">
+            <div class="panel-div">
+              {{ team.shortName }}
+            </div>
+          </div>
+          <div class="mat-cell two-cell center-self">
+            <div class="panel-div">
+              {{ team.email }}
+            </div>
+          </div>
+          <div class="mat-cell five-cell center-self">
+            <div class="panel-div">
+              {{ team.name }}
+            </div>
+          </div>
+        </mat-expansion-panel-header>
+      }
+      @if (team.id === editTeam.id) {
+        <app-admin-team-users
+          [teamId]="team.id"
+          [canEdit]="canEdit"
+        ></app-admin-team-users>
+      }
+    </mat-expansion-panel>
+  }
 </mat-accordion>
 
-<mat-card
-  appearance="outlined"
-  *ngIf="isLoading"
-  style="display: flex; justify-content: center; align-items: center;"
->
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
-</mat-card>
+@if (isLoading) {
+  <mat-card
+    appearance="outlined"
+    style="display: flex; justify-content: center; align-items: center;"
+    >
+    <mat-progress-spinner color="primary" mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
+}

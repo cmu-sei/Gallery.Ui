@@ -1,8 +1,8 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { DOCUMENT } from '@angular/common';
-import { Component, EventEmitter, Inject, Input, Output, OnDestroy } from '@angular/core';
+
+import { Component, EventEmitter, Inject, Input, Output, OnDestroy, DOCUMENT } from '@angular/core';
 import { Team, TeamCard, UserArticle, ItemStatus } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';

@@ -1,7 +1,7 @@
 // Copyright 2023 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy } from '@angular/core';
+
+import { Component, Inject, OnDestroy, DOCUMENT } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';

@@ -1,8 +1,8 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { Component, Inject, OnDestroy, OnInit, ViewChild, DOCUMENT } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';

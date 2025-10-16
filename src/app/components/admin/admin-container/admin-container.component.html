@@ -6,24 +6,24 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 <mat-sidenav-container
   class="appcontent-container"
   autosize
->
+  >
   <mat-sidenav
     #sidenav
     mode="side"
     [(opened)]="isSidebarOpen"
     class="appbarmenu-container background"
-  >
+    >
     <mat-list>
       <mat-list-item
         class="appslist showhand"
         (click)="exitAdmin()"
-      >
+        >
         <button
           mat-icon-button
           (click)="exitAdmin()"
           style="outline: none;"
           title="Exit Administration"
-        >
+          >
           <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
         </button>
         <a class="nolink showhand" (click)="exitAdmin()" title="Exit Administration">
@@ -33,185 +33,209 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </a>
         <mat-divider></mat-divider>
       </mat-list-item>
-      <mat-list-item
-        *ngIf="canViewCollections || hasPermission(SystemPermission.CreateCollections)"
-        [ngClass]="getSelectedClass(section.collections)"
-      >
-        <div class="showhand" id="wrapper" (click)="gotoSection(section.collections)">
-          <div id="lefticon">
-            <mat-icon
-              class="mdi-24px"
-              fontIcon="mdi-focus-field"
-            ></mat-icon>
+      @if (canViewCollections || hasPermission(SystemPermission.CreateCollections)) {
+        <mat-list-item
+          [ngClass]="getSelectedClass(section.collections)"
+          >
+          <div class="showhand" id="wrapper" (click)="gotoSection(section.collections)">
+            <div id="lefticon">
+              <mat-icon
+                class="mdi-24px"
+                fontIcon="mdi-focus-field"
+              ></mat-icon>
+            </div>
+            <div id="content">Collections</div>
+            <div class="pull-right" id="rightcontext">
+              <button mat-icon-button style="outline: none">
+                <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
+              </button>
+            </div>
           </div>
-          <div id="content">Collections</div>
-          <div class="pull-right" id="rightcontext">
-            <button mat-icon-button style="outline: none">
-              <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
-            </button>
+        </mat-list-item>
+      }
+      @if (canViewCollections || hasPermission(SystemPermission.CreateCollections)) {
+        <mat-list-item
+          [ngClass]="getSelectedClass(section.cards)"
+          >
+          <div class="showhand" id="wrapper" (click)="gotoSection(section.cards)">
+            <div id="lefticon">
+              <mat-icon
+                class="mdi-24px"
+                fontIcon="mdi-border-all-variant"
+              ></mat-icon>
+            </div>
+            <div id="content">Cards</div>
+            <div class="pull-right" id="rightcontext">
+              <button mat-icon-button style="outline: none">
+                <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
+              </button>
+            </div>
           </div>
-        </div>
-      </mat-list-item>
-      <mat-list-item
-        *ngIf="canViewCollections || hasPermission(SystemPermission.CreateCollections)"
-        [ngClass]="getSelectedClass(section.cards)"
-      >
-        <div class="showhand" id="wrapper" (click)="gotoSection(section.cards)">
-          <div id="lefticon">
-            <mat-icon
-              class="mdi-24px"
-              fontIcon="mdi-border-all-variant"
-            ></mat-icon>
+        </mat-list-item>
+      }
+      @if (canViewCollections || hasPermission(SystemPermission.CreateCollections)) {
+        <mat-list-item
+          [ngClass]="getSelectedClass(section.articles)"
+          >
+          <div class="showhand" id="wrapper" (click)="gotoSection(section.articles)">
+            <div id="lefticon">
+              <mat-icon
+                class="mdi-24px"
+                fontIcon="mdi-format-list-bulleted-type"
+              ></mat-icon>
+            </div>
+            <div id="content">Articles</div>
+            <div class="pull-right" id="rightcontext">
+              <button mat-icon-button style="outline: none">
+                <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
+              </button>
+            </div>
           </div>
-          <div id="content">Cards</div>
-          <div class="pull-right" id="rightcontext">
-            <button mat-icon-button style="outline: none">
-              <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
-            </button>
+        </mat-list-item>
+      }
+      @if (canViewExhibits || hasPermission(SystemPermission.CreateExhibits)) {
+        <mat-list-item
+          [ngClass]="getSelectedClass(section.exhibits)"
+          >
+          <div class="showhand" id="wrapper" (click)="gotoSection(section.exhibits)">
+            <div id="lefticon">
+              <mat-icon
+                class="mdi-24px"
+                fontIcon="mdi-monitor-dashboard"
+              ></mat-icon>
+            </div>
+            <div id="content">Exhibits</div>
+            <div class="pull-right" id="rightcontext">
+              <button mat-icon-button style="outline: none">
+                <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
+              </button>
+            </div>
           </div>
-        </div>
-      </mat-list-item>
-      <mat-list-item
-        *ngIf="canViewCollections || hasPermission(SystemPermission.CreateCollections)"
-        [ngClass]="getSelectedClass(section.articles)"
-      >
-        <div class="showhand" id="wrapper" (click)="gotoSection(section.articles)">
-          <div id="lefticon">
-            <mat-icon
-              class="mdi-24px"
-              fontIcon="mdi-format-list-bulleted-type"
-            ></mat-icon>
+        </mat-list-item>
+      }
+      @if (hasPermission(SystemPermission.ViewUsers)) {
+        <mat-list-item
+          [ngClass]="getSelectedClass(section.users)"
+          >
+          <div class="showhand" id="wrapper" (click)="gotoSection(section.users)">
+            <div id="lefticon">
+              <mat-icon
+                class="mdi-24px"
+                fontIcon="mdi-account"
+              ></mat-icon>
+            </div>
+            <div id="content">Users</div>
+            <div class="pull-right" id="rightcontext">
+              <button mat-icon-button style="outline: none">
+                <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
+              </button>
+            </div>
           </div>
-          <div id="content">Articles</div>
-          <div class="pull-right" id="rightcontext">
-            <button mat-icon-button style="outline: none">
-              <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
-            </button>
+        </mat-list-item>
+      }
+      @if (hasPermission(SystemPermission.ViewRoles)) {
+        <mat-list-item
+          [ngClass]="getSelectedClass(section.roles)"
+          >
+          <div class="showhand" id="wrapper" (click)="gotoSection(section.roles)">
+            <div id="lefticon">
+              <mat-icon class="mdi-24px" fontIcon="mdi-lock"></mat-icon>
+            </div>
+            <div id="content">Roles</div>
+            <div class="pull-right" id="rightcontext">
+              <button mat-icon-button style="outline: none">
+                <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
+              </button>
+            </div>
           </div>
-        </div>
-      </mat-list-item>
-      <mat-list-item
-        *ngIf="canViewExhibits || hasPermission(SystemPermission.CreateExhibits)"
-        [ngClass]="getSelectedClass(section.exhibits)"
-      >
-        <div class="showhand" id="wrapper" (click)="gotoSection(section.exhibits)">
-          <div id="lefticon">
-            <mat-icon
-              class="mdi-24px"
-              fontIcon="mdi-monitor-dashboard"
-            ></mat-icon>
+        </mat-list-item>
+      }
+      @if (hasPermission(SystemPermission.ViewGroups)) {
+        <mat-list-item
+          [ngClass]="getSelectedClass(section.groups)"
+          >
+          <div class="showhand" id="wrapper" (click)="gotoSection(section.groups)">
+            <div id="lefticon">
+              <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
+            </div>
+            <div id="content">Groups</div>
+            <div class="pull-right" id="rightcontext">
+              <button mat-icon-button style="outline: none">
+                <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
+              </button>
+            </div>
           </div>
-          <div id="content">Exhibits</div>
-          <div class="pull-right" id="rightcontext">
-            <button mat-icon-button style="outline: none">
-              <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
-            </button>
-          </div>
-        </div>
-      </mat-list-item>
-      <mat-list-item
-        *ngIf="hasPermission(SystemPermission.ViewUsers)"
-        [ngClass]="getSelectedClass(section.users)"
-      >
-        <div class="showhand" id="wrapper" (click)="gotoSection(section.users)">
-          <div id="lefticon">
-            <mat-icon
-              class="mdi-24px"
-              fontIcon="mdi-account"
-            ></mat-icon>
-          </div>
-          <div id="content">Users</div>
-          <div class="pull-right" id="rightcontext">
-            <button mat-icon-button style="outline: none">
-              <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
-            </button>
-          </div>
-        </div>
-      </mat-list-item>
-      <mat-list-item
-        *ngIf="hasPermission(SystemPermission.ViewRoles)"
-        [ngClass]="getSelectedClass(section.roles)"
-      >
-        <div class="showhand" id="wrapper" (click)="gotoSection(section.roles)">
-          <div id="lefticon">
-            <mat-icon class="mdi-24px" fontIcon="mdi-lock"></mat-icon>
-          </div>
-
-          <div id="content">Roles</div>
-
-          <div class="pull-right" id="rightcontext">
-            <button mat-icon-button style="outline: none">
-              <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
-            </button>
-          </div>
-        </div>
-      </mat-list-item>
-      <mat-list-item
-        *ngIf="hasPermission(SystemPermission.ViewGroups)"
-        [ngClass]="getSelectedClass(section.groups)"
-      >
-        <div class="showhand" id="wrapper" (click)="gotoSection(section.groups)">
-          <div id="lefticon">
-            <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
-          </div>
-
-          <div id="content">Groups</div>
-
-          <div class="pull-right" id="rightcontext">
-            <button mat-icon-button style="outline: none">
-              <mat-icon class="mdi-24px" fontIcon="mdi-menu-right"></mat-icon>
-            </button>
-          </div>
-        </div>
-      </mat-list-item>
+        </mat-list-item>
+      }
     </mat-list>
-    <div class="app-versions" style="margin-bottom: 58px;" *ngIf="!hideTopbar">
-      Versions: UI {{ uiVersion }},  API {{ apiVersion }}
-    </div>
-    <div class="app-versions" *ngIf="hideTopbar">
-      Versions: UI {{ uiVersion }},  API {{ apiVersion }}
-    </div>
-    <img
-      *ngIf="!hideTopbar"
-      class="crucible-logo"
+    @if (!hideTopbar) {
+      <div class="app-versions" style="margin-bottom: 58px;">
+        Versions: UI {{ uiVersion }},  API {{ apiVersion }}
+      </div>
+    }
+    @if (hideTopbar) {
+      <div class="app-versions">
+        Versions: UI {{ uiVersion }},  API {{ apiVersion }}
+      </div>
+    }
+    @if (!hideTopbar) {
+      <img
+        class="crucible-logo"
       [src]="
         (theme$ | async) === 'light-theme'
           ? 'assets/img/crucible-logo-light.png'
           : 'assets/img/crucible-logo-dark.png'
       "
-    />
+        />
+    }
   </mat-sidenav>
   <mat-sidenav-content>
-    <app-topbar *ngIf="!hideTopbar"
-      [title]="titleText"
-      [topbarView]="TopbarView.GALLERY_ADMIN"
-      [topbarColor]="topbarColor"
-      [topbarTextColor]="topbarTextColor"
-      [imageFilePath]="topbarImage"
-    ></app-topbar>
-    <span *ngIf="(canViewCollections || hasPermission(SystemPermission.CreateCollections)) && displayedSection === section.collections">
-      <app-admin-collections></app-admin-collections>
-    </span>
-    <span *ngIf="(canViewExhibits || hasPermission(SystemPermission.CreateExhibits)) && displayedSection === section.exhibits">
-      <app-admin-exhibits
-        [userList]="userList | async"
-      >
-      </app-admin-exhibits>
-    </span>
-    <span *ngIf="(canViewCollections || hasPermission(SystemPermission.CreateCollections)) && displayedSection === section.cards">
-      <app-admin-cards></app-admin-cards>
-    </span>
-    <span *ngIf="(canViewCollections || hasPermission(SystemPermission.CreateCollections)) && displayedSection === section.articles">
-      <app-admin-articles></app-admin-articles>
-    </span>
-    <span *ngIf="hasPermission(SystemPermission.ViewUsers) && displayedSection === section.users">
-      <app-admin-users></app-admin-users>
-    </span>
-    <span *ngIf="hasPermission(SystemPermission.ViewRoles) && displayedSection === section.roles">
-      <app-admin-roles></app-admin-roles>
-    </span>
-    <span *ngIf="hasPermission(SystemPermission.ViewGroups) && displayedSection === section.groups">
-      <app-admin-groups></app-admin-groups>
-    </span>
+    @if (!hideTopbar) {
+      <app-topbar
+        [title]="titleText"
+        [topbarView]="TopbarView.GALLERY_ADMIN"
+        [topbarColor]="topbarColor"
+        [topbarTextColor]="topbarTextColor"
+        [imageFilePath]="topbarImage"
+      ></app-topbar>
+    }
+    @if ((canViewCollections || hasPermission(SystemPermission.CreateCollections)) && displayedSection === section.collections) {
+      <span>
+        <app-admin-collections></app-admin-collections>
+      </span>
+    }
+    @if ((canViewExhibits || hasPermission(SystemPermission.CreateExhibits)) && displayedSection === section.exhibits) {
+      <span>
+        <app-admin-exhibits
+          [userList]="userList | async"
+          >
+        </app-admin-exhibits>
+      </span>
+    }
+    @if ((canViewCollections || hasPermission(SystemPermission.CreateCollections)) && displayedSection === section.cards) {
+      <span>
+        <app-admin-cards></app-admin-cards>
+      </span>
+    }
+    @if ((canViewCollections || hasPermission(SystemPermission.CreateCollections)) && displayedSection === section.articles) {
+      <span>
+        <app-admin-articles></app-admin-articles>
+      </span>
+    }
+    @if (hasPermission(SystemPermission.ViewUsers) && displayedSection === section.users) {
+      <span>
+        <app-admin-users></app-admin-users>
+      </span>
+    }
+    @if (hasPermission(SystemPermission.ViewRoles) && displayedSection === section.roles) {
+      <span>
+        <app-admin-roles></app-admin-roles>
+      </span>
+    }
+    @if (hasPermission(SystemPermission.ViewGroups) && displayedSection === section.groups) {
+      <span>
+        <app-admin-groups></app-admin-groups>
+      </span>
+    }
   </mat-sidenav-content>
 </mat-sidenav-container>

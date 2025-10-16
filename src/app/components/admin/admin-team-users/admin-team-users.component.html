@@ -12,9 +12,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         class="mdi-24px"
         fontIcon="mdi-account-multiple"
       ></mat-icon>
-    <span style="margin-left: 10px">
-      All Users
-    </span>
+      <span style="margin-left: 10px">
+        All Users
+      </span>
     </div>
 
     <div>
@@ -25,28 +25,30 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field style="width: 220px;">
         <input matInput [formControl]="filterControl" placeholder="Search" />
       </mat-form-field>
-      <button
-        *ngIf="filterString != ''"
-        mat-icon-button
-        (click)="clearFilter()"
-        style="outline: none;"
-        title="Clear Search"
-      >
-        <mat-icon
-          style="transform: scale(0.85);"
-          svgIcon="ic_clear"
-        ></mat-icon>
-      </button>
+      @if (filterString != '') {
+        <button
+          mat-icon-button
+          (click)="clearFilter()"
+          style="outline: none;"
+          title="Clear Search"
+          >
+          <mat-icon
+            style="transform: scale(0.85);"
+            svgIcon="ic_clear"
+          ></mat-icon>
+        </button>
+      }
     </div>
 
-    <mat-card
-      appearance="outlined"
-      *ngIf="false"
-      style="display: flex; justify-content: center; align-items: center;"
-    >
-      <mat-progress-spinner color="primary" mode="indeterminate">
-      </mat-progress-spinner>
-    </mat-card>
+    @if (false) {
+      <mat-card
+        appearance="outlined"
+        style="display: flex; justify-content: center; align-items: center;"
+        >
+        <mat-progress-spinner color="primary" mode="indeterminate">
+        </mat-progress-spinner>
+      </mat-card>
+    }
 
     <mat-table
       class="mat-table-all-users"
@@ -54,110 +56,120 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       [dataSource]="userDataSource"
       matSort
       (matSortChange)="onSortChange($event)"
-    >
+      >
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header
           >User Name</mat-header-cell
-        >
-        <mat-cell *matCellDef="let element">
-          <div *ngIf="element.name !== null">{{ element.name }}</div>
-          <div *ngIf="element.name === null">{{ element.id }}</div>
-        </mat-cell>
-      </ng-container>
+          >
+          <mat-cell *matCellDef="let element">
+            @if (element.name !== null) {
+              <div>{{ element.name }}</div>
+            }
+            @if (element.name === null) {
+              <div>{{ element.id }}</div>
+            }
+          </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="id">
-        <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          <div>
-            <button
-              mat-icon-button
-              (click)="addUserToTeam(element)"
-              style="outline: none;"
-              title="Add {{ element.name }} to Team"
-              *ngIf="!onAnotherTeam(element.id)"
-              [disabled]="!canEdit"
-            >
-              <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle-outline"></mat-icon>
-            </button>
-            <label *ngIf="onAnotherTeam(element.id)">{{ getUserTeamName(element.id) }}</label>
-          </div>
-        </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <div>
+              @if (!onAnotherTeam(element.id)) {
+                <button
+                  mat-icon-button
+                  (click)="addUserToTeam(element)"
+                  style="outline: none;"
+                  title="Add {{ element.name }} to Team"
+                  [disabled]="!canEdit"
+                  >
+                  <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle-outline"></mat-icon>
+                </button>
+              }
+              @if (onAnotherTeam(element.id)) {
+                <label>{{ getUserTeamName(element.id) }}</label>
+              }
+            </div>
+          </mat-cell>
+        </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedUserColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedUserColumns"></mat-row>
-    </mat-table>
+        <mat-header-row *matHeaderRowDef="displayedUserColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedUserColumns"></mat-row>
+      </mat-table>
 
-    <div *ngIf="userDataSource.filteredData.length === 0">No results found</div>
-  </div>
-
-  <div class="spacer">&nbsp;</div>
-
-  <div class="team-list-container mat-elevation-z8">
-
-    <div class="sp-icon">
-      <mat-icon
-          class="mdi-24px"
-          fontIcon="mdi-account-group"
-      ></mat-icon>
-      <span style="margin-left: 10px">
-        Team Users
-      </span>
+      @if (userDataSource.filteredData.length === 0) {
+        <div>No results found</div>
+      }
     </div>
 
-    <mat-card
-      appearance="outlined"
-      *ngIf="false"
-      style="display: flex; justify-content: center; align-items: center;"
-    >
-      <mat-progress-spinner color="primary" mode="indeterminate">
-      </mat-progress-spinner>
-    </mat-card>
+    <div class="spacer">&nbsp;</div>
 
-    <mat-table
-      class="mat-table-all-users"
-      #table
-      [dataSource]="teamUserDataSource"
-      matSort
-      (matSortChange)="onSortTeamChange($event)"
-    >
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          >User Name</mat-header-cell
+    <div class="team-list-container mat-elevation-z8">
+
+      <div class="sp-icon">
+        <mat-icon
+          class="mdi-24px"
+          fontIcon="mdi-account-group"
+        ></mat-icon>
+        <span style="margin-left: 10px">
+          Team Users
+        </span>
+      </div>
+
+      @if (false) {
+        <mat-card
+          appearance="outlined"
+          style="display: flex; justify-content: center; align-items: center;"
+          >
+          <mat-progress-spinner color="primary" mode="indeterminate">
+          </mat-progress-spinner>
+        </mat-card>
+      }
+
+      <mat-table
+        class="mat-table-all-users"
+        #table
+        [dataSource]="teamUserDataSource"
+        matSort
+        (matSortChange)="onSortTeamChange($event)"
         >
-        <mat-cell *matCellDef="let element">
-          <div>{{ getUserName(element.userId) }}</div>
-        </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header
+            >User Name</mat-header-cell
+            >
+            <mat-cell *matCellDef="let element">
+              <div>{{ getUserName(element.userId) }}</div>
+            </mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="isObserver">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          >Observer</mat-header-cell
-        >
-        <mat-cell *matCellDef="let element">
-          <mat-checkbox
-            [checked]="element.isObserver"
-            (change)="setObserverValue(element.id, $event.checked)"
-            [disabled]="!canEdit"
-          ></mat-checkbox>
-        </mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="isObserver">
+            <mat-header-cell *matHeaderCellDef mat-sort-header
+              >Observer</mat-header-cell
+              >
+              <mat-cell *matCellDef="let element">
+                <mat-checkbox
+                  [checked]="element.isObserver"
+                  (change)="setObserverValue(element.id, $event.checked)"
+                  [disabled]="!canEdit"
+                ></mat-checkbox>
+              </mat-cell>
+            </ng-container>
 
-      <ng-container matColumnDef="id">
-        <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          <div>
-            <button mat-stroked-button (click)="removeUserFromTeam(element)" [disabled]="!canEdit">
-              Remove
-            </button>
-          </div>
-        </mat-cell>
-      </ng-container>
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <div>
+                  <button mat-stroked-button (click)="removeUserFromTeam(element)" [disabled]="!canEdit">
+                    Remove
+                  </button>
+                </div>
+              </mat-cell>
+            </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedTeamUserColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedTeamUserColumns"></mat-row>
-    </mat-table>
+            <mat-header-row *matHeaderRowDef="displayedTeamUserColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedTeamUserColumns"></mat-row>
+          </mat-table>
 
-  </div>
+        </div>
 
-</div>
+      </div>

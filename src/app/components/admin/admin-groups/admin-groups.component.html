@@ -12,14 +12,18 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <input matInput [(ngModel)]="filterString" (keyup)="applyFilter($event.target.value)"
             placeholder="Search Groups" />
         </mat-form-field>
-        <button *ngIf="filterString != ''" matTooltip="Clear Search" mat-icon-button (click)="clearFilter()"
-          style="outline: none">
-          <mat-icon class="mdi-24px" fontIcon="mdi-close-circle"></mat-icon>
-        </button>
+        @if (filterString != '') {
+          <button matTooltip="Clear Search" mat-icon-button (click)="clearFilter()"
+            style="outline: none">
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle"></mat-icon>
+          </button>
+        }
         <div class="spacer"></div>
-        <button *ngIf="canEdit" mat-icon-button matTooltip="Add New Group" (click)="createGroup()">
-          <mat-icon fontSet="fas" fontIcon="fa-plus"></mat-icon>
-        </button>
+        @if (canEdit) {
+          <button mat-icon-button matTooltip="Add New Group" (click)="createGroup()">
+            <mat-icon fontSet="fas" fontIcon="fa-plus"></mat-icon>
+          </button>
+        }
       </mat-toolbar-row>
     </mat-toolbar>
   </div>
@@ -39,16 +43,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-expansion-panel class="w-100">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <ng-container *ngIf="canEdit">
+              @if (canEdit) {
                 <button mat-icon-button matTooltip="Delete {{ element.name }}"
                   (click)="$event.stopPropagation(); deleteGroup(element)">
                   <mat-icon color="primary" fontSet="fas" fontIcon="fa-trash"></mat-icon>
                 </button>
                 <button mat-icon-button matTooltip="Rename">
                   <mat-icon color="primary" fontSet="fas" fontIcon="fa-pencil-alt"
-                    (click)="$event.stopPropagation(); updateGroup(element)"></mat-icon>
+                  (click)="$event.stopPropagation(); updateGroup(element)"></mat-icon>
                 </button>
-              </ng-container>
+              }
               {{ element.name }}
             </mat-panel-title>
           </mat-expansion-panel-header>
