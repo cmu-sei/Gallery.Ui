@@ -37,14 +37,14 @@
 
 .mat-mdc-header-row {
   min-height: 56px;
-  font-family: "open_sansregular";
 }
 
 .mat-mdc-row {
   min-height: 48px;
 }
 
-.mat-mdc-row, .mat-mdc-header-row {
+.mat-mdc-row,
+.mat-mdc-header-row {
   display: flex;
   border-bottom-width: 1px;
   border-bottom-style: solid;
@@ -53,7 +53,8 @@
   box-sizing: border-box;
 }
 
-.mat-mdc-cell, .mat-mdc-header-cell {
+.mat-mdc-cell,
+.mat-mdc-header-cell {
   flex: 1;
   overflow: hidden;
   word-wrap: break-word;
