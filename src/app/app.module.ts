@@ -94,11 +94,9 @@ import { AdminExhibitRolesComponent } from './components/admin/admin-roles/admin
 import { AdminCollectionRolesComponent } from './components/admin/admin-roles/admin-collection-roles/admin-collection-roles.component';
 import { CollectionMembershipsComponent } from './components/collections/collection-memberships/collection-memberships/collection-memberships.component';
 import { CollectionMemberListComponent } from './components/collections/collection-memberships/collection-member-list/collection-member-list.component';
-import { CollectionMembershipsPageComponent } from './components/collections/collection-memberships/collection-memberships-page/collection-memberships-page.component';
 import { CollectionMembershipListComponent } from './components/collections/collection-memberships/collection-membership-list/collection-membership-list.component';
 import { ExhibitMembershipsComponent } from './components/exhibits/exhibit-memberships/exhibit-memberships/exhibit-memberships.component';
 import { ExhibitMemberListComponent } from './components/exhibits/exhibit-memberships/exhibit-member-list/exhibit-member-list.component';
-import { ExhibitMembershipsPageComponent } from './components/exhibits/exhibit-memberships/exhibit-memberships-page/exhibit-memberships-page.component';
 import { ExhibitMembershipListComponent } from './components/exhibits/exhibit-memberships/exhibit-membership-list/exhibit-membership-list.component';
 import { AdminSystemRolesComponent } from './components/admin/admin-roles/admin-system-roles/admin-system-roles.component';
 import { AdminUserListComponent } from './components/admin/admin-users/admin-user-list/admin-user-list.component';
@@ -172,11 +170,9 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     CollectionMemberListComponent,
     CollectionMembershipListComponent,
     CollectionMembershipsComponent,
-    CollectionMembershipsPageComponent,
     ExhibitMemberListComponent,
     ExhibitMembershipListComponent,
     ExhibitMembershipsComponent,
-    ExhibitMembershipsPageComponent,
     TopbarComponent,
     ArchiveComponent,
     WallComponent,
