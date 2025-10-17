@@ -3,15 +3,14 @@
 
 import { DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, Output, OnDestroy } from '@angular/core';
-import { Team, TeamCard, UserArticle, ItemStatus } from 'src/app/generated/api/model/models';
+import { TeamCard, UserArticle, ItemStatus } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
-import { Subject, Observable } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Section } from 'src/app/utilities/enumerations';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 
 @Component({
