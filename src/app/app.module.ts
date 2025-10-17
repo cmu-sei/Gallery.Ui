@@ -3,21 +3,51 @@
 
 import { CdkTableModule } from '@angular/cdk/table';
 import { CdkTreeModule } from '@angular/cdk/tree';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatLabel } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatListModule, MatListItem, MatDivider } from '@angular/material/list';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatOption } from '@angular/material/core';
+import { MatTable } from '@angular/material/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -83,7 +113,6 @@ import { ErrorService } from './services/error/error.service';
 import { SystemMessageService } from './services/system-message/system-message.service';
 import { BASE_PATH } from './generated/api';
 import { ApiModule as SwaggerCodegenApiModule } from './generated/api/api.module';
-import { DisplayOrderPipe, SortByPipe } from 'src/app/utilities/sort-by-pipe';
 import { ArchiveComponent } from './components/archive/archive.component';
 import { WallComponent } from './components/wall/wall.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
@@ -99,102 +128,137 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
   return settingsSvc.settings.ApiUrl;
 }
 
-@NgModule({ declarations: [
-        AppComponent,
-        HomeAppComponent,
-        SystemMessageComponent,
-        NameDialogComponent,
-        AdminContainerComponent,
-        AdminArticleEditDialogComponent,
-        AdminArticlesComponent,
-        AdminCardEditDialogComponent,
-        AdminCardsComponent,
-        AdminCollectionEditDialogComponent,
-        AdminCollectionsComponent,
-        AdminExhibitArticlesComponent,
-        AdminExhibitArticleTeamsComponent,
-        AdminExhibitsComponent,
-        AdminExhibitEditDialogComponent,
-        AdminObserversComponent,
-        AdminTeamCardsComponent,
-        AdminTeamCardEditDialogComponent,
-        AdminTeamEditDialogComponent,
-        AdminTeamsComponent,
-        AdminTeamUsersComponent,
-        AdminUsersComponent,
-        AdminUserEditDialogComponent,
-        AdminUserListComponent,
-        AdminGroupsComponent,
-        AdminGroupsDetailComponent,
-        AdminGroupsMemberListComponent,
-        AdminGroupsMembershipListComponent,
-        AdminRolesComponent,
-        AdminExhibitRolesComponent,
-        AdminCollectionRolesComponent,
-        AdminExhibitsComponent,
-        AdminCollectionsComponent,
-        AdminSystemRolesComponent,
-        ArticleComponent,
-        ArticleEditDialogComponent,
-        ArticleMoreDialogComponent,
-        ArticleShareDialogComponent,
-        ArticleTeamsComponent,
-        CollectionMemberListComponent,
-        CollectionMembershipListComponent,
-        CollectionMembershipsComponent,
-        CollectionMembershipsPageComponent,
-        ExhibitMemberListComponent,
-        ExhibitMembershipListComponent,
-        ExhibitMembershipsComponent,
-        ExhibitMembershipsPageComponent,
-        TopbarComponent,
-        DisplayOrderPipe,
-        SortByPipe,
-        ArchiveComponent,
-        WallComponent,
-        TeamSelectorComponent,
-    ],
-    exports: [MatSortModule],
-    bootstrap: [AppComponent], imports: [AkitaNgDevtools,
-        AkitaNgRouterStoreModule,
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        CwdDialogsModule,
-        SwaggerCodegenApiModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatButtonToggleModule,
-        MatDialogModule,
-        MatExpansionModule,
-        MatGridListModule,
-        MatIconModule,
-        MatNativeDateModule,
-        MatRippleModule,
-        MatSidenavModule,
-        MatSortModule,
-        MatToolbarModule,
-        MatStepperModule,
-        MatBottomSheetModule,
-        MatBadgeModule,
-        CdkTableModule,
-        MatTreeModule,
-        CdkTreeModule,
-        ComnAuthModule.forRoot(),
-        ComnSettingsModule.forRoot()], providers: [
-        DialogService,
-        SystemMessageService,
-        UIDataService,
-        UserDataService,
-        {
-            provide: BASE_PATH,
-            useFactory: getBasePath,
-            deps: [ComnSettingsService],
-        },
-        {
-            provide: ErrorHandler,
-            useClass: ErrorService,
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeAppComponent,
+    SystemMessageComponent,
+    NameDialogComponent,
+    AdminContainerComponent,
+    AdminArticleEditDialogComponent,
+    AdminArticlesComponent,
+    AdminCardEditDialogComponent,
+    AdminCardsComponent,
+    AdminCollectionEditDialogComponent,
+    AdminCollectionsComponent,
+    AdminExhibitArticlesComponent,
+    AdminExhibitArticleTeamsComponent,
+    AdminExhibitsComponent,
+    AdminExhibitEditDialogComponent,
+    AdminObserversComponent,
+    AdminTeamCardsComponent,
+    AdminTeamCardEditDialogComponent,
+    AdminTeamEditDialogComponent,
+    AdminTeamsComponent,
+    AdminTeamUsersComponent,
+    AdminUsersComponent,
+    AdminUserEditDialogComponent,
+    AdminUserListComponent,
+    AdminGroupsComponent,
+    AdminGroupsDetailComponent,
+    AdminGroupsMemberListComponent,
+    AdminGroupsMembershipListComponent,
+    AdminRolesComponent,
+    AdminExhibitRolesComponent,
+    AdminCollectionRolesComponent,
+    AdminExhibitsComponent,
+    AdminCollectionsComponent,
+    AdminSystemRolesComponent,
+    ArticleComponent,
+    ArticleEditDialogComponent,
+    ArticleMoreDialogComponent,
+    ArticleShareDialogComponent,
+    ArticleTeamsComponent,
+    CollectionMemberListComponent,
+    CollectionMembershipListComponent,
+    CollectionMembershipsComponent,
+    CollectionMembershipsPageComponent,
+    ExhibitMemberListComponent,
+    ExhibitMembershipListComponent,
+    ExhibitMembershipsComponent,
+    ExhibitMembershipsPageComponent,
+    TopbarComponent,
+    ArchiveComponent,
+    WallComponent,
+    TeamSelectorComponent,
+  ],
+  exports: [MatSortModule],
+  bootstrap: [AppComponent],
+  imports: [
+    AkitaNgDevtools,
+    AkitaNgRouterStoreModule,
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    CwdDialogsModule,
+    SwaggerCodegenApiModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonToggleModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatIconModule,
+    MatNativeDateModule,
+    MatRippleModule,
+    MatSidenavModule,
+    MatSortModule,
+    MatToolbarModule,
+    MatStepperModule,
+    MatBottomSheetModule,
+    MatBadgeModule,
+    CdkTableModule,
+    MatTreeModule,
+    CdkTreeModule,
+    ComnAuthModule.forRoot(),
+    ComnSettingsModule.forRoot(),
+    AngularEditorModule,
+    MatFormFieldModule,
+    MatLabel,
+    MatSelect,
+    MatPaginator,
+    MatListModule,
+    MatListItem,
+    MatDivider,
+    MatTabGroup,
+    MatTab,
+    MatOption,
+    MatTable,
+    MatMenuModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatSliderModule,
+    MatSnackBarModule,
+    MatTableModule,
+    MatTabsModule,
+    MatTooltipModule,
+  ],
+  providers: [
+    DialogService,
+    SystemMessageService,
+    UIDataService,
+    UserDataService,
+    {
+      provide: BASE_PATH,
+      useFactory: getBasePath,
+      deps: [ComnSettingsService],
+    },
+    {
+      provide: ErrorHandler,
+      useClass: ErrorService,
+    },
+    provideHttpClient(withInterceptorsFromDi()),
+  ],
+})
 export class AppModule {}
