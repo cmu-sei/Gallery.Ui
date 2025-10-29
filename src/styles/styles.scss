@@ -43,6 +43,7 @@ html {
     ));
 }
 
+
 // classes for icon sizing
 .icon-35px {
   width: 35px !important;
@@ -64,6 +65,112 @@ mat-paginator {
   --mat-form-field-outlined-focus-outline-color: transparent;
   min-width: 200px !important;
 }
+
+// classes set in old _theme.scss
+.icon-35px {
+  height: 35px;
+  width: 35px;
+}
+
+.icon-24px {
+  height: 24px;
+  width: 24px;
+}
+
+.icon-20px {
+  height: 20px;
+  width: 20px;
+}
+
+.icon-color {
+  color: var(--mat-sys-color-primary);
+}
+
+.selected {
+  background: var(--mat-sys-color-primary);
+  &:hover,
+  &:focus {
+    background: var(--mat-sys-color-primary) !important;
+  }
+}
+
+.disabled-text {
+  color: var(--mat-sys-color-disabled);
+}
+
+.warn-text {
+  color: var(--mat-sys-color-warn);
+}
+
+.background {
+  background-color: var(--mat-sys-color-background);
+}
+
+.highlight {
+  &:hover,
+  &:focus {
+    background: var(--mat-sys-color-hover);
+  }
+}
+
+.text {
+  color: var(--mat-sys-color-text);
+}
+
+.mat-tooltip {
+  background-color: var(--mat-sys-color-primary);
+  color: var(--mat-sys-color-on-primary);
+}
+
+.no-outline {
+  outline: none;
+}
+
+.mat-paginator {
+  color: var(--mat-sys-color-text);
+  background: var(--mat-sys-color-background);
+}
+
+.mat-form-field {
+  color: purple;
+}
+
+.mat-header-cell {
+  color: pink;
+}
+
+.mat-form-field-label {
+  color: green !important;
+}
+
+.selected-item {
+  background-color: yellow;
+}
+
+.article-action {
+  color: var(--mat-sys-color-warn);
+}
+
+.article-read {
+  background: transparent;
+  color: var(--mat-sys-color-primary);
+}
+
+.article-unread {
+  background: var(--mat-sys-color-warn);
+  color: var(--mat-sys-color-on-primary);
+}
+
+.active-button {
+  background-color: var(--mat-sys-color-warn) !important;
+  color: var(--mat-sys-color-on-primary) !important;
+}
+
+.inactive-button {
+  background-color: transparent !important;
+  color: var(--mat-sys-color-warn) !important;
+}
+
 
 /* The following acts as drop in replacement for the deprecation of Angular FlexLayout */
 .cssLayoutColumnCenterCenter {

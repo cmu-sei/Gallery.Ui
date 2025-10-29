@@ -39,17 +39,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </div>
       <div class="source-type-cell">
         <!-- Intel -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Intel')" [ngClass]="getButtonClass('Intel')">
+        <button mat-stroked-button class="tiny" [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Intel') < 0}" title="Filter on/off" (click)="filterBySourceType('Intel')">
           <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px shift-left"></mat-icon>
           Intel
         </button>
         <!-- Reporting -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Reporting')" [ngClass]="getButtonClass('Reporting')">
+        <button mat-stroked-button class="tiny active-button" title="Filter on/off" (click)="filterBySourceType('Reporting')">
           <mat-icon fontIcon="{{ sourceIcon['Reporting'] }}" class="mdi-18px shift-left"></mat-icon>
           Reporting
         </button>
         <!-- Orders -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Orders')" [ngClass]="getButtonClass('Orders')">
+        <button mat-stroked-button class="tiny inactive-button" title="Filter on/off" (click)="filterBySourceType('Orders')">
           <mat-icon fontIcon="{{ sourceIcon['Orders'] }}" class="mdi-18px shift-left"></mat-icon>
           Orders
         </button>

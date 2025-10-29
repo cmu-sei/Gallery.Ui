@@ -4,7 +4,7 @@
 import { Component, Inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import {
   Permission,
   User,
@@ -25,7 +25,6 @@ import { environment } from 'src/environments/environment';
 import { HealthCheckService } from 'src/app/generated/api';
 import { ComnAuthService } from '@cmusei/crucible-common';
 import { SystemPermission } from 'src/app/generated/api';
-import { System } from 'typescript';
 
 @Component({
     selector: 'app-admin-container',

@@ -109,14 +109,10 @@ export class AppComponent implements OnDestroy {
     const classList = this.overlayContainer.getContainerElement().classList;
     switch (theme) {
       case Theme.LIGHT:
-        this.componentCssClass = theme;
-        classList.add(theme);
-        classList.remove(Theme.DARK);
+        document.body.classList.toggle('darkMode', false);
         break;
       case Theme.DARK:
-        this.componentCssClass = theme;
-        classList.add(theme);
-        classList.remove(Theme.LIGHT);
+        document.body.classList.toggle('darkMode', true);
     }
   }
   ngOnDestroy(): void {
