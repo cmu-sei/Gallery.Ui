@@ -7,65 +7,55 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="top-row">
     <div class="spacer-cell">&nbsp;</div>
     <div class="selector-cell">
-      <app-team-selector
-        (changeTeam)="changeTeamRequest($event)"
-        style="float: right;"
-      ></app-team-selector>
+      <app-team-selector (changeTeam)="changeTeamRequest($event)" style="float: right;"></app-team-selector>
     </div>
     <div class="button-cell">
-      <button
-        mat-icon-button
-        (click)="gotoArchive('archive')"
-        style="outline: none;"
-        title="Archive"
-        >
+      <button mat-icon-button (click)="gotoArchive('archive')" style="outline: none;" title="Archive">
         <mat-icon class="mdi-24px self-center" fontIcon="mdi-archive"></mat-icon>
       </button>
       @if (showAdminButton) {
-        <button
-          mat-icon-button
-          (click)="gotoAdmin()"
-          style="outline: none;"
-          title="Administration"
-          >
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-cog"></mat-icon>
-        </button>
+      <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
+        <mat-icon class="mdi-24px self-center" fontIcon="mdi-cog"></mat-icon>
+      </button>
       }
     </div>
   </div>
   <section class="cards">
     @for (card of shownCardList; track card) {
-      <mat-card appearance="outlined" [ngClass]="'card ' + card.displayedStatus.toLowerCase().replace(' ', '') + '-status'">
-        <mat-card-header>
-          <mat-card-title class="card-title-text">{{ card.name }}</mat-card-title>
-          <mat-card-subtitle class="card-subtitle-text">{{ card.description }}</mat-card-subtitle>
-        </mat-card-header>
-        @if (card.datePosted.getFullYear() > 1970) {
-          <mat-card-content>
-            <div class="center">
-              <span style="float: left;"><mat-icon fontIcon="mdi-calendar-clock-outline" alt="Simulated Date/Time"></mat-icon> {{ card.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }} ET</span>
-            </div>
-            <h3>@if (card.unreadCount > 0) {
-              <span>{{ card.unreadCount }} unread article</span>
-              }@if (card.unreadCount > 1) {
-              <span>s</span>
-            }&nbsp;</h3>
-          </mat-card-content>
+    <mat-card appearance="outlined"
+      [ngClass]="'card ' + card.displayedStatus.toLowerCase().replace(' ', '') + '-status'">
+      <mat-card-header class="center">
+        <mat-card-title class="card-title-text">{{ card.name }}</mat-card-title>
+        <mat-card-subtitle class="card-subtitle-text">{{ card.description }}</mat-card-subtitle>
+      </mat-card-header>
+      @if (card.datePosted.getFullYear() > 1970) {
+      <mat-card-content>
+        <div class="center">
+          <mat-icon class="sys-text" fontIcon="mdi-calendar-clock-outline" alt="Simulated Date/Time"></mat-icon>
+          {{
+          card.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }} ET
+        </div>
+        <h3>@if (card.unreadCount > 0) {
+          <span>{{ card.unreadCount }} unread article</span>
+          }@if (card.unreadCount > 1) {
+          <span>s</span>
+          }&nbsp;
+        </h3>
+      </mat-card-content>
+      }
+      @if (card.datePosted.getFullYear() <= 1970) { <mat-card-content>
+        <div class="center">
+          <span style="float: left;">&nbsp;</span>
+        </div>
+        <h3>No articles posted</h3>
+        </mat-card-content>
         }
-        @if (card.datePosted.getFullYear() <= 1970) {
-          <mat-card-content>
-            <div class="center">
-              <span style="float: left;">&nbsp;</span>
-            </div>
-            <h3>No articles posted</h3>
-          </mat-card-content>
-        }
-        <mat-card-actions>
+        <mat-card-actions class="center">
           @if (card.datePosted.getFullYear() > 1970) {
-            <button mat-stroked-button (click)="gotoArchive(card.id)">Details</button>
+          <button mat-stroked-button class="sys-text" (click)="gotoArchive(card.id)">Details</button>
           }
         </mat-card-actions>
-      </mat-card>
+    </mat-card>
     }
   </section>
 </div>

@@ -46,38 +46,6 @@
   margin: 1rem .25em;
 }
 
-@media screen and (min-width: 40em) {
-  .card {
-     max-width: calc(50% -  1em);
-  }
-}
-
-@media screen and (min-width: 60em) {
-  .card {
-      max-width: calc(33.3% - 1em);
-  }
-}
-
-@media screen and (min-width: 80em) {
-  .card {
-      max-width: calc(25% - 1em);
-  }
-}
-
-.centered {
-  margin: 0 auto;
-  padding: 0 1em;
-}
-
-/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
-.mat-mdc-card::ng-deep.mat-card-header-text {
-  width: 100%;
-}
-
-.mat-mdc-outlined-button {
-  border-color: black !important;
-}
-
 .gallery-icon {
   transform: scale(0.8);
   width: 60px;
@@ -111,13 +79,42 @@
 
 .card-title-text {
   font-weight: bold;
+  text-align: center;
 }
 
 .card-subtitle-text {
   color: rgba(0, 0, 0, 0.54);
+  text-align: center;
+}
+
+.sys-text {
+  color: var(--mat-sys-text);
+  border-color: var(--mat-sys-text);
 }
 
 .center {
   display: flex;
   justify-content: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+@media screen and (min-width: 40em) {
+  .card {
+    max-width: calc(50% - 1em);
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .card {
+    max-width: calc(33.3% - 1em);
+  }
+}
+
+@media screen and (min-width: 80em) {
+  .card {
+    max-width: calc(25% - 1em);
+  }
 }
