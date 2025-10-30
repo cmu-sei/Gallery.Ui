@@ -15,7 +15,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           mat-icon-button
           matTooltip="Close Sidebar"
           >
-          <mat-icon svgIcon="ic_chevron_left"></mat-icon>
+          <mat-icon class="menu-trigger" fontIcon="mdi-chevron-left"></mat-icon>
         </button>
       }
       @if (sidenav && !sidenav?.opened) {
@@ -24,7 +24,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           mat-icon-button
           matTooltip="Open Sidebar"
           >
-          <mat-icon class="icon-color" svgIcon="ic_chevron_right"></mat-icon>
+          <mat-icon class="menu-trigger" fontIcon="mdi-chevron-right"></mat-icon>
         </button>
       }
       @if (!!imageFilePath) {
@@ -46,7 +46,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             [matMenuTriggerFor]="teamMenu"
             style="outline: none;"
             >
-            <mat-icon class="icon-color" svgIcon="ic_expand_more"></mat-icon>
+            <mat-icon class="menu-trigger" fontIcon="mdi-chevron-down"></mat-icon>
           </button>
           <mat-menu #teamMenu="matMenu" [overlapTrigger]="false">
             @for (val of teams; track val) {
@@ -71,7 +71,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             style="outline: none;"
             >
             <strong>{{ currentUser.name }}</strong>
-            <mat-icon class="icon-color" svgIcon="ic_expand_more"></mat-icon>
+            <mat-icon class="menu-trigger" fontIcon="mdi-chevron-down"></mat-icon>
           </button>
           <mat-menu #menu="matMenu" [overlapTrigger]="false">
             <button mat-menu-item (click)="logout()">Logout</button>

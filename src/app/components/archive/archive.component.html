@@ -39,37 +39,37 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </div>
       <div class="source-type-cell">
         <!-- Intel -->
-        <button mat-stroked-button class="tiny" [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Intel') < 0}" title="Filter on/off" (click)="filterBySourceType('Intel')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Intel')" [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Intel') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px shift-left"></mat-icon>
           Intel
         </button>
         <!-- Reporting -->
-        <button mat-stroked-button class="tiny active-button" title="Filter on/off" (click)="filterBySourceType('Reporting')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Reporting')" [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Reporting') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Reporting'] }}" class="mdi-18px shift-left"></mat-icon>
           Reporting
         </button>
         <!-- Orders -->
-        <button mat-stroked-button class="tiny inactive-button" title="Filter on/off" (click)="filterBySourceType('Orders')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Orders')" [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Orders') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Orders'] }}" class="mdi-18px shift-left"></mat-icon>
           Orders
         </button>
         <!-- News -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('News')" [ngClass]="getButtonClass('News')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('News')" [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('News') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['News'] }}" class="mdi-18px shift-left"></mat-icon>
           News
         </button>
         <!-- Social -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Social')" [ngClass]="getButtonClass('Social')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Social')" [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Social') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Social'] }}" class="mdi-18px shift-left"></mat-icon>
           Social
         </button>
         <!-- Phone -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Phone')" [ngClass]="getButtonClass('Phone')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Phone')" [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Phone') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Phone'] }}" class="mdi-18px shift-left"></mat-icon>
           Phone
         </button>
         <!-- Email -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Email')" [ngClass]="getButtonClass('Email')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Email')" [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Email') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Email'] }}" class="mdi-18px shift-left"></mat-icon>
           Email
         </button>
@@ -77,7 +77,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <div class="team-cell">
         <app-team-selector
           (changeTeam)="changeTeamRequest($event)"
-          style="float: right;"
         ></app-team-selector>
       </div>
       <div class="last-cell">
@@ -125,24 +124,24 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div class="action-buttons">
           <div class="one-cell">
             <button mat-button class="article-action" title="View" (click)="openMoreDialog(userArticle, false)">
-              <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye" alt="View Media"></mat-icon> View
+              <mat-icon fontIcon="mdi-eye" alt="View Media"></mat-icon> View
             </button>
           </div>
           <div class="one-cell">
             @if (!userArticle.isRead) {
               <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" [disabled]="!myTeamIsSelected()">
-                <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-checkbox-blank-outline" alt="UserArticle Read"></mat-icon> Read
+                <mat-icon fontIcon="mdi-checkbox-blank-outline" alt="UserArticle Read"></mat-icon> Read
               </button>
             }
             @if (userArticle.isRead) {
               <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" [disabled]="!myTeamIsSelected()">
-                <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-checkbox-marked-outline" alt="UserArticle Read"></mat-icon> Read
+                <mat-icon fontIcon="mdi-checkbox-marked-outline" alt="UserArticle Read"></mat-icon> Read
               </button>
             }
           </div>
           <div class="one-cell">
             <button mat-button class="article-action" title="Share UserArticle" (click)="openShareDialog(userArticle)" [disabled]="!myTeamIsSelected()">
-              <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-share-variant" alt="Share UserArticle"></mat-icon> Share
+              <mat-icon fontIcon="mdi-share-variant" alt="Share UserArticle"></mat-icon> Share
             </button>
           </div>
         </div>
@@ -150,7 +149,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <div class="one-cell">
             @if (userArticle.article.url) {
               <button mat-button class="article-action" title="More Article Info" (click)="openMoreDialog(userArticle, true)">
-                <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye-plus" alt="View Media"></mat-icon> More
+                <mat-icon fontIcon="mdi-eye-plus" alt="View Media"></mat-icon> More
               </button>
             }
           </div>
@@ -164,7 +163,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
                 title="Edit {{ userArticle.article.name }}"
                 [disabled]="!myTeamIsSelected()"
                 >
-                <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-square-edit-outline"></mat-icon> Edit
+                <mat-icon fontIcon="mdi-square-edit-outline"></mat-icon> Edit
               </button>
             }
           </div>
@@ -178,7 +177,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
                 title="Delete {{ userArticle.article.name }}"
                 [disabled]="!myTeamIsSelected()"
                 >
-                <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-trash-can"></mat-icon> Delete
+                <mat-icon fontIcon="mdi-trash-can"></mat-icon> Delete
               </button>
             }
           </div>

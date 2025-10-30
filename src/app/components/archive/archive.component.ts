@@ -24,7 +24,6 @@ import {
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { UserArticleDataService } from 'src/app/data/user-article/user-article-data.service';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
-import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
@@ -40,7 +39,7 @@ import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
 import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dialog/article-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/generated/api';
@@ -335,11 +334,13 @@ export class ArchiveComponent implements OnDestroy {
         .pipe(take(1))
         .subscribe();
       const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
+        minWidth: '900px',
+        minHeight: '700px',
         data: {
           article: userArticle.article,
           useUrl: useUrl,
           exhibitId: this.exhibitId,
-        },
+        }
       });
       dialogRef.componentInstance.editComplete.subscribe((result) => {
         dialogRef.close();
@@ -362,7 +363,8 @@ export class ArchiveComponent implements OnDestroy {
 
   openShareDialog(userArticle: UserArticle) {
     const dialogRef = this.dialog.open(ArticleShareDialogComponent, {
-      width: '900px',
+      minWidth: '900px',
+      minHeight: '700px',
       data: {
         article: userArticle.article,
         teamList: this.shareTeamList,

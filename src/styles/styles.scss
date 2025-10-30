@@ -26,10 +26,19 @@ html {
   @include mat.theme((color: theme.$primary-palette,
       typography: '"Open Sans", sans-serif',
     ),
-    $overrides: ((background: #f1f1f2, surface: var(--mat-sys-background), surface-variant: var(--mat-sys-background))));
-  @include mat.datepicker-overrides((calendar-container-background-color: var(--mat-sys-outline-variant),
-      calendar-date-selected-state-text-color: var(--mat-sys-primary), calendar-container-text-color: var(--mat-sys-on-background),
-    ));
+    $overrides: ((
+      background: #f1f1f2,
+      surface: var(--mat-sys-background),
+      surface-variant: var(--mat-sys-background),
+      icon: var(--mat-sys-primary),
+    ))
+  );
+  @include mat.datepicker-overrides((
+    calendar-container-background-color: var(--mat-sys-outline-variant),
+    calendar-date-selected-state-text-color: var(--mat-sys-primary),
+    calendar-container-text-color: var(--mat-sys-on-background),
+    )
+  );
 }
 
 .darkMode {
@@ -37,12 +46,24 @@ html {
         theme-type: dark,
       ),
     ),
-    $overrides: ((background: #313131, surface: var(--mat-sys-background), surface-variant: var(--mat-sys-background))));
-  @include mat.datepicker-overrides((calendar-container-background-color: var(--mat-sys-outline-variant),
-      calendar-date-selected-state-text-color: var(--mat-sys-primary), calendar-container-text-color: var(--mat-sys-on-background),
-    ));
+    $overrides: ((
+      background: #313131,
+      surface: var(--mat-sys-background),
+      surface-variant: var(--mat-sys-background)
+      ))
+  );
+  @include mat.datepicker-overrides((
+    calendar-container-background-color: var(--mat-sys-outline-variant),
+    calendar-date-selected-state-text-color: var(--mat-sys-primary),
+    calendar-container-text-color: var(--mat-sys-on-background),
+  ));
 }
 
+:root {
+  @include mat.icon-overrides((
+    color: var(--mat-sys-primary)
+  ));
+}
 
 // classes for icon sizing
 .icon-35px {
@@ -83,43 +104,43 @@ mat-paginator {
 }
 
 .icon-color {
-  color: var(--mat-sys-color-primary);
+  color: var(--mat-sys-primary) !important;
 }
 
 .selected {
-  background: var(--mat-sys-color-primary);
+  background: var(--mat-sys-primary);
   &:hover,
   &:focus {
-    background: var(--mat-sys-color-primary) !important;
+    background: var(--mat-sys-primary) !important;
   }
 }
 
 .disabled-text {
-  color: var(--mat-sys-color-disabled);
+  color: var(--mat-sys-disabled);
 }
 
 .warn-text {
-  color: var(--mat-sys-color-warn);
+  color: var(--mat-sys-warn);
 }
 
 .background {
-  background-color: var(--mat-sys-color-background);
+  background-color: var(--mat-sys-background);
 }
 
 .highlight {
   &:hover,
   &:focus {
-    background: var(--mat-sys-color-hover);
+    background: var(--mat-sys-hover);
   }
 }
 
 .text {
-  color: var(--mat-sys-color-text);
+  color: var(--mat-sys-text);
 }
 
 .mat-tooltip {
-  background-color: var(--mat-sys-color-primary);
-  color: var(--mat-sys-color-on-primary);
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
 }
 
 .no-outline {
@@ -127,48 +148,67 @@ mat-paginator {
 }
 
 .mat-paginator {
-  color: var(--mat-sys-color-text);
-  background: var(--mat-sys-color-background);
+  color: var(--mat-sys-text);
+  background: var(--mat-sys-background);
 }
 
 .mat-form-field {
-  color: purple;
+  color: var(--mat-sys-primary);
 }
 
 .mat-header-cell {
-  color: pink;
+  color: orange;
 }
 
 .mat-form-field-label {
-  color: green !important;
+  color: var(--mat-text-color) !important;
 }
 
 .selected-item {
-  background-color: yellow;
+  background-color: var(--mat-sys-accent);
 }
 
-.article-action {
-  color: var(--mat-sys-color-warn);
+.twelve-cell {
+  flex: 12;
 }
 
-.article-read {
-  background: transparent;
-  color: var(--mat-sys-color-primary);
+.ten-cell {
+  flex: 10;
 }
 
-.article-unread {
-  background: var(--mat-sys-color-warn);
-  color: var(--mat-sys-color-on-primary);
+.nine-cell {
+  flex: 7;
 }
 
-.active-button {
-  background-color: var(--mat-sys-color-warn) !important;
-  color: var(--mat-sys-color-on-primary) !important;
+.eight-cell {
+  flex: 6;
+}
+.seven-cell {
+  flex: 7;
 }
 
-.inactive-button {
-  background-color: transparent !important;
-  color: var(--mat-sys-color-warn) !important;
+.six-cell {
+  flex: 6;
+}
+
+.five-cell {
+  flex: 5;
+}
+
+.four-cell {
+  flex: 4;
+}
+
+.three-cell {
+  flex: 3;
+}
+
+.two-cell {
+  flex: 2;
+}
+
+.one-cell {
+  flex: 1;
 }
 
 
@@ -246,3 +286,33 @@ mat-paginator {
 }
 
 /* end of FlexLayout replacements */
+
+
+// These variables represent the core color roles of the application's theme:
+// --mat-sys-primary: The primary color used for prominent elements and components.
+// --mat-sys-on-primary: Color for content displayed on top of the primary color.
+// --mat-sys-primary-container: A container color related to the primary color.
+// --mat-sys-on-primary-container: Color for content displayed on top of the primary container.
+// --mat-sys-secondary: A secondary color used for less prominent elements.
+// --mat-sys-on-secondary: Color for content displayed on top of the secondary color.
+// --mat-sys-secondary-container: A container color related to the secondary color.
+// --mat-sys-on-secondary-container: Color for content displayed on top of the secondary container.
+// --mat-sys-tertiary: A tertiary color for additional emphasis or variations.
+// --mat-sys-on-tertiary: Color for content displayed on top of the tertiary color.
+// --mat-sys-tertiary-container: A container color related to the tertiary color.
+// --mat-sys-on-tertiary-container: Color for content displayed on top of the tertiary container.
+// --mat-sys-error: Color used to indicate errors or warnings.
+// --mat-sys-on-error: Color for content displayed on top of the error color.
+// --mat-sys-error-container: A container color related to the error color.
+// --mat-sys-on-error-container: Color for content displayed on top of the error container.
+// --mat-sys-background: The background color of the application.
+// --mat-sys-on-background: Color for content displayed on top of the background.
+// --mat-sys-surface: The color used for surfaces like cards and dialogs.
+// --mat-sys-on-surface: Color for content displayed on top of surfaces.
+// --mat-sys-surface-variant: A variant of the surface color.
+// --mat-sys-on-surface-variant: Color for content displayed on top of the surface variant.
+// --mat-sys-outline: Color used for outlines and borders.
+// --mat-sys-shadow: Color used for shadows.
+// --mat-sys-inverse-surface: An inverted surface color for contrast.
+// --mat-sys-inverse-on-surface: Color for content displayed on top of the inverse surface.
+// --mat-sys-inverse-primary: An inverted primary color for contrast.
