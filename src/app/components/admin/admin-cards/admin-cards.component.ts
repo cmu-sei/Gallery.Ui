@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
@@ -20,22 +20,21 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
-    selector: 'app-admin-cards',
-    templateUrl: './admin-cards.component.html',
-    styleUrls: ['./admin-cards.component.scss'],
-    standalone: false
+  selector: 'app-admin-cards',
+  templateUrl: './admin-cards.component.html',
+  styleUrls: ['./admin-cards.component.scss'],
+  standalone: false
 })
-export class AdminCardsComponent implements OnDestroy {
+export class AdminCardsComponent implements OnDestroy, OnInit {
+  @Input() selectedCollectionId: string;
   canEdit = false;
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];
-  selectedCollectionId = '';
   newCard: Card = { id: '', name: '' };
   cardList: Card[];
   displayedCards: Card[];
   isLoading = false;
-  topbarColor = '#ef3a47';
   addingNewCard = false;
   newCardName = '';
   editCard: Card = {};
@@ -56,9 +55,6 @@ export class AdminCardsComponent implements OnDestroy {
     private cardQuery: CardQuery,
     private permissionDataService: PermissionDataService
   ) {
-    this.topbarColor = this.settingsService.settings.AppTopBarHexColor
-      ? this.settingsService.settings.AppTopBarHexColor
-      : this.topbarColor;
     this.cardQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -73,13 +69,6 @@ export class AdminCardsComponent implements OnDestroy {
           this.sortChanged(this.sort);
         });
       });
-    this.collectionList = this.collectionQuery.getActive() as Collection[];
-    this.collectionQuery
-      .selectAll()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((collections) => {
-        this.collectionList = collections;
-      });
     this.cardQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -88,26 +77,16 @@ export class AdminCardsComponent implements OnDestroy {
         this.applyFilter();
         this.isLoading = false;
       });
-    this.selectedCollectionId = this.collectionQuery.getActiveId();
-    if (this.selectedCollectionId) {
-      this.loadCards();
-    }
-    this.collectionQuery
-      .selectActiveId()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((collectionId) => {
-        if (collectionId && this.selectedCollectionId !== collectionId) {
-          this.selectedCollectionId = collectionId;
-          this.loadCards();
-        }
-      });
-
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
         this.filterString = term.trim().toLowerCase();
         this.applyFilter();
       });
+  }
+
+  ngOnInit() {
+    this.loadCards();
   }
 
   loadCards() {
@@ -230,7 +209,7 @@ export class AdminCardsComponent implements OnDestroy {
       case 'collectionId':
         return (
           (this.getCollectionName(a.collectionId).toLowerCase() <
-          this.getCollectionName(b.collectionId).toLowerCase()
+            this.getCollectionName(b.collectionId).toLowerCase()
             ? -1
             : 1) * (isAsc ? 1 : -1)
         );

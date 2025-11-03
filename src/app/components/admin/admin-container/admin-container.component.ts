@@ -27,10 +27,10 @@ import { ComnAuthService } from '@cmusei/crucible-common';
 import { SystemPermission } from 'src/app/generated/api';
 
 @Component({
-    selector: 'app-admin-container',
-    templateUrl: './admin-container.component.html',
-    styleUrls: ['./admin-container.component.scss'],
-    standalone: false
+  selector: 'app-admin-container',
+  templateUrl: './admin-container.component.html',
+  styleUrls: ['./admin-container.component.scss'],
+  standalone: false
 })
 export class AdminContainerComponent implements OnDestroy, OnInit {
   titleText = 'GALLERY';
@@ -159,7 +159,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     if (section === this.displayedSection) {
       return 'selected-item';
     } else {
-      return null;
+      return 'showhand';
     }
   }
   inIframe() {

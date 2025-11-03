@@ -26,19 +26,15 @@ html {
   @include mat.theme((color: theme.$primary-palette,
       typography: '"Open Sans", sans-serif',
     ),
-    $overrides: ((
-      background: #f1f1f2,
-      surface: var(--mat-sys-background),
-      surface-variant: var(--mat-sys-background),
-      icon: var(--mat-sys-primary),
-    ))
-  );
-  @include mat.datepicker-overrides((
-    calendar-container-background-color: var(--mat-sys-outline-variant),
-    calendar-date-selected-state-text-color: var(--mat-sys-primary),
-    calendar-container-text-color: var(--mat-sys-on-background),
-    )
-  );
+    $overrides: ((background: #f1f1f2,
+        surface: var(--mat-sys-background),
+        surface-variant: var(--mat-sys-background),
+        icon: var(--mat-sys-primary),
+      )));
+  @include mat.datepicker-overrides((calendar-container-background-color: var(--mat-sys-outline-variant),
+      calendar-date-selected-state-text-color: var(--mat-sys-primary),
+      calendar-container-text-color: var(--mat-sys-on-background),
+    ));
 }
 
 .darkMode {
@@ -46,23 +42,17 @@ html {
         theme-type: dark,
       ),
     ),
-    $overrides: ((
-      background: #313131,
-      surface: var(--mat-sys-background),
-      surface-variant: var(--mat-sys-background)
-      ))
-  );
-  @include mat.datepicker-overrides((
-    calendar-container-background-color: var(--mat-sys-outline-variant),
-    calendar-date-selected-state-text-color: var(--mat-sys-primary),
-    calendar-container-text-color: var(--mat-sys-on-background),
-  ));
+    $overrides: ((background: #313131,
+        surface: var(--mat-sys-background),
+        surface-variant: var(--mat-sys-background))));
+  @include mat.datepicker-overrides((calendar-container-background-color: var(--mat-sys-outline-variant),
+      calendar-date-selected-state-text-color: var(--mat-sys-primary),
+      calendar-container-text-color: var(--mat-sys-on-background),
+    ));
 }
 
 :root {
-  @include mat.icon-overrides((
-    color: var(--mat-sys-primary)
-  ));
+  @include mat.icon-overrides((color: var(--mat-sys-primary)));
 }
 
 // classes for icon sizing
@@ -87,89 +77,38 @@ mat-paginator {
   min-width: 200px !important;
 }
 
-// classes set in old _theme.scss
+// classes for icon sizing
 .icon-35px {
-  height: 35px;
-  width: 35px;
+  width: 35px !important;
+  height: 35px !important;
 }
 
-.icon-24px {
-  height: 24px;
-  width: 24px;
+// prevent table header rows from scrolling
+.mat-mdc-header-row {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 9 !important;
 }
 
-.icon-20px {
-  height: 20px;
-  width: 20px;
-}
-
-.icon-color {
-  color: var(--mat-sys-primary) !important;
-}
-
-.selected {
-  background: var(--mat-sys-primary);
-  &:hover,
-  &:focus {
-    background: var(--mat-sys-primary) !important;
-  }
-}
-
-.disabled-text {
-  color: var(--mat-sys-disabled);
-}
-
-.warn-text {
-  color: var(--mat-sys-warn);
-}
-
-.background {
-  background-color: var(--mat-sys-background);
-}
-
-.highlight {
-  &:hover,
-  &:focus {
-    background: var(--mat-sys-hover);
-  }
-}
-
-.text {
-  color: var(--mat-sys-text);
-}
-
-.mat-tooltip {
-  background-color: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary);
-}
-
-.no-outline {
-  outline: none;
-}
-
-.mat-paginator {
-  color: var(--mat-sys-text);
-  background: var(--mat-sys-background);
+// remove the border around paginator items per page selection
+mat-paginator {
+  --mat-form-field-outlined-outline-color: transparent;
+  --mat-form-field-outlined-hover-outline-color: transparent;
+  --mat-form-field-outlined-focus-outline-color: transparent;
+  min-width: 200px !important;
 }
 
 .mat-form-field {
   color: var(--mat-sys-primary);
 }
 
-.mat-header-cell {
-  color: orange;
-}
-
-.mat-form-field-label {
-  color: var(--mat-text-color) !important;
-}
-
-.selected-item {
-  background-color: var(--mat-sys-accent);
-}
-
 .twelve-cell {
   flex: 12;
+}
+
+.eleven-cell {
+  flex: 11;
 }
 
 .ten-cell {
@@ -177,12 +116,13 @@ mat-paginator {
 }
 
 .nine-cell {
-  flex: 7;
+  flex: 9;
 }
 
 .eight-cell {
-  flex: 6;
+  flex: 8;
 }
+
 .seven-cell {
   flex: 7;
 }
@@ -211,6 +151,9 @@ mat-paginator {
   flex: 1;
 }
 
+.center-self {
+  align-self: center;
+}
 
 /* The following acts as drop in replacement for the deprecation of Angular FlexLayout */
 .cssLayoutColumnCenterCenter {

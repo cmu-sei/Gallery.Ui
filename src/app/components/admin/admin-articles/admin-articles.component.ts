@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
@@ -17,22 +17,22 @@ import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
-import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminArticleEditDialogComponent } from 'src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
-    selector: 'app-admin-articles',
-    templateUrl: './admin-articles.component.html',
-    styleUrls: ['./admin-articles.component.scss'],
-    standalone: false
+  selector: 'app-admin-articles',
+  templateUrl: './admin-articles.component.html',
+  styleUrls: ['./admin-articles.component.scss'],
+  standalone: false
 })
-export class AdminArticlesComponent implements OnDestroy {
+export class AdminArticlesComponent implements OnDestroy, OnInit {
+  @Input() selectedCollectionId: string;
   canEdit = false;
   pageSize = 10;
   pageIndex = 0;
@@ -42,7 +42,6 @@ export class AdminArticlesComponent implements OnDestroy {
   articleList: Article[] = [];
   selectedCardId = '';
   cardList: Card[] = [];
-  selectedCollectionId = '';
   collectionList: Collection[] = [];
   selectedMove = -1;
   moveList: number[] = [];
@@ -67,10 +66,8 @@ export class AdminArticlesComponent implements OnDestroy {
     private cardDataService: CardDataService,
     private cardQuery: CardQuery,
     private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery,
     private permissionDataService: PermissionDataService
   ) {
-    this.articleDataService.unload();
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
@@ -103,41 +100,7 @@ export class AdminArticlesComponent implements OnDestroy {
       .subscribe((cards) => {
         this.cardList = cards;
       });
-    // get initial selectedCollectionId value
-    this.selectedCollectionId = this.collectionQuery.getActiveId();
-    if (this.selectedCollectionId) {
-      this.loadCollectionData();
-    }
-    // observe active collection changes
-    this.collectionQuery
-      .selectActiveId()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((collectionId) => {
-        if (collectionId && collectionId !== this.selectedCollectionId) {
-          this.selectedCollectionId = collectionId;
-          this.loadCollectionData();
-        }
-      });
-    // get the initial collectionList
-    this.collectionList = this.collectionQuery.getAll();
-    // observe collection list changes
-    this.collectionQuery
-      .selectAll()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((collections) => {
-        this.collectionList = collections;
-      });
-    // observe the active card
-    this.cardQuery
-      .selectActiveId()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((cardId) => {
-        if (cardId && this.selectedCardId !== cardId) {
-          this.selectedCardId = cardId;
-          this.loadArticleData();
-        }
-      });
-
+    // observe filter control changes
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
@@ -146,24 +109,14 @@ export class AdminArticlesComponent implements OnDestroy {
       });
   }
 
-  loadCollectionData() {
-    this.cardDataService.loadByCollection(this.selectedCollectionId);
-    this.canEdit = this.permissionDataService.canEditCollection(
-      this.selectedCollectionId
-    );
-    this.selectedCardId = '';
-    this.loadArticleData();
+  ngOnInit() {
+    this.loadCollectionData();
+    this.canEdit = this.permissionDataService.canEditCollection(this.selectedCollectionId);
   }
 
-  loadArticleData() {
-    this.filteredArticleList = [];
-    this.articleList = [];
-    if (this.selectedCardId) {
-      this.articleDataService.loadByCard(this.selectedCardId);
-    } else if (this.selectedCollectionId) {
-      this.articleDataService.loadByCollection(this.selectedCollectionId);
-    }
-    this.sortChanged(this.sort);
+  loadCollectionData() {
+    this.cardDataService.loadByCollection(this.selectedCollectionId);
+    this.articleDataService.loadByCollection(this.selectedCollectionId);
   }
 
   addOrEditArticle(article: Article) {
@@ -210,12 +163,13 @@ export class AdminArticlesComponent implements OnDestroy {
   }
 
   selectCard(cardId: string) {
-    this.cardDataService.setActive(cardId);
+    this.selectedCardId = cardId;
+    this.applyFilter();
   }
 
   selectMove(move: number) {
     this.selectedMove = move;
-    this.sortChanged(this.sort);
+    this.applyFilter();
   }
 
   selectArticle(article: Article) {
@@ -252,10 +206,12 @@ export class AdminArticlesComponent implements OnDestroy {
   applyFilter() {
     this.filteredArticleList = this.articleList.filter(
       (article) =>
-        !this.filterString ||
-        article.name.toLowerCase().includes(this.filterString) ||
-        article.description.toLowerCase().includes(this.filterString) ||
-        article.sourceName.toLowerCase().includes(this.filterString)
+        (!this.filterString ||
+          article.name.toLowerCase().includes(this.filterString) ||
+          article.description.toLowerCase().includes(this.filterString) ||
+          article.sourceName.toLowerCase().includes(this.filterString)) &&
+        (!this.selectedCardId || article.cardId === this.selectedCardId) &&
+        (+this.selectedMove === -1 || +article.move === +this.selectedMove)
     );
     this.sortChanged(this.sort);
   }
@@ -288,7 +244,7 @@ export class AdminArticlesComponent implements OnDestroy {
       case 'cardId':
         return (
           (this.getCardName(a.cardId).toLowerCase() <
-          this.getCardName(b.cardId).toLowerCase()
+            this.getCardName(b.cardId).toLowerCase()
             ? -1
             : 1) * (isAsc ? 1 : -1)
         );

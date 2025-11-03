@@ -79,18 +79,18 @@ export class CollectionDataService {
         ]) =>
           items
             ? (items as Collection[])
-                .sort((a: Collection, b: Collection) =>
-                  this.sortCollections(a, b, sortColumn, sortIsAscending)
-                )
-                .filter(
-                  (collection) =>
-                    ('' + collection.description)
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase()) ||
-                    collection.id
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase())
-                )
+              .sort((a: Collection, b: Collection) =>
+                this.sortCollections(a, b, sortColumn, sortIsAscending)
+              )
+              .filter(
+                (collection) =>
+                  ('' + collection.description)
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase()) ||
+                  collection.id
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase())
+              )
             : []
       )
     );
@@ -178,7 +178,6 @@ export class CollectionDataService {
   }
 
   add(collection: Collection) {
-    console.log('going to add collection id ' + collection.id);
     this.collectionStore.setLoading(true);
     this.collectionService
       .createCollection(collection)
@@ -190,7 +189,6 @@ export class CollectionDataService {
       )
       .subscribe((s) => {
         this.collectionStore.add(s);
-        console.log('the added collection id is ' + s.id);
       });
   }
 

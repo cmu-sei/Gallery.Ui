@@ -20,10 +20,10 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
-    selector: 'app-admin-collections',
-    templateUrl: './admin-collections.component.html',
-    styleUrls: ['./admin-collections.component.scss'],
-    standalone: false
+  selector: 'app-admin-collections',
+  templateUrl: './admin-collections.component.html',
+  styleUrls: ['./admin-collections.component.scss'],
+  standalone: false
 })
 export class AdminCollectionsComponent implements OnDestroy {
   pageSize = 10;
@@ -70,7 +70,6 @@ export class AdminCollectionsComponent implements OnDestroy {
           }
         });
         this.applyFilter();
-        console.log('loading collection permissions from admin-collections');
         this.permissionDataService.loadCollectionPermissions().subscribe();
       });
     this.collectionDataService.load();
@@ -125,11 +124,13 @@ export class AdminCollectionsComponent implements OnDestroy {
         : (this.editCollection = { ...collection });
   }
 
-  showMemberships(collectionId: string) {
-    if (this.permissionDataService.canManageCollection(collectionId)) {
+  toggleSelectedCollection(collectionId: string) {
+    if (this.selectedCollectionId !== collectionId) {
       this.selectedCollectionId = collectionId;
+    } else {
+      this.selectedCollectionId = '';
     }
-    this.collectionDataService.setActive(collectionId);
+    this.collectionDataService.setActive(this.selectedCollectionId);
   }
 
   canEditCollection(collectionId: string): boolean {

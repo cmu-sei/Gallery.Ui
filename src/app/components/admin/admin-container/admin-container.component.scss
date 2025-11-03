@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 .appitems-container .mat-mdc-list-item {
-  height: auto;
+  min-height: 48px;
 }
 
 .appslist {
@@ -10,9 +10,18 @@
   margin-bottom: 20px;
 }
 
+.mat-list-item-icon {
+  color: var(--mat-sys-primary) !important;
+}
+
 .nolink {
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
+}
+
+.selected-item {
+  background-color: var(--mat-sys-surface-container);
   cursor: pointer;
 }
 
@@ -25,7 +34,13 @@
 }
 
 .appbarmenu-container {
-  min-width: 50px;
+  width: 250px;
+  border-right: solid var(--mat-sys-surface-container);
+}
+
+.sidenav-header {
+  height: 40px;
+  border-bottom: 2px solid var(--mat-sys-surface-container);
 }
 
 .app-admin-container {
@@ -49,11 +64,13 @@
   padding-top: 5px;
   text-align: center;
   font-size: x-small;
-  border-bottom: 1px;
+  border-bottom: 2px;
   border-bottom-style: solid;
-  border-top: 1px;
+  border-top: 2px;
   border-top-style: solid;
-  border-color: lightgray;
+  border-color: var(--mat-sys-surface-container);
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
 }
 
 .showhand {
@@ -72,19 +89,14 @@
 
 .pull-right {
   position: absolute;
-  right: 35px;
+  right: 0px;
+  margin-top: -8px;
 }
 
 #wrapper {
-  display: table;
-  table-layout: fixed;
-  width: 220px;
-  margin-top: 5px;
-  border-width: 0.25pt;
-  border-color: darkgray;
-}
-#wrapper > div {
-  display: table-cell;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 
 #lefticon {
@@ -92,16 +104,19 @@
   font-size: 75%;
   padding: 0.5em;
 }
-#lefticon > img {
+
+#lefticon>img {
   height: 35px;
   width: 35px;
   text-align: center;
   cursor: pointer;
 }
+
 #rightcontext {
   width: 30px;
   font-size: 75%;
 }
+
 #content {
   text-align: left;
   vertical-align: middle;
