@@ -4,7 +4,7 @@
 @use "@angular/material" as mat;
 
 :host {
-  @include mat.form-field-density(-5); // Adjust -3 for this specific form field
+  @include mat.form-field-density(-5);
 }
 
 .archive {
@@ -61,10 +61,6 @@
   width: 100%;
 }
 
-.center-self {
-  align-self: center;
-}
-
 .mat-placeholder {
   font-size: 10px;
 }
@@ -86,7 +82,8 @@
   margin-bottom: 12px;
 }
 
-.mat-mdc-outlined-button.tiny, .mat-mdc-unelevated-button.tiny {
+.mat-mdc-outlined-button.tiny,
+.mat-mdc-unelevated-button.tiny {
   font-size: 10px;
   height: 20px;
   line-height: 20px;
@@ -136,7 +133,7 @@
 }
 
 .mat-icon {
-  overflow:visible;
+  overflow: visible;
 }
 
 .mat-icon.point {
@@ -171,7 +168,7 @@
 }
 
 .img-article {
-    height: 350px;
+  height: 350px;
 }
 
 .action-buttons {
@@ -199,19 +196,18 @@
 
 @media screen and (min-width: 40em) {
   .card {
-     max-width: calc(50% -  1em);
+    max-width: calc(50% - 1em);
   }
 }
 
 @media screen and (min-width: 60em) {
   .card {
-      max-width: calc(33.3% - 1em);
+    max-width: calc(33.3% - 1em);
   }
 }
 
 @media screen and (min-width: 80em) {
   .card {
-      max-width: calc(25% - 1em);
+    max-width: calc(25% - 1em);
   }
 }
-

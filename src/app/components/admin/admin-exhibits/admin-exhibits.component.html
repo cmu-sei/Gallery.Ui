@@ -5,209 +5,134 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div class="cssLayoutRowStartCenter">
   <div class="sp-icon">
-    <mat-icon
-      class="mdi-24px"
-      fontIcon="mdi-monitor-dashboard"
-      [ngStyle]="{'color': topbarColor}"
-    ></mat-icon>
+    <mat-icon class="mdi-24px" fontIcon="mdi-monitor-dashboard" [ngStyle]="{'color': topbarColor}"></mat-icon>
   </div>
-  <mat-form-field class="button-margins">
-    <mat-label>Collection</mat-label>
-    <mat-select placeholder="Collection" [value]="selectedCollectionId" (selectionChange)="selectCollection($event.value)">
+  <mat-form-field class="collection-box">
+    <mat-label>Select a Collection</mat-label>
+    <mat-select placeholder="Collection" [value]="selectedCollectionId"
+      (selectionChange)="selectCollection($event.value)">
       @for (collection of collectionList; track collection) {
-        <mat-option [value]="collection.id">
-          {{ collection.name }}
-        </mat-option>
+      <mat-option [value]="collection.id">
+        {{ collection.name }}
+      </mat-option>
       }
     </mat-select>
   </mat-form-field>
   @if (selectedCollectionId) {
-    <div style="min-width: 370px;">
-      <mat-paginator
-        #paginator
-        [length]="exhibitList?.length"
-        [pageIndex]="pageIndex"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
-        (page)="paginatorEvent($event)"
-      ></mat-paginator>
-    </div>
+  <div style="min-width: 370px;">
+    <mat-paginator #paginator [length]="exhibitList?.length" [pageIndex]="pageIndex" [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]" (page)="paginatorEvent($event)"></mat-paginator>
+  </div>
   }
 </div>
 
+@if (!isLoading && selectedCollectionId) {
 <mat-accordion displayMode="flat">
-  <section
-    matSort
-    (matSortChange)="sortChanged($event)"
-    class="mat-elevation-z2 mat-header-row"
-    >
-    <span class="mat-header-cell first-cell center-self">
-      <button
-        mat-icon-button
-        (click)="addOrEditExhibit(null)"
-        style="outline: none; margin-left: 20px;"
-        title="Add Exhibit"
-        [disabled]="isBusy || !canCreate"
-        >
-        <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
+  <section matSort (matSortChange)="sortChanged($event)" class="header-row">
+    <div class="header-cell first-cell">
+      <button mat-icon-button (click)="addOrEditExhibit(null)" style="outline: none; margin-left: 20px;"
+        title="Add Exhibit" [disabled]="isBusy || !canCreate">
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
-      <button
-        mat-icon-button
-        (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
-        title="Upload Exhibit"
-        [disabled]="isBusy || !canCreate"
-        >
-        <mat-icon class="mdi-24px" fontIcon="mdi-upload" alt="Upload"></mat-icon>
+      <button mat-icon-button (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
+        title="Upload Exhibit" [disabled]="isBusy || !canCreate">
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-upload" alt="Upload"></mat-icon>
       </button>
-    </span>
-    <span class="mat-header-cell three-cell center-self" mat-sort-header="name">Name</span>
-    <span class="mat-header-cell four-cell center-self" mat-sort-header="description">Description</span>
-    <span class="mat-header-cell two-cell center-self" mat-sort-header="dateCreated">Date Created</span>
-    <span class="mat-header-cell two-cell center-self" mat-sort-header="createdBy">User</span>
-    <span class="mat-header-cell three-cell center-self" mat-sort-header="exhibitId">Exhibit ID</span>
-    <span class="mat-header-cell one-cell center-self" mat-sort-header="currentMove">Current Move</span>
-    <span class="mat-header-cell one-cell center-self" mat-sort-header="currentInject">Current Inject</span>
+    </div>
+    <div class="header-cell five-cell" mat-sort-header="name">Name</div>
+    <div class="header-cell two-cell" mat-sort-header="dateCreated">Created</div>
+    <div class="header-cell two-cell" mat-sort-header="createdBy">User</div>
+    <div class="header-cell one-cell" mat-sort-header="currentMove">Move</div>
+    <div class="header-cell one-cell" mat-sort-header="currentInject">Inject</div>
   </section>
 
   @for (exhibit of paginateExhibits(); track getExhibitId($index, exhibit)) {
-    <mat-expansion-panel
-      [expanded]="selectedExhibit.id === exhibit.id"
-      >
-      @if (!isLoading) {
-        <mat-expansion-panel-header class="mat-row" (click)="togglePanel(exhibit); $event.stopPropagation()">
-          <span class="mat-cell first-cell center-self">
-            <button
-              mat-icon-button
-              (click)="addOrEditExhibit(exhibit); $event.stopPropagation()"
-              style="outline: none;"
-              title="Edit Exhibit"
-              [disabled]="isBusy || !canEditExhibit(exhibit.id)"
-              >
-              <mat-icon class="mdi-18px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              (click)="copyExhibit(exhibit.id); $event.stopPropagation();"
-              title="Copy {{ exhibit.dateCreated | date }}"
-              [disabled]="isBusy || !canCreate"
-              >
-              <mat-icon class="mdi-18px" fontIcon="mdi-content-copy" alt="Copy"></mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              (click)="downloadExhibit(exhibit); $event.stopPropagation();"
-              title="Download {{ exhibit.dateCreated | date }}"
-              [disabled]="isBusy"
-              >
-              <mat-icon class="mdi-18px" fontIcon="mdi-download" alt="Download"></mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              (click)="deleteExhibit(exhibit); $event.stopPropagation()"
-              style="outline: none;"
-              title="Delete Exhibit"
-              [disabled]="isBusy || !canEditExhibit(exhibit.id)"
-              >
-              <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can"></mat-icon>
-            </button>
-          </span>
-          <span class="mat-cell three-cell center-self">
-            {{ exhibit.name }}
-          </span>
-          <span class="mat-cell four-cell center-self">
-            {{ exhibit.description }}
-          </span>
-          <span class="mat-cell two-cell center-self">
-            {{ exhibit.dateCreated | date: "yyyy-MM-dd HH:mm" }}
-          </span>
-          <span class="mat-cell two-cell center-self">
-            {{ getUserName(exhibit.createdBy) }}
-          </span>
-          <span class="mat-cell three-cell center-self">
-            {{ exhibit.scenarioId }}
-          </span>
-          <span class="mat-cell one-cell center-self">
-            {{ exhibit.currentMove }}
-          </span>
-          <span class="mat-cell one-cell center-self">
-            {{ exhibit.currentInject }}
-          </span>
+  <mat-expansion-panel [expanded]="selectedExhibit.id === exhibit.id">
+    <mat-expansion-panel-header class="row" (click)="togglePanel(exhibit); $event.stopPropagation()">
+      <div class="cell first-cell center-self">
+        <button mat-icon-button (click)="addOrEditExhibit(exhibit); $event.stopPropagation()" style="outline: none;"
+          title="Edit {{ exhibit.name }}" [disabled]="isBusy || !canEditExhibit(exhibit.id)">
+          <mat-icon class="mdi-18px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="copyExhibit(exhibit.id); $event.stopPropagation();"
+          title="Copy {{ exhibit.name }}" [disabled]="isBusy || !canCreate">
+          <mat-icon class="mdi-18px" fontIcon="mdi-content-copy" alt="Copy"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="downloadExhibit(exhibit); $event.stopPropagation();"
+          title="Download {{ exhibit.name }}" [disabled]="isBusy">
+          <mat-icon class="mdi-18px" fontIcon="mdi-download" alt="Download"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteExhibit(exhibit); $event.stopPropagation()" style="outline: none;"
+          title="Delete {{ exhibit.name }}" [disabled]="isBusy || !canEditExhibit(exhibit.id)">
+          <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can"></mat-icon>
+        </button>
+      </div>
+      <div class="cell five-cell center-self">
+        {{ exhibit.name }}
+      </div>
+      <div class="cell two-cell center-self">
+        {{ exhibit.dateCreated | date: "yyyy-MM-dd HH:mm" }}
+      </div>
+      <div class="cell two-cell center-self">
+        {{ getUserName(exhibit.createdBy) }}
+      </div>
+      <div class="cell one-cell center-self">
+        {{ exhibit.currentMove }}
+      </div>
+      <div class="cell one-cell center-self">
+        {{ exhibit.currentInject }}
+      </div>
+    </mat-expansion-panel-header>
+    @if (selectedExhibit.id === exhibit.id) {
+    <div class="sub-container">
+      <mat-expansion-panel class="bottom-space">
+        <mat-expansion-panel-header>
+          <h4>Exhibit Teams</h4>
         </mat-expansion-panel-header>
+        <app-admin-teams [exhibitId]="exhibit.id" [canEdit]="canEditExhibit(exhibit.id)"></app-admin-teams>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="bottom-space">
+        <mat-expansion-panel-header>
+          <h4>Card Teams</h4>
+        </mat-expansion-panel-header>
+        <app-admin-team-cards [teamList]="teamList" [collectionId]="selectedCollectionId"
+          [exhibitId]="selectedExhibit.id" [canEdit]="canEditExhibit(exhibit.id)">
+        </app-admin-team-cards>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="bottom-space">
+        <mat-expansion-panel-header>
+          <h4>Article Teams</h4>
+        </mat-expansion-panel-header>
+        <app-admin-exhibit-articles [exhibit]="exhibit" [teamList]="teamList" [canEdit]="canEditExhibit(exhibit.id)">
+        </app-admin-exhibit-articles>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="bottom-space">
+        <mat-expansion-panel-header>
+          <h4>Observers</h4>
+        </mat-expansion-panel-header>
+        <app-admin-observers [exhibitId]="exhibit.id" [canEdit]="canEditExhibit(exhibit.id)">
+        </app-admin-observers>
+      </mat-expansion-panel>
+      @if (canManageExhibit) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <h4>Memberships</h4>
+        </mat-expansion-panel-header>
+        <app-exhibit-memberships [exhibitId]="selectedExhibit.id" [embedded]="false"></app-exhibit-memberships>
+      </mat-expansion-panel>
       }
-      @if (selectedExhibit.id === exhibit.id) {
-        <div class="sub-container">
-          <mat-expansion-panel class="bottom-space">
-            <mat-expansion-panel-header>
-              <h4>Exhibit Teams</h4>
-            </mat-expansion-panel-header>
-            <app-admin-teams
-              [exhibitId]="exhibit.id"
-              [canEdit]="canEditExhibit(exhibit.id)"
-            ></app-admin-teams>
-          </mat-expansion-panel>
-          <mat-expansion-panel class="bottom-space">
-            <mat-expansion-panel-header>
-              <h4>Card Teams</h4>
-            </mat-expansion-panel-header>
-            <app-admin-team-cards
-              [teamList]="teamList"
-              [collectionId]="selectedCollectionId"
-              [exhibitId]="selectedExhibit.id"
-              [canEdit]="canEditExhibit(exhibit.id)"
-              >
-            </app-admin-team-cards>
-          </mat-expansion-panel>
-          <mat-expansion-panel class="bottom-space">
-            <mat-expansion-panel-header>
-              <h4>Article Teams</h4>
-            </mat-expansion-panel-header>
-            <app-admin-exhibit-articles
-              [exhibit]="exhibit"
-              [teamList]="teamList"
-              [canEdit]="canEditExhibit(exhibit.id)"
-              >
-            </app-admin-exhibit-articles>
-          </mat-expansion-panel>
-          <mat-expansion-panel class="bottom-space">
-            <mat-expansion-panel-header>
-              <h4>Observers</h4>
-            </mat-expansion-panel-header>
-            <app-admin-observers
-              [exhibitId]="exhibit.id"
-              [canEdit]="canEditExhibit(exhibit.id)"
-              >
-            </app-admin-observers>
-          </mat-expansion-panel>
-          @if (canManageExhibit) {
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <h4>Memberships</h4>
-              </mat-expansion-panel-header>
-              <app-exhibit-memberships [exhibitId]="selectedExhibit.id" [embedded]="false"></app-exhibit-memberships>
-            </mat-expansion-panel>
-          }
-        </div>
-      }
-    </mat-expansion-panel>
+    </div>
+    }
+  </mat-expansion-panel>
   }
 </mat-accordion>
-
+}
 @if (isLoading) {
-  <mat-card
-    appearance="outlined"
-    style="display: flex; justify-content: center; align-items: center;"
-    >
-    <mat-progress-spinner color="primary" mode="indeterminate">
-    </mat-progress-spinner>
-  </mat-card>
+<mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
+  <mat-progress-spinner color="primary" mode="indeterminate">
+  </mat-progress-spinner>
+</mat-card>
 }
 
 
-<input
-  hidden
-  (change)="selectFile($event)"
-  (cancel)="isBusy = false"
-  #jsonInput
-  type="file"
-  accept=".json"
-  />
+<input hidden (change)="selectFile($event)" (cancel)="isBusy = false" #jsonInput type="file" accept=".json" />

@@ -5,59 +5,54 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div mat-dialog-title>
   Edit Team
-  <button
-    mat-icon-button
-    (click)="handleEditComplete(false)"
-    title="Cancel"
-    class="close-button"
-    tabindex="-1"
-    >
-    <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+  <button mat-icon-button (click)="handleEditComplete(false)" title="Cancel" class="close-button" tabindex="-1">
+    <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
   </button>
 </div>
 @if (!!data && data.team !== undefined && data.team !== null) {
-  <div mat-dialog-content>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input type="text" matInput [formControl]="teamNameFormControl" placeholder="Name (required)" (blur)="saveTeam('name')"
-            value="{{data.team.name}}">
-          @if (teamNameFormControl.hasError('required')) {
-            <mat-error>
-              Name is <strong>required</strong>!
-            </mat-error>
-          }
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input type="text" matInput [formControl]="teamShortNameFormControl" placeholder="Short Name (required)" (blur)="saveTeam('shortName')"
-            value="{{data.team.shortName}}">
-          @if (teamShortNameFormControl.hasError('required')) {
-            <mat-error>
-              Short Name is <strong>required</strong>
-            </mat-error>
-          }
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input matInput placeholder="Email" [formControl]="emailFormControl"
-            (blur)="saveTeam('email')" value="{{data.team.email}}">
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="cssLayoutRowStartCenter bottom-button">
-      <div class="delete-button">
-        <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
-      </div>
-      <div class="delete-button">
-        <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
-      </div>
+<div mat-dialog-content>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input type="text" matInput [formControl]="teamNameFormControl" placeholder="Name (required)"
+          (blur)="saveTeam('name')" value="{{data.team.name}}">
+        @if (teamNameFormControl.hasError('required')) {
+        <mat-error>
+          Name is <strong>required</strong>!
+        </mat-error>
+        }
+      </mat-form-field>
     </div>
   </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input type="text" matInput [formControl]="teamShortNameFormControl" placeholder="Short Name (required)"
+          (blur)="saveTeam('shortName')" value="{{data.team.shortName}}">
+        @if (teamShortNameFormControl.hasError('required')) {
+        <mat-error>
+          Short Name is <strong>required</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Email" [formControl]="emailFormControl" (blur)="saveTeam('email')"
+          value="{{data.team.email}}">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="cssLayoutRowStartCenter bottom-button">
+    <div class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()"
+        style="margin-left: 40px;">Save</button>
+    </div>
+    <div class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
+    </div>
+  </div>
+</div>
 }

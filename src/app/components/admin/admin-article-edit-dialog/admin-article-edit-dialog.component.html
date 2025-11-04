@@ -5,244 +5,164 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div mat-dialog-title>
   @if (data.article.id) {
-    <span>Edit Article</span>
+  <span>Edit Article</span>
   }
   @if (!data.article.id) {
-    <span>Add Article</span>
+  <span>Add Article</span>
   }
-  <button
-    mat-icon-button
-    (click)="handleEditComplete(false)"
-    title="Cancel"
-    class="close-button"
-    tabindex="-1"
-    >
-    <mat-icon
-      class="mdi-24px self-center"
-      fontIcon="mdi-close-circle-outline"
-    ></mat-icon>
+  <button mat-icon-button (click)="handleEditComplete(false)" title="Cancel" class="close-button" tabindex="-1">
+    <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
   </button>
 </div>
 @if (!!data && data.article !== undefined && data.article !== null) {
-  <div
-    mat-dialog-content
-    >
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input
-            type="text"
-            matInput
-            [formControl]="articleNameFormControl"
-            placeholder="Name (required)"
-            (blur)="saveArticle('name')"
-            value="{{ data.article.name }}"
-            [errorStateMatcher]="matcher"
-            />
-          @if (articleNameFormControl.hasError('required')) {
-            <mat-error>
-              Name is <strong>required</strong>
-            </mat-error>
-          }
-        </mat-form-field>
-      </div>
+<div mat-dialog-content>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)"
+          (blur)="saveArticle('name')" value="{{ data.article.name }}" [errorStateMatcher]="matcher" />
+        @if (articleNameFormControl.hasError('required')) {
+        <mat-error>
+          Name is <strong>required</strong>
+        </mat-error>
+        }
+      </mat-form-field>
     </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input
-            matInput
-            placeholder="Summary (required)"
-            [formControl]="summaryFormControl"
-            (blur)="saveArticle('summary')"
-            value="{{ data.article.summary }}"
-            [errorStateMatcher]="matcher"
-            />
-          @if (summaryFormControl.hasError('required')) {
-            <mat-error>
-              Summary is <strong>required</strong>
-            </mat-error>
-          }
-        </mat-form-field>
-      </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Summary (required)" [formControl]="summaryFormControl"
+          (blur)="saveArticle('summary')" value="{{ data.article.summary }}" [errorStateMatcher]="matcher" />
+        @if (summaryFormControl.hasError('required')) {
+        <mat-error>
+          Summary is <strong>required</strong>
+        </mat-error>
+        }
+      </mat-form-field>
     </div>
-    <div class="add-margin left">
-      <div>
-        <p
-        style="
+  </div>
+  <div class="add-margin left">
+    <div>
+      <p style="
           font-size: 13px;
           font-weight: 400;
           line-height: 1.125;
           font-family: Open Sans, sans-serif;
           letter-spacing: normal;
-        "
-          >
-          Description (required)*
-        </p>
-        <div>
-          <angular-editor
-            [placeholder]="'Description'"
-            [formControl]="descriptionFormControl"
-            [config]="editorConfig"
-            (focus)="showDescriptionError = true"
-            (blur)="saveArticle('description')"
-          ></angular-editor>
-          @if (descriptionFormControl.hasError('required')) {
-            <mat-error>
-              Description is <strong>required</strong>
-            </mat-error>
-          }
-        </div>
-      </div>
-    </div>
-    <div class="add-margin">
+        ">
+        Description (required)*
+      </p>
       <div>
-        <mat-form-field>
-          <mat-select
-            placeholder="Card"
-            [formControl]="cardIdFormControl"
-            (selectionChange)="saveArticle('cardId')"
-            >
-            <mat-option></mat-option>
-            @for (card of data.cardList; track card) {
-              <mat-option
-                [value]="card.id"
-                [matTooltip]="card.id"
-                matTooltipPosition="right"
-                >
-                {{ card.name }}
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field>
-          <mat-select
-            placeholder="Status"
-            [formControl]="statusFormControl"
-            (selectionChange)="saveArticle('status')"
-            >
-            @for (itemStatusOption of itemStatusList; track itemStatusOption) {
-              <mat-option
-                [value]="itemStatusOption"
-                >
-                {{ itemStatusOption }}
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field>
-          <mat-select
-            placeholder="Source Type"
-            [formControl]="sourceTypeFormControl"
-            (selectionChange)="saveArticle('sourceType')"
-            >
-            @for (sourceTypeOption of sourceTypeList; track sourceTypeOption) {
-              <mat-option
-                [value]="sourceTypeOption"
-                >
-                {{ sourceTypeOption }}
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input
-            matInput
-            placeholder="Source Name"
-            [formControl]="sourceNameFormControl"
-            (blur)="saveArticle('sourceName')"
-            value="{{ data.article.sourceName }}"
-            />
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input
-            matInput
-            placeholder="URL for more info"
-            [formControl]="urlFormControl"
-            (blur)="saveArticle('url')"
-            value="{{ data.article.url }}"
-            />
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div class="full-width">
-        <mat-checkbox [(ngModel)]="data.article.openInNewTab">
-          Open URL in new tab
-        </mat-checkbox>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input
-            matInput
-            placeholder="Move"
-            [formControl]="moveFormControl"
-            (blur)="saveArticle('move')"
-            value="{{ data.article.move }}"
-            />
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input
-            matInput
-            placeholder="Inject"
-            [formControl]="injectFormControl"
-            (blur)="saveArticle('inject')"
-            value="{{ data.article.inject }}"
-            />
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field>
-          <input
-            matInput
-            placeholder="Posted Date / Time"
-            [formControl]="datePostedFormControl"
-            (inputChange)="saveArticle('datePosted')"
-            (dateChange)="saveArticle('datePosted')"
-            />
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="cssLayoutRowStartCenter bottom-button">
-      <div class="delete-button">
-        <button
-          mat-stroked-button
-          (click)="handleEditComplete(true)"
-          [disabled]="!errorFree()"
-          style="margin-left: 40px"
-          >
-          Save
-        </button>
-      </div>
-      <div class="delete-button">
-        <button mat-stroked-button (click)="handleEditComplete(false)">
-          Cancel
-        </button>
+        <angular-editor [placeholder]="'Description'" [formControl]="descriptionFormControl" [config]="editorConfig"
+          (focus)="showDescriptionError = true" (blur)="saveArticle('description')"></angular-editor>
+        @if (descriptionFormControl.hasError('required')) {
+        <mat-error>
+          Description is <strong>required</strong>
+        </mat-error>
+        }
       </div>
     </div>
   </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field>
+        <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
+          <mat-option></mat-option>
+          @for (card of data.cardList; track card) {
+          <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
+            {{ card.name }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field>
+        <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
+          @for (itemStatusOption of itemStatusList; track itemStatusOption) {
+          <mat-option [value]="itemStatusOption">
+            {{ itemStatusOption }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field>
+        <mat-select placeholder="Source Type" [formControl]="sourceTypeFormControl"
+          (selectionChange)="saveArticle('sourceType')">
+          @for (sourceTypeOption of sourceTypeList; track sourceTypeOption) {
+          <mat-option [value]="sourceTypeOption">
+            {{ sourceTypeOption }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Source Name" [formControl]="sourceNameFormControl"
+          (blur)="saveArticle('sourceName')" value="{{ data.article.sourceName }}" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="URL for more info" [formControl]="urlFormControl" (blur)="saveArticle('url')"
+          value="{{ data.article.url }}" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div class="full-width">
+      <mat-checkbox [(ngModel)]="data.article.openInNewTab">
+        Open URL in new tab
+      </mat-checkbox>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Move" [formControl]="moveFormControl" (blur)="saveArticle('move')"
+          value="{{ data.article.move }}" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Inject" [formControl]="injectFormControl" (blur)="saveArticle('inject')"
+          value="{{ data.article.inject }}" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Posted Date / Time" [formControl]="datePostedFormControl"
+          (inputChange)="saveArticle('datePosted')" (dateChange)="saveArticle('datePosted')" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="cssLayoutRowStartCenter bottom-button">
+    <div class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px">
+        Save
+      </button>
+    </div>
+    <div class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(false)">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
 }

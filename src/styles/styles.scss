@@ -155,6 +155,10 @@ mat-paginator {
   align-self: center;
 }
 
+.full-width {
+  width: 100%;
+}
+
 /* The following acts as drop in replacement for the deprecation of Angular FlexLayout */
 .cssLayoutColumnCenterCenter {
   display: flex;

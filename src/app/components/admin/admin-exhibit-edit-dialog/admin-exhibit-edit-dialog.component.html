@@ -5,75 +5,83 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div mat-dialog-title>
   Edit Exhibit
-  <button
-    mat-icon-button
-    (click)="handleEditComplete(false)"
-    title="Cancel"
-    class="close-button"
-    tabindex="-1"
-    >
-    <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+  <button mat-icon-button (click)="handleEditComplete(false)" title="Cancel" class="close-button" tabindex="-1">
+    <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
   </button>
 </div>
 @if (data && data.exhibit) {
-  <div mat-dialog-content>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input type="text" matInput [formControl]="nameFormControl" placeholder="Name" (blur)="saveExhibit('name')"
-            value="{{data.exhibit.name}}" [disabled]="!data.canEdit">
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input type="text" matInput [formControl]="descriptionFormControl" placeholder="Description"
-            (blur)="saveExhibit('description')" value="{{data.exhibit.description}}" [disabled]="!data.canEdit">
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input type="text" matInput [formControl]="currentMoveFormControl" placeholder="Current Move" (blur)="saveExhibit('currentMove')"
-            value="{{data.exhibit.currentMove}}" [disabled]="!data.canEdit">
-          @if (currentMoveFormControl.hasError('required')) {
-            <mat-error>
-              Current Move is <strong>required</strong>
-            </mat-error>
-          }
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input type="text" matInput [formControl]="currentInjectFormControl" placeholder="Current Inject" (blur)="saveExhibit('currentInject')"
-            value="{{data.exhibit.currentInject}}" [disabled]="!data.canEdit">
-          @if (currentInjectFormControl.hasError('required')) {
-            <mat-error>
-              Current Inject is <strong>required</strong>
-            </mat-error>
-          }
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="add-margin">
-      <div>
-        <mat-form-field class="full-width">
-          <input type="text" matInput [formControl]="exhibitIdFormControl" placeholder="Scenario ID" (blur)="saveExhibit('scenarioId')"
-            value="{{data.exhibit.scenarioId}}" [disabled]="!data.canEdit">
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="cssLayoutRowStartCenter bottom-button">
-      <div class="delete-button">
-        <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree() || !data.canEdit" style="margin-left: 40px;">Save</button>
-      </div>
-      <div class="delete-button">
-        <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
-      </div>
+<div mat-dialog-content>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>ID</mat-label>
+        <input type="text" matInput placeholder="ID" value="{{data.exhibit.id}}" disabled>
+      </mat-form-field>
     </div>
   </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
+        <input type="text" matInput [formControl]="nameFormControl" placeholder="Name" (blur)="saveExhibit('name')"
+          value="{{data.exhibit.name}}" [disabled]="!data.canEdit">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>Description</mat-label>
+        <input type="text" matInput [formControl]="descriptionFormControl" placeholder="Description"
+          (blur)="saveExhibit('description')" value="{{data.exhibit.description}}" [disabled]="!data.canEdit">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>Current Move</mat-label>
+        <input type="text" matInput [formControl]="currentMoveFormControl" placeholder="Current Move"
+          (blur)="saveExhibit('currentMove')" value="{{data.exhibit.currentMove}}" [disabled]="!data.canEdit">
+        @if (currentMoveFormControl.hasError('required')) {
+        <mat-error>
+          Current Move is <strong>required</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>Current Inject</mat-label>
+        <input type="text" matInput [formControl]="currentInjectFormControl" placeholder="Current Inject"
+          (blur)="saveExhibit('currentInject')" value="{{data.exhibit.currentInject}}" [disabled]="!data.canEdit">
+        @if (currentInjectFormControl.hasError('required')) {
+        <mat-error>
+          Current Inject is <strong>required</strong>
+        </mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-margin">
+    <div>
+      <mat-form-field class="full-width">
+        <mat-label>Scenario ID</mat-label>
+        <input type="text" matInput [formControl]="exhibitIdFormControl" placeholder="Scenario ID"
+          (blur)="saveExhibit('scenarioId')" value="{{data.exhibit.scenarioId}}" [disabled]="!data.canEdit">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="cssLayoutRowStartCenter bottom-button">
+    <div class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree() || !data.canEdit"
+        style="margin-left: 40px;">Save</button>
+    </div>
+    <div class="delete-button">
+      <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
+    </div>
+  </div>
+</div>
 }

@@ -12,7 +12,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </mat-form-field>
   <div style="width: 30px;">
     <button mat-icon-button (click)="clearFilter()" style="outline: none;" title="Clear Search">
-      <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+      <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
     </button>
   </div>
   <div style="min-width: 370px;">
@@ -26,7 +26,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <span class="mat-header-cell first-cell">
       <button mat-icon-button (click)="addOrEditCollection(null); $event.stopPropagation()"
         style="outline: none; margin-left: 20px;" title="Add Collection" [disabled]="isBusy || !canCreateCollections()">
-        <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
       <button mat-icon-button (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
         title="Upload Collection" [disabled]="isBusy || !canCreateCollections()">
@@ -43,7 +43,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <button mat-icon-button (click)="addOrEditCollection(collection); $event.stopPropagation()"
           style="outline: none;" title="Edit {{ collection.name }}"
           [disabled]="isBusy || !canEditCollection(collection.id)">
-          <mat-icon class="mdi-18px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
+          <mat-icon class="mdi-18px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
         </button>
         <button mat-icon-button (click)="copyCollection(collection.id); $event.stopPropagation();"
           title="Copy {{ collection.name }}" [disabled]="isBusy || !canCreateCollections()">
@@ -55,7 +55,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </button>
         <button mat-icon-button (click)="deleteCollection(collection); $event.stopPropagation()" style="outline: none;"
           title="Delete {{ collection.name }}" [disabled]="isBusy || !canManageCollection(collection.id)">
-          <mat-icon class="mdi-18px self-center" fontIcon="mdi-trash-can"></mat-icon>
+          <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can"></mat-icon>
         </button>
       </div>
       <div class="cell name-cell center-self">

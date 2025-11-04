@@ -9,7 +9,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="header-cell button-cell">
       <button mat-icon-button (click)="addOrEditCard(null); $event.stopPropagation()"
         style="outline: none; margin-left: 20px;" title="Add a Card" [disabled]="!canEdit">
-        <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
     </div>
     <div class="header-cell three-cell" mat-sort-header="name">Name</div>
@@ -21,7 +21,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </mat-form-field>
         <div style="width: 30px;">
           <button mat-icon-button (click)="clearFilter()" style="outline: none;" title="Clear Search">
-            <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+            <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
           </button>
         </div>
       </div>
@@ -33,14 +33,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <div class="cell button-cell">
         <button mat-icon-button (click)="addOrEditCard(card)" style="outline: none;" title="Edit {{ card.name }}"
           [disabled]="!canEdit">
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-square-edit-outline"></mat-icon>
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
         </button>
         <button mat-icon-button (click)="deleteCard(card)" style="outline: none;" title="Delete {{ card.name }}"
           [disabled]="!canEdit">
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-trash-can"></mat-icon>
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can"></mat-icon>
         </button>
       </div>
-      <div class="cell three-cell">
+      <div class="cell three-cell center-self">
         {{ card.name }}
       </div>
       <div class="cell five-cell center-self pad-top-bottom">

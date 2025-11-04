@@ -1,6 +1,12 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+@use "@angular/material" as mat;
+
+:host {
+  @include mat.form-field-density(-5);
+}
+
 .user-list-container {
   display: flex;
   flex-direction: column;
@@ -44,16 +50,22 @@
   padding-right: 0;
 }
 
-.sp-icon {
+.user-list-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-items: center;
   margin-left: 10px;
   margin-right: 20px;
   margin-top: 10px;
-  display: inline-flex;
-  align-items: center;
 }
 
 .full-width {
   display: flex;
   flex: 1;
   flex-direction: row;
+}
+
+.right-10 {
+  margin-right: 10px;
 }
