@@ -55,7 +55,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </button>
         <button mat-icon-button (click)="deleteCollection(collection); $event.stopPropagation()" style="outline: none;"
           title="Delete {{ collection.name }}" [disabled]="isBusy || !canManageCollection(collection.id)">
-          <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can"></mat-icon>
+          <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
         </button>
       </div>
       <div class="cell name-cell center-self">

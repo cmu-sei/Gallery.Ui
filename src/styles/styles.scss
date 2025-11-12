@@ -52,7 +52,13 @@ html {
 }
 
 :root {
-  @include mat.icon-overrides((color: var(--mat-sys-primary)));
+  @include mat.icon-button-overrides((icon-color: var(--mat-sys-primary)));
+  // @include mat.icon-button-overrides((disabled-icon-color: var(--mat-sys-outline-variant)));
+}
+
+// Override the disabled icon color specifically for mat-icon-button
+.mat-mdc-icon-button[disabled] .mat-icon {
+  --mat-icon-color-disabled: var(--mat-sys-outline-variant);
 }
 
 // classes for icon sizing

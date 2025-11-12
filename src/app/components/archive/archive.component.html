@@ -162,7 +162,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           @if (userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)) {
           <button mat-button class="article-action" (click)="deleteArticle(userArticle.article)" style="outline: none;"
             title="Delete {{ userArticle.article.name }}" [disabled]="!myTeamIsSelected()">
-            <mat-icon fontIcon="mdi-trash-can"></mat-icon> Delete
+            <mat-icon fontIcon="mdi-trash-can-outline"></mat-icon> Delete
           </button>
           }
         </div>

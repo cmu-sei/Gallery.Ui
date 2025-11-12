@@ -64,7 +64,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </button>
         <button mat-icon-button (click)="deleteExhibit(exhibit); $event.stopPropagation()" style="outline: none;"
           title="Delete {{ exhibit.name }}" [disabled]="isBusy || !canEditExhibit(exhibit.id)">
-          <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can"></mat-icon>
+          <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
         </button>
       </div>
       <div class="cell five-cell center-self">

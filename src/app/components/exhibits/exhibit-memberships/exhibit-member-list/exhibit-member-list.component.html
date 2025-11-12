@@ -13,9 +13,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-label>Search</mat-label>
         <input matInput [(ngModel)]="filterString" (keyup)="applyFilter($event)" #input autocomplete="off" />
         @if (filterString) {
-          <button matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter()">
-            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
-          </button>
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter()">
+          <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+        </button>
         }
       </mat-form-field>
       <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page of members"></mat-paginator>
@@ -42,7 +42,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-select [disabled]="!canEdit" [value]="model.membership.roleId"
           (selectionChange)="updateRole(model.membership.id, $event)">
           @for (role of roles; track trackById($index, role)) {
-            <mat-option [value]="role.id">{{ role.name }}</mat-option>
+          <mat-option [value]="role.id">{{ role.name }}</mat-option>
           }
         </mat-select>
       </td>
@@ -51,8 +51,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let model">
-        <button mat-flat-button color="primary" (click)="delete(model.membership.id)">
-          Remove
+        <button mat-icon-button (click)="delete(model.membership.id)" style="outline: none;"
+          title="Remove {{ model.name }}" [disabled]="!canEdit">
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
         </button>
       </td>
     </ng-container>
@@ -63,9 +64,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <tr class="mat-row" *matNoDataRow>
       <td class="mat-cell" colspan="4">
         @if (input.value) {
-          No data matching the filter "{{ input.value }}"
+        No data matching the filter "{{ input.value }}"
         } @else {
-          This Exhibit currently has no members
+        This Exhibit currently has no members
         }
       </td>
     </tr>

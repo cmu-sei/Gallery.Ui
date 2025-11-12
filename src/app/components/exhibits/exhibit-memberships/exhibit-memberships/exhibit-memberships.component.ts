@@ -12,7 +12,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { combineLatest, forkJoin, Observable } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
@@ -28,12 +28,12 @@ import { GroupDataService } from 'src/app/data/group/group-data.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
-    selector: 'app-exhibit-memberships',
-    templateUrl: './exhibit-memberships.component.html',
-    styleUrls: ['./exhibit-memberships.component.scss'],
-    standalone: false
+  selector: 'app-exhibit-memberships',
+  templateUrl: './exhibit-memberships.component.html',
+  styleUrls: ['./exhibit-memberships.component.scss'],
+  standalone: false
 })
-export class ExhibitMembershipsComponent implements OnInit, OnChanges {
+export class ExhibitMembershipsComponent implements OnInit {
   @Input() embedded: boolean;
   @Input() exhibitId: string;
   @Output() goBack = new EventEmitter();
@@ -50,7 +50,7 @@ export class ExhibitMembershipsComponent implements OnInit, OnChanges {
   groupNonMembers$ = this.selectGroups(false);
   groupMembers$ = this.selectGroups(true);
 
-  canEdit: boolean;
+  canEdit$: Observable<boolean>;
 
   constructor(
     private exhibitQuery: ExhibitQuery,
@@ -60,7 +60,7 @@ export class ExhibitMembershipsComponent implements OnInit, OnChanges {
     private userQuery: UserQuery,
     private groupDataService: GroupDataService,
     private permissionDataService: PermissionDataService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     forkJoin([
@@ -69,15 +69,7 @@ export class ExhibitMembershipsComponent implements OnInit, OnChanges {
       this.exhibitRolesDataService.loadRoles(),
       this.groupDataService.load(),
     ]).subscribe();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    this.exhibit$ = this.exhibitQuery.selectEntity(this.exhibitId).pipe(
-      filter((x) => x != null),
-      tap(
-        (x) => (this.canEdit = this.permissionDataService.canEditExhibit(x.id))
-      )
-    );
+    this.canEdit$ = of(this.permissionDataService.canEditExhibit(this.exhibitId));
   }
 
   selectUsers(members: boolean) {

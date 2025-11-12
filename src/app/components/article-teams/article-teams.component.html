@@ -11,19 +11,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <hr />
 
     <div>
-      <mat-table
-        class="mat-table-exhibit-teams"
-        #table
-        [dataSource]="exhibitTeamDataSource"
-        matSort
-        >
+      <mat-table class="mat-table-exhibit-teams" #table [dataSource]="exhibitTeamDataSource" matSort>
         <ng-container matColumnDef="name">
           <mat-cell *matCellDef="let element">
             @if (element.name !== null) {
-              <div>{{ element.shortName }}</div>
+            <div>{{ element.shortName }}</div>
             }
             @if (element.name === null) {
-              <div>{{ element.id }}</div>
+            <div>{{ element.id }}</div>
             }
           </mat-cell>
         </ng-container>
@@ -31,8 +26,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <ng-container matColumnDef="id">
           <mat-cell *matCellDef="let element">
             <div class="push-right">
-              <button mat-stroked-button (click)="addTeamToArticle(element)">
-                Add
+              <button mat-icon-button (click)="addTeamToArticle(element)" style="outline: none;"
+                title="Add {{ element.shortName }}" [disabled]="!canEdit">
+                <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
               </button>
             </div>
           </mat-cell>
@@ -48,19 +44,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <b>Selected Teams</b>
     </div>
     <hr />
-    <mat-table
-      class="mat-table-article-teams"
-      #table
-      [dataSource]="articleTeamDataSource"
-      matSort
-      >
+    <mat-table class="mat-table-article-teams" #table [dataSource]="articleTeamDataSource" matSort>
       <ng-container matColumnDef="name">
         <mat-cell *matCellDef="let element">
           @if (element.name !== null) {
-            <div>{{ element.shortName }}</div>
+          <div>{{ element.shortName }}</div>
           }
           @if (element.name === null) {
-            <div>{{ element.id }}</div>
+          <div>{{ element.id }}</div>
           }
         </mat-cell>
       </ng-container>
@@ -68,8 +59,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <ng-container matColumnDef="id">
         <mat-cell *matCellDef="let element">
           <div class="push-right">
-            <button mat-stroked-button (click)="removeTeamFromArticle(element)">
-              Remove
+            <button mat-icon-button (click)="removeTeamFromArticle(element)" style="outline: none;"
+              title="Remove {{ element.shortName }}" [disabled]="!canEdit">
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
             </button>
           </div>
         </mat-cell>

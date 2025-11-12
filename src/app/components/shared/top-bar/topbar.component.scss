@@ -3,23 +3,28 @@
 .margin-auto {
   margin: auto;
 }
+
 .spacer {
   flex: 1 1 auto;
 }
+
 .toolbar {
   max-height: 38px;
   min-height: 38px;
 }
+
 .team-text {
   text-align: right;
   margin-right: 10px;
 }
+
 .view-text {
   font-size: 110%;
   margin-left: 50px;
   margin-right: 40px;
   margin-top: -6px;
 }
+
 .no-sidenav {
   height: 32px;
   width: 32px;
@@ -30,8 +35,4 @@
 .options-text {
   text-align: right;
   margin-right: 10px;
-}
-
-.menu-trigger {
-  color: var(--mat-sys-on-primary) !important;
 }
