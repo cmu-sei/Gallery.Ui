@@ -1,8 +1,86 @@
 /*
-Copyright 2021 Carnegie Mellon University. All Rights Reserved. 
+Copyright 2021 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-mat-cell {
-  padding: 0 !important;
+@use '@angular/material' as mat;
+
+.move-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: left;
+  text-align: left;
+  align-items: center;
+}
+
+.search-field {
+  min-width: 100px;
+  margin-left: 10px;
+}
+
+.group-list {
+  width: 90%;
+  margin-left: 5%;
+}
+
+.header-row {
+  min-height: 56px;
+}
+
+.row {
+  min-height: 48px;
+}
+
+.row,
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+}
+
+.cell,
+.header-cell {
+  flex: 1;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.mat-mdc-cell {
+  border-bottom-style: none;
+  border-top-style: none;
+}
+
+.sp-icon {
+  margin-left: 20px;
+  margin-right: 20px;
+  min-width: 30px;
+  width: 5%;
+  color: var(--mat-sys-primary)
+}
+
+.mat-mdc-select {
+  width: 100px;
+}
+
+.bottom-space {
+  margin-bottom: 20px;
+}
+
+.center-self {
+  align-self: center;
+}
+
+.button-cell {
+  width: 100px;
+  text-align: center;
+  margin-left: 24px;
+}
+
+.row-button-cell {
+  width: 100px;
+  text-align: center;
 }

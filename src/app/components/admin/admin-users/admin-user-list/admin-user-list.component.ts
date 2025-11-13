@@ -37,10 +37,10 @@ export interface Action {
 }
 
 @Component({
-    selector: 'app-admin-user-list',
-    templateUrl: './admin-user-list.component.html',
-    styleUrls: ['./admin-user-list.component.scss'],
-    standalone: false
+  selector: 'app-admin-user-list',
+  templateUrl: './admin-user-list.component.html',
+  styleUrls: ['./admin-user-list.component.scss'],
+  standalone: false
 })
 export class AdminUserListComponent implements OnInit, OnChanges {
   displayedColumns: string[] = ['id', 'name'];
@@ -71,7 +71,7 @@ export class AdminUserListComponent implements OnInit, OnChanges {
     private dialog: MatDialog,
     private roleDataService: RoleDataService,
     private userDataService: UserDataService
-  ) {}
+  ) { }
 
   /**
    * Initialization
@@ -125,9 +125,9 @@ export class AdminUserListComponent implements OnInit, OnChanges {
       };
       this.savedFilterString = this.filterString;
       this.create.emit(user);
-    } else {
-      this.newUser = {};
     }
+    this.newUser = {};
+    this.addingNewUser = false;
   }
 
   deleteUser(user: User) {
