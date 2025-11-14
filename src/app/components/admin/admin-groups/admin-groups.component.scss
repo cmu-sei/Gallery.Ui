@@ -20,8 +20,13 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 }
 
 .group-list {
-  width: 90%;
-  margin-left: 5%;
+  width: 94%;
+  margin-left: 3%;
+}
+
+.xpanel {
+  width: 94%;
+  margin-bottom: 10px;
 }
 
 .header-row {
@@ -66,14 +71,6 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
   width: 100px;
 }
 
-.bottom-space {
-  margin-bottom: 20px;
-}
-
-.center-self {
-  align-self: center;
-}
-
 .button-cell {
   width: 100px;
   text-align: center;
@@ -83,4 +80,13 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 .row-button-cell {
   width: 100px;
   text-align: center;
+}
+
+.name-cell {
+  align-self: center;
+  text-justify: center;
+}
+
+.primary-color {
+  color: var(--mat-sys-primary);
 }

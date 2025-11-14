@@ -53,7 +53,6 @@ html {
 
 :root {
   @include mat.icon-button-overrides((icon-color: var(--mat-sys-primary)));
-  // @include mat.icon-button-overrides((disabled-icon-color: var(--mat-sys-outline-variant)));
 }
 
 // Override the disabled icon color specifically for mat-icon-button
