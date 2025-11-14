@@ -5,7 +5,8 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+  padding-top: 56.25%;
+  /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
 }
 
 /* Then style the iframe to fit in the container div with full height and width */
@@ -24,10 +25,6 @@
   margin-left: 30px;
 }
 
-.self-center {
-  align-self: center;
-}
-
 .page {
   width: 21.5cm;
   padding: 2cm;
@@ -40,15 +37,15 @@
 
 @media print {
   .page {
-      margin: 0;
-      border: initial;
-      border-radius: initial;
-      width: initial;
-      min-height: initial;
-      box-shadow: initial;
-      background: initial;
-      page-break-after: always;
-      -webkit-print-color-adjust:exact !important;
-      print-color-adjust:exact !important;
-    }
+    margin: 0;
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: initial;
+    background: initial;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }

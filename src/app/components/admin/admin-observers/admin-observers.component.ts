@@ -2,30 +2,27 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  Input,
-  ViewChild,
-} from '@angular/core';
-import { LegacyPageEvent as PageEvent, MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Team, TeamUser, User } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 import { TeamUserQuery } from 'src/app/data/team-user/team-user.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
+import { UserQuery } from 'src/app/data/user/user.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 @Component({
-  selector: 'app-admin-observers',
-  templateUrl: './admin-observers.component.html',
-  styleUrls: ['./admin-observers.component.scss'],
+    selector: 'app-admin-observers',
+    templateUrl: './admin-observers.component.html',
+    styleUrls: ['./admin-observers.component.scss'],
+    standalone: false
 })
 export class AdminObserversComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;
+  @Input() canEdit: boolean;
   userList: User[] = [];
   teamUsers: TeamUser[] = [];
   displayedObserverColumns: string[] = ['team', 'name', 'id'];
@@ -41,14 +38,20 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
     private teamQuery: TeamQuery,
     private teamUserDataService: TeamUserDataService,
     private teamUserQuery: TeamUserQuery,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private userQuery: UserQuery
   ) {
-    this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
-      this.userList = users;
-    });
-    this.teamUserQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(tUsers => {
-      this.teamUsers = tUsers
-        .sort((a, b) => {
+    this.userQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((users) => {
+        this.userList = users;
+      });
+    this.teamUserQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((tUsers) => {
+        this.teamUsers = tUsers.sort((a, b) => {
           const aTeam = this.getTeamName(a.teamId).toLowerCase();
           const bTeam = this.getTeamName(b.teamId).toLowerCase();
           const aName = this.getUserName(a.userId).toLowerCase();
@@ -67,11 +70,14 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
             }
           }
         });
-      this.setDataSources();
-    });
-    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
-      this.teamList = teams;
-    });
+        this.setDataSources();
+      });
+    this.teamQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teams) => {
+        this.teamList = teams;
+      });
   }
 
   ngOnInit() {
@@ -82,10 +88,10 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
 
   setDataSources() {
     // filter the list for each data source
-    this.teamUserDataSource.data = this.teamUsers
-      .filter(tu => !tu.isObserver);
-    this.observerDataSource.data = this.teamUsers
-      .filter(tu => tu.isObserver);
+    this.teamUserDataSource.data = this.teamUsers.filter(
+      (tu) => !tu.isObserver
+    );
+    this.observerDataSource.data = this.teamUsers.filter((tu) => tu.isObserver);
   }
 
   addObserver(id: string): void {
@@ -109,12 +115,12 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   }
 
   getUserName(id: string) {
-    const user = this.userList.find(u => u.id === id);
+    const user = this.userList.find((u) => u.id === id);
     return user ? user.name : '?';
   }
 
   getTeamName(id: string) {
-    const team = this.teamList.find(t => t.id === id);
+    const team = this.teamList.find((t) => t.id === id);
     return team ? team.shortName : '?';
   }
 
@@ -122,5 +128,4 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

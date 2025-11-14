@@ -7,16 +7,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="max-width">
     <div class="top-row">
       <div class="search-cell">
-        <button
-          mat-button
-          *ngIf="canAddArticles()"
-          (click)="addOrEditArticle(null)"
-          style="outline: none;"
-          title="Add an Article"
-        >
+        @if (canAddArticles()) {
+        <button mat-button (click)="addOrEditArticle(null)" style="outline: none;" title="Add an Article">
           <mat-icon class="add-button mdi-18px" fontIcon="mdi-plus-circle"></mat-icon>
         </button>
-        <span *ngIf="!canAddArticles()" style="width: 20px;">&nbsp;</span>
+        }
+        @if (!canAddArticles()) {
+        <span style="width: 20px;">&nbsp;</span>
+        }
         <mat-form-field>
           <input matInput placeholder="Search the Archive" class="tiny" [formControl]="filterControl" />
         </mat-form-field>
@@ -26,89 +24,90 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-form-field class="card-selector">
           <mat-select [(ngModel)]="cardId" (selectionChange)="changeCard($event.value)">
             <mat-option [value]="'all'">All Cards</mat-option>
-            <mat-option *ngFor="let card of showCardList" [value]="card.id">
+            @for (card of showCardList; track card) {
+            <mat-option [value]="card.id">
               {{card.name}}
             </mat-option>
+            }
           </mat-select>
         </mat-form-field>
       </div>
       <div class="source-type-cell">
         <!-- Intel -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Intel')" [ngClass]="getButtonClass('Intel')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Intel')"
+          [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Intel') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px shift-left"></mat-icon>
           Intel
         </button>
         <!-- Reporting -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Reporting')" [ngClass]="getButtonClass('Reporting')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Reporting')"
+          [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Reporting') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Reporting'] }}" class="mdi-18px shift-left"></mat-icon>
           Reporting
         </button>
         <!-- Orders -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Orders')" [ngClass]="getButtonClass('Orders')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Orders')"
+          [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Orders') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Orders'] }}" class="mdi-18px shift-left"></mat-icon>
           Orders
         </button>
         <!-- News -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('News')" [ngClass]="getButtonClass('News')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('News')"
+          [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('News') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['News'] }}" class="mdi-18px shift-left"></mat-icon>
           News
         </button>
         <!-- Social -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Social')" [ngClass]="getButtonClass('Social')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Social')"
+          [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Social') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Social'] }}" class="mdi-18px shift-left"></mat-icon>
           Social
         </button>
         <!-- Phone -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Phone')" [ngClass]="getButtonClass('Phone')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Phone')"
+          [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Phone') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Phone'] }}" class="mdi-18px shift-left"></mat-icon>
           Phone
         </button>
         <!-- Email -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Email')" [ngClass]="getButtonClass('Email')">
+        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Email')"
+          [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Email') < 0}">
           <mat-icon fontIcon="{{ sourceIcon['Email'] }}" class="mdi-18px shift-left"></mat-icon>
           Email
         </button>
       </div>
       <div class="team-cell">
-        <app-team-selector
-          (changeTeam)="changeTeamRequest($event)"
-          style="float: right;"
-        ></app-team-selector>
+        <app-team-selector (changeTeam)="changeTeamRequest($event)"></app-team-selector>
       </div>
       <div class="last-cell">
-        <button
-          mat-icon-button
-          (click)="gotoWallSection()"
-          style="outline: none;"
-          title="Wall"
-        >
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-wall"></mat-icon>
+        <button mat-icon-button (click)="gotoWallSection()" style="outline: none;" title="Wall">
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-wall"></mat-icon>
         </button>
-        <button
-          mat-icon-button
-          *ngIf="showAdminButton"
-          (click)="gotoAdmin()"
-          style="outline: none;"
-          title="Administration"
-        >
-          <mat-icon class="mdi-24px self-center" fontIcon="mdi-cog"></mat-icon>
+        @if (showAdminButton) {
+        <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
         </button>
+        }
       </div>
     </div>
   </div>
 </div>
 <section class="cards">
-  <mat-card class="card" *ngFor="let userArticle of filteredUserArticleList">
+  @for (userArticle of filteredUserArticleList; track userArticle) {
+  <mat-card appearance="outlined" class="card">
     <mat-card-header [ngClass]="getIsReadClass(userArticle)">
       <div mat-card-avatar>
-        <mat-icon style="overflow:visible" fontIcon="{{ sourceIcon[userArticle.article.sourceType] }}" title="{{ userArticle.article.sourceType }}" class="mdi-48px center-self title source-icon"></mat-icon>
+        <mat-icon style="overflow:visible" fontIcon="{{ sourceIcon[userArticle.article.sourceType] }}"
+          title="{{ userArticle.article.sourceType }}" class="mdi-48px center-self title source-icon"></mat-icon>
       </div>
       <mat-card-title class="article-title">{{userArticle.article.name}}</mat-card-title>
       <mat-card-subtitle class="article-subtitle">{{userArticle.article.sourceName}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="article-text" contenteditable="false">
       <div class="center">
-        <span style="float: left;"><mat-icon fontIcon="mdi-calendar-clock-outline" alt="Simulated Date/Time"></mat-icon> {{ userArticle.article.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }} ET</span>
+        <span style="float: left;"><mat-icon fontIcon="mdi-calendar-clock-outline" alt="Simulated Date/Time"></mat-icon>
+          {{ userArticle.article.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }}
+          ET</span>
       </div>
       <div class="summary-text">
         {{ userArticle.article.summary }}
@@ -118,63 +117,63 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <div class="action-buttons">
         <div class="one-cell">
           <button mat-button class="article-action" title="View" (click)="openMoreDialog(userArticle, false)">
-            <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye" alt="View Media"></mat-icon> View
+            <mat-icon fontIcon="mdi-eye" alt="View Media"></mat-icon> View
           </button>
         </div>
         <div class="one-cell">
-          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" [disabled]="!myTeamIsSelected()" *ngIf="!userArticle.isRead">
-            <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-checkbox-blank-outline" alt="UserArticle Read"></mat-icon> Read
+          @if (!userArticle.isRead) {
+          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)"
+            [disabled]="!myTeamIsSelected()">
+            <mat-icon fontIcon="mdi-checkbox-blank-outline" alt="UserArticle Read"></mat-icon> Read
           </button>
-          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)" [disabled]="!myTeamIsSelected()" *ngIf="userArticle.isRead">
-            <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-checkbox-marked-outline" alt="UserArticle Read"></mat-icon> Read
+          }
+          @if (userArticle.isRead) {
+          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)"
+            [disabled]="!myTeamIsSelected()">
+            <mat-icon fontIcon="mdi-checkbox-marked-outline" alt="UserArticle Read"></mat-icon> Read
           </button>
+          }
         </div>
         <div class="one-cell">
-          <button mat-button class="article-action" title="Share UserArticle" (click)="openShareDialog(userArticle)" [disabled]="!myTeamIsSelected()">
-            <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-share-variant" alt="Share UserArticle"></mat-icon> Share
+          <button mat-button class="article-action" title="Share UserArticle" (click)="openShareDialog(userArticle)"
+            [disabled]="!myTeamIsSelected()">
+            <mat-icon fontIcon="mdi-share-variant" alt="Share UserArticle"></mat-icon> Share
           </button>
         </div>
       </div>
       <div class="action-buttons">
         <div class="one-cell">
-          <button mat-button class="article-action" title="More Article Info" (click)="openMoreDialog(userArticle, true)" *ngIf="userArticle.article.url">
-            <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-eye-plus" alt="View Media"></mat-icon> More
+          @if (userArticle.article.url) {
+          <button mat-button class="article-action" title="More Article Info"
+            (click)="openMoreDialog(userArticle, true)">
+            <mat-icon fontIcon="mdi-eye-plus" alt="View Media"></mat-icon> More
           </button>
+          }
         </div>
         <div class="button-cell">
-          <button
-            mat-button
-            class="article-action"
-            (click)="addOrEditArticle(userArticle.article)"
-            style="outline: none;"
-            title="Edit {{ userArticle.article.name }}"
-            [disabled]="!myTeamIsSelected()"
-            *ngIf="userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)"
-          >
-            <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-square-edit-outline"></mat-icon> Edit
+          @if (userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)) {
+          <button mat-button class="article-action" (click)="addOrEditArticle(userArticle.article)"
+            style="outline: none;" title="Edit {{ userArticle.article.name }}" [disabled]="!myTeamIsSelected()">
+            <mat-icon fontIcon="mdi-square-edit-outline"></mat-icon> Edit
           </button>
+          }
         </div>
         <div class="one-cell">
-          <button
-            mat-button
-            class="article-action"
-            (click)="deleteArticle(userArticle.article)"
-            style="outline: none;"
-            title="Delete {{ userArticle.article.name }}"
-            [disabled]="!myTeamIsSelected()"
-            *ngIf="userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)"
-          >
-            <mat-icon style="margin-bottom: 12px;" fontIcon="mdi-trash-can"></mat-icon> Delete
+          @if (userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)) {
+          <button mat-button class="article-action" (click)="deleteArticle(userArticle.article)" style="outline: none;"
+            title="Delete {{ userArticle.article.name }}" [disabled]="!myTeamIsSelected()">
+            <mat-icon fontIcon="mdi-trash-can-outline"></mat-icon> Delete
           </button>
+          }
         </div>
       </div>
     </mat-card-actions>
   </mat-card>
+  }
 </section>
-<mat-card
-  *ngIf="isLoading"
-  style="display: flex; justify-content: center; align-items: center;"
->
+@if (isLoading) {
+<mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
   <mat-progress-spinner color="primary" mode="indeterminate">
   </mat-progress-spinner>
 </mat-card>
+}

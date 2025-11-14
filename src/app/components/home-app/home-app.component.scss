@@ -1,8 +1,24 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-.nolink {
-  text-decoration: none;
+@use "@angular/material" as mat;
+@include mat.elevation-classes();
+@include mat.app-background();
+
+.elevate {
+  @include mat.elevation(2);
+}
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 800px;
+  min-width: 300px;
+  margin: auto;
+  width: 80%;
+  overflow-y: auto;
+  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
 }
 
 .app-home-container {
@@ -14,30 +30,9 @@
   height: 100%;
   text-align: center;
   overflow: hidden;
-}
-
-.app-header-container {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  text-align: center;
-  height: 59px;
-}
-
-.app-error-container {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.app-content-container {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  text-align: center;
-  height: auto;
-  height: 59px;
+  height: 100%;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
 }
 
 .app-model-container {
@@ -62,16 +57,8 @@
   bottom: 0;
 }
 
-.showhand {
-  cursor: pointer;
-}
-
 .last-cell {
   text-align: right;
-}
-
-.one-cell {
-  flex: 1;
 }
 
 .lefticon {
@@ -100,16 +87,6 @@ a {
   color: black;
 }
 
-.exhibit-list-container {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  min-width: 300px;
-  width: 80%;
-  max-height: calc(100% - 50px);
-  margin-top: 20px;
-}
-
 .collection-container {
   margin: auto;
 }
@@ -128,16 +105,24 @@ a {
 
 .icon-text-container {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  padding-top: 20px;
+  justify-content: center;
   margin-left: 20px;
+  height: 90px;
 }
 
-.mat-table {
+.mat-mdc-table {
   overflow-y: auto;
   max-height: calc(100vh - 300px);
 }
 
 .searchBox {
-  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  margin-left: auto !important;
+  height: 60px !important;
 }

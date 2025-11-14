@@ -5,12 +5,9 @@ import { ArticleStore } from './article.store';
 import { ArticleQuery } from './article.query';
 import { Injectable } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  Article,
-  ArticleService,
-} from 'src/app/generated/api';
+import { Article, ArticleService } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { ArticleTeamDataService } from '../team/article-team-data.service';
@@ -81,29 +78,22 @@ export class ArticleDataService {
         ]) =>
           items
             ? (items as Article[])
-              .sort((a: Article, b: Article) =>
-                this.sortArticles(a, b, sortColumn, sortIsAscending)
-              )
-              .filter(
-                (article) =>
-                  ('' + article.description)
-                    .toLowerCase()
-                    .includes(filterTerm.toLowerCase()) ||
-                    article.id
+                .sort((a: Article, b: Article) =>
+                  this.sortArticles(a, b, sortColumn, sortIsAscending)
+                )
+                .filter(
+                  (article) =>
+                    ('' + article.description)
                       .toLowerCase()
-                      .includes(filterTerm.toLowerCase())
-              )
+                      .includes(filterTerm.toLowerCase()) ||
+                    article.id.toLowerCase().includes(filterTerm.toLowerCase())
+                )
             : []
       )
     );
   }
 
-  private sortArticles(
-    a: Article,
-    b: Article,
-    column: string,
-    isAsc: boolean
-  ) {
+  private sortArticles(a: Article, b: Article, column: string, isAsc: boolean) {
     switch (column) {
       case 'description':
         return (
@@ -132,7 +122,7 @@ export class ArticleDataService {
       )
       .subscribe(
         (articles) => {
-          articles.forEach(a => {
+          articles.forEach((a) => {
             this.setAsDates(a);
           });
           this.articleStore.set(articles);
@@ -155,7 +145,7 @@ export class ArticleDataService {
       )
       .subscribe(
         (articles) => {
-          articles.forEach(a => {
+          articles.forEach((a) => {
             this.setAsDates(a);
           });
           this.articleStore.set(articles);
@@ -265,5 +255,4 @@ export class ArticleDataService {
     article.dateModified = new Date(article.dateModified);
     article.datePosted = new Date(article.datePosted);
   }
-
 }

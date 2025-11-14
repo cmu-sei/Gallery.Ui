@@ -2,15 +2,22 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { platformBrowser } from '@angular/platform-browser';
+import { enableAkitaProdMode, persistState } from '@datorama/akita';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
+  enableAkitaProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+export const storage = persistState({
+  key: 'akita-cite-ui',
+  include: ['auth.ui'],
+});
 
+platformBrowser()
+  .bootstrapModule(AppModule)
+  .catch((err) => console.error(err));

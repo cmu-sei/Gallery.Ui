@@ -1,15 +1,8 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import {
-  Observable,
-  of,
-  concat,
-  combineLatest,
-  defer
-} from 'rxjs';
+import { Observable, of, concat, combineLatest, defer } from 'rxjs';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
@@ -56,36 +49,43 @@ interface PropertySortFns<U> {
 }
 
 /** RxJS operator to map a material Sort object to a sort function */
-function toSortFn<U>(sortFns: PropertySortFns<U> = {}, useDefault = true): (sort$: Observable<Sort>) => Observable<undefined | SortFn<U>> {
-  return (sort$) => sort$.pipe(
-    map(sort => {
-      if (!sort.active || sort.direction === '') {
-        return undefined;
-      }
-
-      let sortFn = sortFns[sort.active];
-      if (!sortFn) {
-        if (!useDefault) {
-          throw new Error(`Unknown sort property [${sort.active}]`);
+function toSortFn<U>(
+  sortFns: PropertySortFns<U> = {},
+  useDefault = true
+): (sort$: Observable<Sort>) => Observable<undefined | SortFn<U>> {
+  return (sort$) =>
+    sort$.pipe(
+      map((sort) => {
+        if (!sort.active || sort.direction === '') {
+          return undefined;
         }
 
-        // By default assume sort.active is a property name, and sort using the default sort
-        //  uses < and >.
-        sortFn = (a: U, b: U) => defaultSort((<any>a)[sort.active], (<any>b)[sort.active]);
-      }
+        let sortFn = sortFns[sort.active];
+        if (!sortFn) {
+          if (!useDefault) {
+            throw new Error(`Unknown sort property [${sort.active}]`);
+          }
 
-      return sort.direction === 'asc' ? sortFn : (a: U, b: U) => sortFn(b, a);
-    })
-  );
+          // By default assume sort.active is a property name, and sort using the default sort
+          //  uses < and >.
+          sortFn = (a: U, b: U) =>
+            defaultSort((<any>a)[sort.active], (<any>b)[sort.active]);
+        }
+
+        return sort.direction === 'asc' ? sortFn : (a: U, b: U) => sortFn(b, a);
+      })
+    );
 }
 
 /** Creates an Observable stream of Sort objects from a MatSort component */
 export function fromMatSort(sort: MatSort): Observable<Sort> {
   return concat(
-    defer(() => of({
-      active: sort.active,
-      direction: sort.direction
-    })),
+    defer(() =>
+      of({
+        active: sort.active,
+        direction: sort.direction,
+      })
+    ),
     sort.sortChange.asObservable()
   );
 }
@@ -96,18 +96,19 @@ export function sortRows<U>(
   sortFns: PropertySortFns<U> = {},
   useDefault = true
 ): (obs$: Observable<U[]>) => Observable<U[]> {
-  return (rows$: Observable<U[]>) => combineLatest(
-    rows$,
-    sort$.pipe(toSortFn(sortFns, useDefault)),
-    (rows, sortFn) => {
-      if (!sortFn) {
-        return rows;
-      }
+  return (rows$: Observable<U[]>) =>
+    combineLatest(
+      rows$,
+      sort$.pipe(toSortFn(sortFns, useDefault)),
+      (rows, sortFn) => {
+        if (!sortFn) {
+          return rows;
+        }
 
-      const copy = rows.slice();
-      return copy.sort(sortFn);
-    }
-  );
+        const copy = rows.slice();
+        return copy.sort(sortFn);
+      }
+    );
 }
 
 /* TODO: handle ngIf'd MatPager controls.
@@ -147,27 +148,25 @@ export function fromMatPaginators(pagers: QueryList<MatPaginator>): Observable<P
 /** Creates an Observable stream of PageEvent objects from a MatPaginator component */
 export function fromMatPaginator(pager: MatPaginator): Observable<PageEvent> {
   return concat(
-    defer(() => of({
-      pageIndex: pager.pageIndex,
-      pageSize: pager.pageSize,
-      length: pager.length,
-    })),
+    defer(() =>
+      of({
+        pageIndex: pager.pageIndex,
+        pageSize: pager.pageSize,
+        length: pager.length,
+      })
+    ),
     pager.page.asObservable()
   );
 }
 
 /** RxJs operator to paginate an array based on an Observable of PageEvent objects **/
-export function paginateRows<U>(page$: Observable<PageEvent>): (obs$: Observable<U[]>) => Observable<U[]> {
-  return (rows$: Observable<U[]>) => combineLatest(
-    rows$,
-    page$,
-    (rows, page) => {
+export function paginateRows<U>(
+  page$: Observable<PageEvent>
+): (obs$: Observable<U[]>) => Observable<U[]> {
+  return (rows$: Observable<U[]>) =>
+    combineLatest(rows$, page$, (rows, page) => {
       const startIndex = page.pageIndex * page.pageSize;
       const copy = rows.slice();
       return copy.splice(startIndex, page.pageSize);
-    }
-  );
+    });
 }
-
-
-

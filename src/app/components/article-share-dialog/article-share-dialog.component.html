@@ -5,57 +5,50 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div mat-dialog-title>
   Share Article
-  <button
-    mat-icon-button
-    (click)="handleShareIsComplete(false)"
-    title="Cancel"
-    class="close-button"
-    tabindex="-1"
-  >
-    <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+  <button mat-icon-button (click)="handleShareIsComplete(false)" title="Cancel" class="close-button" tabindex="-1">
+    <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
   </button>
 </div>
-<div mat-dialog-content *ngIf="!!data && data.article !== undefined && data.article !== null">
+@if (!!data && data.article !== undefined && data.article !== null) {
+<div mat-dialog-content>
   <mat-form-field appearance="fill" style="width: 100%;">
     <mat-label>Share with ...</mat-label>
     <mat-select [formControl]="shareTeamsControl" multiple style="width: 100%;">
-      <mat-option *ngFor="let team of data.teamList" [value]="team.id">
+      @for (team of data.teamList; track team) {
+      <mat-option [value]="team.id">
         {{team.name}}
       </mat-option>
+      }
     </mat-select>
   </mat-form-field>
-  <mat-form-field appearance="fill" style="width: 100%;" *ngIf="data.isEmailActive">
+  @if (data.isEmailActive) {
+  <mat-form-field appearance="fill" style="width: 100%;">
     <mat-label>Email Subject</mat-label>
     <input matInput [formControl]="subjectFormControl" />
   </mat-form-field>
-  <div class="add-margin left" *ngIf="data.isEmailActive">
+  }
+  @if (data.isEmailActive) {
+  <div class="add-margin left">
     <div>
       <h4>Email Message</h4>
-      <angular-editor
-        [placeholder]="'Description'"
-        [formControl]="messageFormControl"
-        [config]="editorConfig"
-      ></angular-editor>
-      <mat-error *ngIf="messageFormControl.hasError('required')">
+      <angular-editor [placeholder]="'Description'" [formControl]="messageFormControl"
+        [config]="editorConfig"></angular-editor>
+      @if (messageFormControl.hasError('required')) {
+      <mat-error>
         Message is <strong>required</strong>
       </mat-error>
+      }
     </div>
   </div>
+  }
   <div class="cssLayoutRowStartCenter bottom-button">
     <div class="delete-button">
-      <button
-        mat-stroked-button
-        (click)="handleShareIsComplete(true)"
-        style="margin-left: 40px;"
-        [disabled]="!shareTeamsControl.value || shareTeamsControl.value.length === 0"
-      >Share</button>
+      <button mat-stroked-button (click)="handleShareIsComplete(true)" style="margin-left: 40px;"
+        [disabled]="!shareTeamsControl.value || shareTeamsControl.value.length === 0">Share</button>
     </div>
     <div class="delete-button">
-      <button
-        mat-stroked-button
-        (click)="handleShareIsComplete(false)"
-      >Cancel</button>
+      <button mat-stroked-button (click)="handleShareIsComplete(false)">Cancel</button>
     </div>
   </div>
-
 </div>
+}

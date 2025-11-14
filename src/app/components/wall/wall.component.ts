@@ -1,23 +1,23 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { DOCUMENT } from '@angular/common';
-import { Component, EventEmitter, Inject, Input, Output, OnDestroy } from '@angular/core';
-import { Team, TeamCard, UserArticle, ItemStatus } from 'src/app/generated/api/model/models';
+
+import { Component, EventEmitter, Inject, Input, Output, OnDestroy, DOCUMENT } from '@angular/core';
+import { TeamCard, UserArticle, ItemStatus } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
-import { Subject, Observable } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Section } from 'src/app/utilities/enumerations';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 
 @Component({
-  selector: 'app-wall',
-  templateUrl: './wall.component.html',
-  styleUrls: ['./wall.component.scss'],
+    selector: 'app-wall',
+    templateUrl: './wall.component.html',
+    styleUrls: ['./wall.component.scss'],
+    standalone: false
 })
 export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;

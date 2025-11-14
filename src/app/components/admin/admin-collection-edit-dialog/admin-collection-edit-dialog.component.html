@@ -4,54 +4,52 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div mat-dialog-title>
-  <span *ngIf="data && data.collection && data.collection.id">Edit Collection</span>
-  <span *ngIf="!data || !data.collection || !data.collection.id">New Collection</span>
-  <button
-    mat-icon-button
-    (click)="handleEditComplete(false)"
-    title="Cancel"
-    class="close-button"
-    tabindex="-1"
-  >
-    <mat-icon class="mdi-24px self-center" fontIcon="mdi-close-circle-outline"></mat-icon>
+  @if (data && data.collection && data.collection.id) {
+  <span>Edit Collection</span>
+  }
+  @if (!data || !data.collection || !data.collection.id) {
+  <span>New Collection</span>
+  }
+  <button mat-icon-button (click)="handleEditComplete(false)" title="Cancel" class="close-button" tabindex="-1">
+    <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
   </button>
 </div>
-<div mat-dialog-content *ngIf="!!data && data.collection !== undefined && data.collection !== null">
-
+@if (!!data && data.collection !== undefined && data.collection !== null) {
+<div mat-dialog-content>
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
-        <input type="text" matInput [formControl]="collectionNameFormControl" placeholder="Name (required)" (blur)="saveCollection('name')"
-          value="{{data.collection.name}}">
-        <mat-error *ngIf="collectionNameFormControl.hasError('minlength') && !collectionNameFormControl.hasError('required')">
-          Must contain {{ MIN_NAME_LENGTH }} or more characters
-        </mat-error>
-        <mat-error *ngIf="collectionNameFormControl.hasError('required')">
+        <input type="text" matInput [formControl]="collectionNameFormControl" placeholder="Name (required)"
+          (blur)="saveCollection('name')" value="{{data.collection.name}}">
+        @if (collectionNameFormControl.hasError('required')) {
+        <mat-error>
           Name is <strong>required</strong>
         </mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
-
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
         <textarea matInput placeholder="Description" [formControl]="descriptionFormControl"
           (blur)="saveCollection('description')" value="{{data.collection.description}}"></textarea>
-        <mat-error *ngIf="descriptionFormControl.hasError('required')">
+        @if (descriptionFormControl.hasError('required')) {
+        <mat-error>
           Description is <strong>required</strong>
         </mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
-
   <div class="cssLayoutRowStartCenter bottom-button">
     <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px;">Save</button>
+      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()"
+        style="margin-left: 40px;">Save</button>
     </div>
     <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
     </div>
   </div>
-
 </div>
+}

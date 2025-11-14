@@ -5,12 +5,9 @@ import { TeamCardStore } from './team-card.store';
 import { TeamCardQuery } from './team-card.query';
 import { Injectable } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  TeamCard,
-  TeamCardService,
-} from 'src/app/generated/api';
+import { TeamCard, TeamCardService } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 
@@ -79,14 +76,12 @@ export class TeamCardDataService {
         ]) =>
           items
             ? (items as TeamCard[])
-              .sort((a: TeamCard, b: TeamCard) =>
-                this.sortTeamCards(a, b, sortColumn, sortIsAscending)
-              )
-              .filter(
-                (teamCard) =>
-                  teamCard.id
-                    .toLowerCase()
-                    .includes(filterTerm.toLowerCase())                )
+                .sort((a: TeamCard, b: TeamCard) =>
+                  this.sortTeamCards(a, b, sortColumn, sortIsAscending)
+                )
+                .filter((teamCard) =>
+                  teamCard.id.toLowerCase().includes(filterTerm.toLowerCase())
+                )
             : []
       )
     );
@@ -121,30 +116,7 @@ export class TeamCardDataService {
       )
       .subscribe(
         (teamCards) => {
-          teamCards.forEach(a => {
-            this.setAsDates(a);
-          });
-          this.teamCardStore.set(teamCards);
-        },
-        (error) => {
-          this.teamCardStore.set([]);
-        }
-      );
-  }
-
-  loadByCard(cardId: string) {
-    this.teamCardStore.setLoading(true);
-    this.teamCardService
-      .getCardTeamCards(cardId)
-      .pipe(
-        tap(() => {
-          this.teamCardStore.setLoading(false);
-        }),
-        take(1)
-      )
-      .subscribe(
-        (teamCards) => {
-          teamCards.forEach(a => {
+          teamCards.forEach((a) => {
             this.setAsDates(a);
           });
           this.teamCardStore.set(teamCards);
@@ -167,7 +139,7 @@ export class TeamCardDataService {
       )
       .subscribe(
         (teamCards) => {
-          teamCards.forEach(a => {
+          teamCards.forEach((a) => {
             this.setAsDates(a);
           });
           this.teamCardStore.set(teamCards);
@@ -190,7 +162,7 @@ export class TeamCardDataService {
       )
       .subscribe(
         (teamCards) => {
-          teamCards.forEach(a => {
+          teamCards.forEach((a) => {
             this.setAsDates(a);
           });
           this.teamCardStore.set(teamCards);
@@ -283,5 +255,4 @@ export class TeamCardDataService {
     teamCard.dateCreated = new Date(teamCard.dateCreated);
     teamCard.dateModified = new Date(teamCard.dateModified);
   }
-
 }

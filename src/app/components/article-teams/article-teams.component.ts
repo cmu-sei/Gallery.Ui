@@ -8,22 +8,22 @@ import {
   Input,
   Output,
   ViewChild,
-  EventEmitter
+  EventEmitter,
 } from '@angular/core';
-import { LegacyPageEvent as PageEvent, MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Team } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-article-teams',
-  templateUrl: './article-teams.component.html',
-  styleUrls: ['./article-teams.component.scss'],
+    selector: 'app-article-teams',
+    templateUrl: './article-teams.component.html',
+    styleUrls: ['./article-teams.component.scss'],
+    standalone: false
 })
-
 export class ArticleTeamsComponent implements OnDestroy, OnInit {
   @Input() exhibitId: string;
   @Output() articleTeamsChange = new EventEmitter<Team[]>();
@@ -39,16 +39,17 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(
-    private teamQuery: TeamQuery
-  ) {}
+  constructor(private teamQuery: TeamQuery) {}
 
   ngOnInit() {
     this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
-    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
-      this.exhibitTeams = teams;
-      this.setDataSources();
-    });
+    this.teamQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teams) => {
+        this.exhibitTeams = teams;
+        this.setDataSources();
+      });
   }
 
   setDataSources() {
@@ -71,13 +72,13 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
   }
 
   addTeamToArticle(team: Team): void {
-    this.articleTeams.push({ ...team});
+    this.articleTeams.push({ ...team });
     this.setDataSources();
     this.articleTeamsChange.emit(this.articleTeams);
   }
 
   removeTeamFromArticle(team: Team): void {
-    this.articleTeams = this.articleTeams.filter(t => t.id !== team.id);
+    this.articleTeams = this.articleTeams.filter((t) => t.id !== team.id);
     this.setDataSources();
     this.articleTeamsChange.emit(this.articleTeams);
   }
@@ -94,5 +95,4 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

@@ -10,7 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItemStatus, SourceType } from 'src/app/generated/api';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
@@ -27,11 +27,11 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-article-edit-dialog',
-  templateUrl: './article-edit-dialog.component.html',
-  styleUrls: ['./article-edit-dialog.component.scss'],
+    selector: 'app-article-edit-dialog',
+    templateUrl: './article-edit-dialog.component.html',
+    styleUrls: ['./article-edit-dialog.component.scss'],
+    standalone: false
 })
-
 export class ArticleEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
   editorConfig: AngularEditorConfig = {
@@ -50,45 +50,34 @@ export class ArticleEditDialogComponent {
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [
-      {class: 'arial', name: 'Arial'},
-      {class: 'times-new-roman', name: 'Times New Roman'},
-      {class: 'calibri', name: 'Calibri'},
-      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' },
     ],
     uploadUrl: '',
     uploadWithCredentials: false,
     sanitize: true,
     toolbarPosition: 'top',
-    toolbarHiddenButtons: [
-      ['backgroundColor']
-    ]
+    toolbarHiddenButtons: [['backgroundColor']],
   };
   public articleNameFormControl = new UntypedFormControl(
     this.data.article.name,
-    [
-      Validators.required
-    ]
+    [Validators.required]
   );
   public summaryFormControl = new UntypedFormControl(
-    this.data.article.summary ,
-    [
-      Validators.required
-    ]
+    this.data.article.summary,
+    [Validators.required]
   );
   public descriptionFormControl = new UntypedFormControl(
-    this.data.article.description ,
-    [
-      Validators.required
-    ]
+    this.data.article.description,
+    [Validators.required]
   );
   public cardIdFormControl = new UntypedFormControl(
     this.data.article.cardId,
     []
   );
-  public moveFormControl = new UntypedFormControl(
-    this.data.article.move,
-    []
-  );
+  public moveFormControl = new UntypedFormControl(this.data.article.move, []);
   public injectFormControl = new UntypedFormControl(
     this.data.article.inject,
     []
@@ -105,10 +94,7 @@ export class ArticleEditDialogComponent {
     this.data.article.sourceName,
     []
   );
-  public urlFormControl = new UntypedFormControl(
-    this.data.article.url,
-    []
-  );
+  public urlFormControl = new UntypedFormControl(this.data.article.url, []);
   public datePostedFormControl = new UntypedFormControl(
     this.data.article.datePosted,
     []
@@ -120,7 +106,7 @@ export class ArticleEditDialogComponent {
     ItemStatus.Affected,
     ItemStatus.Closed,
     ItemStatus.Critical,
-    ItemStatus.Open
+    ItemStatus.Open,
   ];
   sourceTypeList: SourceType[] = [
     SourceType.Intel,
@@ -129,7 +115,7 @@ export class ArticleEditDialogComponent {
     SourceType.Social,
     SourceType.Phone,
     SourceType.Email,
-    SourceType.Orders
+    SourceType.Orders,
   ];
   teamIdList: string[] = [];
 
@@ -144,7 +130,7 @@ export class ArticleEditDialogComponent {
   editorStyle = {
     'min-height': '100px',
     'max-height': '400px',
-    'overflow': 'auto'
+    overflow: 'auto',
   };
 
   errorFree() {
@@ -186,7 +172,7 @@ export class ArticleEditDialogComponent {
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,
-          article: this.data.article
+          article: this.data.article,
         });
       }
     }
@@ -198,13 +184,19 @@ export class ArticleEditDialogComponent {
   saveArticle(changedField): void {
     switch (changedField) {
       case 'name':
-        this.data.article.name = this.articleNameFormControl.value ? this.articleNameFormControl.value.toString() : '';
+        this.data.article.name = this.articleNameFormControl.value
+          ? this.articleNameFormControl.value.toString()
+          : '';
         break;
       case 'summary':
-        this.data.article.summary = this.summaryFormControl.value ? this.summaryFormControl.value.toString() : '';
+        this.data.article.summary = this.summaryFormControl.value
+          ? this.summaryFormControl.value.toString()
+          : '';
         break;
       case 'description':
-        this.data.article.description = this.descriptionFormControl.value ? this.descriptionFormControl.value.toString() : '';
+        this.data.article.description = this.descriptionFormControl.value
+          ? this.descriptionFormControl.value.toString()
+          : '';
         break;
       case 'cardId':
         this.data.article.cardId = this.cardIdFormControl.value;
@@ -222,10 +214,14 @@ export class ArticleEditDialogComponent {
         this.data.article.sourceType = this.sourceTypeFormControl.value;
         break;
       case 'sourceName':
-        this.data.article.sourceName = this.sourceNameFormControl.value ? this.sourceNameFormControl.value.toString() : '';
+        this.data.article.sourceName = this.sourceNameFormControl.value
+          ? this.sourceNameFormControl.value.toString()
+          : '';
         break;
       case 'url':
-        this.data.article.url = this.urlFormControl.value ? this.urlFormControl.value.toString() : '';
+        this.data.article.url = this.urlFormControl.value
+          ? this.urlFormControl.value.toString()
+          : '';
         break;
       case 'datePosted': {
         const newPosted = new Date(this.datePostedFormControl.value);
@@ -239,5 +235,4 @@ export class ArticleEditDialogComponent {
         break;
     }
   }
-
 }

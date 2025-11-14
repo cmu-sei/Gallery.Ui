@@ -1,28 +1,31 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { Collection } from 'src/app/generated/api/model/models';
+import {
+  Collection,
+  SystemPermission,
+} from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import {
-  AdminCollectionEditDialogComponent
-} from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
   selector: 'app-admin-collections',
   templateUrl: './admin-collections.component.html',
   styleUrls: ['./admin-collections.component.scss'],
+  standalone: false
 })
-export class AdminCollectionsComponent implements OnInit, OnDestroy {
+export class AdminCollectionsComponent implements OnDestroy {
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];
@@ -33,11 +36,12 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   newCollectionName = '';
   editCollection: Collection = {};
   originalCollection: Collection = {};
+  selectedCollectionId = '';
   filteredCollectionList: Collection[] = [];
   displayedCollections: Collection[] = [];
   filterControl = new UntypedFormControl();
   filterString = '';
-  sort: Sort = {active: 'dateCreated', direction: 'desc'};
+  sort: Sort = { active: 'dateCreated', direction: 'desc' };
   private unsubscribe$ = new Subject();
   isBusy = false;
   uploadProgress = 0;
@@ -48,21 +52,26 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     public dialogService: DialogService,
     private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery
+    private collectionQuery: CollectionQuery,
+    private permissionDataService: PermissionDataService
   ) {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.collectionList = [];
-      collections.forEach(collection => {
-        this.collectionList.push({ ...collection });
-        if (collection.id === this.editCollection.id) {
-          this.editCollection = { ...collection};
-        }
+    this.collectionQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((collections) => {
+        this.collectionList = [];
+        collections.forEach((collection) => {
+          this.collectionList.push({ ...collection });
+          if (collection.id === this.editCollection.id) {
+            this.editCollection = { ...collection };
+          }
+        });
+        this.applyFilter();
+        this.permissionDataService.loadCollectionPermissions().subscribe();
       });
-      this.sortChanged(this.sort);
-    });
     this.collectionDataService.load();
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
@@ -71,35 +80,33 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
         this.applyFilter();
       });
     // subscribe to scoring models loading
-    this.collectionQuery.selectLoading().pipe(takeUntil(this.unsubscribe$)).subscribe((isLoading) => {
-      this.isBusy = isLoading;
-    });
+    this.collectionQuery
+      .selectLoading()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((isLoading) => {
+        this.isBusy = isLoading;
+      });
   }
 
-  ngOnInit() {
-    this.loadInitialData();
-  }
-
-  loadInitialData() {
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.collectionList = Array.from(collections);
-      this.applyFilter();
-    });
+  canCreateCollections(): boolean {
+    return this.permissionDataService.hasPermission(
+      SystemPermission.CreateCollections
+    );
   }
 
   addOrEditCollection(collection: Collection) {
     if (!collection) {
       collection = {
         name: '',
-        description: ''
+        description: '',
       };
     } else {
-      collection = {... collection};
+      collection = { ...collection };
     }
     const dialogRef = this.dialog.open(AdminCollectionEditDialogComponent, {
       width: '480px',
       data: {
-        collection: collection
+        collection: collection,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -111,7 +118,27 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   }
 
   togglePanel(collection: Collection) {
-    this.editCollection = this.editCollection.id === collection.id ? this.editCollection = {} : this.editCollection = { ...collection};
+    this.editCollection =
+      this.editCollection.id === collection.id
+        ? (this.editCollection = {})
+        : (this.editCollection = { ...collection });
+  }
+
+  toggleSelectedCollection(collectionId: string) {
+    if (this.selectedCollectionId !== collectionId) {
+      this.selectedCollectionId = collectionId;
+    } else {
+      this.selectedCollectionId = '';
+    }
+    this.collectionDataService.setActive(this.selectedCollectionId);
+  }
+
+  canEditCollection(collectionId: string): boolean {
+    return this.permissionDataService.canEditCollection(collectionId);
+  }
+
+  canManageCollection(collectionId: string): boolean {
+    return this.permissionDataService.canManageCollection(collectionId);
   }
 
   selectCollection(collection: Collection) {
@@ -142,14 +169,15 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   }
 
   cancelEdit() {
-    this.editCollection = { ... this.originalCollection };
+    this.editCollection = { ...this.originalCollection };
   }
 
   applyFilter() {
-    this.filteredCollectionList = this.collectionList.filter(collection =>
-      !this.filterString ||
-      collection.name.toLowerCase().includes(this.filterString) ||
-      collection.description.toLowerCase().includes(this.filterString)
+    this.filteredCollectionList = this.collectionList.filter(
+      (collection) =>
+        !this.filterString ||
+        collection.name.toLowerCase().includes(this.filterString) ||
+        collection.description.toLowerCase().includes(this.filterString)
     );
     this.sortChanged(this.sort);
   }
@@ -160,7 +188,9 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    this.filteredCollectionList.sort((a, b) => this.sortCollections(a, b, sort.active, sort.direction));
+    this.filteredCollectionList.sort((a, b) =>
+      this.sortCollections(a, b, sort.active, sort.direction)
+    );
     this.applyPagination();
   }
 
@@ -188,7 +218,8 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
   }
 
   copyCollection(id: string): void {
-    this.collectionDataService.copy(id);
+    this.permissionDataService.loadCollectionPermissions().subscribe();
+    // this.collectionDataService.copy(id);
   }
 
   downloadCollection(collection: Collection) {
@@ -236,12 +267,14 @@ export class AdminCollectionsComponent implements OnInit, OnDestroy {
 
   applyPagination() {
     const startIndex = this.pageIndex * this.pageSize;
-    this.displayedCollections = this.filteredCollectionList.slice(startIndex, startIndex + this.pageSize);
+    this.displayedCollections = this.filteredCollectionList.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
   }
 
   ngOnDestroy() {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

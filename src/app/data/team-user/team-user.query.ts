@@ -3,13 +3,10 @@
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
 import { Order, Query, QueryConfig, QueryEntity } from '@datorama/akita';
-import {
-  TeamUserState,
-  TeamUserStore,
-} from './team-user.store';
+import { TeamUserState, TeamUserStore } from './team-user.store';
 import { TeamUser } from 'src/app/generated/api';
 import { Injectable } from '@angular/core';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 
 @QueryConfig({

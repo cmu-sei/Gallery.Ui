@@ -4,72 +4,55 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <mat-accordion displayMode="flat" class="full-width">
-  <section
-    matSort
-    (matSortChange)="sortChanged($event)"
-    class="mat-elevation-z2 mat-header-row"
-  >
-    <div class="mat-header-cell one-cell" mat-sort-header="move">Move</div>
-    <div class="mat-header-cell one-cell" mat-sort-header="inject">Inject</div>
-    <div class="mat-header-cell two-cell" mat-sort-header="cardId">Card</div>
-    <div class="mat-header-cell two-cell" mat-sort-header="sourceName">Source Name</div>
-    <div class="mat-header-cell two-cell" mat-sort-header="name">Article Title</div>
-    <div class="mat-header-cell three-cell">
+  <section matSort (matSortChange)="sortChanged($event)" class="header-row">
+    <div class="header-cell one-cell" mat-sort-header="move">Move</div>
+    <div class="header-cell one-cell" mat-sort-header="inject">Inject</div>
+    <div class="header-cell two-cell" mat-sort-header="cardId">Card</div>
+    <div class="header-cell two-cell" mat-sort-header="sourceName">Source Name</div>
+    <div class="header-cell two-cell" mat-sort-header="name">Article Title</div>
+    <div class="header-cell three-cell">
       <div class="panel-div">
         <mat-form-field style="width: 60%; margin-left: 10px;">
-          <input
-            matInput
-            [(ngModel)]="filterString"
-            (keyup)="applyFilter()"
-            (keypress)="$event.stopPropagation"
-            (blur)="$event.stopPropagation"
-            placeholder="Search"
-          />
+          <input matInput [(ngModel)]="filterString" (keyup)="applyFilter()" (keypress)="$event.stopPropagation"
+            (blur)="$event.stopPropagation" placeholder="Search" />
         </mat-form-field>
         <div style="width: 30px;">
-          <button
-            mat-icon-button
-            (click)="clearFilter();"
-            style="outline: none;"
-            title="Clear Search"
-          >
+          <button mat-icon-button (click)="clearFilter();" style="outline: none;" title="Clear Search">
             <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
           </button>
         </div>
       </div>
     </div>
   </section>
-  <mat-expansion-panel
-    *ngFor="let article of sortedArticles; trackBy:getArticleId"
-  >
-    <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading">
-      <div class="mat-cell one-cell center-self">
+  @for (article of sortedArticles; track getArticleId($index, article)) {
+  <mat-expansion-panel>
+    @if (!isLoading) {
+    <mat-expansion-panel-header class="row">
+      <div class="cell one-cell center-self">
         {{ article.move }}
       </div>
-      <div class="mat-cell one-cell center-self">
+      <div class="cell one-cell center-self">
         {{ article.inject }}
       </div>
-      <div class="mat-cell two-cell center-self">
+      <div class="cell two-cell center-self">
         {{ getCardName(article.cardId) }}
       </div>
-      <div class="mat-cell two-cell center-self">
+      <div class="cell two-cell center-self">
         {{ article.sourceName }}
       </div>
-      <div class="mat-cell five-cell">
+      <div class="cell five-cell">
         {{ article.name }}
       </div>
     </mat-expansion-panel-header>
-    <app-admin-exhibit-article-teams
-      [exhibitId]="exhibit.id"
-      [articleId]="article.id"
-    >
+    }
+    <app-admin-exhibit-article-teams [exhibitId]="exhibit.id" [articleId]="article.id" [canEdit]="canEdit">
     </app-admin-exhibit-article-teams>
   </mat-expansion-panel>
+  }
 </mat-accordion>
-<mat-card
-  *ngIf="isLoading"
-  style="display: flex; justify-content: center; align-items: center;"
->
+@if (isLoading) {
+<mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
   <mat-progress-spinner color="primary" mode="indeterminate">
   </mat-progress-spinner>
 </mat-card>
+}

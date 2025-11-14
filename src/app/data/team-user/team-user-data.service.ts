@@ -5,11 +5,8 @@
 import { TeamUserStore } from './team-user.store';
 import { TeamUserQuery } from './team-user.query';
 import { Injectable } from '@angular/core';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
-import {
-  TeamUser,
-  TeamUserService,
-} from 'src/app/generated/api';
+import { PageEvent } from '@angular/material/paginator';
+import { TeamUser, TeamUserService } from 'src/app/generated/api';
 import { take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -37,7 +34,7 @@ export class TeamUserDataService {
       )
       .subscribe(
         (teamUsers) => {
-          teamUsers.forEach(e => {
+          teamUsers.forEach((e) => {
             this.setAsDates(e);
           });
           this.teamUserStore.set(teamUsers);
@@ -60,7 +57,7 @@ export class TeamUserDataService {
       )
       .subscribe(
         (teamUsers) => {
-          teamUsers.forEach(e => {
+          teamUsers.forEach((e) => {
             this.setAsDates(e);
           });
           this.teamUserStore.set(teamUsers);
@@ -109,13 +106,19 @@ export class TeamUserDataService {
 
   setObserverValue(teamUserId: string, value: boolean) {
     if (value) {
-      this.teamUserService.setObserver(teamUserId).pipe(take(1)).subscribe((tu) => {
-        this.updateStore(tu);
-      });
+      this.teamUserService
+        .setObserver(teamUserId)
+        .pipe(take(1))
+        .subscribe((tu) => {
+          this.updateStore(tu);
+        });
     } else {
-      this.teamUserService.clearObserver(teamUserId).pipe(take(1)).subscribe((tu) => {
-        this.updateStore(tu);
-      });
+      this.teamUserService
+        .clearObserver(teamUserId)
+        .pipe(take(1))
+        .subscribe((tu) => {
+          this.updateStore(tu);
+        });
     }
   }
 
@@ -145,5 +148,4 @@ export class TeamUserDataService {
     teamUser.dateCreated = new Date(teamUser.dateCreated);
     teamUser.dateModified = new Date(teamUser.dateModified);
   }
-
 }

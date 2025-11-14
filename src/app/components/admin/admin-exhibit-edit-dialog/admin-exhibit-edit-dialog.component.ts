@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -24,9 +24,10 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-admin-exhibit-edit-dialog',
-  templateUrl: './admin-exhibit-edit-dialog.component.html',
-  styleUrls: ['./admin-exhibit-edit-dialog.component.scss'],
+    selector: 'app-admin-exhibit-edit-dialog',
+    templateUrl: './admin-exhibit-edit-dialog.component.html',
+    styleUrls: ['./admin-exhibit-edit-dialog.component.scss'],
+    standalone: false
 })
 export class AdminExhibitEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
@@ -36,8 +37,8 @@ export class AdminExhibitEditDialogComponent {
     this.data.exhibit.description,
     []
   );
-  public scenarioIdFormControl = new UntypedFormControl(
-    this.data.exhibit.scenarioId,
+  public exhibitIdFormControl = new UntypedFormControl(
+    this.data.exhibit.exhibitId,
     []
   );
   public currentMoveFormControl = new UntypedFormControl(
@@ -93,9 +94,9 @@ export class AdminExhibitEditDialogComponent {
       case 'description':
         this.data.exhibit.description = this.descriptionFormControl.value;
         break;
-      case 'scenarioId':
-        this.data.exhibit.scenarioId =
-          this.scenarioIdFormControl.value.toString();
+      case 'exhibitId':
+        this.data.exhibit.exhibitId =
+          this.exhibitIdFormControl.value.toString();
         break;
       case 'currentMove':
         this.data.exhibit.currentMove =

@@ -5,13 +5,9 @@ import { ExhibitStore } from './exhibit.store';
 import { ExhibitQuery } from './exhibit.query';
 import { Injectable } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  Exhibit,
-  ExhibitService,
-  ItemStatus
-} from 'src/app/generated/api';
+import { Exhibit, ExhibitService, ItemStatus } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -82,32 +78,21 @@ export class ExhibitDataService {
         ]) =>
           items
             ? (items as Exhibit[])
-              .sort((a: Exhibit, b: Exhibit) =>
-                this.sortExhibits(a, b, sortColumn, sortIsAscending)
-              )
-              .filter(
-                (exhibit) =>
-                  exhibit.id
-                    .toLowerCase()
-                    .includes(filterTerm.toLowerCase())
-              )
+                .sort((a: Exhibit, b: Exhibit) =>
+                  this.sortExhibits(a, b, sortColumn, sortIsAscending)
+                )
+                .filter((exhibit) =>
+                  exhibit.id.toLowerCase().includes(filterTerm.toLowerCase())
+                )
             : []
       )
     );
   }
 
-  private sortExhibits(
-    a: Exhibit,
-    b: Exhibit,
-    column: string,
-    isAsc: boolean
-  ) {
+  private sortExhibits(a: Exhibit, b: Exhibit, column: string, isAsc: boolean) {
     switch (column) {
       case 'createdBy':
-        return (
-          (a.createdBy < b.createdBy ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.createdBy < b.createdBy ? -1 : 1) * (isAsc ? 1 : -1);
       case 'dateCreated':
         return (
           (a.dateCreated.valueOf() < b.dateCreated.valueOf() ? -1 : 1) *
@@ -130,16 +115,16 @@ export class ExhibitDataService {
       )
       .subscribe(
         (exhibits) => {
-          exhibits.forEach(a => {
+          exhibits.forEach((a) => {
             this.setAsDates(a);
           });
-          const sortedExhibits = exhibits.sort(
-            (a: Exhibit, b: Exhibit) =>
-              this.sortExhibits(a, b, 'dateCreated', false)
+          const sortedExhibits = exhibits.sort((a: Exhibit, b: Exhibit) =>
+            this.sortExhibits(a, b, 'dateCreated', false)
           );
           this.exhibitStore.set(sortedExhibits);
         },
         (error) => {
+          console.log(error);
           this.exhibitStore.set([]);
         }
       );
@@ -157,16 +142,16 @@ export class ExhibitDataService {
       )
       .subscribe(
         (exhibits) => {
-          exhibits.forEach(a => {
+          exhibits.forEach((a) => {
             this.setAsDates(a);
           });
-          const sortedExhibits = exhibits.sort(
-            (a: Exhibit, b: Exhibit) =>
-              this.sortExhibits(a, b, 'dateCreated', false)
+          const sortedExhibits = exhibits.sort((a: Exhibit, b: Exhibit) =>
+            this.sortExhibits(a, b, 'dateCreated', false)
           );
           this.exhibitStore.set(sortedExhibits);
         },
         (error) => {
+          console.log(error);
           this.exhibitStore.set([]);
         }
       );
@@ -185,17 +170,16 @@ export class ExhibitDataService {
         )
         .subscribe(
           (exhibits) => {
-            exhibits.forEach(a => {
+            exhibits.forEach((a) => {
               this.setAsDates(a);
             });
             this.exhibitStore.set(exhibits);
           },
           (error) => {
+            console.log(error);
             this.exhibitStore.set([]);
           }
         );
-    } else {
-      this.exhibitStore.set([]);
     }
   }
 
@@ -211,12 +195,13 @@ export class ExhibitDataService {
       )
       .subscribe(
         (exhibits) => {
-          exhibits.forEach(a => {
+          exhibits.forEach((a) => {
             this.setAsDates(a);
           });
           this.exhibitStore.set(exhibits);
         },
         (error) => {
+          console.log(error);
           this.exhibitStore.set([]);
         }
       );
@@ -266,12 +251,14 @@ export class ExhibitDataService {
         }),
         take(1)
       )
-      .subscribe((s) => {
-        this.exhibitStore.add(s);
-      },
-      (error) => {
-        this.exhibitStore.setLoading(false);
-      });
+      .subscribe(
+        (s) => {
+          this.exhibitStore.add(s);
+        },
+        (error) => {
+          this.exhibitStore.setLoading(false);
+        }
+      );
   }
 
   updateExhibit(exhibit: Exhibit) {
@@ -305,24 +292,16 @@ export class ExhibitDataService {
   uploadJson(file: File, observe: any, reportProgress: boolean) {
     this.exhibitStore.setLoading(true);
     this.exhibitService
-      .uploadJson(file, observe, reportProgress)
-      .subscribe((event) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          const uploadProgress = Math.round((100 * event.loaded) / event.total);
-          this.uploadProgress.next(uploadProgress);
-        } else if (event instanceof HttpResponse) {
-          this.uploadProgress.next(0);
+      .uploadJsonFiles(file, observe, reportProgress)
+      .subscribe(
+        (exhibit) => {
+          this.exhibitStore.upsert(exhibit.id, exhibit);
+        },
+        (error) => {
           this.exhibitStore.setLoading(false);
-          if (event.status === 200) {
-            const exhibit = event.body;
-            this.exhibitStore.upsert(exhibit.id, exhibit);
-          }
+          this.uploadProgress.next(0);
         }
-      },
-      (error) => {
-        this.exhibitStore.setLoading(false);
-        this.uploadProgress.next(0);
-      });
+      );
   }
   setActive(id: string) {
     this.exhibitStore.setActive(id);
@@ -345,5 +324,4 @@ export class ExhibitDataService {
     exhibit.dateCreated = new Date(exhibit.dateCreated);
     exhibit.dateModified = new Date(exhibit.dateModified);
   }
-
 }

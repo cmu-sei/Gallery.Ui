@@ -4,14 +4,29 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ComnAuthService, ComnSettingsService } from '@cmusei/crucible-common';
 import * as signalR from '@microsoft/signalr';
-import { Article, Collection, Exhibit, Team, TeamCard, TeamUser, User, UserArticle } from 'src/app/generated/api';
+import {
+  Article,
+  Collection,
+  CollectionMembership,
+  GroupMembership,
+  Exhibit,
+  ExhibitMembership,
+  Team,
+  TeamCard,
+  TeamUser,
+  User,
+  UserArticle
+} from 'src/app/generated/api';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { UserArticleDataService } from '../data/user-article/user-article-data.service';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
+import { CollectionMembershipDataService } from '../data/collection/collection-membership-data.service';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
+import { ExhibitMembershipDataService } from '../data/exhibit/exhibit-membership-data.service';
+import { GroupMembershipDataService } from '../data/group/group-membership.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { TeamUserDataService } from '../data/team-user/team-user-data.service';
@@ -40,7 +55,10 @@ export class SignalRService implements OnDestroy {
     private articleDataService: ArticleDataService,
     private cardDataService: CardDataService,
     private collectionDataService: CollectionDataService,
+    private collectionMembershipDataService: CollectionMembershipDataService,
     private exhibitDataService: ExhibitDataService,
+    private exhibitMembershipDataService: ExhibitMembershipDataService,
+    private groupMembershipDataService: GroupMembershipDataService,
     private teamDataService: TeamDataService,
     private teamCardDataService: TeamCardDataService,
     private teamUserDataService: TeamUserDataService,
@@ -134,7 +152,10 @@ export class SignalRService implements OnDestroy {
     this.addArticleHandlers();
     this.addCardHandlers();
     this.addCollectionHandlers();
+    this.addCollectionMembershipHandlers();
     this.addExhibitHandlers();
+    this.addExhibitMembershipHandlers();
+    this.addGroupMembershipHandlers();
     this.addTeamCardHandlers();
     this.addTeamHandlers();
     this.addTeamUserHandlers();
@@ -271,6 +292,66 @@ export class SignalRService implements OnDestroy {
 
     this.hubConnection.on('UserArticleDeleted', (id: string) => {
       this.userArticleDataService.deleteFromStore(id);
+    });
+  }
+
+  private addCollectionMembershipHandlers() {
+    this.hubConnection.on(
+      'CollectionMembershipCreated',
+      (collectionMembership: CollectionMembership) => {
+        this.collectionMembershipDataService.updateStore(collectionMembership);
+      }
+    );
+
+    this.hubConnection.on(
+      'CollectionMembershipUpdated',
+      (collectionMembership: CollectionMembership) => {
+        this.collectionMembershipDataService.updateStore(collectionMembership);
+      }
+    );
+
+    this.hubConnection.on('CollectionMembershipDeleted', (id: string) => {
+      this.collectionMembershipDataService.deleteFromStore(id);
+    });
+  }
+
+  private addExhibitMembershipHandlers() {
+    this.hubConnection.on(
+      'ExhibitMembershipCreated',
+      (exhibitMembership: ExhibitMembership) => {
+        this.exhibitMembershipDataService.updateStore(exhibitMembership);
+      }
+    );
+
+    this.hubConnection.on(
+      'ExhibitMembershipUpdated',
+      (exhibitMembership: ExhibitMembership) => {
+        this.exhibitMembershipDataService.updateStore(exhibitMembership);
+      }
+    );
+
+    this.hubConnection.on('ExhibitMembershipDeleted', (id: string) => {
+      this.exhibitMembershipDataService.deleteFromStore(id);
+    });
+  }
+
+  private addGroupMembershipHandlers() {
+    this.hubConnection.on(
+      'GroupMembershipCreated',
+      (groupMembership: GroupMembership) => {
+        this.groupMembershipDataService.updateStore(groupMembership);
+      }
+    );
+
+    this.hubConnection.on(
+      'GroupMembershipUpdated',
+      (groupMembership: GroupMembership) => {
+        this.groupMembershipDataService.updateStore(groupMembership);
+      }
+    );
+
+    this.hubConnection.on('GroupMembershipDeleted', (id: string) => {
+      this.groupMembershipDataService.deleteFromStore(id);
     });
   }
 

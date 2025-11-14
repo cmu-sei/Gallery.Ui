@@ -2,13 +2,10 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-.panel-container {
-  display: flex;
-  flex-flow: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-align: left;
-  margin-left: 10%;
+@use "@angular/material" as mat;
+
+:host {
+  @include mat.form-field-density(-5);
 }
 
 .panel-div {
@@ -19,44 +16,58 @@
   text-align: left;
 }
 
-.user-div {
-  display: flex;
-  flex-flow: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-align: left;
+.sub-panel {
+  width: 90%;
+  margin-left: 5%;
 }
 
-.name-width {
-  width: 600px;
-}
-
-.short-width {
-  width: 150px;
-}
-
-.mat-header-row {
+.header-row {
   min-height: 56px;
-  font-family: "open_sansregular";
 }
 
-.mat-row {
+.row {
   min-height: 48px;
 }
 
-.mat-row, .mat-header-row {
+.row,
+.header-row {
   display: flex;
   border-bottom-width: 1px;
   border-bottom-style: solid;
+  border-color: var(--mat-sys-surface-variant);
   align-items: center;
   padding: 0 24px;
-  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  color: var(--mat-sys-on-background);
 }
 
-.mat-cell, .mat-header-cell {
-  flex: 1;
+.cell,
+.header-cell {
   overflow: hidden;
   word-wrap: break-word;
+}
+
+.mat-accordion .mat-mdc-header-row {
+  padding-left: 1.5rem;
+  padding-right: 2rem;
+  border-bottom: none;
+}
+
+.mat-expansion-panel-header.mat-mdc-row {
+  border-bottom: none;
+}
+
+.mat-expansion-panel {
+  text-align: left;
+}
+
+.search-box {
+  min-width: 100px;
+}
+
+.paginator {
+  min-width: 422px;
 }
 
 .button-margins {
@@ -66,20 +77,6 @@
 
 .sp-icon {
   margin-left: 10px;
-}
-
-.mat-accordion .mat-header-row {
-  padding-left: 1.5rem;
-  padding-right: 2rem;
-  border-bottom: none;
-}
-
-.mat-expansion-panel-header.mat-row {
-  border-bottom: none;
-}
-
-.mat-expansion-panel {
-  text-align: left;
 }
 
 .pad-top {
@@ -92,29 +89,8 @@
 
 .far-right-cell {
   float: right;
-  min-width: 200px;
 }
 
-.five-cell {
-  flex: 5;
-}
-
-.four-cell {
-  flex: 4;
-}
-
-.three-cell {
-  flex: 3;
-}
-
-.two-cell {
-  flex: 2;
-}
-
-.one-cell {
-  flex: 1;
-}
-
-.center-self {
-  align-self: center;
+.button-cell {
+  width: 90px;
 }

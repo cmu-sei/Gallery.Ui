@@ -1,6 +1,6 @@
 <!--
 Copyright 2023 Carnegie Mellon University. All Rights Reserved.
- Released under a MIT (SEI)-style license, please see LICENSE.md in the
+Released under a MIT (SEI)-style license, please see LICENSE.md in the
 project root for license information or contact permission@sei.cmu.edu for full terms.
 -->
 
@@ -11,42 +11,29 @@ project root for license information or contact permission@sei.cmu.edu for full 
   <div class="user-list-container mat-elevation-z8">
 
     <div class="sp-icon">
-      <mat-icon
-        class="mdi-24px"
-        fontIcon="mdi-account-group"
-      ></mat-icon>
-    <span style="margin-left: 10px">
-      Evaluation Users
-    </span>
+      <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
+      <span style="margin-left: 10px">
+        Evaluation Users
+      </span>
     </div>
 
-    <mat-card
-      *ngIf="false"
-      style="display: flex; justify-content: center; align-items: center;"
-    >
+    @if (false) {
+    <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
       <mat-progress-spinner color="primary" mode="indeterminate">
       </mat-progress-spinner>
     </mat-card>
+    }
 
-    <mat-table
-      class="mat-table-all-users"
-      #table
-      [dataSource]="teamUserDataSource"
-      matSort
-    >
+    <mat-table class="mat-table-all-users" #table [dataSource]="teamUserDataSource" matSort>
       <ng-container matColumnDef="team">
-        <mat-header-cell *matHeaderCellDef
-          >Team</mat-header-cell
-        >
+        <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ getTeamName(element.teamId) }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef
-          >User</mat-header-cell
-        >
+        <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ getUserName(element.userId) }}
         </mat-cell>
@@ -56,8 +43,9 @@ project root for license information or contact permission@sei.cmu.edu for full 
         <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <div>
-            <button mat-stroked-button (click)="addObserver(element.id)">
-              Add
+            <button mat-icon-button (click)="addObserver(element.id)" style="outline: none;"
+              title="Add {{ getUserName(element.userId) }}" [disabled]="!canEdit">
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline"></mat-icon>
             </button>
           </div>
         </mat-cell>
@@ -67,7 +55,9 @@ project root for license information or contact permission@sei.cmu.edu for full 
       <mat-row *matRowDef="let row; columns: displayedTeamUserColumns"></mat-row>
     </mat-table>
 
-    <div *ngIf="teamUserDataSource.filteredData.length === 0">No results found</div>
+    @if (teamUserDataSource.filteredData.length === 0) {
+    <div>No results found</div>
+    }
   </div>
 
   <div class="spacer">&nbsp;</div>
@@ -75,42 +65,29 @@ project root for license information or contact permission@sei.cmu.edu for full 
   <div class="observer-list-container mat-elevation-z8">
 
     <div class="sp-icon">
-      <mat-icon
-          class="mdi-24px"
-          fontIcon="mdi-account-multiple"
-      ></mat-icon>
+      <mat-icon class="mdi-24px" fontIcon="mdi-account-multiple"></mat-icon>
       <span style="margin-left: 10px">
         Observers
       </span>
     </div>
 
-    <mat-card
-      *ngIf="false"
-      style="display: flex; justify-content: center; align-items: center;"
-    >
+    @if (false) {
+    <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
       <mat-progress-spinner color="primary" mode="indeterminate">
       </mat-progress-spinner>
     </mat-card>
+    }
 
-    <mat-table
-      class="mat-table-all-users"
-      #table
-      [dataSource]="observerDataSource"
-      matSort
-    >
+    <mat-table class="mat-table-all-users" #table [dataSource]="observerDataSource" matSort>
       <ng-container matColumnDef="team">
-        <mat-header-cell *matHeaderCellDef
-          >Team</mat-header-cell
-        >
+        <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ getTeamName(element.teamId) }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef
-          >User</mat-header-cell
-        >
+        <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ getUserName(element.userId) }}
         </mat-cell>
@@ -120,8 +97,9 @@ project root for license information or contact permission@sei.cmu.edu for full 
         <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <div>
-            <button mat-stroked-button (click)="removeObserver(element.id)">
-              Remove
+            <button mat-icon-button (click)="removeObserver(element.id)" style="outline: none;"
+              title="Remove {{ getUserName(element.userId) }}" [disabled]="!canEdit">
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
             </button>
           </div>
         </mat-cell>

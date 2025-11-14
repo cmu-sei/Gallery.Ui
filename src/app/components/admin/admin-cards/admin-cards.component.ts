@@ -1,9 +1,9 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Collection } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
@@ -14,26 +14,27 @@ import { CardQuery } from 'src/app/data/card/card.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AdminCardEditDialogComponent } from 'src/app/components/admin/admin-card-edit-dialog/admin-card-edit-dialog.component';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
   selector: 'app-admin-cards',
   templateUrl: './admin-cards.component.html',
   styleUrls: ['./admin-cards.component.scss'],
+  standalone: false
 })
-export class AdminCardsComponent implements OnInit, OnDestroy {
+export class AdminCardsComponent implements OnDestroy, OnInit {
+  @Input() selectedCollectionId: string;
+  canEdit = false;
   pageSize = 10;
   pageIndex = 0;
   collectionList: Collection[] = [];
-  selectedCollectionId = '';
   newCard: Card = { id: '', name: '' };
   cardList: Card[];
   displayedCards: Card[];
   isLoading = false;
-  topbarColor = '#ef3a47';
   addingNewCard = false;
   newCardName = '';
   editCard: Card = {};
@@ -41,65 +42,59 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   filteredCardList: Card[] = [];
   filterControl = new UntypedFormControl();
   filterString = '';
-  sort: Sort = {active: 'datePosted', direction: 'desc'};
+  sort: Sort = { active: 'datePosted', direction: 'desc' };
   private unsubscribe$ = new Subject();
 
   constructor(
-    activatedRoute: ActivatedRoute,
-    private router: Router,
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
     public dialogService: DialogService,
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
     private cardDataService: CardDataService,
-    private cardQuery: CardQuery
+    private cardQuery: CardQuery,
+    private permissionDataService: PermissionDataService
   ) {
-    this.cardDataService.unload();
-    this.topbarColor = this.settingsService.settings.AppTopBarHexColor
-      ? this.settingsService.settings.AppTopBarHexColor
-      : this.topbarColor;
-    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
-      this.cardList = [];
-      this.filteredCardList = [];
-      cards.forEach(card => {
-        this.cardList.push({ ...card });
-        if (card.id === this.editCard.id) {
-          this.editCard = { ...card};
-        }
-        this.sortChanged(this.sort);
+    this.cardQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cards) => {
+        this.cardList = [];
+        this.filteredCardList = [];
+        cards.forEach((card) => {
+          this.cardList.push({ ...card });
+          if (card.id === this.editCard.id) {
+            this.editCard = { ...card };
+          }
+          this.sortChanged(this.sort);
+        });
       });
-    });
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.collectionList = collections;
-    });
-    this.collectionDataService.load();
-
+    this.cardQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cards) => {
+        this.cardList = Array.from(cards);
+        this.applyFilter();
+        this.isLoading = false;
+      });
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
         this.filterString = term.trim().toLowerCase();
         this.applyFilter();
       });
-
-    activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.selectedCollectionId = params.get('collection');
-      this.cardDataService.unload();
-      if (this.selectedCollectionId) {
-        this.cardDataService.loadByCollection(this.selectedCollectionId);
-      }
-    });
   }
 
   ngOnInit() {
-    this.loadInitialData();
+    this.loadCards();
   }
 
-  loadInitialData() {
-    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
-      this.cardList = Array.from(cards);
-      this.applyFilter();
-    });
+  loadCards() {
+    this.isLoading = true;
+    this.cardDataService.loadByCollection(this.selectedCollectionId);
+    this.canEdit = this.permissionDataService.canEditCollection(
+      this.selectedCollectionId
+    );
   }
 
   addOrEditCard(card: Card) {
@@ -107,16 +102,16 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
       card = {
         name: '',
         description: '',
-        collectionId: this.selectedCollectionId
+        collectionId: this.selectedCollectionId,
       };
     } else {
-      card = {... card};
+      card = { ...card };
     }
     const dialogRef = this.dialog.open(AdminCardEditDialogComponent, {
       width: '480px',
       data: {
         card: card,
-        collectionList: this.collectionList
+        collectionList: this.collectionList,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -128,7 +123,10 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   }
 
   togglePanel(card: Card) {
-    this.editCard = this.editCard.id === card.id ? this.editCard = {} : this.editCard = { ...card};
+    this.editCard =
+      this.editCard.id === card.id
+        ? (this.editCard = {})
+        : (this.editCard = { ...card });
   }
 
   cancelCardAdd() {
@@ -137,10 +135,9 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   }
 
   selectCollection(collectionId: string) {
-    this.router.navigate([], {
-      queryParams: { collection: collectionId },
-      queryParamsHandling: 'merge',
-    });
+    this.cardList = [];
+    this.isLoading = true;
+    this.collectionDataService.setActive(collectionId);
   }
 
   selectCard(card: Card) {
@@ -171,14 +168,15 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
   }
 
   cancelEdit() {
-    this.editCard = { ... this.originalCard };
+    this.editCard = { ...this.originalCard };
   }
 
   applyFilter() {
-    this.filteredCardList = this.cardList.filter(card =>
-      !this.filterString ||
-      card.name.toLowerCase().includes(this.filterString) ||
-      card.description.toLowerCase().includes(this.filterString)
+    this.filteredCardList = this.cardList.filter(
+      (card) =>
+        !this.filterString ||
+        card.name.toLowerCase().includes(this.filterString) ||
+        card.description.toLowerCase().includes(this.filterString)
     );
     this.sortChanged(this.sort);
   }
@@ -189,16 +187,13 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    this.filteredCardList.sort((a, b) => this.sortCards(a, b, sort.active, sort.direction));
+    this.filteredCardList.sort((a, b) =>
+      this.sortCards(a, b, sort.active, sort.direction)
+    );
     this.applyPagination();
   }
 
-  private sortCards(
-    a: Card,
-    b: Card,
-    column: string,
-    direction: string
-  ) {
+  private sortCards(a: Card, b: Card, column: string, direction: string) {
     const isAsc = direction !== 'desc';
     switch (column) {
       case 'name':
@@ -213,26 +208,22 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
         );
       case 'collectionId':
         return (
-          (this.getCollectionName(a.collectionId).toLowerCase() < this.getCollectionName(b.collectionId).toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
+          (this.getCollectionName(a.collectionId).toLowerCase() <
+            this.getCollectionName(b.collectionId).toLowerCase()
+            ? -1
+            : 1) * (isAsc ? 1 : -1)
         );
       case 'move':
-        return (
-          (a.move < b.move ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.move < b.move ? -1 : 1) * (isAsc ? 1 : -1);
       case 'inject':
-        return (
-          (a.inject < b.inject ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (a.inject < b.inject ? -1 : 1) * (isAsc ? 1 : -1);
       default:
         return 0;
     }
   }
 
   getCollectionName(collectionId: string) {
-    return this.collectionList.find(c => c.id === collectionId).name;
+    return this.collectionList.find((c) => c.id === collectionId).name;
   }
 
   paginatorEvent(page: PageEvent) {
@@ -243,12 +234,14 @@ export class AdminCardsComponent implements OnInit, OnDestroy {
 
   applyPagination() {
     const startIndex = this.pageIndex * this.pageSize;
-    this.displayedCards = this.filteredCardList.slice(startIndex, startIndex + this.pageSize);
+    this.displayedCards = this.filteredCardList.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
   }
 
   ngOnDestroy() {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

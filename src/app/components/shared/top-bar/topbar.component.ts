@@ -11,18 +11,19 @@ import {
   Output,
 } from '@angular/core';
 import { ComnAuthQuery, ComnAuthService, Theme } from '@cmusei/crucible-common';
-import { User as AuthUser } from 'oidc-client';
+import { CurrentUserState } from 'src/app/data/user/user.store';
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { UserDataService } from 'src/app/data/user/user-data.service';
+import { CurrentUserQuery } from 'src/app/data/user/user.query';
 import { TopbarView } from './topbar.models';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 
 @Component({
-  selector: 'app-topbar',
-  templateUrl: './topbar.component.html',
-  styleUrls: ['./topbar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-topbar',
+    templateUrl: './topbar.component.html',
+    styleUrls: ['./topbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TopbarComponent implements OnInit, OnDestroy {
   @Input() title?: string;
@@ -37,19 +38,19 @@ export class TopbarComponent implements OnInit, OnDestroy {
   @Output() setTeam?: EventEmitter<string> = new EventEmitter<string>();
   @Output() editView?: EventEmitter<any> = new EventEmitter<any>();
   @Output() urlNavigate?: EventEmitter<string> = new EventEmitter<string>();
-  currentUser$: Observable<AuthUser>;
+  currentUser$: Observable<CurrentUserState>;
   theme$: Observable<Theme>;
   unsubscribe$: Subject<null> = new Subject<null>();
   TopbarView = TopbarView;
   constructor(
     private authService: ComnAuthService,
-    private loggedInUserService: UserDataService,
+    private currentUserQuery: CurrentUserQuery,
     private authQuery: ComnAuthQuery,
     private uiDataService: UIDataService
   ) {}
 
   ngOnInit() {
-    this.currentUser$ = this.loggedInUserService.loggedInUser.pipe(
+    this.currentUser$ = this.currentUserQuery.select().pipe(
       filter((user) => user !== null),
       takeUntil(this.unsubscribe$)
     );

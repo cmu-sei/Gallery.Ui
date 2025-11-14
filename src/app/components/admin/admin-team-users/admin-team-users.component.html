@@ -4,80 +4,46 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div class="full-width">
-
-  <div class="user-list-container mat-elevation-z8">
-
-    <div class="sp-icon">
-      <mat-icon
-        class="mdi-24px"
-        fontIcon="mdi-account-multiple"
-      ></mat-icon>
-    <span style="margin-left: 10px">
+  <div class="user-list-container">
+    <div class="user-list-header">
+      <mat-icon class="mdi-24px right-10" fontIcon="mdi-account-multiple"></mat-icon>
       All Users
-    </span>
     </div>
-
-    <div>
-      <mat-icon
-        style="transform: scale(0.85); margin-right: 5px; margin-left: 10px;"
-        svgIcon="ic_magnify_search"
-      ></mat-icon>
-      <mat-form-field style="width: 220px;">
-        <input matInput [formControl]="filterControl" placeholder="Search" />
-      </mat-form-field>
-      <button
-        *ngIf="filterString != ''"
-        mat-icon-button
-        (click)="clearFilter()"
-        style="outline: none;"
-        title="Clear Search"
-      >
-        <mat-icon
-          style="transform: scale(0.85);"
-          svgIcon="ic_clear"
-        ></mat-icon>
-      </button>
-    </div>
-
-    <mat-card
-      *ngIf="false"
-      style="display: flex; justify-content: center; align-items: center;"
-    >
-      <mat-progress-spinner color="primary" mode="indeterminate">
-      </mat-progress-spinner>
-    </mat-card>
-
-    <mat-table
-      class="mat-table-all-users"
-      #table
-      [dataSource]="userDataSource"
-      matSort
-      (matSortChange)="onSortChange($event)"
-    >
+    <mat-table class="mat-table-all-users" #table [dataSource]="userDataSource" matSort
+      (matSortChange)="onSortChange($event)">
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          >User Name</mat-header-cell
-        >
+        <mat-header-cell *matHeaderCellDef mat-sort-header>User Name</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <div *ngIf="element.name !== null">{{ element.name }}</div>
-          <div *ngIf="element.name === null">{{ element.id }}</div>
+          @if (element.name !== null) {
+          <div>{{ element.name }}</div>
+          }
+          @if (element.name === null) {
+          <div>{{ element.id }}</div>
+          }
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="id">
-        <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>
+          <mat-form-field>
+            <input matInput [formControl]="filterControl" placeholder="Search" />
+          </mat-form-field>
+          <button mat-icon-button (click)="clearFilter()" style="outline: none;" title="Clear Search"
+            [disabled]="!filterString">
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+          </button>
+        </mat-header-cell>
         <mat-cell *matCellDef="let element">
           <div>
-            <button
-              mat-icon-button
-              (click)="addUserToTeam(element)"
-              style="outline: none;"
-              title="Add {{ element.name }} to Team"
-              *ngIf="!onAnotherTeam(element.id)"
-            >
-              <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle-outline"></mat-icon>
+            @if (!onAnotherTeam(element.id)) {
+            <button mat-icon-button (click)="addUserToTeam(element)" style="outline: none;"
+              title="Add {{ element.name }} to Team" [disabled]="!canEdit">
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline"></mat-icon>
             </button>
-            <label *ngIf="onAnotherTeam(element.id)">{{ getUserTeamName(element.id) }}</label>
+            }
+            @if (onAnotherTeam(element.id)) {
+            <label>{{ getUserTeamName(element.id) }}</label>
+            }
           </div>
         </mat-cell>
       </ng-container>
@@ -86,7 +52,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-row *matRowDef="let row; columns: displayedUserColumns"></mat-row>
     </mat-table>
 
-    <div *ngIf="userDataSource.filteredData.length === 0">No results found</div>
+    @if (userDataSource.filteredData.length === 0) {
+    <div>No results found</div>
+    }
   </div>
 
   <div class="spacer">&nbsp;</div>
@@ -94,48 +62,33 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="team-list-container mat-elevation-z8">
 
     <div class="sp-icon">
-      <mat-icon
-          class="mdi-24px"
-          fontIcon="mdi-account-group"
-      ></mat-icon>
+      <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
       <span style="margin-left: 10px">
         Team Users
       </span>
     </div>
 
-    <mat-card
-      *ngIf="false"
-      style="display: flex; justify-content: center; align-items: center;"
-    >
+    @if (false) {
+    <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
       <mat-progress-spinner color="primary" mode="indeterminate">
       </mat-progress-spinner>
     </mat-card>
+    }
 
-    <mat-table
-      class="mat-table-all-users"
-      #table
-      [dataSource]="teamUserDataSource"
-      matSort
-      (matSortChange)="onSortTeamChange($event)"
-    >
+    <mat-table class="mat-table-all-users" #table [dataSource]="teamUserDataSource" matSort
+      (matSortChange)="onSortTeamChange($event)">
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          >User Name</mat-header-cell
-        >
+        <mat-header-cell *matHeaderCellDef mat-sort-header>User Name</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <div>{{ getUserName(element.userId) }}</div>
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="isObserver">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          >Observer</mat-header-cell
-        >
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Observer</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <mat-checkbox
-            [checked]="element.isObserver"
-            (change)="setObserverValue(element.id, $event.checked)"
-          ></mat-checkbox>
+          <mat-checkbox [checked]="element.isObserver" (change)="setObserverValue(element.id, $event.checked)"
+            [disabled]="!canEdit"></mat-checkbox>
         </mat-cell>
       </ng-container>
 
@@ -143,8 +96,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <div>
-            <button mat-stroked-button (click)="removeUserFromTeam(element)">
-              Remove
+            <button mat-icon-button (click)="removeUserFromTeam(element)" style="outline: none;"
+              title="Remove {{ element.name }} from Team" [disabled]="!canEdit">
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
             </button>
           </div>
         </mat-cell>

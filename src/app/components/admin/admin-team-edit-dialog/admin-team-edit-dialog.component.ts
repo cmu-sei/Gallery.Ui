@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -23,37 +23,23 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-const MIN_NAME_LENGTH = 3;
-
 @Component({
-  selector: 'app-admin-team-edit-dialog',
-  templateUrl: './admin-team-edit-dialog.component.html',
-  styleUrls: ['./admin-team-edit-dialog.component.scss'],
+    selector: 'app-admin-team-edit-dialog',
+    templateUrl: './admin-team-edit-dialog.component.html',
+    styleUrls: ['./admin-team-edit-dialog.component.scss'],
+    standalone: false
 })
-
 export class AdminTeamEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
-  public teamNameFormControl = new UntypedFormControl(
-    this.data.team.name,
-    [
-      Validators.required,
-      Validators.minLength(MIN_NAME_LENGTH),
-    ]
-  );
+  public teamNameFormControl = new UntypedFormControl(this.data.team.name, [
+    Validators.required,
+  ]);
   public teamShortNameFormControl = new UntypedFormControl(
     this.data.team.shortName,
-    [
-      Validators.required,
-      Validators.minLength(MIN_NAME_LENGTH),
-    ]
+    [Validators.required]
   );
-  public emailFormControl = new UntypedFormControl(
-    this.data.team.email ,
-    []
-  );
-
-  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
+  public emailFormControl = new UntypedFormControl(this.data.team.email, []);
 
   constructor(
     public dialogService: DialogService,
@@ -79,9 +65,7 @@ export class AdminTeamEditDialogComponent {
     if (!saveChanges) {
       this.editComplete.emit({ saveChanges: false, team: null });
     } else {
-      this.data.team.name = this.teamNameFormControl.value
-        .toString()
-        .trim();
+      this.data.team.name = this.teamNameFormControl.value.toString().trim();
       this.data.team.shortName = this.teamShortNameFormControl.value
         .toString()
         .trim();
@@ -103,7 +87,8 @@ export class AdminTeamEditDialogComponent {
         this.data.team.name = this.teamNameFormControl.value.toString();
         break;
       case 'shortName':
-        this.data.team.shortName = this.teamShortNameFormControl.value.toString();
+        this.data.team.shortName =
+          this.teamShortNameFormControl.value.toString();
         break;
       case 'email':
         this.data.team.email = this.emailFormControl.value.toString();
@@ -114,7 +99,6 @@ export class AdminTeamEditDialogComponent {
   }
 
   getUserName(userId: string) {
-    return this.data.userList.find(u => u.id === userId).name;
+    return this.data.userList.find((u) => u.id === userId).name;
   }
-
 }

@@ -3,25 +3,38 @@
 
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
-  selector: 'app-article-share-dialog',
-  templateUrl: './article-share-dialog.component.html',
-  styleUrls: ['./article-share-dialog.component.scss'],
+    selector: 'app-article-share-dialog',
+    templateUrl: './article-share-dialog.component.html',
+    styleUrls: ['./article-share-dialog.component.scss'],
+    standalone: false
 })
-
 export class ArticleShareDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
   shareTeamsControl = new UntypedFormControl();
-  subjectFormControl = new UntypedFormControl(this.data.article.sourceName + ': ' + this.data.article.name);
-  messageFormControl = new UntypedFormControl('<p>FYSA</p><p>- - - - - -</p><p>' +
-    this.data.article.sourceType + ' from ' + this.data.article.sourceName + '</p><p>' +
-    this.data.article.name + '</p>&nbsp;<p>' + this.data.article.summary + '</p>&nbsp;<p>' +
-    '<a href="' + location.origin + '/article/' + this.data.article.id
-          + '" rel="noopener noreferrer" target="_blank">Article Text</a></p>');
+  subjectFormControl = new UntypedFormControl(
+    this.data.article.sourceName + ': ' + this.data.article.name
+  );
+  messageFormControl = new UntypedFormControl(
+    '<p>FYSA</p><p>- - - - - -</p><p>' +
+      this.data.article.sourceType +
+      ' from ' +
+      this.data.article.sourceName +
+      '</p><p>' +
+      this.data.article.name +
+      '</p>&nbsp;<p>' +
+      this.data.article.summary +
+      '</p>&nbsp;<p>' +
+      '<a href="' +
+      location.origin +
+      '/article/' +
+      this.data.article.id +
+      '" rel="noopener noreferrer" target="_blank">Article Text</a></p>'
+  );
   editorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -38,18 +51,16 @@ export class ArticleShareDialogComponent {
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [
-      {class: 'arial', name: 'Arial'},
-      {class: 'times-new-roman', name: 'Times New Roman'},
-      {class: 'calibri', name: 'Calibri'},
-      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' },
     ],
     uploadUrl: '',
     uploadWithCredentials: false,
     sanitize: true,
     toolbarPosition: 'top',
-    toolbarHiddenButtons: [
-      ['backgroundColor']
-    ]
+    toolbarHiddenButtons: [['backgroundColor']],
   };
 
   constructor(
@@ -59,9 +70,12 @@ export class ArticleShareDialogComponent {
   ) {
     dialogRef.disableClose = true;
     if (this.data.article.url) {
-      this.messageFormControl
-        .setValue(this.messageFormControl.value + '<a href="' + this.data.article.url
-          + '" rel="noopener noreferrer" target="_blank">More Information</a>');
+      this.messageFormControl.setValue(
+        this.messageFormControl.value +
+          '<a href="' +
+          this.data.article.url +
+          '" rel="noopener noreferrer" target="_blank">More Information</a>'
+      );
     }
   }
 
@@ -77,10 +91,9 @@ export class ArticleShareDialogComponent {
         shareDetails: {
           toTeamIdList: this.shareTeamsControl.value,
           subject: this.subjectFormControl.value,
-          message: this.messageFormControl.value
-        }
+          message: this.messageFormControl.value,
+        },
       });
     }
   }
-
 }

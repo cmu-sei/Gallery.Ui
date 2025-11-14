@@ -11,24 +11,24 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <hr />
 
     <div>
-      <mat-table
-        class="mat-table-exhibit-teams"
-        #table
-        [dataSource]="exhibitTeamDataSource"
-        matSort
-      >
+      <mat-table class="mat-table-exhibit-teams" #table [dataSource]="exhibitTeamDataSource" matSort>
         <ng-container matColumnDef="name">
           <mat-cell *matCellDef="let element">
-            <div *ngIf="element.name !== null">{{ element.shortName }}</div>
-            <div *ngIf="element.name === null">{{ element.id }}</div>
+            @if (element.name !== null) {
+            <div>{{ element.shortName }}</div>
+            }
+            @if (element.name === null) {
+            <div>{{ element.id }}</div>
+            }
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="id">
           <mat-cell *matCellDef="let element">
             <div class="push-right">
-              <button mat-stroked-button (click)="addTeamToArticle(element)">
-                Add
+              <button mat-icon-button (click)="addTeamToArticle(element)" style="outline: none;"
+                title="Add {{ element.shortName }}" [disabled]="!canEdit">
+                <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
               </button>
             </div>
           </mat-cell>
@@ -39,36 +39,36 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
 
-    <div class="article-teams-list-container mat-elevation-z8">
-      <div class="sp-icon">
-        <b>Selected Teams</b>
-      </div>
-      <hr />
-      <mat-table
-        class="mat-table-article-teams"
-        #table
-        [dataSource]="articleTeamDataSource"
-        matSort
-      >
-        <ng-container matColumnDef="name">
-          <mat-cell *matCellDef="let element">
-            <div *ngIf="element.name !== null">{{ element.shortName }}</div>
-            <div *ngIf="element.name === null">{{ element.id }}</div>
-          </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="id">
-          <mat-cell *matCellDef="let element">
-            <div class="push-right">
-              <button mat-stroked-button (click)="removeTeamFromArticle(element)">
-                Remove
-              </button>
-            </div>
-          </mat-cell>
-        </ng-container>
-
-        <mat-row *matRowDef="let row; columns: displayedTeamColumns"></mat-row>
-      </mat-table>
-
+  <div class="article-teams-list-container mat-elevation-z8">
+    <div class="sp-icon">
+      <b>Selected Teams</b>
     </div>
+    <hr />
+    <mat-table class="mat-table-article-teams" #table [dataSource]="articleTeamDataSource" matSort>
+      <ng-container matColumnDef="name">
+        <mat-cell *matCellDef="let element">
+          @if (element.name !== null) {
+          <div>{{ element.shortName }}</div>
+          }
+          @if (element.name === null) {
+          <div>{{ element.id }}</div>
+          }
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="id">
+        <mat-cell *matCellDef="let element">
+          <div class="push-right">
+            <button mat-icon-button (click)="removeTeamFromArticle(element)" style="outline: none;"
+              title="Remove {{ element.shortName }}" [disabled]="!canEdit">
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
+            </button>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <mat-row *matRowDef="let row; columns: displayedTeamColumns"></mat-row>
+    </mat-table>
+
+  </div>
 </div>

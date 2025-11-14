@@ -13,6 +13,8 @@ export enum Section {
   teamcards = 'teamcards',
   articles = 'articles',
   exhibits = 'exhibits',
+  roles = 'roles',
+  groups = 'groups',
   // home sections
   wall = 'wall',
   archive = 'archive',

@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -23,36 +23,22 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-const MIN_NAME_LENGTH = 3;
-
 @Component({
-  selector: 'app-admin-user-edit-dialog',
-  templateUrl: './admin-user-edit-dialog.component.html',
-  styleUrls: ['./admin-user-edit-dialog.component.scss'],
+    selector: 'app-admin-user-edit-dialog',
+    templateUrl: './admin-user-edit-dialog.component.html',
+    styleUrls: ['./admin-user-edit-dialog.component.scss'],
+    standalone: false
 })
-
 export class AdminUserEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
 
-  public userNameFormControl = new UntypedFormControl(
-    this.data.user.name,
-    [
-      Validators.required,
-      Validators.minLength(MIN_NAME_LENGTH),
-    ]
-  );
-  public emailFormControl = new UntypedFormControl(
-    this.data.user.email ,
-    []
-  );
-  public idFormControl = new UntypedFormControl(
-    this.data.user.id ,
-    [
-      Validators.required
-    ]
-  );
-
-  readonly MIN_NAME_LENGTH = MIN_NAME_LENGTH;
+  public userNameFormControl = new UntypedFormControl(this.data.user.name, [
+    Validators.required,
+  ]);
+  public emailFormControl = new UntypedFormControl(this.data.user.email, []);
+  public idFormControl = new UntypedFormControl(this.data.user.id, [
+    Validators.required,
+  ]);
 
   constructor(
     public dialogService: DialogService,
@@ -74,9 +60,7 @@ export class AdminUserEditDialogComponent {
       this.idFormControl.value &&
       this.idFormControl.value.toString()[0] === ' '
     ) {
-      this.idFormControl.setValue(
-        this.idFormControl.value.toString().trim()
-      );
+      this.idFormControl.setValue(this.idFormControl.value.toString().trim());
     }
   }
 
@@ -87,12 +71,8 @@ export class AdminUserEditDialogComponent {
     if (!saveChanges) {
       this.editComplete.emit({ saveChanges: false, user: null });
     } else {
-      this.data.user.name = this.userNameFormControl.value
-        .toString()
-        .trim();
-      this.data.user.id = this.idFormControl.value
-        .toString()
-        .trim();
+      this.data.user.name = this.userNameFormControl.value.toString().trim();
+      this.data.user.id = this.idFormControl.value.toString().trim();
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,
@@ -111,7 +91,9 @@ export class AdminUserEditDialogComponent {
         this.data.user.name = this.userNameFormControl.value.toString();
         break;
       case 'email':
-        this.data.user.email = this.emailFormControl.value ? this.emailFormControl.value.toString() : '';
+        this.data.user.email = this.emailFormControl.value
+          ? this.emailFormControl.value.toString()
+          : '';
         break;
       case 'id':
         this.data.user.id = this.idFormControl.value.toString();
@@ -120,5 +102,4 @@ export class AdminUserEditDialogComponent {
         break;
     }
   }
-
 }

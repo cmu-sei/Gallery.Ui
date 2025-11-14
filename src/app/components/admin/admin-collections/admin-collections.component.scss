@@ -1,6 +1,12 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+@use "@angular/material" as mat;
+
+:host {
+  @include mat.form-field-density(-5);
+}
+
 .panel-container {
   display: flex;
   flex-flow: column;
@@ -26,6 +32,16 @@
   text-align: left;
 }
 
+.sub-panel {
+  width: 90%;
+  margin-left: 5%;
+  min-width: 700px;
+}
+
+.bottom-space {
+  margin-bottom: 20px;
+}
+
 .name-width {
   width: 600px;
 }
@@ -34,25 +50,26 @@
   width: 150px;
 }
 
-.mat-header-row {
+.header-row {
   min-height: 56px;
 }
 
-.mat-row {
+.row {
   min-height: 48px;
 }
 
-.mat-row, .mat-header-row {
+.row,
+.header-row {
   display: flex;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
   align-items: center;
+  justify-content: center;
   padding: 0 24px;
-  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
 }
 
-.mat-cell, .mat-header-cell {
-  flex: 1;
+.cell,
+.header-cell {
   overflow: hidden;
   word-wrap: break-word;
 }
@@ -66,13 +83,13 @@
   margin-left: 10px;
 }
 
-.mat-accordion .mat-header-row {
+.mat-accordion .mat-mdc-header-row {
   padding-left: 1.5rem;
   padding-right: 2rem;
   border-bottom: none;
 }
 
-.mat-expansion-panel-header.mat-row {
+.mat-expansion-panel-header.mat-mdc-row {
   border-bottom: none;
 }
 
@@ -86,34 +103,12 @@
 
 .first-cell {
   flex: 2;
+  align-self: center;
   min-width: 160px;
+  max-width: 180px;
 }
 
 .name-cell {
   flex: 3;
   min-width: 200px;
-}
-
-.five-cell {
-  flex: 5;
-}
-
-.four-cell {
-  flex: 4;
-}
-
-.three-cell {
-  flex: 3;
-}
-
-.two-cell {
-  flex: 2;
-}
-
-.one-cell {
-  flex: 1;
-}
-
-.center-self {
-  align-self: center;
 }

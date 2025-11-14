@@ -3,7 +3,9 @@ Copyright 2023 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 <div class="article-container background">
-  <div class="page" *ngIf="article && article.description">
-    <angular-editor class="angular-editor" [ngModel]="article.description" [config]="editorConfig"></angular-editor>
-  </div>
+  @if (article && article.description) {
+    <div class="page">
+      <angular-editor class="angular-editor" [ngModel]="article.description" [config]="editorConfig"></angular-editor>
+    </div>
+  }
 </div>

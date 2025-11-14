@@ -1,32 +1,29 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  Input,
-  ViewChild,
-} from '@angular/core';
-import { LegacyPageEvent as PageEvent} from '@angular/material/legacy-paginator';
+import { Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort, MatSortable } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Team, TeamUser, User } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 import { TeamUserQuery } from 'src/app/data/team-user/team-user.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
+import { UserQuery } from 'src/app/data/user/user.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-admin-team-users',
-  templateUrl: './admin-team-users.component.html',
-  styleUrls: ['./admin-team-users.component.scss'],
+    selector: 'app-admin-team-users',
+    templateUrl: './admin-team-users.component.html',
+    styleUrls: ['./admin-team-users.component.scss'],
+    standalone: false
 })
 export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   @Input() teamId: string;
+  @Input() canEdit: boolean;
   userList: User[] = [];
   teamUsers: TeamUser[] = [];
   otherTeamUsers: TeamUser[] = [];
@@ -41,44 +38,57 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   defaultPageSize = 100;
   pageEvent: PageEvent;
   private unsubscribe$ = new Subject();
-  sort: Sort = {active: 'name', direction: 'asc'};
+  sort: Sort = { active: 'name', direction: 'asc' };
 
   constructor(
     private teamQuery: TeamQuery,
     private teamUserDataService: TeamUserDataService,
     private teamUserQuery: TeamUserQuery,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private userQuery: UserQuery
   ) {
-    this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
-      this.userList = users;
-      this.setDataSources();
-    });
-    this.teamUserQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(tUsers => {
-      this.teamUsers = tUsers.filter(tu => tu.teamId === this.teamId);
-      this.otherTeamUsers = tUsers.filter(tu => tu.teamId !== this.teamId);
-      this.setDataSources();
-    });
+    this.userQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((users) => {
+        this.userList = users;
+        this.setDataSources();
+        this.applyFilter();
+      });
+    this.teamUserQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((tUsers) => {
+        this.teamUsers = tUsers.filter((tu) => tu.teamId === this.teamId);
+        this.otherTeamUsers = tUsers.filter((tu) => tu.teamId !== this.teamId);
+        this.setDataSources();
+      });
     // observe the exhibit teams
-    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
-      this.teamList = teams ? teams : [];
-    });
+    this.teamQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teams) => {
+        this.teamList = teams ? teams : [];
+      });
     this.pageEvent = new PageEvent();
     this.pageEvent.pageIndex = 0;
     this.pageEvent.pageSize = this.defaultPageSize;
   }
 
   ngOnInit() {
-    this.filterControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      this.filterString = this.filterControl.value;
-      this.applyFilter();
-    });
-    this.userDataService.userList.pipe(takeUntil(this.unsubscribe$)).subscribe(users => {
-      this.userList = users;
-      this.applyFilter();
-    });
+    this.filterControl.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.filterString = this.filterControl.value;
+        this.applyFilter();
+      });
     this.filterControl.setValue('');
-    this.teamUsers = this.teamUserQuery.getAll().filter(tu => tu.teamId === this.teamId);
-    this.otherTeamUsers = this.teamUserQuery.getAll().filter(tu => tu.teamId !== this.teamId);
+    this.teamUsers = this.teamUserQuery
+      .getAll()
+      .filter((tu) => tu.teamId === this.teamId);
+    this.otherTeamUsers = this.teamUserQuery
+      .getAll()
+      .filter((tu) => tu.teamId !== this.teamId);
     this.setDataSources();
   }
 
@@ -98,7 +108,9 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
         return 0;
       }
     });
-    const newAllUsers = !this.userList ? new Array<User>() : this.userList.slice(0);
+    const newAllUsers = !this.userList
+      ? new Array<User>()
+      : this.userList.slice(0);
     this.teamUserDataSource.data.forEach((tu) => {
       const index = newAllUsers.findIndex((u) => u.id === tu.userId);
       if (index >= 0) {
@@ -109,9 +121,11 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   }
 
   applyFilter() {
-    const searchTerm = this.filterControl.value ? this.filterControl.value.toLowerCase() : '';
-    const filteredData = this.userList.filter(user =>
-      !searchTerm || user.name.toLowerCase().includes(searchTerm)
+    const searchTerm = this.filterControl.value
+      ? this.filterControl.value.toLowerCase()
+      : '';
+    const filteredData = this.userList.filter(
+      (user) => !searchTerm || user.name.toLowerCase().includes(searchTerm)
     );
     this.sortUserData(filteredData);
   }
@@ -140,7 +154,11 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
         case 'name':
           return this.compare(aName, bName, isAsc);
         case 'isObserver':
-          return this.compare(String(a.isObserver), String(b.isObserver), isAsc);
+          return this.compare(
+            String(a.isObserver),
+            String(b.isObserver),
+            isAsc
+          );
         default:
           return 0;
       }
@@ -163,14 +181,14 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   }
 
   getUserName(id: string) {
-    const user = this.userList.find(u => u.id === id);
+    const user = this.userList.find((u) => u.id === id);
     return user ? user.name : '?';
   }
 
   addUserToTeam(user: User): void {
     const teamUser = {
       teamId: this.teamId,
-      userId: user.id
+      userId: user.id,
     } as TeamUser;
     this.teamUserDataService.add(teamUser);
   }
@@ -184,14 +202,14 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   }
 
   onAnotherTeam(userId: string): boolean {
-    return this.otherTeamUsers.some(tu => tu.userId === userId);
+    return this.otherTeamUsers.some((tu) => tu.userId === userId);
   }
 
   getUserTeamName(userId: string): string {
     let teamName = '';
-    const teamUser = this.otherTeamUsers.find(tu => tu.userId === userId);
+    const teamUser = this.otherTeamUsers.find((tu) => tu.userId === userId);
     if (teamUser && teamUser.teamId) {
-      const team = this.teamList.find(t => t.id === teamUser.teamId);
+      const team = this.teamList.find((t) => t.id === teamUser.teamId);
       if (team) {
         teamName = team.shortName;
       }
@@ -203,5 +221,4 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

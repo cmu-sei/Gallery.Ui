@@ -2,20 +2,22 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
-  selector: 'app-article-more-dialog',
-  templateUrl: './article-more-dialog.component.html',
-  styleUrls: ['./article-more-dialog.component.scss'],
+    selector: 'app-article-more-dialog',
+    templateUrl: './article-more-dialog.component.html',
+    styleUrls: ['./article-more-dialog.component.scss'],
+    standalone: false
 })
-
 export class ArticleMoreDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
-  safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.data.article.url);
+  safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+    this.data.article.url
+  );
   safeContent: SafeHtml = '';
   editorConfig: AngularEditorConfig = {
     editable: false,
@@ -41,11 +43,18 @@ export class ArticleMoreDialogComponent {
   ) {
     dialogRef.disableClose = true;
     if (this.data.useUrl) {
-      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.data.article.url);
+      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+        this.data.article.url
+      );
     } else {
       const parser = new DOMParser();
-      const document = parser.parseFromString(this.data.article.description, 'text/html');
-      this.safeContent = this.sanitizer.bypassSecurityTrustHtml(document.body.outerHTML);
+      const document = parser.parseFromString(
+        this.data.article.description,
+        'text/html'
+      );
+      this.safeContent = this.sanitizer.bypassSecurityTrustHtml(
+        document.body.outerHTML
+      );
     }
   }
 
@@ -55,8 +64,7 @@ export class ArticleMoreDialogComponent {
   handleMoreIsComplete(openNewTab: boolean): void {
     this.editComplete.emit({
       openNewTab: openNewTab,
-      useUrl: this.data.useUrl
+      useUrl: this.data.useUrl,
     });
   }
-
 }

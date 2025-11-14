@@ -5,15 +5,12 @@ import { CollectionStore } from './collection.store';
 import { CollectionQuery } from './collection.query';
 import { Injectable } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  Collection,
-  CollectionService,
-} from 'src/app/generated/api';
+import { Collection, CollectionService } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
-import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { PermissionDataService } from '../permission/permission-data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +35,7 @@ export class CollectionDataService {
     private collectionStore: CollectionStore,
     private collectionQuery: CollectionQuery,
     private collectionService: CollectionService,
+    private permissionDataService: PermissionDataService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -89,9 +87,9 @@ export class CollectionDataService {
                   ('' + collection.description)
                     .toLowerCase()
                     .includes(filterTerm.toLowerCase()) ||
-                    collection.id
-                      .toLowerCase()
-                      .includes(filterTerm.toLowerCase())
+                  collection.id
+                    .toLowerCase()
+                    .includes(filterTerm.toLowerCase())
               )
             : []
       )
@@ -204,12 +202,14 @@ export class CollectionDataService {
         }),
         take(1)
       )
-      .subscribe((s) => {
-        this.collectionStore.add(s);
-      },
-      (error) => {
-        this.collectionStore.setLoading(false);
-      });
+      .subscribe(
+        (s) => {
+          this.collectionStore.add(s);
+        },
+        (error) => {
+          this.collectionStore.setLoading(false);
+        }
+      );
   }
 
   updateCollection(collection: Collection) {
@@ -243,24 +243,16 @@ export class CollectionDataService {
   uploadJson(file: File, observe: any, reportProgress: boolean) {
     this.collectionStore.setLoading(true);
     this.collectionService
-      .uploadJson(file, observe, reportProgress)
-      .subscribe((event) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          const uploadProgress = Math.round((100 * event.loaded) / event.total);
-          this.uploadProgress.next(uploadProgress);
-        } else if (event instanceof HttpResponse) {
-          this.uploadProgress.next(0);
+      .uploadJsonFiles(file, observe, reportProgress)
+      .subscribe(
+        (collection) => {
+          this.collectionStore.upsert(collection.id, collection);
+        },
+        (error) => {
           this.collectionStore.setLoading(false);
-          if (event.status === 200) {
-            const collection = event.body;
-            this.collectionStore.upsert(collection.id, collection);
-          }
+          this.uploadProgress.next(0);
         }
-      },
-      (error) => {
-        this.collectionStore.setLoading(false);
-        this.uploadProgress.next(0);
-      });
+      );
   }
   setActive(id: string) {
     this.collectionStore.setActive(id);

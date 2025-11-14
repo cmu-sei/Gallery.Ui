@@ -10,9 +10,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-label>Team</mat-label>
       <mat-select placeholder="Team" [(ngModel)]="selectedTeamId" (selectionChange)="sortChanged(sort)">
         <mat-option value=''>All Teams</mat-option>
-        <mat-option *ngFor="let team of teamList" [value]="team.id">
+        @for (team of teamList; track team) {
+        <mat-option [value]="team.id">
           {{ team.name }}
         </mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
@@ -21,9 +23,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-label>Card</mat-label>
       <mat-select placeholder="Card" [(ngModel)]="selectedCardId" (selectionChange)="sortChanged(sort)">
         <mat-option value=''>All Cards</mat-option>
-        <mat-option *ngFor="let card of cardList" [value]="card.id">
+        @for (card of cardList; track card) {
+        <mat-option [value]="card.id">
           {{ card.name }}
         </mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
@@ -31,81 +35,65 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 </div>
 
 <mat-accordion displayMode="flat">
-  <section
-    matSort
-    (matSortChange)="sortChanged($event)"
-    class="mat-elevation-z2 mat-header-row"
-  >
-    <div class="mat-header-cell two-cell">
-      <button
-        mat-icon-button
-        (click)="addOrEditTeamCard(null)"
-        style="outline: none;"
-        title="Add Team"
-      >
-        <mat-icon class="mdi-24px self-center" fontIcon="mdi-plus-circle"></mat-icon>
+  <section matSort (matSortChange)="sortChanged($event)" class="header-row">
+    <div class="header-cell two-cell">
+      <button mat-icon-button (click)="addOrEditTeamCard(null)" style="outline: none;" title="Add Team"
+        [disabled]="!canEdit">
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
     </div>
-    <div class="mat-header-cell five-cell" mat-sort-header="teamId">Team</div>
-    <div class="mat-header-cell five-cell" mat-sort-header="cardId">Card</div>
-    <div class="mat-header-cell one-cell" mat-sort-header="isShownOnWall">Show</div>
-    <div class="mat-header-cell one-cell" mat-sort-header="canPostArticles">Post</div>
-    <div class="mat-header-cell one-cell" mat-sort-header="move">Move</div>
-    <div class="mat-header-cell one-cell" mat-sort-header="inject">Inject</div>
+    <div class="header-cell five-cell" mat-sort-header="teamId">Team</div>
+    <div class="header-cell five-cell" mat-sort-header="cardId">Card</div>
+    <div class="header-cell one-cell" mat-sort-header="isShownOnWall">Show</div>
+    <div class="header-cell one-cell" mat-sort-header="canPostArticles">Post</div>
+    <div class="header-cell one-cell" mat-sort-header="move">Move</div>
+    <div class="header-cell one-cell" mat-sort-header="inject">Inject</div>
   </section>
 
   <section class="srollable-region">
-    <mat-expansion-panel
-      *ngFor="let teamCard of filteredTeamCardList"
-      disabled
-    >
-      <mat-expansion-panel-header class="mat-row" *ngIf="!isLoading">
-        <div class="mat-cell two-cell button-div">
-          <button
-            mat-icon-button
-            (click)="addOrEditTeamCard(teamCard)"
-            title="Edit TeamCard"
-          >
+    @for (teamCard of filteredTeamCardList; track teamCard) {
+    <mat-expansion-panel disabled>
+      @if (!isLoading) {
+      <mat-expansion-panel-header class="row">
+        <div class="cell two-cell button-div">
+          <button mat-icon-button (click)="addOrEditTeamCard(teamCard)" title="Edit TeamCard" [disabled]="!canEdit">
             <mat-icon class="mdi-24px" fontIcon="mdi-square-edit-outline"></mat-icon>
           </button>
-          <button
-            mat-icon-button
-            (click)="deleteTeamCard(teamCard)"
-            title="Delete TeamCard"
-          >
-            <mat-icon class="mdi-24px" fontIcon="mdi-trash-can"></mat-icon>
+          <button mat-icon-button (click)="deleteTeamCard(teamCard)" title="Delete TeamCard" [disabled]="!canEdit">
+            <mat-icon class="mdi-24px" fontIcon="mdi-trash-can-outline"></mat-icon>
           </button>
         </div>
-        <div class="mat-cell five-cell center-self">
+        <div class="cell five-cell center-self">
           {{ getTeamName(teamCard.teamId) }}
         </div>
-        <div class="mat-cell five-cell center-self">
+        <div class="cell five-cell center-self">
           {{ getCardName(teamCard.cardId) }}
         </div>
-        <div class="mat-cell one-cell center-self">
+        <div class="cell one-cell center-self">
           {{ teamCard.isShownOnWall }}
         </div>
-        <div class="mat-cell one-cell center-self">
+        <div class="cell one-cell center-self">
           {{ teamCard.canPostArticles }}
         </div>
-        <div class="mat-cell one-cell center-self">
+        <div class="cell one-cell center-self">
           {{ teamCard.move }}
         </div>
-        <div class="mat-cell one-cell center-self">
+        <div class="cell one-cell center-self">
           {{ teamCard.inject }}
         </div>
       </mat-expansion-panel-header>
+      }
       <div class="panel-container">
         nothing to see here
       </div>
     </mat-expansion-panel>
+    }
   </section>
 </mat-accordion>
 
-<mat-card
-  *ngIf="isLoading"
-  style="display: flex; justify-content: center; align-items: center;"
->
+@if (isLoading) {
+<mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
   <mat-progress-spinner color="primary" mode="indeterminate">
   </mat-progress-spinner>
 </mat-card>
+}
