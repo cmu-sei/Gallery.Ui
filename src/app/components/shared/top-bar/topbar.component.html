@@ -20,7 +20,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <img class="no-sidenav" [src]="imageFilePath" (click)="goToUrl('/')" />
       }
     </span>
-    <span class="view-text">{{ title }}</span>
+    <span class="view-text">{{ title.charAt(0).toUpperCase() + title.slice(1) }}</span>
     @if (teams && team && teams.length > 0) {
     <div class="team-text">Team:</div>
     <b class="team-text">{{ team.name }}</b>

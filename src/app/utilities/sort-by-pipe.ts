@@ -11,8 +11,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { orderBy } from 'lodash';
 
 @Pipe({
-    name: 'sortBy',
-    standalone: false
+  name: 'sortBy',
+  standalone: false
 })
 export class SortByPipe implements PipeTransform {
 
@@ -39,8 +39,8 @@ export class SortByPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'displayOrder',
-    standalone: false
+  name: 'displayOrder',
+  standalone: false
 })
 export class DisplayOrderPipe implements PipeTransform {
 
