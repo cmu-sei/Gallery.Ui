@@ -16,11 +16,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-icon class="menu-trigger" fontIcon="mdi-chevron-right"></mat-icon>
       </button>
       }
-      @if (!!imageFilePath) {
-      <img class="no-sidenav" [src]="imageFilePath" (click)="goToUrl('/')" />
-      }
+      <button mat-icon-button style="outline: none;" (click)="goToUrl('/')">
+        <mat-icon svgIcon="crucible-icon-gallery"></mat-icon>
+      </button>
     </span>
-    <span class="view-text">{{ title }}</span>
+    <span class="view-text">{{ title.charAt(0).toUpperCase() + title.slice(1) }}</span>
     @if (teams && team && teams.length > 0) {
     <div class="team-text">Team:</div>
     <b class="team-text">{{ team.name }}</b>

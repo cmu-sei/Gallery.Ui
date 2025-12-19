@@ -4,7 +4,7 @@
 import { Component, Inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { map, tap, take, takeUntil } from 'rxjs/operators';
 import {
   Permission,
   User,
@@ -54,6 +54,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   canViewCollections = false;
   canViewExhibits = false;
   readonly SystemPermission = SystemPermission;
+  showSection$: Observable<string>;
 
   constructor(
     @Inject(DOCUMENT) private _document: HTMLDocument,
@@ -75,15 +76,9 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   ) {
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
-    this._document
-      .getElementById('appFavicon')
-      .setAttribute('href', 'assets/img/monitor-dashboard-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Admin';
 
     this.collectionDataService.load();
-    activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.displayedSection = params.get('section');
-    });
     // observe the collections
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
       this.canViewCollections = this.canViewCollections || collections.length > 0;
@@ -105,6 +100,19 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       : this.topbarTextColor;
     this.titleText = this.settingsService.settings.AppTopBarText;
     this.getApiVersion();
+    this.showSection$ = activatedRoute.queryParamMap.pipe(
+      tap(
+        (params) =>
+        (this.displayedSection =
+          params.get('section') || Section.collections)
+      ),
+      map((params) => params.get('section') || Section.collections)
+    );
+    this.showSection$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((section) => {
+        this.displayedSection = section;
+      });
   }
 
   ngOnInit() {

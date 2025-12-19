@@ -11,10 +11,10 @@ import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: false
 })
 export class AppComponent implements OnDestroy {
   @HostBinding('class') componentCssClass: string;
@@ -51,52 +51,6 @@ export class AppComponent implements OnDestroy {
   registerIcons(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     iconRegistry.setDefaultFontSetClass('mdi');
 
-    iconRegistry.addSvgIcon(
-      'app_icon',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        'assets/svg-icons/monitor-dashboard.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'account',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        'assets/svg-icons/account.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'account_multiple',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        'assets/svg-icons/account-multiple.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'ic_chevron_left',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        'assets/svg-icons/ic_chevron_left.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'ic_chevron_right',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        'assets/svg-icons/ic_chevron_right.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'ic_clear',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/svg-icons/ic_clear.svg')
-    );
-    iconRegistry.addSvgIcon(
-      'ic_expand_more',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        'assets/svg-icons/ic_expand_more.svg'
-      )
-    );
-    iconRegistry.addSvgIcon(
-      'ic_magnify_search',
-      sanitizer.bypassSecurityTrustResourceUrl(
-        'assets/svg-icons/ic_magnify_glass.svg'
-      )
-    );
     iconRegistry.addSvgIcon(
       'crucible-icon-gallery',
       sanitizer.bypassSecurityTrustResourceUrl(
