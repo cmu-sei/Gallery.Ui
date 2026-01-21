@@ -14,10 +14,10 @@ import { Router } from '@angular/router';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 
 @Component({
-    selector: 'app-wall',
-    templateUrl: './wall.component.html',
-    styleUrls: ['./wall.component.scss'],
-    standalone: false
+  selector: 'app-wall',
+  templateUrl: './wall.component.html',
+  styleUrls: ['./wall.component.scss'],
+  standalone: false
 })
 export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
@@ -38,9 +38,6 @@ export class WallComponent implements OnDestroy {
     private router: Router,
     private settingsService: ComnSettingsService
   ) {
-    this._document
-      .getElementById('appFavicon')
-      .setAttribute('href', 'assets/img/wall-blue.png');
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Wall';
     this.cardQuery.selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -83,7 +80,7 @@ export class WallComponent implements OnDestroy {
     this.cardList.forEach(card => {
       const teamCard = this.teamCardList.find(tc => tc.cardId === card.id);
       if (teamCard && teamCard.isShownOnWall) {
-        const cardToAdd = { ... card };
+        const cardToAdd = { ...card };
         const userArticles = this.userArticleList
           .filter(ua => ua.article.cardId === card.id)
           .sort((a: UserArticle, b: UserArticle) => a.actualDatePosted.getTime() > b.actualDatePosted.getTime() ? -1 : 1);

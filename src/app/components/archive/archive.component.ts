@@ -45,10 +45,10 @@ import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/generated/api';
 
 @Component({
-    selector: 'app-archive',
-    templateUrl: './archive.component.html',
-    styleUrls: ['./archive.component.scss'],
-    standalone: false
+  selector: 'app-archive',
+  templateUrl: './archive.component.html',
+  styleUrls: ['./archive.component.scss'],
+  standalone: false
 })
 export class ArchiveComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
@@ -110,9 +110,6 @@ export class ArchiveComponent implements OnDestroy {
     private settingsService: ComnSettingsService,
     private xApiService: XApiService
   ) {
-    this._document
-      .getElementById('appFavicon')
-      .setAttribute('href', 'assets/img/archive-blue.png');
     this._document.getElementById('appTitle').innerHTML =
       this.settingsService.settings.AppTitle + ' Archive';
     // subscribe to userArticles
@@ -293,7 +290,7 @@ export class ArchiveComponent implements OnDestroy {
       case 'cardId':
         return (
           (this.getCardName(a.cardId).toLowerCase() <
-          this.getCardName(b.cardId).toLowerCase()
+            this.getCardName(b.cardId).toLowerCase()
             ? -1
             : 1) * (isAsc ? 1 : -1)
         );

@@ -93,13 +93,15 @@
 .top-row {
   display: flex;
   flex: 1;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   width: 100%;
   min-width: 1010px;
+  max-height: 65px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   align-items: center;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .search-cell {
@@ -114,12 +116,14 @@
 
 .source-type-cell {
   flex: 6;
-  min-width: 287px;
+  min-width: 430px;
   padding-left: 10px;
 }
 
 .team-cell {
   width: 250px;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .card-cell {
@@ -171,11 +175,24 @@
   height: 350px;
 }
 
+mat-card-actions {
+  display: flex;
+  flex-direction: column;
+}
+
 .action-buttons {
   display: flex;
   flex: 1;
   flex-direction: row;
+  flex-wrap: wrap;
   text-align: center;
+  justify-content: center;
+}
+
+.one-cell,
+.button-cell {
+  flex: 0 1 auto;
+  min-width: fit-content;
 }
 
 .cards {
