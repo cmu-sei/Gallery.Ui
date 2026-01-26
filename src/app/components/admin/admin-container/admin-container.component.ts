@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map, tap, take, takeUntil } from 'rxjs/operators';
@@ -53,6 +53,11 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   username = '';
   canViewCollections = false;
   canViewExhibits = false;
+  canViewUsers = false;
+  canViewRoles = false;
+  canViewGroups = false;
+  canCreateCollections = false;
+  canCreateExhibits = false;
   readonly SystemPermission = SystemPermission;
   showSection$: Observable<string>;
 
@@ -72,7 +77,8 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     private settingsService: ComnSettingsService,
     private authQuery: ComnAuthQuery,
     private currentUserQuery: CurrentUserQuery,
-    private permissionDataService: PermissionDataService
+    private permissionDataService: PermissionDataService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
@@ -118,7 +124,9 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this.userList = this.userQuery.selectAll();
     this.userDataService.load().pipe(take(1)).subscribe();
-    this.permissionDataService.load().subscribe();
+    this.permissionDataService.load().pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      this.updatePermissions();
+    });
     this.permissionDataService.loadCollectionPermissions().subscribe();
     this.permissionDataService.loadExhibitPermissions().subscribe();
     this.signalRService
@@ -138,8 +146,13 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.userDataService.setCurrentUser();
   }
 
-  hasPermission(permission: SystemPermission): boolean {
-    return this.permissionDataService.hasPermission(permission);
+  updatePermissions() {
+    this.canViewUsers = this.permissionDataService.hasPermission(SystemPermission.ViewUsers);
+    this.canViewRoles = this.permissionDataService.hasPermission(SystemPermission.ViewRoles);
+    this.canViewGroups = this.permissionDataService.hasPermission(SystemPermission.ViewGroups);
+    this.canCreateCollections = this.permissionDataService.hasPermission(SystemPermission.CreateCollections);
+    this.canCreateExhibits = this.permissionDataService.hasPermission(SystemPermission.CreateExhibits);
+    this.changeDetectorRef.detectChanges();
   }
 
   exitAdmin() {
