@@ -85,8 +85,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </mat-sidenav>
   <mat-sidenav-content>
     @if (!hideTopbar) {
-    <app-topbar [title]="displayedSection" [topbarView]="TopbarView.GALLERY_ADMIN" [topbarColor]="topbarColor"
-      [topbarTextColor]="topbarTextColor"></app-topbar>
+    <app-topbar [title]="displayedSection" [topbarView]="TopbarView.GALLERY_ADMIN"></app-topbar>
     }
     @if ((canViewCollections || canCreateCollections) && displayedSection === section.collections) {
     <span>

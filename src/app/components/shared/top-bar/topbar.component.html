@@ -2,8 +2,8 @@
 Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
-<mat-toolbar class="toolbar" [style.backgroundColor]="topbarColor ? topbarColor : null"
-  [style.color]="topbarTextColor ? topbarTextColor : null">
+<mat-toolbar class="toolbar" [style.backgroundColor]="'var(--mat-sys-primary)'"
+  [style.color]="'var(--mat-sys-on-primary)'">
   <mat-toolbar-row>
     <span class="margin-auto">
       @if (sidenav && sidenav?.opened) {
@@ -43,7 +43,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     @if (currentUser$ | async; as currentUser) {
     <div class="options-text">
       <button mat-button class="menu-trigger" [matMenuTriggerFor]="menu" style="outline: none;"
-        [style.color]="topbarTextColor ? topbarTextColor : null">
+        [style.color]="'var(--mat-sys-on-primary)'">
         <strong>{{ currentUser.name }}</strong>
         <mat-icon class="menu-trigger" fontIcon="mdi-chevron-down"></mat-icon>
       </button>

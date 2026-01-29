@@ -48,7 +48,6 @@ export class AdminExhibitsComponent implements OnDestroy {
   selectedCollectionId = '';
   exhibitList: Exhibit[];
   isLoading = false;
-  topbarColor = '#ef3a47';
   selectedExhibit: Exhibit = {};
   originalExhibit: Exhibit = {};
   filteredExhibitList: Exhibit[] = [];
@@ -76,9 +75,6 @@ export class AdminExhibitsComponent implements OnDestroy {
     private teamDataService: TeamDataService,
     private teamUserDataService: TeamUserDataService
   ) {
-    this.topbarColor = this.settingsService.settings.AppTopBarHexColor
-      ? this.settingsService.settings.AppTopBarHexColor
-      : this.topbarColor;
     // observe exhibits
     this.exhibitQuery
       .selectAll()

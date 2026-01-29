@@ -5,8 +5,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div class="app-home-container">
   @if (!hideTopbar) {
-  <app-topbar [title]="titleText" [topbarView]="TopbarView.GALLERY_HOME" [topbarColor]="topbarColor"
-    [topbarTextColor]="topbarTextColor" [imageFilePath]="topbarImage"
+  <app-topbar [title]="titleText" [topbarView]="TopbarView.GALLERY_HOME" [imageFilePath]="topbarImage"
     (urlNavigate)="topBarNavigate($event)"></app-topbar>
   }
 
