@@ -31,7 +31,6 @@ export class AdminCollectionsComponent implements OnDestroy {
   collectionList: Collection[] = [];
   newCollection: Collection = { id: '', name: '' };
   isLoading = false;
-  topbarColor = '#ef3a47';
   addingNewCollection = false;
   newCollectionName = '';
   editCollection: Collection = {};
@@ -55,9 +54,6 @@ export class AdminCollectionsComponent implements OnDestroy {
     private collectionQuery: CollectionQuery,
     private permissionDataService: PermissionDataService
   ) {
-    this.topbarColor = this.settingsService.settings.AppTopBarHexColor
-      ? this.settingsService.settings.AppTopBarHexColor
-      : this.topbarColor;
     this.collectionQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))

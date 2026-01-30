@@ -7,6 +7,21 @@
   @include mat.form-field-density(-5);
 }
 
+.top-row mat-form-field {
+  margin-bottom: 0;
+  vertical-align: middle;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.top-row .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.top-row .mat-mdc-text-field-wrapper {
+  padding-bottom: 0;
+}
+
 .archive {
   display: flex;
   flex: 100;
@@ -108,10 +123,15 @@
   display: flex;
   flex: 2;
   align-items: center;
+  gap: 8px;
 }
 
-.last-cell {
+.button-cell {
   width: 80px;
+}
+
+.selector-cell {
+  flex: 2;
 }
 
 .source-type-cell {
@@ -120,16 +140,11 @@
   padding-left: 10px;
 }
 
-.team-cell {
-  width: 250px;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
 .card-cell {
   display: flex;
   flex: 1;
   padding-left: 10px;
+  align-items: center;
 }
 
 .card-selector {

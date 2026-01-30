@@ -84,7 +84,12 @@
 }
 
 a {
-  color: black;
+  color: var(--mat-sys-primary);
+  text-decoration: underline;
+
+  &:visited {
+    color: var(--mat-sys-primary);
+  }
 }
 
 .collection-container {

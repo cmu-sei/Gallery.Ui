@@ -43,8 +43,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   private unsubscribe$ = new Subject();
   hideTopbar = false;
   TopbarView = TopbarView;
-  topbarColor = '#ef3a47';
-  topbarTextColor = '#FFFFFF';
   topbarImage = this.settingsService.settings.AppTopBarImage;
   theme$: Observable<Theme>;
   section = Section;
@@ -98,12 +96,6 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
       this.exhibitDataService.loadByCollection(activeId);
     });
     // Set the display settings from config file
-    this.topbarColor = this.settingsService.settings.AppTopBarHexColor
-      ? this.settingsService.settings.AppTopBarHexColor
-      : this.topbarColor;
-    this.topbarTextColor = this.settingsService.settings.AppTopBarHexTextColor
-      ? this.settingsService.settings.AppTopBarHexTextColor
-      : this.topbarTextColor;
     this.titleText = this.settingsService.settings.AppTopBarText;
     this.getApiVersion();
     this.showSection$ = activatedRoute.queryParamMap.pipe(
