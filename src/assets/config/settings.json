@@ -16,5 +16,5 @@
     "UseLocalAuthStorage": false,
     "IsEmailActive": false,
     "useAccessTokenExpirationRedirect": true,
-    "AppPrimaryThemeColor": "#17E817"
+    "AppPrimaryThemeColor": "#E81717"
 }
