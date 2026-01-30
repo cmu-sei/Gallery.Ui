@@ -51,8 +51,10 @@ export class AppComponent implements OnDestroy {
     });
     this.activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       const theme = params.get('theme');
-      this.paramTheme = theme === Theme.DARK ? Theme.DARK : Theme.LIGHT;
-      this.authService.setUserTheme(this.paramTheme);
+      if (theme) {
+        this.paramTheme = theme === Theme.DARK ? Theme.DARK : Theme.LIGHT;
+        this.authService.setUserTheme(this.paramTheme);
+      }
     });
   }
 
