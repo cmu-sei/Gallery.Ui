@@ -117,6 +117,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { TeamSelectorComponent } from './components/team-selector/team-selector.component';
 import { UIDataService } from './data/ui/ui-data.service';
 import { DynamicThemeService } from './services/dynamic-theme.service';
+import { FaviconService } from './services/favicon.service';
 import { initializeTheme } from './services/theme-initializer.factory';
 
 const settings: ComnSettingsConfig = {
@@ -248,6 +249,7 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     UIDataService,
     UserDataService,
     DynamicThemeService,
+    FaviconService,
     {
       provide: BASE_PATH,
       useFactory: getBasePath,

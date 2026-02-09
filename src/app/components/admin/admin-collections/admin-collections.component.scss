@@ -3,10 +3,6 @@
 
 @use "@angular/material" as mat;
 
-:host {
-  @include mat.form-field-density(-5);
-}
-
 .panel-container {
   display: flex;
   flex-flow: column;

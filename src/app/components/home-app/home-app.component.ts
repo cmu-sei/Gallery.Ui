@@ -43,10 +43,10 @@ import { Section } from 'src/app/utilities/enumerations';
 import { XApiService } from 'src/app/generated/api';
 
 @Component({
-    selector: 'app-home-app',
-    templateUrl: './home-app.component.html',
-    styleUrls: ['./home-app.component.scss'],
-    standalone: false
+  selector: 'app-home-app',
+  templateUrl: './home-app.component.html',
+  styleUrls: ['./home-app.component.scss'],
+  standalone: false
 })
 export class HomeAppComponent implements OnDestroy, OnInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
@@ -224,7 +224,8 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((exhibits) => {
-        this.exhibitList = exhibits;
+        this.allExhibits = exhibits;
+        this.applyFilter(this.filterString);
       });
     // subscribe to the active exhibit
     (this.exhibitQuery.selectActive() as Observable<Exhibit>)
@@ -396,14 +397,16 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   applyFilter(filterValue: string) {
-    this.filterString = filterValue.trim().toLowerCase();
-    this.exhibitList = this.exhibitList.filter((exhibit) => {
+    console.log('applyFilter: ' + filterValue);
+    this.filterString = filterValue;
+    this.exhibitList = this.allExhibits.filter((exhibit) => {
       const createdBy = this.getUserName(exhibit.createdBy).toLowerCase();
-      return createdBy.includes(this.filterString);
+      return createdBy.includes(this.filterString.toLowerCase());
     });
   }
 
   onFilterChange() {
+    console.log('filterChange: ' + this.filterString);
     if (!this.filterString) {
       this.clearFilter();
     }
