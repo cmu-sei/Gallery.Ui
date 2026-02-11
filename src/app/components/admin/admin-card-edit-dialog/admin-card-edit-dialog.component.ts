@@ -24,10 +24,10 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'app-admin-card-edit-dialog',
-    templateUrl: './admin-card-edit-dialog.component.html',
-    styleUrls: ['./admin-card-edit-dialog.component.scss'],
-    standalone: false
+  selector: 'app-admin-card-edit-dialog',
+  templateUrl: './admin-card-edit-dialog.component.html',
+  styleUrls: ['./admin-card-edit-dialog.component.scss'],
+  standalone: false
 })
 export class AdminCardEditDialogComponent {
   @Output() editComplete = new EventEmitter<any>();
@@ -39,12 +39,6 @@ export class AdminCardEditDialogComponent {
     this.data.card.description,
     []
   );
-  public collectionIdFormControl = new UntypedFormControl(
-    this.data.card.collectionId,
-    [Validators.required]
-  );
-  public collectionList = this.data.collectionList;
-  public hideCollectionSelector = this.data.hideCollectionSelector || false;
 
   constructor(
     public dialogService: DialogService,
@@ -72,9 +66,6 @@ export class AdminCardEditDialogComponent {
       this.data.card.description = this.cardDescriptionFormControl.value
         .toString()
         .trim();
-      this.data.card.collectionId = this.collectionIdFormControl.value
-        .toString()
-        .trim();
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,
@@ -95,10 +86,6 @@ export class AdminCardEditDialogComponent {
       case 'description':
         this.data.card.description =
           this.cardDescriptionFormControl.value.toString();
-        break;
-      case 'collectionId':
-        this.data.card.collectionId =
-          this.collectionIdFormControl.value.toString();
         break;
       default:
         break;
