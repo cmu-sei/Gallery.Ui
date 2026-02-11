@@ -15,13 +15,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         @if (!canAddArticles()) {
         <span style="width: 20px;">&nbsp;</span>
         }
-        <mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
           <input matInput placeholder="Search the Archive" class="tiny" [formControl]="filterControl" />
+          @if (filterControl.value) {
+          <button mat-icon-button matSuffix (click)="applyFilter('')" title="Clear Search">
+            <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
+          </button>
+          }
         </mat-form-field>
-        <mat-icon class="mdi-24px point" fontIcon="mdi-close-circle-outline" (click)="applyFilter('')"></mat-icon>
       </div>
       <div class="card-cell">
-        <mat-form-field class="card-selector">
+        <mat-form-field class="card-selector" subscriptSizing="dynamic">
           <mat-select [(ngModel)]="cardId" (selectionChange)="changeCard($event.value)">
             <mat-option [value]="'all'">All Cards</mat-option>
             @for (card of showCardList; track card) {
@@ -76,10 +80,10 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           Email
         </button>
       </div>
-      <div class="team-cell">
+      <div class="selector-cell">
         <app-team-selector (changeTeam)="changeTeamRequest($event)"></app-team-selector>
       </div>
-      <div class="last-cell">
+      <div class="button-cell">
         <button mat-icon-button (click)="gotoWallSection()" style="outline: none;" title="Wall">
           <mat-icon class="mdi-24px center-self" fontIcon="mdi-wall"></mat-icon>
         </button>
