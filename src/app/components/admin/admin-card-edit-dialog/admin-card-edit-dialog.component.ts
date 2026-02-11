@@ -44,6 +44,7 @@ export class AdminCardEditDialogComponent {
     [Validators.required]
   );
   public collectionList = this.data.collectionList;
+  public hideCollectionSelector = this.data.hideCollectionSelector || false;
 
   constructor(
     public dialogService: DialogService,

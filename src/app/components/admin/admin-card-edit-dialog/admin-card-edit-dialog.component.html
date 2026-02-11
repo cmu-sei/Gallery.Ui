@@ -32,20 +32,22 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-form-field>
     </div>
   </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="name-width">
-        <mat-select placeholder="Collection" [formControl]="collectionIdFormControl">
-          <mat-option>None</mat-option>
-          @for (collection of collectionList; track collection) {
-          <mat-option [value]="collection.id">
-            {{ collection.name }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+  @if (!hideCollectionSelector) {
+    <div class="add-margin">
+      <div>
+        <mat-form-field class="name-width">
+          <mat-select placeholder="Collection" [formControl]="collectionIdFormControl">
+            <mat-option>None</mat-option>
+            @for (collection of collectionList; track collection) {
+            <mat-option [value]="collection.id">
+              {{ collection.name }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
-  </div>
+  }
   <div class="cssLayoutRowStartCenter bottom-button">
     <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()"
