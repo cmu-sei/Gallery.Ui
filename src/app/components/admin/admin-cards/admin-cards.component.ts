@@ -5,9 +5,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { Collection } from 'src/app/generated/api/model/models';
-import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
-import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
@@ -30,7 +27,6 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
   canEdit = false;
   pageSize = 10;
   pageIndex = 0;
-  collectionList: Collection[] = [];
   newCard: Card = { id: '', name: '' };
   cardList: Card[];
   displayedCards: Card[];
@@ -49,8 +45,6 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
     public dialogService: DialogService,
-    private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery,
     private cardDataService: CardDataService,
     private cardQuery: CardQuery,
     private permissionDataService: PermissionDataService
@@ -110,8 +104,7 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
     const dialogRef = this.dialog.open(AdminCardEditDialogComponent, {
       width: '480px',
       data: {
-        card: card,
-        collectionList: this.collectionList,
+        card: card
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -132,12 +125,6 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
   cancelCardAdd() {
     this.addingNewCard = false;
     this.newCardName = '';
-  }
-
-  selectCollection(collectionId: string) {
-    this.cardList = [];
-    this.isLoading = true;
-    this.collectionDataService.setActive(collectionId);
   }
 
   selectCard(card: Card) {
@@ -206,13 +193,6 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
           (a.description.toLowerCase() < b.description.toLowerCase() ? -1 : 1) *
           (isAsc ? 1 : -1)
         );
-      case 'collectionId':
-        return (
-          (this.getCollectionName(a.collectionId).toLowerCase() <
-            this.getCollectionName(b.collectionId).toLowerCase()
-            ? -1
-            : 1) * (isAsc ? 1 : -1)
-        );
       case 'move':
         return (a.move < b.move ? -1 : 1) * (isAsc ? 1 : -1);
       case 'inject':
@@ -220,10 +200,6 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
       default:
         return 0;
     }
-  }
-
-  getCollectionName(collectionId: string) {
-    return this.collectionList.find((c) => c.id === collectionId).name;
   }
 
   paginatorEvent(page: PageEvent) {
