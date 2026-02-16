@@ -26,7 +26,7 @@ html {
   @include mat.theme((color: theme.$primary-palette,
       typography: '"Open Sans", sans-serif',
     ),
-    $overrides: ((background: #f1f1f2,
+    $overrides: ((
         surface: var(--mat-sys-background),
         surface-variant: var(--mat-sys-background),
         icon: var(--mat-sys-primary),
@@ -36,6 +36,9 @@ html {
       calendar-container-text-color: var(--mat-sys-on-background),
     ));
   @include mat.icon-button-overrides((icon-color: var(--mat-sys-primary)));
+
+  // Override to use exact primary color
+  --mat-sys-primary: #008740;
 }
 
 .darkMode {
@@ -44,7 +47,7 @@ html {
         theme-type: dark,
       ),
     ),
-    $overrides: ((background: #313131,
+    $overrides: ((
         surface: var(--mat-sys-background),
         surface-variant: var(--mat-sys-background),
         icon: var(--mat-sys-primary),
@@ -54,6 +57,9 @@ html {
       calendar-container-text-color: var(--mat-sys-on-background),
     ));
   @include mat.icon-button-overrides((icon-color: var(--mat-sys-primary)));
+
+  // Override to use exact primary color
+  --mat-sys-primary: #008740;
 }
 
 body {

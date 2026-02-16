@@ -36,8 +36,8 @@ export class DynamicThemeService {
    */
   applyThemeToDocument(hexColor: string): void {
     const { light, dark } = this.generateThemeFromHex(hexColor);
-    this.injectLightTheme(light);
-    this.injectDarkTheme(dark);
+    this.injectLightTheme(light, hexColor);
+    this.injectDarkTheme(dark, hexColor);
   }
 
   /**
@@ -46,7 +46,7 @@ export class DynamicThemeService {
    */
   applyLightTheme(hexColor: string): void {
     const { light } = this.generateThemeFromHex(hexColor);
-    this.injectLightTheme(light);
+    this.injectLightTheme(light, hexColor);
   }
 
   /**
@@ -55,15 +55,22 @@ export class DynamicThemeService {
    */
   applyDarkTheme(hexColor: string): void {
     const { dark } = this.generateThemeFromHex(hexColor);
-    this.injectDarkTheme(dark);
+    this.injectDarkTheme(dark, hexColor);
   }
 
   /**
    * Injects light theme CSS variables into :root
    * @param scheme Material 3 light scheme
+   * @param exactPrimaryColor Optional exact hex color to use instead of Material 3 tone 40
    */
-  private injectLightTheme(scheme: Scheme): void {
+  private injectLightTheme(scheme: Scheme, exactPrimaryColor?: string): void {
     const variables = this.buildCssVariables(scheme);
+
+    // Override primary color with exact value if provided
+    if (exactPrimaryColor) {
+      variables['--mat-sys-primary'] = exactPrimaryColor;
+    }
+
     Object.entries(variables).forEach(([prop, value]) => {
       document.documentElement.style.setProperty(prop, value);
     });
@@ -72,9 +79,15 @@ export class DynamicThemeService {
   /**
    * Injects dark theme CSS variables into body.darkMode
    * @param scheme Material 3 dark scheme
+   * @param exactPrimaryColor Optional exact hex color to use instead of Material 3 tone 80
    */
-  private injectDarkTheme(scheme: Scheme): void {
+  private injectDarkTheme(scheme: Scheme, exactPrimaryColor?: string): void {
     const variables = this.buildCssVariables(scheme);
+
+    // Override primary color with exact value if provided
+    if (exactPrimaryColor) {
+      variables['--mat-sys-primary'] = exactPrimaryColor;
+    }
 
     // Create a style element for dark mode if it doesn't exist
     let styleElement = document.getElementById('dynamic-dark-theme');
