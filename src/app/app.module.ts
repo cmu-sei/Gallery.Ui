@@ -7,7 +7,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatLabel } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
@@ -56,6 +56,7 @@ import {
   ComnSettingsConfig,
   ComnSettingsModule,
   ComnSettingsService,
+  provideCrucibleTheme,
 } from '@cmusei/crucible-common';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
@@ -116,9 +117,6 @@ import { WallComponent } from './components/wall/wall.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { TeamSelectorComponent } from './components/team-selector/team-selector.component';
 import { UIDataService } from './data/ui/ui-data.service';
-import { DynamicThemeService } from './services/dynamic-theme.service';
-import { FaviconService } from './services/favicon.service';
-import { initializeTheme } from './services/theme-initializer.factory';
 
 const settings: ComnSettingsConfig = {
   url: 'assets/config/settings.json',
@@ -248,8 +246,6 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     SystemMessageService,
     UIDataService,
     UserDataService,
-    DynamicThemeService,
-    FaviconService,
     {
       provide: BASE_PATH,
       useFactory: getBasePath,
@@ -259,12 +255,10 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
       provide: ErrorHandler,
       useClass: ErrorService,
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeTheme,
-      deps: [ComnSettingsService, DynamicThemeService],
-      multi: true,
-    },
+    ...provideCrucibleTheme({
+      defaultThemeColor: '#008740',
+      faviconSvgPath: 'assets/svg-icons/crucible-icon-gallery.svg',
+    }),
     provideHttpClient(withInterceptorsFromDi()),
   ],
 })
