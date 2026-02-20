@@ -54,6 +54,11 @@ body {
   z-index: 9 !important;
 }
 
+// default all icons to the primary theme color
+mat-icon, .mat-icon {
+  --mat-icon-color: var(--mat-sys-primary);
+}
+
 // remove the border around paginator items per page selection
 mat-paginator {
   --mat-form-field-outlined-outline-color: transparent;
@@ -192,33 +197,3 @@ mat-paginator {
 }
 
 /* end of FlexLayout replacements */
-
-
-// These variables represent the core color roles of the application's theme:
-// --mat-sys-primary: The primary color used for prominent elements and components.
-// --mat-sys-on-primary: Color for content displayed on top of the primary color.
-// --mat-sys-primary-container: A container color related to the primary color.
-// --mat-sys-on-primary-container: Color for content displayed on top of the primary container.
-// --mat-sys-secondary: A secondary color used for less prominent elements.
-// --mat-sys-on-secondary: Color for content displayed on top of the secondary color.
-// --mat-sys-secondary-container: A container color related to the secondary color.
-// --mat-sys-on-secondary-container: Color for content displayed on top of the secondary container.
-// --mat-sys-tertiary: A tertiary color for additional emphasis or variations.
-// --mat-sys-on-tertiary: Color for content displayed on top of the tertiary color.
-// --mat-sys-tertiary-container: A container color related to the tertiary color.
-// --mat-sys-on-tertiary-container: Color for content displayed on top of the tertiary container.
-// --mat-sys-error: Color used to indicate errors or warnings.
-// --mat-sys-on-error: Color for content displayed on top of the error color.
-// --mat-sys-error-container: A container color related to the error color.
-// --mat-sys-on-error-container: Color for content displayed on top of the error container.
-// --mat-sys-background: The background color of the application.
-// --mat-sys-on-background: Color for content displayed on top of the background.
-// --mat-sys-surface: The color used for surfaces like cards and dialogs.
-// --mat-sys-on-surface: Color for content displayed on top of surfaces.
-// --mat-sys-surface-variant: A variant of the surface color.
-// --mat-sys-on-surface-variant: Color for content displayed on top of the surface variant.
-// --mat-sys-outline: Color used for outlines and borders.
-// --mat-sys-shadow: Color used for shadows.
-// --mat-sys-inverse-surface: An inverted surface color for contrast.
-// --mat-sys-inverse-on-surface: Color for content displayed on top of the inverse surface.
-// --mat-sys-inverse-primary: An inverted primary color for contrast.
