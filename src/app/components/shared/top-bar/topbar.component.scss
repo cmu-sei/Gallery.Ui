@@ -22,7 +22,6 @@
   font-size: 110%;
   margin-left: 50px;
   margin-right: 40px;
-  margin-top: -6px;
 }
 
 .no-sidenav {
@@ -35,4 +34,8 @@
 .options-text {
   text-align: right;
   margin-right: 10px;
+}
+
+.menu-trigger {
+  color: var(--mat-sys-on-primary) !important;
 }

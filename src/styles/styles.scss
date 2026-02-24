@@ -25,17 +25,7 @@
 html {
   @include mat.theme((color: theme.$primary-palette,
       typography: '"Open Sans", sans-serif',
-    ),
-    $overrides: ((background: #f1f1f2,
-        surface: var(--mat-sys-background),
-        surface-variant: var(--mat-sys-background),
-        icon: var(--mat-sys-primary),
-      )));
-  @include mat.datepicker-overrides((calendar-container-background-color: var(--mat-sys-outline-variant),
-      calendar-date-selected-state-text-color: var(--mat-sys-primary),
-      calendar-container-text-color: var(--mat-sys-on-background),
     ));
-  @include mat.icon-button-overrides((icon-color: var(--mat-sys-primary)));
 }
 
 .darkMode {
@@ -43,28 +33,13 @@ html {
         typography: '"Open Sans", sans-serif',
         theme-type: dark,
       ),
-    ),
-    $overrides: ((background: #313131,
-        surface: var(--mat-sys-background),
-        surface-variant: var(--mat-sys-background),
-        icon: var(--mat-sys-primary),
-      )));
-  @include mat.datepicker-overrides((calendar-container-background-color: var(--mat-sys-outline-variant),
-      calendar-date-selected-state-text-color: var(--mat-sys-primary),
-      calendar-container-text-color: var(--mat-sys-on-background),
     ));
-  @include mat.icon-button-overrides((icon-color: var(--mat-sys-primary)));
 }
 
 body {
   font-family: "Open Sans", sans-serif;
 }
 
-// Override the disabled icon color specifically for mat-icon-button
-.mat-mdc-icon-button[disabled] .mat-icon {
-  --mat-icon-color-disabled: var(--mat-sys-outline-variant);
-}
-
 // classes for icon sizing
 .icon-35px {
   width: 35px !important;
@@ -79,26 +54,9 @@ body {
   z-index: 9 !important;
 }
 
-// remove the border around paginator items per page selection
-mat-paginator {
-  --mat-form-field-outlined-outline-color: transparent;
-  --mat-form-field-outlined-hover-outline-color: transparent;
-  --mat-form-field-outlined-focus-outline-color: transparent;
-  min-width: 200px !important;
-}
-
-// classes for icon sizing
-.icon-35px {
-  width: 35px !important;
-  height: 35px !important;
-}
-
-// prevent table header rows from scrolling
-.mat-mdc-header-row {
-  position: sticky;
-  position: -webkit-sticky;
-  top: 0;
-  z-index: 9 !important;
+// default all icons to the primary theme color
+mat-icon, .mat-icon {
+  --mat-icon-color: var(--mat-sys-primary);
 }
 
 // remove the border around paginator items per page selection
@@ -107,31 +65,6 @@ mat-paginator {
   --mat-form-field-outlined-hover-outline-color: transparent;
   --mat-form-field-outlined-focus-outline-color: transparent;
   min-width: 200px !important;
-}
-
-.mat-form-field {
-  color: var(--mat-sys-primary);
-}
-
-// Ensure mat-select dropdown panels match the mat-select background color
-.mat-mdc-select-panel {
-  background-color: var(--mat-sys-outline-variant) !important;
-}
-
-// Ensure mat-option elements match the mat-select background color
-.mat-mdc-option {
-  --mat-option-label-text-color: var(--mat-sys-on-background);
-  --mat-option-hover-state-layer-color: var(--mat-sys-outline);
-  --mat-option-focus-state-layer-color: var(--mat-sys-outline);
-  --mat-option-selected-state-layer-color: var(--mat-sys-outline);
-}
-
-.mat-mdc-option:not(.mat-mdc-option-disabled) {
-  background-color: var(--mat-sys-background);
-}
-
-.mat-mdc-option:hover:not(.mat-mdc-option-disabled) {
-  background-color: var(--mat-sys-surface-variant);
 }
 
 .twelve-cell {
@@ -264,33 +197,3 @@ mat-paginator {
 }
 
 /* end of FlexLayout replacements */
-
-
-// These variables represent the core color roles of the application's theme:
-// --mat-sys-primary: The primary color used for prominent elements and components.
-// --mat-sys-on-primary: Color for content displayed on top of the primary color.
-// --mat-sys-primary-container: A container color related to the primary color.
-// --mat-sys-on-primary-container: Color for content displayed on top of the primary container.
-// --mat-sys-secondary: A secondary color used for less prominent elements.
-// --mat-sys-on-secondary: Color for content displayed on top of the secondary color.
-// --mat-sys-secondary-container: A container color related to the secondary color.
-// --mat-sys-on-secondary-container: Color for content displayed on top of the secondary container.
-// --mat-sys-tertiary: A tertiary color for additional emphasis or variations.
-// --mat-sys-on-tertiary: Color for content displayed on top of the tertiary color.
-// --mat-sys-tertiary-container: A container color related to the tertiary color.
-// --mat-sys-on-tertiary-container: Color for content displayed on top of the tertiary container.
-// --mat-sys-error: Color used to indicate errors or warnings.
-// --mat-sys-on-error: Color for content displayed on top of the error color.
-// --mat-sys-error-container: A container color related to the error color.
-// --mat-sys-on-error-container: Color for content displayed on top of the error container.
-// --mat-sys-background: The background color of the application.
-// --mat-sys-on-background: Color for content displayed on top of the background.
-// --mat-sys-surface: The color used for surfaces like cards and dialogs.
-// --mat-sys-on-surface: Color for content displayed on top of surfaces.
-// --mat-sys-surface-variant: A variant of the surface color.
-// --mat-sys-on-surface-variant: Color for content displayed on top of the surface variant.
-// --mat-sys-outline: Color used for outlines and borders.
-// --mat-sys-shadow: Color used for shadows.
-// --mat-sys-inverse-surface: An inverted surface color for contrast.
-// --mat-sys-inverse-on-surface: Color for content displayed on top of the inverse surface.
-// --mat-sys-inverse-primary: An inverted primary color for contrast.

@@ -42,8 +42,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <span class="spacer"></span>
     @if (currentUser$ | async; as currentUser) {
     <div class="options-text">
-      <button mat-button class="menu-trigger" [matMenuTriggerFor]="menu" style="outline: none;"
-        [style.color]="'var(--mat-sys-on-primary)'">
+      <button mat-button class="menu-trigger" [matMenuTriggerFor]="menu" style="outline: none;">
         <strong>{{ currentUser.name }}</strong>
         <mat-icon class="menu-trigger" fontIcon="mdi-chevron-down"></mat-icon>
       </button>
