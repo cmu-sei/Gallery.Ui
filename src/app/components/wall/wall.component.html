@@ -21,7 +21,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
   <section class="cards">
-    @for (card of shownCardList; track card) {
+    @for (card of shownCardList; track card.id) {
     <mat-card appearance="outlined"
       [ngClass]="'card ' + card.displayedStatus.toLowerCase().replace(' ', '') + '-status'">
       <mat-card-header class="center">

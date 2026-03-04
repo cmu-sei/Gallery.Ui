@@ -78,7 +78,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <mat-form-field>
         <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
-          @for (card of data.cardList; track card) {
+          @for (card of data.cardList; track card.id) {
           <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
             {{card.name}}
           </mat-option>
