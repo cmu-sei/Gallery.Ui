@@ -36,6 +36,11 @@ export const ROUTES: Routes = [
     path: 'admin',
     component: AdminContainerComponent,
     canActivate: [ComnAuthGuardService],
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
   }
 ];
 
