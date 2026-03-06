@@ -145,6 +145,8 @@ export class AdminGroupsComponent implements OnInit, AfterViewInit {
   nameDialog(title: string, message: string, data?: any): Observable<boolean> {
     const dialogRef = this.dialog.open(NameDialogComponent, {
       data: data || {},
+      minWidth: '400px',
+      maxWidth: '90vw',
     });
     dialogRef.componentInstance.title = title;
     dialogRef.componentInstance.message = message;
