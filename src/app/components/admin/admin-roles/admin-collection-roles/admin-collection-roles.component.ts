@@ -14,10 +14,10 @@ import { map } from 'rxjs/operators';
 import { CollectionRoleDataService } from 'src/app/data/collection/collection-role-data.service';
 
 @Component({
-    selector: 'app-admin-collection-roles',
-    templateUrl: './admin-collection-roles.component.html',
-    styleUrls: ['./admin-collection-roles.component.scss'],
-    standalone: false
+  selector: 'app-admin-collection-roles',
+  templateUrl: './admin-collection-roles.component.html',
+  styleUrls: ['./admin-collection-roles.component.scss'],
+  standalone: false
 })
 export class AdminCollectionRolesComponent implements OnInit {
   private collectionRoleService = inject(CollectionRoleDataService);
@@ -33,8 +33,8 @@ export class AdminCollectionRolesComponent implements OnInit {
 
   public roles$ = this.collectionRoleService.collectionRoles$.pipe(
     map((roles) =>
-      roles.sort((a, b) => {
-        return a.name.localeCompare(b.name);
+      roles.filter(r => r.name).sort((a, b) => {
+        return a.name?.localeCompare(b.name);
       })
     )
   );
