@@ -33,7 +33,7 @@ export class AdminExhibitRolesComponent implements OnInit {
 
   public roles$ = this.exhibitRoleService.exhibitRoles$.pipe(
     map((roles) =>
-      roles.sort((a, b) => {
+      roles.filter(r => r.name).sort((a, b) => {
         return a.name?.localeCompare(b.name);
       })
     )

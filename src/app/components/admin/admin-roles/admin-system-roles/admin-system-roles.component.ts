@@ -48,7 +48,7 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
 
   public roles$ = this.roleService.roles$.pipe(
     map((roles) =>
-      roles.sort((a, b) => {
+      roles.filter(r => r.name).sort((a, b) => {
         // Sort by 'immutable' property first (false comes after true)
         if (a.immutable !== b.immutable) {
           return a.immutable ? -1 : 1; // Put `true` before `false`

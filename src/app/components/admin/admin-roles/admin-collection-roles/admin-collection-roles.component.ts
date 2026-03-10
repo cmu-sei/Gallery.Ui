@@ -33,7 +33,7 @@ export class AdminCollectionRolesComponent implements OnInit {
 
   public roles$ = this.collectionRoleService.collectionRoles$.pipe(
     map((roles) =>
-      roles.sort((a, b) => {
+      roles.filter(r => r.name).sort((a, b) => {
         return a.name?.localeCompare(b.name);
       })
     )
