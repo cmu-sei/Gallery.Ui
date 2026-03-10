@@ -14,10 +14,10 @@ import { map } from 'rxjs/operators';
 import { ExhibitRoleDataService } from 'src/app/data/exhibit/exhibit-role-data.service';
 
 @Component({
-    selector: 'app-admin-exhibit-roles',
-    templateUrl: './admin-exhibit-roles.component.html',
-    styleUrls: ['./admin-exhibit-roles.component.scss'],
-    standalone: false
+  selector: 'app-admin-exhibit-roles',
+  templateUrl: './admin-exhibit-roles.component.html',
+  styleUrls: ['./admin-exhibit-roles.component.scss'],
+  standalone: false
 })
 export class AdminExhibitRolesComponent implements OnInit {
   private exhibitRoleService = inject(ExhibitRoleDataService);
@@ -34,7 +34,7 @@ export class AdminExhibitRolesComponent implements OnInit {
   public roles$ = this.exhibitRoleService.exhibitRoles$.pipe(
     map((roles) =>
       roles.sort((a, b) => {
-        return a.name.localeCompare(b.name);
+        return a.name?.localeCompare(b.name);
       })
     )
   );

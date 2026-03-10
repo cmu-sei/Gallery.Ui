@@ -21,10 +21,10 @@ import { SignalRService } from 'src/app/services/signalr.service';
 const NAME_VALUE = 'nameValue';
 
 @Component({
-    selector: 'app-admin-system-roles',
-    templateUrl: './admin-system-roles.component.html',
-    styleUrls: ['./admin-system-roles.component.scss'],
-    standalone: false
+  selector: 'app-admin-system-roles',
+  templateUrl: './admin-system-roles.component.html',
+  styleUrls: ['./admin-system-roles.component.scss'],
+  standalone: false
 })
 export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   private roleService = inject(RoleDataService);
@@ -54,7 +54,7 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
           return a.immutable ? -1 : 1; // Put `true` before `false`
         }
         // If 'immutable' values are the same, sort by 'name' (case-insensitive)
-        return a.name.localeCompare(b.name);
+        return a.name?.localeCompare(b.name);
       })
     )
   );
