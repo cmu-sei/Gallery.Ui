@@ -27,15 +27,22 @@ function buildMockDocument() {
   return mockDoc;
 }
 
-async function renderAdmin(overrides: {
-  permissions?: SystemPermission[];
-  hasCollections?: boolean;
-  section?: string;
-} = {}) {
-  const { permissions = [], hasCollections = false, section = null } = overrides;
+async function renderAdmin(
+  overrides: {
+    permissions?: SystemPermission[];
+    hasCollections?: boolean;
+    section?: string;
+  } = {},
+) {
+  const {
+    permissions = [],
+    hasCollections = false,
+    section = null,
+  } = overrides;
 
   const mockCollectionQuery = {
-    selectAll: () => of(hasCollections ? [{ id: '1', name: 'Test Collection' }] : []),
+    selectAll: () =>
+      of(hasCollections ? [{ id: '1', name: 'Test Collection' }] : []),
     selectActiveId: () => of(null),
     select: () => of(null),
     selectEntity: () => of(null),
@@ -176,5 +183,55 @@ describe('AdminContainerComponent', () => {
       permissions: [SystemPermission.CreateCollections],
     });
     expect(screen.getByText('Collections')).toBeInTheDocument();
+  });
+
+  it('should show Collections nav when ViewCollections permission present', async () => {
+    await renderAdmin({
+      permissions: [SystemPermission.ViewCollections],
+      hasCollections: true,
+    });
+    expect(screen.getByText('Collections')).toBeInTheDocument();
+  });
+
+  it('should hide Collections nav when ViewCollections permission absent and no collections', async () => {
+    await renderAdmin({
+      permissions: [],
+      hasCollections: false,
+    });
+    expect(screen.queryByText('Collections')).not.toBeInTheDocument();
+  });
+
+  it('should show Exhibits nav when ViewExhibits permission present', async () => {
+    await renderAdmin({
+      permissions: [SystemPermission.ViewExhibits],
+      hasCollections: true,
+    });
+    expect(screen.getByText('Exhibits')).toBeInTheDocument();
+  });
+
+  it('should hide Exhibits nav when ViewExhibits permission absent and no collections', async () => {
+    await renderAdmin({
+      permissions: [],
+      hasCollections: false,
+    });
+    expect(screen.queryByText('Exhibits')).not.toBeInTheDocument();
+  });
+
+  it('should show all nav items when all permissions present', async () => {
+    await renderAdmin({
+      permissions: [
+        SystemPermission.ViewUsers,
+        SystemPermission.ViewRoles,
+        SystemPermission.ViewGroups,
+        SystemPermission.CreateCollections,
+        SystemPermission.CreateExhibits,
+      ],
+      hasCollections: true,
+    });
+    expect(screen.getByText('Users')).toBeInTheDocument();
+    expect(screen.getByText('Roles')).toBeInTheDocument();
+    expect(screen.getByText('Groups')).toBeInTheDocument();
+    expect(screen.getByText('Collections')).toBeInTheDocument();
+    expect(screen.getByText('Exhibits')).toBeInTheDocument();
   });
 });

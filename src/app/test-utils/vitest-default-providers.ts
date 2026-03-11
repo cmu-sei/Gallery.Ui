@@ -49,7 +49,7 @@ import { ArticleTeamDataService } from '../data/team/article-team-data.service';
 import { TeamDataService } from '../data/team/team-data.service';
 import { TeamCardDataService } from '../data/team-card/team-card-data.service';
 import { TeamUserDataService } from '../data/team-user/team-user-data.service';
-import { UiDataService } from '../data/ui/ui-data.service';
+import { UIDataService } from '../data/ui/ui-data.service';
 import { UserDataService } from '../data/user/user-data.service';
 import { UserArticleDataService } from '../data/user-article/user-article-data.service';
 
@@ -158,8 +158,11 @@ export function getDefaultProviders(overrides?: Provider[]): Provider[] {
     { provide: TeamDataService, useValue: {} },
     { provide: TeamCardDataService, useValue: {} },
     { provide: TeamUserDataService, useValue: {} },
-    { provide: UiDataService, useValue: {} },
-    { provide: UserDataService, useValue: { load: () => of([]), setCurrentUser: () => {} } },
+    { provide: UIDataService, useValue: {} },
+    {
+      provide: UserDataService,
+      useValue: { load: () => of([]), setCurrentUser: () => {} },
+    },
     { provide: UserArticleDataService, useValue: {} },
 
     // App Services
@@ -253,7 +256,7 @@ export function getDefaultProviders(overrides?: Provider[]): Provider[] {
 
   const overrideTokens = new Set(overrides.map(getProvideToken));
   const filtered = defaults.filter(
-    (p) => !overrideTokens.has(getProvideToken(p))
+    (p) => !overrideTokens.has(getProvideToken(p)),
   );
   return [...filtered, ...overrides];
 }
