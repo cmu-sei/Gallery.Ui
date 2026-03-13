@@ -13,7 +13,8 @@
   flex: 8;
   min-width: 300px;
   margin-top: 10px;
-  min-height: 600px;
+  max-height: 500px;
+  align-self: flex-start;
 }
 
 .team-list-container {
@@ -22,7 +23,8 @@
   flex: 8;
   min-width: 300px;
   margin-top: 10px;
-  min-height: 600px;
+  max-height: 500px;
+  align-self: flex-start;
 }
 
 .spacer {
@@ -68,4 +70,31 @@
 
 .right-10 {
   margin-right: 10px;
+}
+
+.mat-toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mat-toolbar-row mat-icon {
+  color: var(--mat-sys-primary);
+}
+
+.mat-toolbar-row p {
+  font-size: 16px;
+  margin: 0;
+}
+
+mat-paginator {
+  background-color: transparent;
+}
+
+.full-width {
+  align-items: flex-start;
+}
+
+.w-50 {
+  width: 50%;
 }

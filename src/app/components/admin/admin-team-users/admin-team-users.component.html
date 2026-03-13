@@ -4,11 +4,26 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div class="full-width">
-  <div class="user-list-container">
-    <div class="user-list-header">
-      <mat-icon class="mdi-24px right-10" fontIcon="mdi-account-multiple"></mat-icon>
-      All Users
-    </div>
+  <div class="user-list-container mat-elevation-z8">
+    <mat-toolbar class="background">
+      <mat-toolbar-row>
+        <mat-icon class="mdi-24px" fontIcon="mdi-account-multiple"></mat-icon>
+        <p>All Users</p>
+      </mat-toolbar-row>
+      <mat-toolbar-row>
+        <mat-form-field class="w-50">
+          <mat-label>Search</mat-label>
+          <input matInput [formControl]="filterControl" placeholder="Search" autocomplete="off" />
+          @if (filterControl.value) {
+          <button mat-icon-button matSuffix (click)="clearFilter()" title="Clear Search">
+            <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
+          </button>
+          }
+        </mat-form-field>
+        <mat-paginator #userPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+      </mat-toolbar-row>
+    </mat-toolbar>
+
     <mat-table class="mat-table-all-users" #table [dataSource]="userDataSource" matSort
       (matSortChange)="onSortChange($event)">
       <ng-container matColumnDef="name">
@@ -24,16 +39,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </ng-container>
 
       <ng-container matColumnDef="id">
-        <mat-header-cell *matHeaderCellDef>
-          <mat-form-field>
-            <input matInput [formControl]="filterControl" placeholder="Search" />
-            @if (filterControl.value) {
-            <button mat-icon-button matSuffix (click)="clearFilter()" title="Clear Search">
-              <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
-            </button>
-            }
-          </mat-form-field>
-        </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <div>
             @if (!onAnotherTeam(element.id)) {
@@ -53,7 +59,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-row *matRowDef="let row; columns: displayedUserColumns"></mat-row>
     </mat-table>
 
-    @if (userDataSource.filteredData.length === 0) {
+    @if (userDataSource.data.length === 0) {
     <div>No results found</div>
     }
   </div>
@@ -61,13 +67,24 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="spacer">&nbsp;</div>
 
   <div class="team-list-container mat-elevation-z8">
-
-    <div class="sp-icon">
-      <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
-      <span style="margin-left: 10px">
-        Team Users
-      </span>
-    </div>
+    <mat-toolbar class="background">
+      <mat-toolbar-row>
+        <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
+        <p>Team Users</p>
+      </mat-toolbar-row>
+      <mat-toolbar-row>
+        <mat-form-field class="w-50">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="teamUserFilterString" (keyup)="applyTeamUserFilter($event)" #teamUserInput autocomplete="off" />
+          @if (teamUserFilterString) {
+          <button matSuffix mat-icon-button aria-label="Clear" (click)="clearTeamUserFilter()">
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+          </button>
+          }
+        </mat-form-field>
+        <mat-paginator #teamUserPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+      </mat-toolbar-row>
+    </mat-toolbar>
 
     @if (false) {
     <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">

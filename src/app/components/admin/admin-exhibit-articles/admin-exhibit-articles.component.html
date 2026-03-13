@@ -24,31 +24,33 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </div>
     </div>
   </section>
-  @for (article of sortedArticles; track getArticleId($index, article)) {
-  <mat-expansion-panel>
-    @if (!isLoading) {
-    <mat-expansion-panel-header class="row">
-      <div class="cell one-cell center-self">
-        {{ article.move }}
-      </div>
-      <div class="cell one-cell center-self">
-        {{ article.inject }}
-      </div>
-      <div class="cell two-cell center-self">
-        {{ getCardName(article.cardId) }}
-      </div>
-      <div class="cell two-cell center-self">
-        {{ article.sourceName }}
-      </div>
-      <div class="cell five-cell">
-        {{ article.name }}
-      </div>
-    </mat-expansion-panel-header>
+  <section class="scrollable-region">
+    @for (article of sortedArticles; track getArticleId($index, article)) {
+    <mat-expansion-panel>
+      @if (!isLoading) {
+      <mat-expansion-panel-header class="row">
+        <div class="cell one-cell center-self">
+          {{ article.move }}
+        </div>
+        <div class="cell one-cell center-self">
+          {{ article.inject }}
+        </div>
+        <div class="cell two-cell center-self">
+          {{ getCardName(article.cardId) }}
+        </div>
+        <div class="cell two-cell center-self">
+          {{ article.sourceName }}
+        </div>
+        <div class="cell five-cell">
+          {{ article.name }}
+        </div>
+      </mat-expansion-panel-header>
+      }
+      <app-admin-exhibit-article-teams [exhibitId]="exhibit.id" [articleId]="article.id" [canEdit]="canEdit">
+      </app-admin-exhibit-article-teams>
+    </mat-expansion-panel>
     }
-    <app-admin-exhibit-article-teams [exhibitId]="exhibit.id" [articleId]="article.id" [canEdit]="canEdit">
-    </app-admin-exhibit-article-teams>
-  </mat-expansion-panel>
-  }
+  </section>
 </mat-accordion>
 @if (isLoading) {
 <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">

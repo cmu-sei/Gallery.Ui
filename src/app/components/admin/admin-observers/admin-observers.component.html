@@ -9,13 +9,24 @@ project root for license information or contact permission@sei.cmu.edu for full 
   <div class="spacer">&nbsp;</div>
 
   <div class="user-list-container mat-elevation-z8">
-
-    <div class="sp-icon">
-      <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
-      <span style="margin-left: 10px">
-        Evaluation Users
-      </span>
-    </div>
+    <mat-toolbar class="background">
+      <mat-toolbar-row>
+        <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
+        <p>Evaluation Users</p>
+      </mat-toolbar-row>
+      <mat-toolbar-row>
+        <mat-form-field class="w-50">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="teamUserFilterString" (keyup)="applyTeamUserFilter($event)" #teamUserInput autocomplete="off" />
+          @if (teamUserFilterString) {
+          <button matSuffix mat-icon-button aria-label="Clear" (click)="clearTeamUserFilter()">
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+          </button>
+          }
+        </mat-form-field>
+        <mat-paginator #teamUserPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+      </mat-toolbar-row>
+    </mat-toolbar>
 
     @if (false) {
     <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
@@ -63,13 +74,24 @@ project root for license information or contact permission@sei.cmu.edu for full 
   <div class="spacer">&nbsp;</div>
 
   <div class="observer-list-container mat-elevation-z8">
-
-    <div class="sp-icon">
-      <mat-icon class="mdi-24px" fontIcon="mdi-account-multiple"></mat-icon>
-      <span style="margin-left: 10px">
-        Observers
-      </span>
-    </div>
+    <mat-toolbar class="background">
+      <mat-toolbar-row>
+        <mat-icon class="mdi-24px" fontIcon="mdi-account-multiple"></mat-icon>
+        <p>Observers</p>
+      </mat-toolbar-row>
+      <mat-toolbar-row>
+        <mat-form-field class="w-50">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="observerFilterString" (keyup)="applyObserverFilter($event)" #observerInput autocomplete="off" />
+          @if (observerFilterString) {
+          <button matSuffix mat-icon-button aria-label="Clear" (click)="clearObserverFilter()">
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+          </button>
+          }
+        </mat-form-field>
+        <mat-paginator #observerPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+      </mat-toolbar-row>
+    </mat-toolbar>
 
     @if (false) {
     <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">

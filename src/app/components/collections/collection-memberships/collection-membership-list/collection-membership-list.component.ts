@@ -4,6 +4,7 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
 */
 
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -26,7 +27,7 @@ import { CollectionMembership, Group, User } from 'src/app/generated/api';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
 })
-export class CollectionMembershipListComponent implements OnInit, OnChanges {
+export class CollectionMembershipListComponent implements OnInit, OnChanges, AfterViewInit {
   @Input()
   users: User[];
 
@@ -49,13 +50,16 @@ export class CollectionMembershipListComponent implements OnInit, OnChanges {
 
   constructor(public snackBar: MatSnackBar) {}
 
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnChanges() {
     this.dataSource.data = this.buildModel();
