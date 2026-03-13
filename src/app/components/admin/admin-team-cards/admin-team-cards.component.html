@@ -23,7 +23,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-label>Card</mat-label>
       <mat-select placeholder="Card" [(ngModel)]="selectedCardId" (selectionChange)="sortChanged(sort)">
         <mat-option value=''>All Cards</mat-option>
-        @for (card of cardList; track card) {
+        @for (card of cardList; track card.id) {
         <mat-option [value]="card.id">
           {{ card.name }}
         </mat-option>
@@ -51,7 +51,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </section>
 
   <section class="srollable-region">
-    @for (teamCard of filteredTeamCardList; track teamCard) {
+    @for (teamCard of filteredTeamCardList; track teamCard.id) {
     <mat-expansion-panel disabled>
       @if (!isLoading) {
       <mat-expansion-panel-header class="row">
