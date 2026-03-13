@@ -34,6 +34,7 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 })
 export class AdminArticleEditDialogComponent implements OnInit {
   @Output() editComplete = new EventEmitter<any>();
+  showDescriptionError = false;
   editorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -61,44 +62,17 @@ export class AdminArticleEditDialogComponent implements OnInit {
     toolbarPosition: 'top',
     toolbarHiddenButtons: [['backgroundColor']],
   };
-  public articleNameFormControl = new UntypedFormControl(
-    this.data.article.name,
-    [Validators.required]
-  );
-  public summaryFormControl = new UntypedFormControl(
-    this.data.article.summary,
-    [Validators.required]
-  );
-  public descriptionFormControl = new UntypedFormControl(
-    this.data.article.description,
-    [Validators.required]
-  );
-  public cardIdFormControl = new UntypedFormControl(
-    this.data.article.cardId,
-    []
-  );
-  public moveFormControl = new UntypedFormControl(this.data.article.move, []);
-  public injectFormControl = new UntypedFormControl(
-    this.data.article.inject,
-    []
-  );
-  public statusFormControl = new UntypedFormControl(
-    this.data.article.status,
-    []
-  );
-  public sourceTypeFormControl = new UntypedFormControl(
-    this.data.article.sourceType,
-    []
-  );
-  public sourceNameFormControl = new UntypedFormControl(
-    this.data.article.sourceName,
-    []
-  );
-  public urlFormControl = new UntypedFormControl(this.data.article.url, []);
-  public datePostedFormControl = new UntypedFormControl(
-    this.data.article.datePosted,
-    []
-  );
+  public articleNameFormControl!: UntypedFormControl;
+  public summaryFormControl!: UntypedFormControl;
+  public descriptionFormControl!: UntypedFormControl;
+  public cardIdFormControl!: UntypedFormControl;
+  public moveFormControl!: UntypedFormControl;
+  public injectFormControl!: UntypedFormControl;
+  public statusFormControl!: UntypedFormControl;
+  public sourceTypeFormControl!: UntypedFormControl;
+  public sourceNameFormControl!: UntypedFormControl;
+  public urlFormControl!: UntypedFormControl;
+  public datePostedFormControl!: UntypedFormControl;
 
   public matcher = new UserErrorStateMatcher();
   itemStatusList: ItemStatus[] = [
@@ -133,6 +107,51 @@ export class AdminArticleEditDialogComponent implements OnInit {
   };
 
   ngOnInit() {
+    // Ensure openInNewTab is defined
+    if (this.data.article.openInNewTab === undefined) {
+      this.data.article.openInNewTab = false;
+    }
+
+    // Initialize form controls after data is injected
+    this.articleNameFormControl = new UntypedFormControl(
+      this.data.article.name || '',
+      [Validators.required]
+    );
+    this.summaryFormControl = new UntypedFormControl(
+      this.data.article.summary || '',
+      [Validators.required]
+    );
+    this.descriptionFormControl = new UntypedFormControl(
+      this.data.article.description || '',
+      [Validators.required]
+    );
+    this.cardIdFormControl = new UntypedFormControl(
+      this.data.article.cardId || '',
+      []
+    );
+    this.moveFormControl = new UntypedFormControl(this.data.article.move || 0, []);
+    this.injectFormControl = new UntypedFormControl(
+      this.data.article.inject || 0,
+      []
+    );
+    this.statusFormControl = new UntypedFormControl(
+      this.data.article.status || '',
+      []
+    );
+    this.sourceTypeFormControl = new UntypedFormControl(
+      this.data.article.sourceType || '',
+      []
+    );
+    this.sourceNameFormControl = new UntypedFormControl(
+      this.data.article.sourceName || '',
+      []
+    );
+    this.urlFormControl = new UntypedFormControl(this.data.article.url || '', []);
+    this.datePostedFormControl = new UntypedFormControl(
+      this.data.article.datePosted || new Date(),
+      []
+    );
+
     this.articleNameFormControl.markAsTouched();
     this.summaryFormControl.markAllAsTouched();
     this.descriptionFormControl.markAllAsTouched();
@@ -228,15 +247,32 @@ export class AdminArticleEditDialogComponent implements OnInit {
           : '';
         break;
       case 'datePosted': {
-        const newPosted = new Date(this.datePostedFormControl.value);
-        const oldPosted = new Date(this.data.article.datePosted);
-        newPosted.setHours(oldPosted.getHours());
-        newPosted.setMinutes(oldPosted.getMinutes());
-        this.data.article.datePosted = newPosted;
+        if (this.datePostedFormControl.value) {
+          this.data.article.datePosted = new Date(this.datePostedFormControl.value);
+        }
         break;
       }
       default:
         break;
+    }
+  }
+
+  getUserTimezone(): string {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  }
+
+  getTimezoneAbbr(): string {
+    try {
+      const date = new Date();
+      const timeZone = this.getUserTimezone();
+      const formatted = date.toLocaleTimeString('en-US', {
+        timeZoneName: 'short',
+        timeZone
+      });
+      const parts = formatted.split(' ');
+      return parts[parts.length - 1] || 'UTC';
+    } catch (error) {
+      return 'UTC';
     }
   }
 }

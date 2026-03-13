@@ -75,7 +75,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <!-- Date Created Column -->
           <ng-container matColumnDef="dateCreated">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Date Created</mat-header-cell>
-            <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }}</mat-cell>
+            <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"yyyy-MM-dd" }}</mat-cell>
           </ng-container>
           <mat-header-row *matHeaderRowDef="['name', 'collection', 'createdBy', 'dateCreated']"></mat-header-row>
           <mat-row *matRowDef="let exhibit; columns: ['name', 'collection', 'createdBy', 'dateCreated']"></mat-row>

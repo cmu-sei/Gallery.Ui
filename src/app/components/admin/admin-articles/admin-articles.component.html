@@ -58,7 +58,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="header-cell two-cell" mat-sort-header="sourceName">Source</div>
   </section>
 
-  @for (article of displayedArticles; track article) {
+  @for (article of displayedArticles; track article.id) {
   <mat-expansion-panel disabled>
     <mat-expansion-panel-header class="row" disabled>
       <div class="cell button-cell">
