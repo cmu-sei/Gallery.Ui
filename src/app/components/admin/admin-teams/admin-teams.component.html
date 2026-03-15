@@ -34,36 +34,38 @@ project root for license information or contact permission@sei.cmu.edu for full 
     </div>
   </section>
 
-  @for (team of sortedTeams; track team.id) {
-  <mat-expansion-panel [expanded]="editTeam.id === team.id">
-    <mat-expansion-panel-header class="row" (click)="togglePanel(team); $event.stopPropagation()">
-      <div class="cell button-cell">
-        <button mat-icon-button (click)="addOrEditTeam(team); $event.stopPropagation()" style="outline: none;"
-          title="Edit {{ team.name }}" [disabled]="!canEdit">
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
-        </button>
-        <button mat-icon-button (click)="deleteTeam(team); $event.stopPropagation()" style="outline: none;"
-          title="Delete {{ team.name }}" [disabled]="!canEdit">
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
-        </button>
+  <section class="scrollable-region">
+    @for (team of sortedTeams; track team.id) {
+    <mat-expansion-panel [expanded]="editTeam.id === team.id">
+      <mat-expansion-panel-header class="row" (click)="togglePanel(team); $event.stopPropagation()">
+        <div class="cell button-cell">
+          <button mat-icon-button (click)="addOrEditTeam(team); $event.stopPropagation()" style="outline: none;"
+            title="Edit {{ team.name }}" [disabled]="!canEdit">
+            <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteTeam(team); $event.stopPropagation()" style="outline: none;"
+            title="Delete {{ team.name }}" [disabled]="!canEdit">
+            <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
+          </button>
+        </div>
+        <div class="cell one-cell center-self">
+          {{ team.shortName }}
+        </div>
+        <div class="cell two-cell center-self">
+          {{ team.email }}
+        </div>
+        <div class="cell five-cell center-self">
+          {{ team.name }}
+        </div>
+      </mat-expansion-panel-header>
+      @if (team.id === editTeam.id) {
+      <div class="sub-panel">
+        <app-admin-team-users [teamId]="team.id" [canEdit]="canEdit"></app-admin-team-users>
       </div>
-      <div class="cell one-cell center-self">
-        {{ team.shortName }}
-      </div>
-      <div class="cell two-cell center-self">
-        {{ team.email }}
-      </div>
-      <div class="cell five-cell center-self">
-        {{ team.name }}
-      </div>
-    </mat-expansion-panel-header>
-    @if (team.id === editTeam.id) {
-    <div class="sub-panel">
-      <app-admin-team-users [teamId]="team.id" [canEdit]="canEdit"></app-admin-team-users>
-    </div>
+      }
+    </mat-expansion-panel>
     }
-  </mat-expansion-panel>
-  }
+  </section>
 </mat-accordion>
 }
 

@@ -58,34 +58,34 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="header-cell two-cell" mat-sort-header="sourceName">Source</div>
   </section>
 
-  @for (article of displayedArticles; track article) {
+  @for (article of displayedArticles; track article.id) {
   <mat-expansion-panel disabled>
-    <mat-expansion-panel-header class="row" disabled>
-      <div class="cell button-cell">
-        <button mat-icon-button (click)="addOrEditArticle(article)" style="outline: none;"
-          title="Edit {{ article.name }}" [disabled]="!canEdit">
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
-        </button>
-        <button mat-icon-button (click)="deleteArticle(article)" style="outline: none;"
-          title="Delete {{ article.name }}" [disabled]="!canEdit">
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
-        </button>
-      </div>
-      <div class="cell move-cell center-self">
-        {{ article.move }}
-      </div>
-      <div class="cell move-cell center-self">
-        {{ article.inject }}
-      </div>
-      <div class="cell three-cell center-self pad-top-bottom">
-        {{ getCardName(article.cardId) }}
-      </div>
-      <div class="cell four-cell center-self">{{ article.name }}</div>
-      <div class="cell two-cell center-self">
-        {{ article.sourceName }}
-      </div>
-    </mat-expansion-panel-header>
-  </mat-expansion-panel>
+      <mat-expansion-panel-header class="row" disabled>
+        <div class="cell button-cell">
+          <button mat-icon-button (click)="addOrEditArticle(article)" style="outline: none;"
+            title="Edit {{ article.name }}" [disabled]="!canEdit">
+            <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteArticle(article)" style="outline: none;"
+            title="Delete {{ article.name }}" [disabled]="!canEdit">
+            <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
+          </button>
+        </div>
+        <div class="cell move-cell center-self">
+          {{ article.move }}
+        </div>
+        <div class="cell move-cell center-self">
+          {{ article.inject }}
+        </div>
+        <div class="cell three-cell center-self pad-top-bottom">
+          {{ getCardName(article.cardId) }}
+        </div>
+        <div class="cell four-cell center-self">{{ article.name }}</div>
+        <div class="cell two-cell center-self">
+          {{ article.sourceName }}
+        </div>
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
   }
 </mat-accordion>
 }

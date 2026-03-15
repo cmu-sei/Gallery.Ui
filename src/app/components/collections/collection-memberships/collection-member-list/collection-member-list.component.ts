@@ -30,7 +30,7 @@ import {
     styleUrls: ['./collection-member-list.component.scss'],
     standalone: false
 })
-export class CollectionMemberListComponent implements OnInit, OnChanges {
+export class CollectionMemberListComponent implements OnInit, OnChanges, AfterViewInit {
   @Input()
   memberships: CollectionMembership[];
 
@@ -65,8 +65,6 @@ export class CollectionMemberListComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
         case 'role':
@@ -83,6 +81,11 @@ export class CollectionMemberListComponent implements OnInit, OnChanges {
         data.role.name.toLocaleLowerCase().includes(filter) || defaultMatch
       );
     };
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   ngOnChanges() {

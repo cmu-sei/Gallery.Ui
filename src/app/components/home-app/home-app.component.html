@@ -38,20 +38,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <div class="icon-text-container">
         <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
         <span class="exhibit-title text">My Exhibits</span>
-        <!-- Collection Dropdown -->
-        <mat-form-field class="width-30 collection-container">
-          <mat-label>Collection</mat-label>
-          <mat-select placeholder="Collection" [value]="collectionId"
-            (selectionChange)="selectCollection($event.value)">
-            @for (collection of collectionList; track collection.id) {
-            <mat-option [value]="collection.id">
-              {{ collection.name }}
-            </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <span>&nbsp;&nbsp;</span>
-        @if (!exhibitId && collectionId) {
         <div class="searchBox">
           <!-- Search Bar -->
           <mat-form-field style="width: 320px">
@@ -64,24 +50,22 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             }
           </mat-form-field>
         </div>
-        }
       </div>
-      @if (!exhibitId && collectionId) {
       <div class="exhibit-container background text" autosize>
         <mat-table class="width-100 mat-table" [dataSource]="exhibitList" matSort>
           <!-- Name Column -->
           <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
             <mat-cell *matCellDef="let exhibit">
               <a [routerLink]="['/']" [queryParams]="getQueryParams(exhibit.id)">
                 {{ exhibit.name }}
               </a>
             </mat-cell>
           </ng-container>
-          <!-- Description Column -->
-          <ng-container matColumnDef="description">
-            <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-            <mat-cell *matCellDef="let exhibit">{{ exhibit.description }}</mat-cell>
+          <!-- Collection Column -->
+          <ng-container matColumnDef="collection">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Collection</mat-header-cell>
+            <mat-cell *matCellDef="let exhibit">{{ getCollectionName(exhibit.collectionId) }}</mat-cell>
           </ng-container>
           <!-- Created By Column -->
           <ng-container matColumnDef="createdBy">
@@ -90,20 +74,19 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </ng-container>
           <!-- Date Created Column -->
           <ng-container matColumnDef="dateCreated">
-            <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
-            <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }}</mat-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Date Created</mat-header-cell>
+            <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"yyyy-MM-dd" }}</mat-cell>
           </ng-container>
-          <mat-header-row *matHeaderRowDef="['name', 'description', 'createdBy', 'dateCreated']"></mat-header-row>
-          <mat-row *matRowDef="let exhibit; columns: ['name', 'description', 'createdBy', 'dateCreated']"></mat-row>
+          <mat-header-row *matHeaderRowDef="['name', 'collection', 'createdBy', 'dateCreated']"></mat-header-row>
+          <mat-row *matRowDef="let exhibit; columns: ['name', 'collection', 'createdBy', 'dateCreated']"></mat-row>
         </mat-table>
         <!-- Filter No Results Found -->
-        @if (exhibitList.length === 0) {
+        @if (exhibitList.data.length === 0) {
         <div class="text no-results">
           No results found
         </div>
         }
       </div>
-      }
     </div>
     }
     @if (exhibitId && selectedSection === 'wall') {

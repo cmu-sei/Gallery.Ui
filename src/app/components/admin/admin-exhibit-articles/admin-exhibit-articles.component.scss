@@ -89,3 +89,8 @@
 .pad-top {
   margin-top: 12px;
 }
+
+.scrollable-region {
+  max-height: 500px;
+  overflow-y: auto;
+}
