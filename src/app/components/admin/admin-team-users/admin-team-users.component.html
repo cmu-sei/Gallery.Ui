@@ -126,6 +126,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-row *matRowDef="let row; columns: displayedTeamUserColumns"></mat-row>
     </mat-table>
 
+    @if (teamUserDataSource.filteredData.length === 0) {
+    <div>No results found</div>
+    }
   </div>
 
 </div>

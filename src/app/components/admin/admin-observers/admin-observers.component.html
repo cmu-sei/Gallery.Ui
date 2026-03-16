@@ -131,6 +131,9 @@ project root for license information or contact permission@sei.cmu.edu for full 
       <mat-row *matRowDef="let row; columns: displayedObserverColumns"></mat-row>
     </mat-table>
 
+    @if (observerDataSource.filteredData.length === 0) {
+    <div>No results found</div>
+    }
   </div>
 
   <div class="spacer">&nbsp;</div>
