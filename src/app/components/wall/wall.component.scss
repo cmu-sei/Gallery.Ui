@@ -12,9 +12,9 @@
   width: 100%;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  padding: 0 24px;
   box-sizing: border-box;
-  height: 66px;
+  min-height: 50px;
+  max-height: 50px;
   display: flex;
   align-items: center;
 }
@@ -28,7 +28,7 @@
 }
 
 .spacer-cell {
-  flex: 8;
+  flex: 9;
 }
 
 .cards {
@@ -36,7 +36,7 @@
   display: flex;
   align-content: flex-start;
   flex-wrap: wrap;
-  height: calc(100vh - 110px);
+  height: calc(100vh - 104px);
   overflow-y: auto;
 }
 
