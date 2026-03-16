@@ -27,6 +27,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 </div>
 
 @if (!isLoading && selectedCollectionId) {
+<div class="accordion-container">
 <mat-accordion displayMode="flat">
   <section matSort (matSortChange)="sortChanged($event)" class="header-row">
     <div class="header-cell first-cell">
@@ -126,6 +127,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </mat-expansion-panel>
   }
 </mat-accordion>
+</div>
 }
 @if (isLoading) {
 <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
