@@ -331,6 +331,8 @@ export class ArchiveComponent implements OnDestroy {
         .pipe(take(1))
         .subscribe();
       const dialogRef = this.dialog.open(ArticleMoreDialogComponent, {
+        width: 'auto',
+        maxWidth: '90vw',
         minWidth: '900px',
         minHeight: '700px',
         data: {
@@ -360,6 +362,8 @@ export class ArchiveComponent implements OnDestroy {
 
   openShareDialog(userArticle: UserArticle) {
     const dialogRef = this.dialog.open(ArticleShareDialogComponent, {
+      width: 'auto',
+      maxWidth: '90vw',
       minWidth: '900px',
       minHeight: '700px',
       data: {
@@ -449,7 +453,9 @@ export class ArchiveComponent implements OnDestroy {
       article = { ...article };
     }
     const dialogRef = this.dialog.open(ArticleEditDialogComponent, {
-      width: '900px',
+      width: 'auto',
+      maxWidth: '90vw',
+      minWidth: '900px',
       data: {
         article: article,
         cardList: this.postCardList,

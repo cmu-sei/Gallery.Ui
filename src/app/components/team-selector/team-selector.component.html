@@ -15,7 +15,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     }
     @if (teamList.length > 1) {
       <mat-select class="center-self" placeholder="Team" [value]="selectedTeamId" (selectionChange)="setActiveTeam($event.value)">
-        @for (team of teamList; track team) {
+        @for (team of teamList; track team.id) {
           <mat-option [value]="team.id">
             {{ team.shortName }}
           </mat-option>

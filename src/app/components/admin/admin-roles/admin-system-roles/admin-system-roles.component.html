@@ -34,12 +34,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           @if (canEdit) {
           @if (!role.immutable) {
           <button mat-icon-button color="primary" (click)="renameRole(role)" title="Rename Role">
-            <mat-icon class="mdi-24px" fontIcon="mdi-pencil-outline"></mat-icon>
+            <mat-icon class="mdi-24px" fontIcon="mdi-square-edit-outline"></mat-icon>
           </button>
           }
           @if (!role.immutable) {
           <button mat-icon-button color="primary" (click)="deleteRole(role)" title="Delete Role">
-            <mat-icon class="mdi-24px" fontIcon="mdi-delete-forever-outline"></mat-icon>
+            <mat-icon class="mdi-24px" fontIcon="mdi-trash-can-outline"></mat-icon>
           </button>
           }
           }

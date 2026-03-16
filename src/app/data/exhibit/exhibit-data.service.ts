@@ -217,8 +217,18 @@ export class ExhibitDataService {
         }),
         take(1)
       )
-      .subscribe((s) => {
-        this.exhibitStore.upsert(s.id, { ...s });
+      .subscribe({
+        next: (s) => {
+          this.exhibitStore.upsert(s.id, { ...s });
+        },
+        error: () => {
+          this.exhibitStore.setLoading(false);
+          console.log('Exhibit not found:', id);
+          // Redirect to home page when exhibit doesn't exist
+          this.router.navigate(['/'], {
+            queryParams: {}
+          });
+        }
       });
   }
 
@@ -251,14 +261,14 @@ export class ExhibitDataService {
         }),
         take(1)
       )
-      .subscribe(
-        (s) => {
+      .subscribe({
+        next: (s) => {
           this.exhibitStore.add(s);
         },
-        (error) => {
+        error: () => {
           this.exhibitStore.setLoading(false);
         }
-      );
+      });
   }
 
   updateExhibit(exhibit: Exhibit) {
@@ -280,7 +290,7 @@ export class ExhibitDataService {
     this.exhibitService
       .deleteExhibit(id)
       .pipe(take(1))
-      .subscribe((r) => {
+      .subscribe(() => {
         this.deleteFromStore(id);
       });
   }
@@ -293,15 +303,15 @@ export class ExhibitDataService {
     this.exhibitStore.setLoading(true);
     this.exhibitService
       .uploadJsonFiles(file, observe, reportProgress)
-      .subscribe(
-        (exhibit) => {
+      .subscribe({
+        next: (exhibit) => {
           this.exhibitStore.upsert(exhibit.id, exhibit);
         },
-        (error) => {
+        error: () => {
           this.exhibitStore.setLoading(false);
           this.uploadProgress.next(0);
         }
-      );
+      });
   }
   setActive(id: string) {
     this.exhibitStore.setActive(id);

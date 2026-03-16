@@ -5,6 +5,20 @@ This project is intended to be a functioning UI that can be used within the Cruc
 
 [Gallery Documentation](https://cmu-sei.github.io/crucible/gallery/)
 
+## Color Theming
+
+Gallery uses a monochrome gray Material 3 SCSS palette with runtime top-bar color overrides from `settings.json`.
+
+### Changing the top bar color
+
+| File | Field / Value | Purpose |
+|------|---------------|---------|
+| `src/assets/config/settings.json` | `"AppTopBarHexColor": "#008740"` | Runtime config -- top bar background color |
+| `src/assets/config/settings.json` | `"AppTopBarHexTextColor": "#FFFFFF"` | Runtime config -- top bar text color |
+| `src/app/app.component.ts` | `'#C41230'` / `'#FFFFFF'` fallbacks in `setTheme()` | Runtime fallbacks when settings are not provided |
+
+To change the top bar color for a deployment, update `AppTopBarHexColor` and `AppTopBarHexTextColor` in `settings.json`.
+
 # Generate code to get data from the API
 Run `npm run swagger:gen`
 # Angular

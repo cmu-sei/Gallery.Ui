@@ -21,10 +21,10 @@ import { SignalRService } from 'src/app/services/signalr.service';
 const NAME_VALUE = 'nameValue';
 
 @Component({
-    selector: 'app-admin-system-roles',
-    templateUrl: './admin-system-roles.component.html',
-    styleUrls: ['./admin-system-roles.component.scss'],
-    standalone: false
+  selector: 'app-admin-system-roles',
+  templateUrl: './admin-system-roles.component.html',
+  styleUrls: ['./admin-system-roles.component.scss'],
+  standalone: false
 })
 export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   private roleService = inject(RoleDataService);
@@ -48,13 +48,13 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
 
   public roles$ = this.roleService.roles$.pipe(
     map((roles) =>
-      roles.sort((a, b) => {
+      roles.filter(r => r.name).sort((a, b) => {
         // Sort by 'immutable' property first (false comes after true)
         if (a.immutable !== b.immutable) {
           return a.immutable ? -1 : 1; // Put `true` before `false`
         }
         // If 'immutable' values are the same, sort by 'name' (case-insensitive)
-        return a.name.localeCompare(b.name);
+        return a.name?.localeCompare(b.name);
       })
     )
   );
@@ -152,6 +152,8 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   nameDialog(title: string, message: string, data?: any): Observable<boolean> {
     const dialogRef = this.dialog.open(NameDialogComponent, {
       data: data || {},
+      minWidth: '400px',
+      maxWidth: '90vw',
     });
     dialogRef.componentInstance.title = title;
     dialogRef.componentInstance.message = message;

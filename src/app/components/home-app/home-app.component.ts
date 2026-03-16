@@ -400,8 +400,8 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     console.log('applyFilter: ' + filterValue);
     this.filterString = filterValue;
     this.exhibitList = this.allExhibits.filter((exhibit) => {
-      const createdBy = this.getUserName(exhibit.createdBy).toLowerCase();
-      return createdBy.includes(this.filterString.toLowerCase());
+      const createdBy = this.getUserName(exhibit.createdBy)?.toLowerCase();
+      return createdBy.includes(this.filterString?.toLowerCase());
     });
   }
 

@@ -51,6 +51,10 @@ export class PermissionDataService {
     return this._permissions.includes(permission);
   }
 
+  canViewAdministration() {
+    return this._permissions.some((y) => y.startsWith('View'));
+  }
+
   loadExhibitPermissions(): Observable<ExhibitPermissionClaim[]> {
     return this.exhibitPermissionsService
       .getMyExhibitPermissions()

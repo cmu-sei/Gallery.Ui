@@ -14,7 +14,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <mat-form-field appearance="fill" style="width: 100%;">
     <mat-label>Share with ...</mat-label>
     <mat-select [formControl]="shareTeamsControl" multiple style="width: 100%;">
-      @for (team of data.teamList; track team) {
+      @for (team of data.teamList; track team.id) {
       <mat-option [value]="team.id">
         {{team.name}}
       </mat-option>

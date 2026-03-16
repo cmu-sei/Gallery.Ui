@@ -43,7 +43,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <mat-label>Collection</mat-label>
           <mat-select placeholder="Collection" [value]="collectionId"
             (selectionChange)="selectCollection($event.value)">
-            @for (collection of collectionList; track collection) {
+            @for (collection of collectionList; track collection.id) {
             <mat-option [value]="collection.id">
               {{ collection.name }}
             </mat-option>
