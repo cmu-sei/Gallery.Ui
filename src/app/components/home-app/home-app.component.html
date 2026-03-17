@@ -3,7 +3,7 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div class="app-home-container">
+<div class="app-home-container" fxLayout="column" fxLayoutAlign="center stretch" fxFlexFill>
   @if (!hideTopbar) {
   <app-topbar [title]="titleText" [topbarView]="TopbarView.GALLERY_HOME" [imageFilePath]="topbarImage"
     (urlNavigate)="topBarNavigate($event)"></app-topbar>
@@ -22,7 +22,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </span>
   }
   @if (permissions) {
-  <span>
     @if (!exhibitId) {
     <div class="top-row">
       <div class="one-cell last-cell">
@@ -51,7 +50,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </mat-form-field>
         </div>
       </div>
-      <div class="exhibit-container background text" autosize>
+      <div class="background text" autosize>
         <mat-table class="width-100 mat-table" [dataSource]="exhibitList" matSort>
           <!-- Name Column -->
           <ng-container matColumnDef="name">
@@ -77,7 +76,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-header-cell *matHeaderCellDef mat-sort-header>Date Created</mat-header-cell>
             <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"yyyy-MM-dd" }}</mat-cell>
           </ng-container>
-          <mat-header-row *matHeaderRowDef="['name', 'collection', 'createdBy', 'dateCreated']"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="['name', 'collection', 'createdBy', 'dateCreated']; sticky: true"></mat-header-row>
           <mat-row *matRowDef="let exhibit; columns: ['name', 'collection', 'createdBy', 'dateCreated']"></mat-row>
         </mat-table>
         <!-- Filter No Results Found -->
@@ -90,17 +89,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
     }
     @if (exhibitId && selectedSection === 'wall') {
-    <span>
       <app-wall [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
         (sectionSelected)="gotoSection($event)"></app-wall>
-    </span>
     }
     @if (exhibitId && selectedSection === 'archive') {
-    <span>
       <app-archive [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
         (sectionSelected)="gotoSection($event)"></app-archive>
-    </span>
     }
-  </span>
   }
 </div>

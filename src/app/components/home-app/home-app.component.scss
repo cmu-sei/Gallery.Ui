@@ -9,30 +9,26 @@
   @include mat.elevation(2);
 }
 
+.app-home-container {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+}
+
 .list-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  max-height: 800px;
+  height: calc(100% - 50px);
   min-width: 300px;
-  margin: auto;
+  margin: 0 auto;
   width: 80%;
-  overflow-y: auto;
-  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
-}
-
-.app-home-container {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
-  height: 100%;
-  text-align: center;
   overflow: hidden;
-  height: 100%;
-  background-color: var(--mat-sys-background);
-  color: var(--mat-sys-on-background);
+  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
 }
 
 .app-model-container {
@@ -118,9 +114,21 @@ a {
   height: 90px;
 }
 
-.mat-mdc-table {
+.background {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  max-height: calc(100vh - 300px);
+}
+
+.mat-mdc-table {
+  width: 100%;
+}
+
+.mat-mdc-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--mat-sys-surface, inherit);
 }
 
 .searchBox {
