@@ -3,102 +3,115 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div class="cssLayoutRowStartCenter">
-  <div class="sp-icon">
-    <mat-icon class="mdi-24px" fontIcon="mdi-focus-field" [ngStyle]="{'color': 'var(--mat-sys-primary)'}"></mat-icon>
-  </div>
-  <mat-form-field style="width: 300px;">
-    <input matInput [formControl]="filterControl" placeholder="Search" />
-    @if (filterControl.value) {
-    <button mat-icon-button matSuffix (click)="clearFilter()" title="Clear Search">
-      <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
-    </button>
-    }
-  </mat-form-field>
-  <div style="min-width: 370px;">
-    <mat-paginator #paginator [length]="filteredCollectionList.length" [pageIndex]="pageIndex" [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]" (page)="paginatorEvent($event)"></mat-paginator>
-  </div>
-</div>
-@if (!isLoading) {
-<div class="accordion-container">
-<mat-accordion displayMode="flat">
-  <section matSort (matSortChange)="sortChanged($event)" class="header-row">
-    <span class="mat-header-cell first-cell">
-      <button mat-icon-button (click)="addOrEditCollection(null); $event.stopPropagation()"
-        style="outline: none; margin-left: 20px;" title="Add Collection" [disabled]="isBusy || !canCreateCollections()">
-        <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
-      </button>
-      <button mat-icon-button (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
-        title="Upload Collection" [disabled]="isBusy || !canCreateCollections()">
-        <mat-icon class="mdi-24px" fontIcon="mdi-upload" alt="Upload"></mat-icon>
-      </button>
-    </span>
-    <span class="mat-header-cell name-cell" mat-sort-header="name">Name</span>
-    <span class="mat-header-cell five-cell" mat-sort-header="description">Description</span>
-  </section>
-  @for (collection of displayedCollections; track collection.id) {
-  <mat-expansion-panel>
-    <mat-expansion-panel-header class="row" (click)="toggleSelectedCollection(collection.id)">
-      <div class="cell first-cell">
-        <button mat-icon-button (click)="addOrEditCollection(collection); $event.stopPropagation()"
-          style="outline: none;" title="Edit {{ collection.name }}"
-          [disabled]="isBusy || !canEditCollection(collection.id)">
-          <mat-icon class="mdi-18px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
-        </button>
-        <button mat-icon-button (click)="copyCollection(collection.id); $event.stopPropagation();"
-          title="Copy {{ collection.name }}" [disabled]="isBusy || !canCreateCollections()">
-          <mat-icon class="mdi-18px" fontIcon="mdi-content-copy" alt="Copy"></mat-icon>
-        </button>
-        <button mat-icon-button (click)="downloadCollection(collection); $event.stopPropagation();"
-          title="Download {{ collection.name }}" [disabled]="isBusy">
-          <mat-icon class="mdi-18px" fontIcon="mdi-download" alt="Download"></mat-icon>
-        </button>
-        <button mat-icon-button (click)="deleteCollection(collection); $event.stopPropagation()" style="outline: none;"
-          title="Delete {{ collection.name }}" [disabled]="isBusy || !canManageCollection(collection.id)">
-          <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
-        </button>
-      </div>
-      <div class="cell name-cell center-self">
-        {{ collection.name }}
-      </div>
-      <div class="cell five-cell center-self">
-        {{ collection.description }}
-      </div>
-    </mat-expansion-panel-header>
-    @if (selectedCollectionId === collection.id) {
-    <div class="sub-panel">
-      <mat-expansion-panel class="bottom-space">
-        <mat-expansion-panel-header>
-          <h4>Cards</h4>
-        </mat-expansion-panel-header>
-        <app-admin-cards [selectedCollectionId]="collection.id"></app-admin-cards>
-      </mat-expansion-panel>
-      <mat-expansion-panel class="bottom-space">
-        <mat-expansion-panel-header>
-          <h4>Articles</h4>
-        </mat-expansion-panel-header>
-        <app-admin-articles [selectedCollectionId]="collection.id"></app-admin-articles>
-      </mat-expansion-panel>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <h4>Memberships</h4>
-        </mat-expansion-panel-header>
-        <app-collection-memberships [collectionId]="collection.id" [embedded]="true"></app-collection-memberships>
-      </mat-expansion-panel>
+<div class="cssLayoutColumnCenterStart">
+  <div class="cssLayoutRowStartCenter">
+    <div class="sp-icon">
+      <mat-icon class="mdi-24px" fontIcon="mdi-focus-field" [ngStyle]="{'color': 'var(--mat-sys-primary)'}"></mat-icon>
     </div>
-    }
-  </mat-expansion-panel>
-  }
-</mat-accordion>
-</div>
-}
+    <mat-form-field style="width: 300px;">
+      <input matInput [formControl]="filterControl" placeholder="Search" />
+      @if (filterControl.value) {
+      <button mat-icon-button matSuffix (click)="clearFilter()" title="Clear Search">
+        <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
+      </button>
+      }
+    </mat-form-field>
+    <div style="min-width: 370px;">
+      <mat-paginator [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]" [pageSize]="10"></mat-paginator>
+    </div>
+  </div>
+  <div class="table-container">
+    @if (!isLoading) {
+    <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
 
-@if (isLoading) {
-<mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
-</mat-card>
-}
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="button-cell">
+            <button mat-icon-button (click)="addOrEditCollection(null); $event.stopPropagation()" title="Add Collection"
+              [disabled]="isBusy || !canCreateCollections()">
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
+            </button>
+            <button mat-icon-button (click)="isBusy = true; jsonInput.click(); $event.stopPropagation()"
+              title="Upload Collection" [disabled]="isBusy || !canCreateCollections()">
+              <mat-icon class="mdi-24px" fontIcon="mdi-upload" alt="Upload"></mat-icon>
+            </button>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button (click)="addOrEditCollection(element); $event.stopPropagation()"
+            style="outline: none;" title="Edit {{ element.name }}"
+            [disabled]="isBusy || !canEditCollection(element.id)">
+            <mat-icon class="mdi-18px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="copyCollection(element.id); $event.stopPropagation();"
+            title="Copy {{ element.name }}" [disabled]="isBusy || !canCreateCollections()">
+            <mat-icon class="mdi-18px" fontIcon="mdi-content-copy" alt="Copy"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="downloadCollection(element); $event.stopPropagation();"
+            title="Download {{ element.name }}" [disabled]="isBusy">
+            <mat-icon class="mdi-18px" fontIcon="mdi-download" alt="Download"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteCollection(element); $event.stopPropagation()" style="outline: none;"
+            title="Delete {{ element.name }}" [disabled]="isBusy || !canManageCollection(element.id)">
+            <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+        <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+          <div [@detailExpand]="element.id === expandedCollectionId ? 'expanded' : 'collapsed'"
+            (click)="$event.stopPropagation()">
+            @if (element.id === expandedCollectionId) {
+            <div class="sub-panel">
+              <mat-expansion-panel class="bottom-space">
+                <mat-expansion-panel-header>
+                  <h4>Cards</h4>
+                </mat-expansion-panel-header>
+                <app-admin-cards [selectedCollectionId]="element.id"></app-admin-cards>
+              </mat-expansion-panel>
+              <mat-expansion-panel class="bottom-space">
+                <mat-expansion-panel-header>
+                  <h4>Articles</h4>
+                </mat-expansion-panel-header>
+                <app-admin-articles [selectedCollectionId]="element.id"></app-admin-articles>
+              </mat-expansion-panel>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <h4>Memberships</h4>
+                </mat-expansion-panel-header>
+                <app-collection-memberships [collectionId]="element.id" [embedded]="true"></app-collection-memberships>
+              </mat-expansion-panel>
+            </div>
+            }
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="element-row" (click)="toggleExpand(row.id)">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+    </table>
+    }
+
+    @if (isLoading) {
+    <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
+      <mat-progress-spinner color="primary" mode="indeterminate">
+      </mat-progress-spinner>
+    </mat-card>
+    }
+  </div>
+</div>
 
 <input hidden (change)="selectFile($event)" (cancel)="isBusy = false" #jsonInput type="file" accept=".json" />
