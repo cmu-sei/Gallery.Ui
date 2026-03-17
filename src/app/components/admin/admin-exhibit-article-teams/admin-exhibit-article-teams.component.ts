@@ -107,7 +107,7 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
   }
 
   applyExhibitTeamFilter(event: any) {
-    this.exhibitTeamDataSource.filter = this.exhibitTeamFilterString.toLowerCase();
+    this.exhibitTeamDataSource.filter = (this.exhibitTeamFilterString || '').toLowerCase();
   }
 
   clearExhibitTeamFilter() {
@@ -116,7 +116,7 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
   }
 
   applyArticleTeamFilter(event: any) {
-    this.articleTeamDataSource.filter = this.articleTeamFilterString.toLowerCase();
+    this.articleTeamDataSource.filter = (this.articleTeamFilterString || '').toLowerCase();
   }
 
   clearArticleTeamFilter() {
