@@ -1,10 +1,18 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
-import { Sort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import {
   Collection,
   SystemPermission,
@@ -23,28 +31,30 @@ import { PermissionDataService } from 'src/app/data/permission/permission-data.s
   selector: 'app-admin-collections',
   templateUrl: './admin-collections.component.html',
   styleUrls: ['./admin-collections.component.scss'],
-  standalone: false
+  standalone: false,
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
-export class AdminCollectionsComponent implements OnDestroy {
-  pageSize = 10;
-  pageIndex = 0;
+export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   collectionList: Collection[] = [];
-  newCollection: Collection = { id: '', name: '' };
   isLoading = false;
-  addingNewCollection = false;
-  newCollectionName = '';
   editCollection: Collection = {};
-  originalCollection: Collection = {};
-  selectedCollectionId = '';
-  filteredCollectionList: Collection[] = [];
-  displayedCollections: Collection[] = [];
+  expandedCollectionId: string | null = null;
+  displayedColumns: string[] = ['actions', 'name', 'description'];
+  dataSource = new MatTableDataSource<Collection>();
   filterControl = new UntypedFormControl();
   filterString = '';
-  sort: Sort = { active: 'dateCreated', direction: 'desc' };
   private unsubscribe$ = new Subject();
   isBusy = false;
   uploadProgress = 0;
   @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
+  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private settingsService: ComnSettingsService,
@@ -54,6 +64,11 @@ export class AdminCollectionsComponent implements OnDestroy {
     private collectionQuery: CollectionQuery,
     private permissionDataService: PermissionDataService
   ) {
+    this.dataSource.filterPredicate = (collection: Collection, filter: string) =>
+      !filter ||
+      collection.name?.toLowerCase().includes(filter) ||
+      collection.description?.toLowerCase().includes(filter);
+
     this.collectionQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -65,23 +80,27 @@ export class AdminCollectionsComponent implements OnDestroy {
             this.editCollection = { ...collection };
           }
         });
-        this.applyFilter();
+        this.dataSource.data = this.collectionList;
         this.permissionDataService.loadCollectionPermissions().subscribe();
       });
     this.collectionDataService.load();
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
-        this.filterString = term.trim().toLowerCase();
-        this.applyFilter();
+        this.filterString = term ? term.trim().toLowerCase() : '';
+        this.dataSource.filter = this.filterString;
       });
-    // subscribe to scoring models loading
     this.collectionQuery
       .selectLoading()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((isLoading) => {
         this.isBusy = isLoading;
       });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.matSort;
+    this.dataSource.paginator = this.paginator;
   }
 
   canCreateCollections(): boolean {
@@ -113,20 +132,10 @@ export class AdminCollectionsComponent implements OnDestroy {
     });
   }
 
-  togglePanel(collection: Collection) {
-    this.editCollection =
-      this.editCollection.id === collection.id
-        ? (this.editCollection = {})
-        : (this.editCollection = { ...collection });
-  }
-
-  toggleSelectedCollection(collectionId: string) {
-    if (this.selectedCollectionId !== collectionId) {
-      this.selectedCollectionId = collectionId;
-    } else {
-      this.selectedCollectionId = '';
-    }
-    this.collectionDataService.setActive(this.selectedCollectionId);
+  toggleExpand(collectionId: string) {
+    this.expandedCollectionId =
+      this.expandedCollectionId === collectionId ? null : collectionId;
+    this.collectionDataService.setActive(this.expandedCollectionId || '');
   }
 
   canEditCollection(collectionId: string): boolean {
@@ -135,12 +144,6 @@ export class AdminCollectionsComponent implements OnDestroy {
 
   canManageCollection(collectionId: string): boolean {
     return this.permissionDataService.canManageCollection(collectionId);
-  }
-
-  selectCollection(collection: Collection) {
-    this.editCollection = { ...collection };
-    this.originalCollection = { ...collection };
-    return false;
   }
 
   saveCollection(collection: Collection) {
@@ -164,58 +167,12 @@ export class AdminCollectionsComponent implements OnDestroy {
       });
   }
 
-  cancelEdit() {
-    this.editCollection = { ...this.originalCollection };
-  }
-
-  applyFilter() {
-    this.filteredCollectionList = this.collectionList.filter(
-      (collection) =>
-        !this.filterString ||
-        collection.name.toLowerCase().includes(this.filterString) ||
-        collection.description.toLowerCase().includes(this.filterString)
-    );
-    this.sortChanged(this.sort);
-  }
-
   clearFilter() {
     this.filterControl.setValue('');
   }
 
-  sortChanged(sort: Sort) {
-    this.sort = sort;
-    this.filteredCollectionList.sort((a, b) =>
-      this.sortCollections(a, b, sort.active, sort.direction)
-    );
-    this.applyPagination();
-  }
-
-  private sortCollections(
-    a: Collection,
-    b: Collection,
-    column: string,
-    direction: string
-  ) {
-    const isAsc = direction !== 'desc';
-    switch (column) {
-      case 'name':
-        return (
-          (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
-      case 'description':
-        return (
-          (a.description.toLowerCase() < b.description.toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
-      default:
-        return 0;
-    }
-  }
-
   copyCollection(id: string): void {
     this.permissionDataService.loadCollectionPermissions().subscribe();
-    // this.collectionDataService.copy(id);
   }
 
   downloadCollection(collection: Collection) {
@@ -240,9 +197,6 @@ export class AdminCollectionsComponent implements OnDestroy {
     );
   }
 
-  /**
-   * Selects the file(s) to be uploaded. Called when file selection is changed
-   */
   selectFile(e) {
     const file = e.target.files[0];
     if (!file) {
@@ -253,20 +207,6 @@ export class AdminCollectionsComponent implements OnDestroy {
     this.isBusy = true;
     this.collectionDataService.uploadJson(file, 'events', true);
     this.jsonInput.nativeElement.value = null;
-  }
-
-  paginatorEvent(page: PageEvent) {
-    this.pageIndex = page.pageIndex;
-    this.pageSize = page.pageSize;
-    this.applyPagination();
-  }
-
-  applyPagination() {
-    const startIndex = this.pageIndex * this.pageSize;
-    this.displayedCollections = this.filteredCollectionList.slice(
-      startIndex,
-      startIndex + this.pageSize
-    );
   }
 
   ngOnDestroy() {

@@ -124,13 +124,17 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
       const datePosted = new Date();
       article = {
         name: '',
+        summary: '',
         description: '',
         collectionId: this.selectedCollectionId,
+        cardId: '',
         move: 0,
         inject: 0,
         status: ItemStatus.Unused,
         sourceType: SourceType.Intel,
         sourceName: '',
+        url: '',
+        openInNewTab: false,
         datePosted: datePosted,
       };
     } else {
@@ -142,7 +146,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
       minWidth: '900px',
       data: {
         article: article,
-        cardList: this.cardList,
+        cardList: this.cardList || [],
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {

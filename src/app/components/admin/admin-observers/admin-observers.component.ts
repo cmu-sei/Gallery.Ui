@@ -30,8 +30,11 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   observerDataSource = new MatTableDataSource<TeamUser>(new Array<TeamUser>());
   teamUserDataSource = new MatTableDataSource<TeamUser>(new Array<TeamUser>());
   teamList: Team[] = [];
+  teamUserFilterString = '';
+  observerFilterString = '';
   private unsubscribe$ = new Subject();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild('teamUserPaginator', { static: true }) teamUserPaginator: MatPaginator;
+  @ViewChild('observerPaginator', { static: true }) observerPaginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
@@ -83,7 +86,42 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
     this.observerDataSource.sort = this.sort;
+    this.observerDataSource.paginator = this.observerPaginator;
+    this.teamUserDataSource.paginator = this.teamUserPaginator;
+
+    // Set up filter predicates
+    this.teamUserDataSource.filterPredicate = (data: TeamUser, filter: string) => {
+      const teamName = this.getTeamName(data.teamId).toLowerCase();
+      const userName = this.getUserName(data.userId).toLowerCase();
+      return teamName.includes(filter) || userName.includes(filter);
+    };
+
+    this.observerDataSource.filterPredicate = (data: TeamUser, filter: string) => {
+      const teamName = this.getTeamName(data.teamId).toLowerCase();
+      const userName = this.getUserName(data.userId).toLowerCase();
+      return teamName.includes(filter) || userName.includes(filter);
+    };
     // this.teamUserDataService.loadByEvaluation(this.evaluationId);
+  }
+
+  applyTeamUserFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.teamUserDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  clearTeamUserFilter() {
+    this.teamUserFilterString = '';
+    this.teamUserDataSource.filter = '';
+  }
+
+  applyObserverFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.observerDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  clearObserverFilter() {
+    this.observerFilterString = '';
+    this.observerDataSource.filter = '';
   }
 
   setDataSources() {

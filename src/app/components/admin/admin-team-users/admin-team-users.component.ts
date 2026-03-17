@@ -1,8 +1,8 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { Component, OnDestroy, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Sort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Team, TeamUser, User } from 'src/app/generated/api';
@@ -21,7 +21,7 @@ import { UntypedFormControl } from '@angular/forms';
     styleUrls: ['./admin-team-users.component.scss'],
     standalone: false
 })
-export class AdminTeamUsersComponent implements OnDestroy, OnInit {
+export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit {
   @Input() teamId: string;
   @Input() canEdit: boolean;
   userList: User[] = [];
@@ -35,10 +35,14 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
   teamUserDataSource = new MatTableDataSource<TeamUser>(new Array<TeamUser>());
   filterControl = new UntypedFormControl();
   filterString = '';
+  teamUserFilterString = '';
   defaultPageSize = 100;
   pageEvent: PageEvent;
   private unsubscribe$ = new Subject();
   sort: Sort = { active: 'name', direction: 'asc' };
+
+  @ViewChild('userPaginator') userPaginator: MatPaginator;
+  @ViewChild('teamUserPaginator') teamUserPaginator: MatPaginator;
 
   constructor(
     private teamQuery: TeamQuery,
@@ -92,6 +96,27 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
     this.setDataSources();
   }
 
+  ngAfterViewInit() {
+    this.userDataSource.paginator = this.userPaginator;
+    this.teamUserDataSource.paginator = this.teamUserPaginator;
+
+    // Set up filter predicate for team users
+    this.teamUserDataSource.filterPredicate = (data: TeamUser, filter: string) => {
+      const userName = this.getUserName(data.userId).toLowerCase();
+      return userName.includes(filter);
+    };
+  }
+
+  applyTeamUserFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.teamUserDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  clearTeamUserFilter() {
+    this.teamUserFilterString = '';
+    this.teamUserDataSource.filter = '';
+  }
+
   clearFilter() {
     this.filterControl.setValue('');
   }
@@ -124,7 +149,14 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit {
     const searchTerm = this.filterControl.value
       ? this.filterControl.value.toLowerCase()
       : '';
-    const filteredData = this.userList.filter(
+
+    // Start with users not on this team
+    const availableUsers = !this.userList
+      ? new Array<User>()
+      : this.userList.filter(user => !this.teamUsers.some(tu => tu.userId === user.id));
+
+    // Then apply search filter
+    const filteredData = availableUsers.filter(
       (user) => !searchTerm || user.name.toLowerCase().includes(searchTerm)
     );
     this.sortUserData(filteredData);

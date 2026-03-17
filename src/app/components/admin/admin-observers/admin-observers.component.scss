@@ -2,13 +2,18 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
+.cssLayoutRowStartCenter {
+  align-items: flex-start !important;
+}
+
 .user-list-container {
   display: flex;
   flex-direction: column;
   flex: 8;
   min-width: 300px;
   margin-top: 10px;
-  min-height: 600px;
+  max-height: 500px;
+  align-self: flex-start;
 }
 
 .observer-list-container {
@@ -17,7 +22,8 @@
   flex: 8;
   min-width: 300px;
   margin-top: 10px;
-  min-height: 600px;
+  max-height: 500px;
+  align-self: flex-start;
 }
 
 .spacer {
@@ -50,4 +56,27 @@
   margin-top: 10px;
   display: inline-flex;
   align-items: center;
+}
+
+.mat-toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mat-toolbar-row mat-icon {
+  color: var(--mat-sys-primary);
+}
+
+.mat-toolbar-row p {
+  font-size: 16px;
+  margin: 0;
+}
+
+mat-paginator {
+  background-color: transparent;
+}
+
+.w-50 {
+  width: 50%;
 }

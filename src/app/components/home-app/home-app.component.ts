@@ -4,6 +4,8 @@
 
 import { Component, Inject, OnDestroy, OnInit, ViewChild, DOCUMENT } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
@@ -50,12 +52,23 @@ import { XApiService } from 'src/app/generated/api';
 })
 export class HomeAppComponent implements OnDestroy, OnInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild(MatSort) set sort(sort: MatSort) {
+    if (sort) {
+      this.exhibitList.sortingDataAccessor = (exhibit, column) => {
+        switch (column) {
+          case 'collection': return this.getCollectionName(exhibit.collectionId) || '';
+          case 'dateCreated': return exhibit.dateCreated ? new Date(exhibit.dateCreated).toISOString() : '';
+          default: return exhibit[column as keyof Exhibit] as string;
+        }
+      };
+      this.exhibitList.sort = sort;
+    }
+  }
   apiMessage =
     'The GALLERY API web service appears to be experiencing technical difficulties.';
   titleText = 'Gallery';
   exhibitId = '';
   exhibit: Exhibit;
-  collectionId = '';
   collection: Collection;
   currentMove = -1;
   currentInject = -1;
@@ -65,7 +78,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   collectionList: Collection[] = [];
   collectionLoadCount = 0;
   allExhibits: Exhibit[] = [];
-  exhibitList: Exhibit[] = [];
+  exhibitList = new MatTableDataSource<Exhibit>();
   teamList: Team[] = [];
   selectedTeamId = '';
   isAuthorizedUser = false;
@@ -136,13 +149,14 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   startup() {
+    // load collections
+    this.collectionDataService.loadMine();
     // subscribe to route changes
     this.activatedRoute.queryParamMap
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((params) => {
         // exhibit and collection
         const exhibitId = params.get('exhibit');
-        const collectionId = params.get('collection');
         if (exhibitId) {
           this.exhibitId = exhibitId;
           this.exhibitDataService.loadById(exhibitId);
@@ -159,15 +173,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
             this.selectedSection = Section.archive;
           }
           this.loadExhibitData();
-        } else if (collectionId) {
-          this.exhibitId = '';
-          this.collectionId = collectionId;
-          this.loadCollectionData();
         } else {
-          this.exhibitId = '';
-          this.collectionDataService.loadMine();
+          this.exhibitDataService.loadMine();
         }
-        this.collectionDataService.setActive(this.collectionId);
         // card
         const cardId = params.get('card');
         if (exhibitId && cardId) {
@@ -240,7 +248,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
             !inIntialState &&
             (this.exhibit.currentMove !== this.currentMove ||
               this.exhibit.currentInject !== this.currentInject);
-          this.collectionId = this.exhibit.collectionId;
           this.currentMove = this.exhibit.currentMove;
           this.currentInject = this.exhibit.currentInject;
           if (moveOrInjectChanged) {
@@ -320,13 +327,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     }
   }
 
-  loadCollectionData() {
-    this.collectionDataService.loadById(this.collectionId);
-    this.collectionDataService.setActive(this.collectionId);
-    this.uiDataService.setCollection(this.collectionId);
-    this.exhibitDataService.loadMineByCollection(this.collectionId);
-  }
-
   loadExhibitData() {
     // process the change
     this.exhibitDataService.setActive(this.exhibitId);
@@ -349,10 +349,8 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     }
   }
 
-  selectCollection(collectionId: string) {
-    this.collectionId = collectionId;
-    this.exhibitId = '';
-    this.loadCollectionData();
+  getCollectionName(collectionId: string) {
+    return this.collectionList.find(c => c.id === collectionId)?.name;
   }
 
   handleExhibitMoveOrInjectChange() {
@@ -399,9 +397,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   applyFilter(filterValue: string) {
     console.log('applyFilter: ' + filterValue);
     this.filterString = filterValue;
-    this.exhibitList = this.allExhibits.filter((exhibit) => {
-      const createdBy = this.getUserName(exhibit.createdBy)?.toLowerCase();
-      return createdBy.includes(this.filterString?.toLowerCase());
+    const filter = this.filterString?.toLowerCase() ?? '';
+    this.exhibitList.data = this.allExhibits.filter((exhibit) => {
+      const name = exhibit.name?.toLowerCase() ?? '';
+      const collection = this.getCollectionName(exhibit.collectionId)?.toLowerCase() ?? '';
+      const createdBy = this.getUserName(exhibit.createdBy)?.toLowerCase() ?? '';
+      return name.includes(filter) || collection.includes(filter) || createdBy.includes(filter);
     });
   }
 
@@ -413,8 +414,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   clearFilter() {
-    this.filterString = '';
-    this.exhibitDataService.loadMineByCollection(this.collectionId);
+    this.applyFilter('');
   }
 
   topBarNavigate(url): void {

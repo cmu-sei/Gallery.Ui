@@ -1,109 +1,72 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-@use "@angular/material" as mat;
-
-.panel-container {
+:host {
   display: flex;
-  flex-flow: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-align: left;
-  margin-left: 10%;
+  flex-direction: column;
+  height: calc(100vh - 44px);
 }
 
-.panel-div {
+.cssLayoutColumnCenterStart {
   display: flex;
-  flex-flow: row;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: left;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  align-items: stretch;
 }
 
-.user-div {
-  display: flex;
-  flex-flow: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-align: left;
+.cssLayoutRowStartCenter {
+  flex-shrink: 0;
+}
+
+.table-container {
+  flex: 1;
+  overflow: auto;
+  padding-bottom: 20px;
 }
 
 .sub-panel {
   width: 90%;
   margin-left: 5%;
   min-width: 700px;
+  padding: 16px 0;
 }
 
 .bottom-space {
   margin-bottom: 20px;
 }
 
-.name-width {
-  width: 600px;
-}
-
-.short-width {
-  width: 150px;
-}
-
-.header-row {
-  min-height: 56px;
-}
-
-.row {
-  min-height: 48px;
-}
-
-.row,
-.header-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 24px;
-  font-weight: 400;
-}
-
-.cell,
-.header-cell {
-  overflow: hidden;
-  word-wrap: break-word;
-}
-
-.button-margins {
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
 .sp-icon {
   margin-left: 10px;
 }
 
-.mat-accordion .mat-mdc-header-row {
-  padding-left: 1.5rem;
-  padding-right: 2rem;
-  border-bottom: none;
+table {
+  width: 100%;
 }
 
-.mat-expansion-panel-header.mat-mdc-row {
-  border-bottom: none;
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  overflow: hidden;
+  word-wrap: break-word;
+  padding-right: 10px;
 }
 
-.mat-expansion-panel {
-  text-align: left;
+.mat-column-actions {
+  width: 160px;
+  max-width: 200px;
+  white-space: nowrap;
 }
 
-.pad-top {
-  margin-top: 12px;
+tr.detail-row {
+  height: 0;
 }
 
-.first-cell {
-  flex: 2;
-  align-self: center;
-  min-width: 160px;
-  max-width: 180px;
+.element-row td {
+  border-bottom-width: 0;
+  cursor: pointer;
 }
 
-.name-cell {
-  flex: 3;
-  min-width: 200px;
+.button-cell {
+  display: flex;
+  align-items: center;
 }

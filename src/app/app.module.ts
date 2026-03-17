@@ -114,6 +114,15 @@ import { ApiModule as SwaggerCodegenApiModule } from './generated/api/api.module
 import { ArchiveComponent } from './components/archive/archive.component';
 import { WallComponent } from './components/wall/wall.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import {
+  NgxMatDatepickerActions,
+  NgxMatDatepickerApply,
+  NgxMatDatepickerCancel,
+  NgxMatDatepickerClear,
+  NgxMatDatepickerInput,
+  NgxMatDatepickerToggle,
+  NgxMatDatetimepicker,
+} from '@ngxmc/datetime-picker';
 import { TeamSelectorComponent } from './components/team-selector/team-selector.component';
 import { UIDataService } from './data/ui/ui-data.service';
 
@@ -209,6 +218,13 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     ComnAuthModule.forRoot(),
     ComnSettingsModule.forRoot(),
     AngularEditorModule,
+    NgxMatDatetimepicker,
+    NgxMatDatepickerToggle,
+    NgxMatDatepickerInput,
+    NgxMatDatepickerActions,
+    NgxMatDatepickerApply,
+    NgxMatDatepickerCancel,
+    NgxMatDatepickerClear,
     MatFormFieldModule,
     MatLabel,
     MatSelect,

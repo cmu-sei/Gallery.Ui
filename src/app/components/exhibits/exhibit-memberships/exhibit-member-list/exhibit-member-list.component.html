@@ -6,7 +6,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 <div class="mat-elevation-z8">
   <mat-toolbar class="background">
     <mat-toolbar-row>
-      <p>Exhibit Members</p>
+      <mat-icon class="mdi-24px" fontIcon="mdi-account-multiple"></mat-icon>
+      <p>Members</p>
     </mat-toolbar-row>
     <mat-toolbar-row>
       <mat-form-field class="w-50">
@@ -60,15 +61,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">
-        @if (input.value) {
-        No data matching the filter "{{ input.value }}"
-        } @else {
-        This Exhibit currently has no members
-        }
-      </td>
-    </tr>
   </table>
+
+  @if (dataSource.filteredData.length === 0) {
+  <div>No results found</div>
+  }
 </div>

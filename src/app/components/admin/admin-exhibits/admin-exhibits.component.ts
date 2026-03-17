@@ -2,15 +2,24 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {
   Component,
   Input,
   OnDestroy,
+  AfterViewInit,
   ViewChild,
   ElementRef,
 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
-import { Sort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import {
   Collection,
   Exhibit,
@@ -33,34 +42,38 @@ import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 
 @Component({
-    selector: 'app-admin-exhibits',
-    templateUrl: './admin-exhibits.component.html',
-    styleUrls: ['./admin-exhibits.component.scss'],
-    standalone: false
+  selector: 'app-admin-exhibits',
+  templateUrl: './admin-exhibits.component.html',
+  styleUrls: ['./admin-exhibits.component.scss'],
+  standalone: false,
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
-export class AdminExhibitsComponent implements OnDestroy {
+export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
   @Input() userList: User[];
   canCreate = false;
   teamList: Team[];
-  pageSize = 10;
-  pageIndex = 0;
   collectionList: Collection[] = [];
   selectedCollectionId = '';
-  exhibitList: Exhibit[];
+  exhibitList: Exhibit[] = [];
   isLoading = false;
-  selectedExhibit: Exhibit = {};
-  originalExhibit: Exhibit = {};
-  filteredExhibitList: Exhibit[] = [];
+  expandedExhibitId: string | null = null;
+  displayedColumns: string[] = ['actions', 'name', 'dateCreated', 'createdBy', 'currentMove', 'currentInject'];
+  dataSource = new MatTableDataSource<Exhibit>();
   filterControl = new UntypedFormControl();
   filterString = '';
-  sort: Sort = { active: 'dateCreated', direction: 'desc' };
-  showTeams = false;
-  showArticles = false;
   private unsubscribe$ = new Subject();
   isBusy = false;
   uploadProgress = 0;
   canManageExhibit = false;
   @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
+  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private settingsService: ComnSettingsService,
@@ -75,6 +88,22 @@ export class AdminExhibitsComponent implements OnDestroy {
     private teamDataService: TeamDataService,
     private teamUserDataService: TeamUserDataService
   ) {
+    this.dataSource.filterPredicate = (exhibit: Exhibit, filter: string) =>
+      !filter ||
+      exhibit.createdBy?.toLowerCase().includes(filter) ||
+      exhibit.currentMove?.toString().includes(filter) ||
+      exhibit.currentInject?.toString().includes(filter);
+
+    this.dataSource.sortingDataAccessor = (exhibit: Exhibit, sortHeaderId: string) => {
+      if (sortHeaderId === 'dateCreated') {
+        const d = exhibit.dateCreated instanceof Date
+          ? exhibit.dateCreated
+          : new Date(exhibit.dateCreated as any);
+        return d.getTime();
+      }
+      return (exhibit as any)[sortHeaderId];
+    };
+
     // observe exhibits
     this.exhibitQuery
       .selectAll()
@@ -106,8 +135,8 @@ export class AdminExhibitsComponent implements OnDestroy {
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
-        this.filterString = term.trim().toLowerCase();
-        this.applyFilter();
+        this.filterString = term ? term.trim().toLowerCase() : '';
+        this.dataSource.filter = this.filterString;
       });
     // observe exhibits loading
     this.exhibitQuery
@@ -122,15 +151,24 @@ export class AdminExhibitsComponent implements OnDestroy {
       });
   }
 
+  ngAfterViewInit() {
+    this.dataSource.sort = this.matSort;
+    this.dataSource.paginator = this.paginator;
+  }
+
   setExhibitList(exhibits: Exhibit[]) {
     this.exhibitList = [];
     exhibits.forEach((exhibit) => {
       this.exhibitList.push({ ...exhibit });
-      if (exhibit.id === this.selectedExhibit.id) {
-        this.selectedExhibit = { ...exhibit };
-      }
     });
     this.applyFilter();
+  }
+
+  applyFilter() {
+    this.dataSource.data = this.exhibitList.filter(
+      (e) => e.collectionId === this.selectedCollectionId
+    );
+    this.dataSource.filter = this.filterString.trim().toLowerCase();
   }
 
   addOrEditExhibit(exhibit: Exhibit) {
@@ -163,21 +201,18 @@ export class AdminExhibitsComponent implements OnDestroy {
     });
   }
 
-  togglePanel(exhibit: Exhibit) {
+  toggleExpand(exhibit: Exhibit) {
     this.canManageExhibit = false;
-    this.selectedExhibit =
-      this.selectedExhibit.id === exhibit.id
-        ? (this.selectedExhibit = {})
-        : (this.selectedExhibit = { ...exhibit });
-    this.exhibitDataService.setActive(this.selectedExhibit.id);
-    // if an exhibit has been selected, load the exhibit, so that we have its details
-    if (this.selectedExhibit.id) {
+    const isExpanded = this.expandedExhibitId === exhibit.id;
+    this.expandedExhibitId = isExpanded ? null : exhibit.id;
+    this.exhibitDataService.setActive(this.expandedExhibitId);
+    if (this.expandedExhibitId) {
       this.canManageExhibit = this.permissionDataService.canManageExhibit(
-        this.selectedExhibit.id
+        this.expandedExhibitId
       );
-      this.exhibitDataService.loadById(this.selectedExhibit.id);
-      this.teamUserDataService.loadByExhibit(this.selectedExhibit.id);
-      this.teamDataService.loadByExhibitId(this.selectedExhibit.id);
+      this.exhibitDataService.loadById(this.expandedExhibitId);
+      this.teamUserDataService.loadByExhibit(this.expandedExhibitId);
+      this.teamDataService.loadByExhibitId(this.expandedExhibitId);
     }
   }
 
@@ -185,12 +220,6 @@ export class AdminExhibitsComponent implements OnDestroy {
     this.exhibitList = [];
     this.isBusy = true;
     this.collectionDataService.setActive(collectionId);
-  }
-
-  selectExhibit(exhibit: Exhibit) {
-    this.selectedExhibit = { ...exhibit };
-    this.originalExhibit = { ...exhibit };
-    return false;
   }
 
   canEditExhibit(exhibitId: string): boolean {
@@ -216,63 +245,6 @@ export class AdminExhibitsComponent implements OnDestroy {
           this.exhibitDataService.delete(exhibit.id);
         }
       });
-  }
-
-  cancelEdit() {
-    this.selectedExhibit = { ...this.originalExhibit };
-  }
-
-  applyFilter() {
-    this.filteredExhibitList = this.exhibitList.filter(
-      (exhibit) =>
-        exhibit.collectionId === this.selectedCollectionId &&
-        (!this.filterString ||
-          exhibit.createdBy.toLowerCase().includes(this.filterString) ||
-          exhibit.currentMove
-            .toString()
-            .toLowerCase()
-            .includes(this.filterString) ||
-          exhibit.currentInject
-            .toString()
-            .toLowerCase()
-            .includes(this.filterString))
-    );
-    this.sortChanged(this.sort);
-  }
-
-  sortChanged(sort: Sort) {
-    this.sort = sort;
-    this.filteredExhibitList.sort((a, b) =>
-      this.sortExhibits(a, b, sort.active, sort.direction)
-    );
-    this.paginateExhibits();
-  }
-
-  private sortExhibits(
-    a: Exhibit,
-    b: Exhibit,
-    column: string,
-    direction: string
-  ) {
-    const isAsc = direction !== 'desc';
-    switch (column) {
-      case 'dateCreated':
-        const dateA =
-          a.dateCreated instanceof Date
-            ? a.dateCreated
-            : new Date(a.dateCreated);
-        const dateB =
-          b.dateCreated instanceof Date
-            ? b.dateCreated
-            : new Date(b.dateCreated);
-        return (dateA.getTime() - dateB.getTime()) * (isAsc ? 1 : -1);
-      case 'currentMove':
-        return (a.currentMove - b.currentMove) * (isAsc ? 1 : -1);
-      case 'currentInject':
-        return (a.currentInject - b.currentInject) * (isAsc ? 1 : -1);
-      default:
-        return 0;
-    }
   }
 
   getCollectionName(collectionId: string) {
@@ -324,9 +296,6 @@ export class AdminExhibitsComponent implements OnDestroy {
     );
   }
 
-  /**
-   * Selects the file(s) to be uploaded. Called when file selection is changed
-   */
   selectFile(e) {
     const file = e.target.files[0];
     if (!file) {
@@ -339,24 +308,6 @@ export class AdminExhibitsComponent implements OnDestroy {
     this.exhibitList = [];
     this.exhibitDataService.uploadJson(file, 'events', true);
     this.jsonInput.nativeElement.value = null;
-  }
-
-  paginatorEvent(page: PageEvent) {
-    this.pageIndex = page.pageIndex;
-    this.pageSize = page.pageSize;
-    this.paginateExhibits();
-  }
-
-  paginateExhibits(): Exhibit[] {
-    const startIndex = this.pageIndex * this.pageSize;
-    return this.filteredExhibitList.slice(
-      startIndex,
-      startIndex + this.pageSize
-    );
-  }
-
-  getExhibitId(index: number, exhibit: Exhibit) {
-    return exhibit.id;
   }
 
   ngOnDestroy() {
