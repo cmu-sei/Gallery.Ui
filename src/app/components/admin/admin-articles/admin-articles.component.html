@@ -52,11 +52,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
     </div>
-    <div class="header-cell move-cell" mat-sort-header="move">Move</div>
-    <div class="header-cell move-cell" mat-sort-header="inject">Inject</div>
     <div class="header-cell three-cell" mat-sort-header="cardId">Card</div>
     <div class="header-cell four-cell" mat-sort-header="name">Title</div>
     <div class="header-cell two-cell" mat-sort-header="sourceName">Source</div>
+    <div class="header-cell move-cell" mat-sort-header="move">Move</div>
+    <div class="header-cell move-cell" mat-sort-header="inject">Inject</div>
   </section>
 
   @for (article of displayedArticles; track article.id) {
@@ -72,18 +72,18 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
           </button>
         </div>
-        <div class="cell move-cell center-self">
-          {{ article.move }}
-        </div>
-        <div class="cell move-cell center-self">
-          {{ article.inject }}
-        </div>
         <div class="cell three-cell center-self pad-top-bottom">
           {{ getCardName(article.cardId) }}
         </div>
         <div class="cell four-cell center-self">{{ article.name }}</div>
         <div class="cell two-cell center-self">
           {{ article.sourceName }}
+        </div>
+        <div class="cell move-cell center-self">
+          {{ article.move }}
+        </div>
+        <div class="cell move-cell center-self">
+          {{ article.inject }}
         </div>
       </mat-expansion-panel-header>
     </mat-expansion-panel>
