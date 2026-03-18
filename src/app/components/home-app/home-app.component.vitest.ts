@@ -112,6 +112,7 @@ async function renderHomeApp(
           loadById: () => {},
           setActive: () => {},
           loadMineByCollection: () => {},
+          loadMine: () => {},
         },
       },
       { provide: ExhibitQuery, useValue: { ...queryStub } },
