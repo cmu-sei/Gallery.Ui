@@ -83,7 +83,12 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
         this.dataSource.data = this.collectionList;
         this.permissionDataService.loadCollectionPermissions().subscribe();
       });
-    this.collectionDataService.load();
+    // Load collections based on user permissions
+    if (this.permissionDataService.hasPermission(SystemPermission.ViewCollections)) {
+      this.collectionDataService.load();
+    } else {
+      this.collectionDataService.loadMine();
+    }
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {

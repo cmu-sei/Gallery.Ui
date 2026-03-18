@@ -53,6 +53,14 @@ export class PermissionDataService {
 
   canViewAdministration() {
     const adminPermissions = [
+      SystemPermission.ViewCollections,
+      SystemPermission.EditCollections,
+      SystemPermission.ManageCollections,
+      SystemPermission.CreateCollections,
+      SystemPermission.ViewExhibits,
+      SystemPermission.EditExhibits,
+      SystemPermission.ManageExhibits,
+      SystemPermission.CreateExhibits,
       SystemPermission.ViewUsers,
       SystemPermission.ManageUsers,
       SystemPermission.ViewRoles,

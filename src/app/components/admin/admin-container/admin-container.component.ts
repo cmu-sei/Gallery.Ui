@@ -82,11 +82,14 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.hideTopbar = this.inIframe();
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Admin';
 
-    this.collectionDataService.load();
+    // Load collections based on user permissions
+    if (this.permissionDataService.hasPermission(SystemPermission.ViewCollections)) {
+      this.collectionDataService.load();
+    } else {
+      this.collectionDataService.loadMine();
+    }
     // observe the collections
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.canViewCollections = this.canViewCollections || collections.length > 0;
-      this.canViewExhibits = collections.length > 0;
       this.permissionDataService.load().subscribe();
       this.permissionDataService.loadCollectionPermissions().subscribe();
       this.permissionDataService.loadExhibitPermissions().subscribe();
@@ -139,6 +142,8 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   }
 
   updatePermissions() {
+    this.canViewCollections = this.permissionDataService.hasPermission(SystemPermission.ViewCollections);
+    this.canViewExhibits = this.permissionDataService.hasPermission(SystemPermission.ViewExhibits);
     this.canViewUsers = this.permissionDataService.hasPermission(SystemPermission.ViewUsers);
     this.canViewRoles = this.permissionDataService.hasPermission(SystemPermission.ViewRoles);
     this.canViewGroups = this.permissionDataService.hasPermission(SystemPermission.ViewGroups);
