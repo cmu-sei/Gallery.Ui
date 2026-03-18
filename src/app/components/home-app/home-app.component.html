@@ -25,9 +25,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     @if (!exhibitId) {
     <div class="top-row">
       <div class="one-cell last-cell">
+        @if (canViewAdministration) {
         <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
           <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
         </button>
+        }
       </div>
     </div>
     }
