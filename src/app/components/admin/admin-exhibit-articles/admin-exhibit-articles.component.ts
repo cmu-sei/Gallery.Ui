@@ -30,6 +30,9 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   articleList: Article[] = [];
   cardList: Card[] = [];
   sortedArticles: Article[] = [];
+  selectedMove = -1;
+  moveList: number[] = [];
+  selectedCardId = '';
   sort: Sort = {active: 'move', direction: 'asc'};
   itemStatusList: ItemStatus[] = [
     ItemStatus.Unused,
@@ -85,6 +88,13 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   loadInitialData() {
     this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
       this.articleList = Array.from(articles);
+      const moves: number[] = [];
+      articles.forEach((a) => {
+        if (!moves.includes(+a.move)) {
+          moves.push(+a.move);
+        }
+      });
+      this.moveList = moves.sort((a, b) => a - b);
       this.applyFilter();
     });
   }
@@ -127,12 +137,24 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
 
   applyFilter() {
     this.sortedArticles = this.articleList.filter(article =>
-      !this.filterString ||
-      article.name.toLowerCase().includes(this.filterString) ||
-      this.getCardName(article.cardId).toLowerCase().includes(this.filterString) ||
-      article.sourceName.toLowerCase().includes(this.filterString)
+      (!this.filterString ||
+        article.name.toLowerCase().includes(this.filterString) ||
+        this.getCardName(article.cardId).toLowerCase().includes(this.filterString) ||
+        article.sourceName.toLowerCase().includes(this.filterString)) &&
+      (!this.selectedCardId || article.cardId === this.selectedCardId) &&
+      (+this.selectedMove === -1 || +article.move === +this.selectedMove)
     );
     this.sortChanged(this.sort);
+  }
+
+  selectMove(move: number) {
+    this.selectedMove = move;
+    this.applyFilter();
+  }
+
+  selectCard(cardId: string) {
+    this.selectedCardId = cardId;
+    this.applyFilter();
   }
 
   clearFilter() {

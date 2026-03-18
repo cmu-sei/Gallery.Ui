@@ -16,9 +16,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-icon class="menu-trigger" fontIcon="mdi-chevron-right"></mat-icon>
       </button>
       }
-      <button mat-icon-button style="outline: none; background-color: var(--mat-sys-on-primary);" (click)="goToUrl('/')">
+      <a mat-icon-button style="outline: none; background-color: var(--mat-sys-on-primary);" [routerLink]="['/']">
         <mat-icon svgIcon="crucible-icon-gallery"></mat-icon>
-      </button>
+      </a>
     </span>
     <span class="view-text">{{ title.charAt(0).toUpperCase() + title.slice(1) }}</span>
     @if (teams && team && teams.length > 0) {

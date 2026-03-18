@@ -361,15 +361,16 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   openShareDialog(userArticle: UserArticle) {
+    const isEmailActive = this.settingsService.settings.IsEmailActive;
     const dialogRef = this.dialog.open(ArticleShareDialogComponent, {
       width: 'auto',
       maxWidth: '90vw',
-      minWidth: '900px',
-      minHeight: '700px',
+      minWidth: isEmailActive ? '800px' : '500px',
+      minHeight: isEmailActive ? '600px' : undefined,
       data: {
         article: userArticle.article,
         teamList: this.shareTeamList,
-        isEmailActive: this.settingsService.settings.IsEmailActive,
+        isEmailActive: isEmailActive,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {

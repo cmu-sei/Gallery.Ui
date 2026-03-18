@@ -3,52 +3,77 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
+<div class="cssLayoutRowStartCenter">
+  <div class="panel-div">
+    <mat-form-field class="move-box">
+      <mat-label>Move</mat-label>
+      <mat-select placeholder="Move" [value]="selectedMove" (selectionChange)="selectMove($event.value)">
+        <mat-option [value]="-1">All Moves</mat-option>
+        @for (move of moveList; track move) {
+        <mat-option [value]="move">
+          {{ move }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="card-box">
+      <mat-label>Card</mat-label>
+      <mat-select placeholder="Card" [value]="selectedCardId" (selectionChange)="selectCard($event.value)">
+        <mat-option [value]="''">All Cards</mat-option>
+        @for (card of cardList; track card.id) {
+        <mat-option [value]="card.id">
+          {{ card.name }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <mat-form-field class="search-box">
+    <mat-label>Search</mat-label>
+    <input matInput [formControl]="filterControl" placeholder="Search" />
+    @if (filterControl.value) {
+    <button matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter()">
+      <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
+    </button>
+    }
+  </mat-form-field>
+</div>
+
 <mat-accordion displayMode="flat" class="full-width">
   <section matSort (matSortChange)="sortChanged($event)" class="header-row">
-    <div class="header-cell one-cell" mat-sort-header="move">Move</div>
-    <div class="header-cell one-cell" mat-sort-header="inject">Inject</div>
     <div class="header-cell two-cell" mat-sort-header="cardId">Card</div>
     <div class="header-cell two-cell" mat-sort-header="sourceName">Source Name</div>
     <div class="header-cell two-cell" mat-sort-header="name">Article Title</div>
-    <div class="header-cell three-cell">
-      <div class="panel-div">
-        <mat-form-field style="width: 60%; margin-left: 10px;">
-          <input matInput [(ngModel)]="filterString" (keyup)="applyFilter()" (keypress)="$event.stopPropagation"
-            (blur)="$event.stopPropagation" placeholder="Search" />
-          @if (filterString) {
-          <button mat-icon-button matSuffix (click)="clearFilter()" title="Clear Search">
-            <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
-          </button>
-          }
-        </mat-form-field>
-      </div>
-    </div>
+    <div class="header-cell one-cell" mat-sort-header="move">Move</div>
+    <div class="header-cell one-cell" mat-sort-header="inject">Inject</div>
   </section>
-  @for (article of sortedArticles; track getArticleId($index, article)) {
-  <mat-expansion-panel>
-    @if (!isLoading) {
-    <mat-expansion-panel-header class="row">
-      <div class="cell one-cell center-self">
-        {{ article.move }}
-      </div>
-      <div class="cell one-cell center-self">
-        {{ article.inject }}
-      </div>
-      <div class="cell two-cell center-self">
-        {{ getCardName(article.cardId) }}
-      </div>
-      <div class="cell two-cell center-self">
-        {{ article.sourceName }}
-      </div>
-      <div class="cell five-cell">
-        {{ article.name }}
-      </div>
-    </mat-expansion-panel-header>
+  <section class="scrollable-region">
+    @for (article of sortedArticles; track getArticleId($index, article)) {
+    <mat-expansion-panel>
+      @if (!isLoading) {
+      <mat-expansion-panel-header class="row">
+        <div class="cell two-cell center-self">
+          {{ getCardName(article.cardId) }}
+        </div>
+        <div class="cell two-cell center-self">
+          {{ article.sourceName }}
+        </div>
+        <div class="cell five-cell">
+          {{ article.name }}
+        </div>
+        <div class="cell one-cell center-self">
+          {{ article.move }}
+        </div>
+        <div class="cell one-cell center-self">
+          {{ article.inject }}
+        </div>
+      </mat-expansion-panel-header>
+      }
+      <app-admin-exhibit-article-teams [exhibitId]="exhibit.id" [articleId]="article.id" [canEdit]="canEdit">
+      </app-admin-exhibit-article-teams>
+    </mat-expansion-panel>
     }
-    <app-admin-exhibit-article-teams [exhibitId]="exhibit.id" [articleId]="article.id" [canEdit]="canEdit">
-    </app-admin-exhibit-article-teams>
-  </mat-expansion-panel>
-  }
+  </section>
 </mat-accordion>
 @if (isLoading) {
 <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">

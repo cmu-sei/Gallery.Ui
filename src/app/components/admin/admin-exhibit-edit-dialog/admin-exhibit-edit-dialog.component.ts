@@ -96,15 +96,15 @@ export class AdminExhibitEditDialogComponent {
         break;
       case 'exhibitId':
         this.data.exhibit.exhibitId =
-          this.exhibitIdFormControl.value.toString();
+          this.exhibitIdFormControl.value?.toString() || '';
         break;
       case 'currentMove':
         this.data.exhibit.currentMove =
-          this.currentMoveFormControl.value.toString();
+          this.currentMoveFormControl.value?.toString() || '';
         break;
       case 'currentInject':
         this.data.exhibit.currentInject =
-          this.currentInjectFormControl.value.toString();
+          this.currentInjectFormControl.value?.toString() || '';
         break;
       default:
         break;
