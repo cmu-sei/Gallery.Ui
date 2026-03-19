@@ -64,7 +64,7 @@ async function renderAdmin(
       { provide: DOCUMENT, useFactory: buildMockDocument },
       {
         provide: CollectionDataService,
-        useValue: { load: () => {} },
+        useValue: { load: () => {}, loadMine: () => {} },
       },
       { provide: CollectionQuery, useValue: mockCollectionQuery },
       {
@@ -173,8 +173,8 @@ describe('AdminContainerComponent', () => {
     expect(screen.getByText('Groups')).toBeInTheDocument();
   });
 
-  it('should show Collections nav item when collections exist', async () => {
-    await renderAdmin({ hasCollections: true });
+  it('should show Collections nav item when user has ViewCollections permission', async () => {
+    await renderAdmin({ permissions: [SystemPermission.ViewCollections] });
     expect(screen.getByText('Collections')).toBeInTheDocument();
   });
 

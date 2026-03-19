@@ -235,28 +235,28 @@ describe('PermissionDataService', () => {
       expect(service.canViewAdministration()).toBe(true);
     });
 
-    it('returns false when only Manage* permissions are held (no View* prefix)', async () => {
+    it('returns true when only Manage* permissions are held', async () => {
       await loadAll([
         SystemPermission.ManageCollections,
         SystemPermission.ManageUsers,
       ]);
-      expect(service.canViewAdministration()).toBe(false);
+      expect(service.canViewAdministration()).toBe(true);
     });
 
-    it('returns false when only Create* permissions are held', async () => {
+    it('returns true when only Create* permissions are held', async () => {
       await loadAll([
         SystemPermission.CreateCollections,
         SystemPermission.CreateExhibits,
       ]);
-      expect(service.canViewAdministration()).toBe(false);
+      expect(service.canViewAdministration()).toBe(true);
     });
 
-    it('returns false when only Edit* permissions are held', async () => {
+    it('returns true when only Edit* permissions are held', async () => {
       await loadAll([
         SystemPermission.EditCollections,
         SystemPermission.EditExhibits,
       ]);
-      expect(service.canViewAdministration()).toBe(false);
+      expect(service.canViewAdministration()).toBe(true);
     });
 
     it('returns true when both View* and Manage* permissions are held', async () => {

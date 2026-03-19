@@ -27,8 +27,25 @@ export function permissionProvider(
       loadExhibitPermissions: () => of(exhibitPerms),
       loadCollectionPermissions: () => of(collectionPerms),
       hasPermission: (p: SystemPermission) => systemPerms.includes(p),
-      canViewAdministration: () =>
-        systemPerms.some((y) => y.startsWith('View')),
+      canViewAdministration: () => {
+        const adminPermissions = [
+          SystemPermission.ViewCollections,
+          SystemPermission.EditCollections,
+          SystemPermission.ManageCollections,
+          SystemPermission.CreateCollections,
+          SystemPermission.ViewExhibits,
+          SystemPermission.EditExhibits,
+          SystemPermission.ManageExhibits,
+          SystemPermission.CreateExhibits,
+          SystemPermission.ViewUsers,
+          SystemPermission.ManageUsers,
+          SystemPermission.ViewRoles,
+          SystemPermission.ManageRoles,
+          SystemPermission.ViewGroups,
+          SystemPermission.ManageGroups,
+        ];
+        return systemPerms.some((p) => adminPermissions.includes(p));
+      },
       canEditExhibit: (exhibitId: string) =>
         systemPerms.includes(SystemPermission.EditExhibits) ||
         exhibitPerms.some(
