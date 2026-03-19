@@ -52,7 +52,24 @@ export class PermissionDataService {
   }
 
   canViewAdministration() {
-    return this._permissions.some((y) => y.startsWith('View'));
+    const adminPermissions = [
+      SystemPermission.ViewCollections,
+      SystemPermission.EditCollections,
+      SystemPermission.ManageCollections,
+      SystemPermission.CreateCollections,
+      SystemPermission.ViewExhibits,
+      SystemPermission.EditExhibits,
+      SystemPermission.ManageExhibits,
+      SystemPermission.CreateExhibits,
+      SystemPermission.ViewUsers,
+      SystemPermission.ManageUsers,
+      SystemPermission.ViewRoles,
+      SystemPermission.ManageRoles,
+      SystemPermission.ViewGroups,
+      SystemPermission.ManageGroups
+    ];
+
+    return this._permissions.some((perm) => adminPermissions.includes(perm));
   }
 
   loadExhibitPermissions(): Observable<ExhibitPermissionClaim[]> {
