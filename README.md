@@ -38,11 +38,29 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Gallery UI uses **Vitest** with `@testing-library/angular`. Test files use the `.vitest.ts` extension.
 
-## Running end-to-end tests
+```bash
+npm test                    # Run all tests (jsdom, fast)
+npm run test:watch          # Watch mode
+npm run test:coverage       # With coverage report
+npm run test:browser        # Run in headless Chromium via Playwright
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### Permission Tests
+
+Comprehensive permission tests verify UI gating for all permission checks:
+
+| File | Coverage |
+|------|----------|
+| `src/app/test-utils/mock-permission-data.service.ts` | `permissionProvider()` factory for component tests |
+| `src/app/data/permission/permission-data.service.vitest.ts` | All 14 `SystemPermission` values, `canEditExhibit/Collection()` hierarchy, `canManageExhibit/Collection()` |
+
+Key patterns tested:
+- System permission grants access to any resource ID
+- Resource-level permission only grants access to the specific ID
+- `canViewAdministration()` returns `true` for any `View*` permission
+
 
 
 
