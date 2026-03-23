@@ -251,4 +251,24 @@ describe('HomeAppComponent', () => {
     ) as HTMLButtonElement;
     expect(adminButton).toBeTruthy();
   });
+
+  it('should hide admin cog button when user has no view permissions', async () => {
+    const { fixture } = await renderHomeApp({
+      permissions: [],
+    });
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const adminButton = el.querySelector(
+      'button[title="Administration"]',
+    ) as HTMLButtonElement;
+    expect(adminButton).toBeNull();
+  });
+
+  it('should set canViewAdministration to false when no permissions', async () => {
+    const { fixture } = await renderHomeApp({
+      permissions: [],
+    });
+    fixture.detectChanges();
+    expect(fixture.componentInstance.canViewAdministration).toBe(false);
+  });
 });

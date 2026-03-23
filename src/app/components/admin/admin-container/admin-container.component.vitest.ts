@@ -234,4 +234,31 @@ describe('AdminContainerComponent', () => {
     expect(screen.getByText('Collections')).toBeInTheDocument();
     expect(screen.getByText('Exhibits')).toBeInTheDocument();
   });
+
+  it('should hide Roles nav item when user lacks ViewRoles permission', async () => {
+    await renderAdmin({ permissions: [] });
+    expect(screen.queryByText('Roles')).not.toBeInTheDocument();
+  });
+
+  it('should hide Groups nav item when user lacks ViewGroups permission', async () => {
+    await renderAdmin({ permissions: [] });
+    expect(screen.queryByText('Groups')).not.toBeInTheDocument();
+  });
+
+  it('should show Exhibits nav item when user has CreateExhibits permission', async () => {
+    await renderAdmin({
+      permissions: [SystemPermission.CreateExhibits],
+      hasCollections: true,
+    });
+    expect(screen.getByText('Exhibits')).toBeInTheDocument();
+  });
+
+  it('should hide all nav items when user has no permissions', async () => {
+    await renderAdmin({ permissions: [] });
+    expect(screen.queryByText('Users')).not.toBeInTheDocument();
+    expect(screen.queryByText('Roles')).not.toBeInTheDocument();
+    expect(screen.queryByText('Groups')).not.toBeInTheDocument();
+    expect(screen.queryByText('Collections')).not.toBeInTheDocument();
+    expect(screen.queryByText('Exhibits')).not.toBeInTheDocument();
+  });
 });
