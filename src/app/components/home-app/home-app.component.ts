@@ -335,7 +335,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
 
   loadTeamData() {
     // process the change
-    if (this.selectedTeamId) {
+    if (this.exhibitId && this.selectedTeamId) {
       this.cardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
       this.cardDataService.setActive('all');
       this.teamCardDataService.loadByExhibitTeam(
@@ -354,6 +354,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   handleExhibitMoveOrInjectChange() {
+    if (!this.exhibitId) return;
     this.teamCardDataService.loadByExhibitTeam(
       this.exhibitId,
       this.selectedTeamId
