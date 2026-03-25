@@ -14,6 +14,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Team</mat-label>
         <mat-select placeholder="Team" [formControl]="teamIdFormControl" multiple
           (selectionChange)="saveTeamCard('teamId')">
           <mat-option [value]="ALL_TEAMS">All Teams</mat-option>
@@ -29,6 +30,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div fx>
       <mat-form-field class="full-width">
+        <mat-label>Card</mat-label>
         <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveTeamCard('cardId')">
           @for (card of data.cardList; track card) {
           <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
@@ -42,6 +44,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="short-width">
+        <mat-label>Move</mat-label>
         <input matInput placeholder="Move" [formControl]="moveFormControl" (blur)="saveTeamCard('move')"
           value="{{data.teamCard.move}}" />
       </mat-form-field>
@@ -50,6 +53,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="short-width">
+        <mat-label>Inject</mat-label>
         <input matInput placeholder="Inject" [formControl]="injectFormControl" (blur)="saveTeamCard('inject')"
           value="{{data.teamCard.inject}}" />
       </mat-form-field>
