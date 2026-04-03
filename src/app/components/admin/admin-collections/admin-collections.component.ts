@@ -45,7 +45,7 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   isLoading = false;
   editCollection: Collection = {};
   expandedCollectionId: string | null = null;
-  displayedColumns: string[] = ['actions', 'name', 'description'];
+  displayedColumns: string[] = ['actions', 'name', 'description', 'dateCreated'];
   dataSource = new MatTableDataSource<Collection>();
   filterControl = new UntypedFormControl();
   filterString = '';
@@ -106,6 +106,15 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.matSort;
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor = (collection: Collection, sortHeaderId: string) => {
+      if (sortHeaderId === 'dateCreated') {
+        const d = collection.dateCreated instanceof Date
+          ? collection.dateCreated
+          : new Date(collection.dateCreated as any);
+        return d.getTime();
+      }
+      return (collection as any)[sortHeaderId];
+    };
   }
 
   canCreateCollections(): boolean {
