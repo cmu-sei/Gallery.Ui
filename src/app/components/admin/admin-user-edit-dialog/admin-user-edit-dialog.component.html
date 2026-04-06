@@ -14,6 +14,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
         <input type="text" matInput [formControl]="userNameFormControl" placeholder="Name (required)"
           (blur)="saveUser('name')" value="{{data.user.name}}">
         @if (userNameFormControl.hasError('required')) {
@@ -27,6 +28,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>ID</mat-label>
         <input matInput placeholder="ID (required)" [formControl]="idFormControl" (blur)="saveUser('id')"
           value="{{data.user.id}}">
         @if (idFormControl.hasError('required')) {
@@ -40,6 +42,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Email</mat-label>
         <input matInput placeholder="Email" [formControl]="emailFormControl" (blur)="saveUser('email')"
           value="{{data.user.email}}">
       </mat-form-field>

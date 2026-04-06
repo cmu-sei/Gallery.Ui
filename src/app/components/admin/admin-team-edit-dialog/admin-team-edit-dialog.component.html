@@ -14,6 +14,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
         <input type="text" matInput [formControl]="teamNameFormControl" placeholder="Name (required)"
           (blur)="saveTeam('name')" value="{{data.team.name}}">
         @if (teamNameFormControl.hasError('required')) {
@@ -27,6 +28,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Short Name</mat-label>
         <input type="text" matInput [formControl]="teamShortNameFormControl" placeholder="Short Name (required)"
           (blur)="saveTeam('shortName')" value="{{data.team.shortName}}">
         @if (teamShortNameFormControl.hasError('required')) {
@@ -40,6 +42,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Email</mat-label>
         <input matInput placeholder="Email" [formControl]="emailFormControl" (blur)="saveTeam('email')"
           value="{{data.team.email}}">
       </mat-form-field>
