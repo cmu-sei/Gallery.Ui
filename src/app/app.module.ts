@@ -170,8 +170,6 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AdminRolesComponent,
     AdminExhibitRolesComponent,
     AdminCollectionRolesComponent,
-    AdminExhibitsComponent,
-    AdminCollectionsComponent,
     AdminSystemRolesComponent,
     ArticleComponent,
     ArticleEditDialogComponent,
