@@ -3,11 +3,13 @@
 
 
 import { Component, EventEmitter, Inject, Input, Output, OnDestroy, DOCUMENT } from '@angular/core';
-import { TeamCard, UserArticle, ItemStatus } from 'src/app/generated/api/model/models';
+import { TeamCard, UserArticle, ItemStatus, Exhibit } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
+import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -21,9 +23,12 @@ import { ComnSettingsService } from '@cmusei/crucible-common';
 })
 export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
+  @Input() showAdvanceButton: boolean;
+  @Input() exhibit: Exhibit;
   @Output() changeTeam = new EventEmitter<string>();
   @Output() sectionSelected = new EventEmitter<string>();
   isLoading = false;
+  isAdvancing = false;
   cardList: Card[] = [];
   shownCardList: Card[] = [];
   teamCardList: TeamCard[] = [];
@@ -35,6 +40,8 @@ export class WallComponent implements OnDestroy {
     private cardQuery: CardQuery,
     private teamCardQuery: TeamCardQuery,
     private userArticleQuery: UserArticleQuery,
+    private exhibitDataService: ExhibitDataService,
+    private snackBar: MatSnackBar,
     private router: Router,
     private settingsService: ComnSettingsService
   ) {
@@ -97,6 +104,23 @@ export class WallComponent implements OnDestroy {
       }
     });
     this.shownCardList = shownCardList;
+  }
+
+  advanceExhibit() {
+    if (!this.exhibit?.id || this.isAdvancing) return;
+    this.isAdvancing = true;
+    this.exhibitDataService.advance(this.exhibit.id)
+      .subscribe({
+        next: (updatedExhibit) => {
+          this.isAdvancing = false;
+          this.exhibitDataService.updateStore(updatedExhibit);
+        },
+        error: (err) => {
+          this.isAdvancing = false;
+          const message = err?.error?.Detail || err?.error?.title || 'Already at the last move/inject.';
+          this.snackBar.open(message, 'OK', { duration: 5000 });
+        }
+      });
   }
 
   changeTeamRequest(teamId: string) {

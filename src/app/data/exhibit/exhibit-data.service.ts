@@ -313,6 +313,18 @@ export class ExhibitDataService {
         }
       });
   }
+  advance(id: string) {
+    this.exhibitStore.setLoading(true);
+    return this.exhibitService
+      .advanceExhibit(id)
+      .pipe(
+        tap(() => {
+          this.exhibitStore.setLoading(false);
+        }),
+        take(1)
+      );
+  }
+
   setActive(id: string) {
     this.exhibitStore.setActive(id);
   }

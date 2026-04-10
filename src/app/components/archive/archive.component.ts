@@ -407,8 +407,10 @@ export class ArchiveComponent implements OnDestroy {
     if (this.teamCardList.length > 0 && this.cardList.length > 0) {
       this.teamCardList.forEach((tc) => {
         const card = { ...this.cardList.find((c) => c.id === tc.cardId) };
-        this.showCardList.push(card);
-        if (tc.canPostArticles) {
+        if (!this.showCardList.some((c) => c.id === card.id)) {
+          this.showCardList.push(card);
+        }
+        if (tc.canPostArticles && !this.postCardList.some((c) => c.id === card.id)) {
           this.postCardList.push(card);
         }
       });

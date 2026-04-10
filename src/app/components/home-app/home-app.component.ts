@@ -94,6 +94,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   canViewAdministration = false;
   readonly SystemPermission = SystemPermission;
 
+  get canManageCurrentExhibit(): boolean {
+    if (!this.exhibitId) return false;
+    return this.permissionDataService.canManageExhibit(this.exhibitId);
+  }
+
   constructor(
     @Inject(DOCUMENT) private _document: HTMLDocument,
     private authService: ComnAuthService,
@@ -146,6 +151,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
           this.canViewAdministration = this.permissionDataService.canViewAdministration();
         }
       );
+    this.permissionDataService.loadExhibitPermissions().subscribe();
   }
 
   startup() {

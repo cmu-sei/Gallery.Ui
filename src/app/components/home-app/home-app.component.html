@@ -93,7 +93,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
     }
     @if (exhibitId && selectedSection === 'wall') {
-    <app-wall [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
+    <app-wall [showAdminButton]="canViewAdministration" [showAdvanceButton]="canManageCurrentExhibit"
+      [exhibit]="exhibit" (changeTeam)="changeTeam($event)"
       (sectionSelected)="gotoSection($event)"></app-wall>
     }
     @if (exhibitId && selectedSection === 'archive') {

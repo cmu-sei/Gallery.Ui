@@ -84,7 +84,7 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
         this.permissionDataService.loadCollectionPermissions().subscribe();
       });
     // Load collections based on user permissions
-    if (this.permissionDataService.hasPermission(SystemPermission.ViewCollections)) {
+    if (this.permissionDataService.shouldLoadAllCollections()) {
       this.collectionDataService.load();
     } else {
       this.collectionDataService.loadMine();

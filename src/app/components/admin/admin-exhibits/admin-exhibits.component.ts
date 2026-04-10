@@ -23,6 +23,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import {
   Collection,
   Exhibit,
+  SystemPermission,
   Team,
   User,
 } from 'src/app/generated/api/model/models';
@@ -70,7 +71,7 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
   private unsubscribe$ = new Subject();
   isBusy = false;
   uploadProgress = 0;
-  canManageExhibit = false;
+  canManageExpandedExhibit = false;
   @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatSort) matSort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -127,7 +128,7 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
           this.selectedCollectionId = activeId;
           this.canCreate = this.permissionDataService.canManageCollection(
             this.selectedCollectionId
-          );
+          ) || this.permissionDataService.hasPermission(SystemPermission.CreateExhibits);
           this.exhibitDataService.loadByCollection(activeId);
         }
       });
@@ -202,12 +203,12 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
   }
 
   toggleExpand(exhibit: Exhibit) {
-    this.canManageExhibit = false;
+    this.canManageExpandedExhibit = false;
     const isExpanded = this.expandedExhibitId === exhibit.id;
     this.expandedExhibitId = isExpanded ? null : exhibit.id;
     this.exhibitDataService.setActive(this.expandedExhibitId);
     if (this.expandedExhibitId) {
-      this.canManageExhibit = this.permissionDataService.canManageExhibit(
+      this.canManageExpandedExhibit = this.permissionDataService.canManageExhibit(
         this.expandedExhibitId
       );
       this.exhibitDataService.loadById(this.expandedExhibitId);
@@ -224,6 +225,10 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
 
   canEditExhibit(exhibitId: string): boolean {
     return this.permissionDataService.canEditExhibit(exhibitId);
+  }
+
+  canManageExhibit(exhibitId: string): boolean {
+    return this.permissionDataService.canManageExhibit(exhibitId);
   }
 
   saveExhibit(exhibit: Exhibit) {

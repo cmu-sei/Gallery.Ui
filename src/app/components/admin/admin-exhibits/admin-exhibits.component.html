@@ -57,7 +57,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-icon class="mdi-18px" fontIcon="mdi-download" alt="Download"></mat-icon>
           </button>
           <button mat-icon-button (click)="deleteExhibit(element); $event.stopPropagation()" style="outline: none;"
-            title="Delete {{ element.name }}" [disabled]="isBusy || !canEditExhibit(element.id)">
+            title="Delete {{ element.name }}" [disabled]="isBusy || !canManageExhibit(element.id)">
             <mat-icon class="mdi-18px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
           </button>
         </td>
@@ -123,7 +123,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
                 <app-admin-observers [exhibitId]="element.id" [canEdit]="canEditExhibit(element.id)">
                 </app-admin-observers>
               </mat-expansion-panel>
-              @if (canManageExhibit) {
+              @if (canManageExpandedExhibit) {
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
                   <h4>Memberships</h4>
