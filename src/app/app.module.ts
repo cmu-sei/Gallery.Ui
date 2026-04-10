@@ -56,6 +56,7 @@ import {
   ComnSettingsConfig,
   ComnSettingsModule,
   ComnSettingsService,
+  ComnHeaderBarModule,
 } from '@cmusei/crucible-common';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
@@ -128,6 +129,7 @@ import { UIDataService } from './data/ui/ui-data.service';
 
 const settings: ComnSettingsConfig = {
   url: 'assets/config/settings.json',
+  sharedUrl: 'assets/config/settings.shared.json',
   envUrl: 'assets/config/settings.env.json',
 };
 
@@ -168,8 +170,6 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AdminRolesComponent,
     AdminExhibitRolesComponent,
     AdminCollectionRolesComponent,
-    AdminExhibitsComponent,
-    AdminCollectionsComponent,
     AdminSystemRolesComponent,
     ArticleComponent,
     ArticleEditDialogComponent,
@@ -217,6 +217,7 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     CdkTreeModule,
     ComnAuthModule.forRoot(),
     ComnSettingsModule.forRoot(),
+    ComnHeaderBarModule,
     AngularEditorModule,
     NgxMatDatetimepicker,
     NgxMatDatepickerToggle,

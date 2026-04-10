@@ -22,6 +22,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </span>
   }
   @if (permissions) {
+  <div class="main-area">
     @if (!exhibitId) {
     <div class="top-row">
       <div class="one-cell last-cell">
@@ -78,7 +79,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-header-cell *matHeaderCellDef mat-sort-header>Created</mat-header-cell>
             <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"yyyy-MM-dd HH:mm" }}</mat-cell>
           </ng-container>
-          <mat-header-row *matHeaderRowDef="['name', 'collection', 'createdBy', 'dateCreated']; sticky: true"></mat-header-row>
+          <mat-header-row
+            *matHeaderRowDef="['name', 'collection', 'createdBy', 'dateCreated']; sticky: true"></mat-header-row>
           <mat-row *matRowDef="let exhibit; columns: ['name', 'collection', 'createdBy', 'dateCreated']"></mat-row>
         </mat-table>
         <!-- Filter No Results Found -->
@@ -91,12 +93,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
     }
     @if (exhibitId && selectedSection === 'wall') {
-      <app-wall [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
-        (sectionSelected)="gotoSection($event)"></app-wall>
+    <app-wall [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
+      (sectionSelected)="gotoSection($event)"></app-wall>
     }
     @if (exhibitId && selectedSection === 'archive') {
-      <app-archive [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
-        (sectionSelected)="gotoSection($event)"></app-archive>
+    <app-archive [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
+      (sectionSelected)="gotoSection($event)"></app-archive>
     }
+  </div>
   }
 </div>
