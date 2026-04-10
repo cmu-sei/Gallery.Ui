@@ -5,6 +5,9 @@
 
 :host {
   @include mat.form-field-density(-5);
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .top-row mat-form-field {
@@ -215,7 +218,7 @@ mat-card-actions {
   display: flex;
   align-content: flex-start;
   flex-wrap: wrap;
-  height: calc(100vh - 104px);
+  height: calc(100% - 104px);
   overflow-y: auto;
 }
 

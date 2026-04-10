@@ -1,6 +1,12 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+:host {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
 .wall-container {
   display: flex;
   flex-flow: column;
@@ -36,7 +42,7 @@
   display: flex;
   align-content: flex-start;
   flex-wrap: wrap;
-  height: calc(100vh - 104px);
+  height: calc(100% - 104px);
   overflow-y: auto;
 }
 
