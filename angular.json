@@ -77,6 +77,9 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "localNPM": {
+              "tsConfig": "tsconfig.local-npm.json"
             }
           },
           "defaultConfiguration": ""
@@ -90,6 +93,9 @@
           "configurations": {
             "production": {
               "buildTarget": "gallery-ui:build:production"
+            },
+            "localNPM": {
+              "buildTarget": "gallery-ui:build:development,localNPM"
             }
           }
         },
