@@ -253,7 +253,7 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
   }
 
   getCollectionName(collectionId: string) {
-    return this.collectionList?.find((c) => c.id === collectionId).name;
+    return this.collectionList?.find((c) => c.id === collectionId)?.name;
   }
 
   getUserName(userId: string) {
