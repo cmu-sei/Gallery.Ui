@@ -318,8 +318,9 @@ export class ExhibitDataService {
     return this.exhibitService
       .advanceExhibit(id)
       .pipe(
-        tap(() => {
-          this.exhibitStore.setLoading(false);
+        tap({
+          next: () => this.exhibitStore.setLoading(false),
+          error: () => this.exhibitStore.setLoading(false),
         }),
         take(1)
       );
