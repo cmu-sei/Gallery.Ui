@@ -27,6 +27,7 @@ export interface Exhibit {
     currentInject?: number;
     collectionId?: string;
     scenarioId?: string | null;
+    showAdvanceButton?: boolean;
     name?: string | null;
     description?: string | null;
     exhibitPermissions?: Array<string> | null;

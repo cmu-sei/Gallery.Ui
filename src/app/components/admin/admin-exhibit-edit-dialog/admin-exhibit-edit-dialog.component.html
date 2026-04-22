@@ -74,6 +74,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-form-field>
     </div>
   </div>
+  <div class="add-margin">
+    <mat-checkbox [(ngModel)]="data.exhibit.showAdvanceButton" [disabled]="!data.canEdit">
+      Show Advance Button
+    </mat-checkbox>
+  </div>
   <div class="cssLayoutRowStartCenter bottom-button">
     <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree() || !data.canEdit"

@@ -5,7 +5,18 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div class="wall-container">
   <div class="top-row">
-    <div class="spacer-cell">&nbsp;</div>
+    <div class="move-inject-cell">
+      @if (exhibit) {
+      <span class="move-inject-label">Move {{ exhibit.currentMove }}, Inject {{ exhibit.currentInject }}</span>
+      }
+      @if (showAdvanceButton && exhibit?.showAdvanceButton) {
+      <button mat-flat-button class="advance-button" (click)="advanceExhibit()"
+        [disabled]="isAdvancing"
+        title="Advance the exhibit to the next move/inject for all participants">
+        Advance
+      </button>
+      }
+    </div>
     <div class="selector-cell">
       <app-team-selector (changeTeam)="changeTeamRequest($event)" style="float: right;"></app-team-selector>
     </div>
