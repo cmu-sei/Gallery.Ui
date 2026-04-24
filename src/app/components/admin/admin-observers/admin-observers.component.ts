@@ -133,15 +133,15 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   }
 
   addObserver(id: string): void {
-    this.teamUserDataService.setObserverValue(id, true);
+    this.teamUserDataService.setObserverValue(id, true, this.exhibitId);
   }
 
   removeObserver(id: string): void {
-    this.teamUserDataService.setObserverValue(id, false);
+    this.teamUserDataService.setObserverValue(id, false, this.exhibitId);
   }
 
   setObserverValue(teamUserId: string, value: boolean) {
-    this.teamUserDataService.setObserverValue(teamUserId, value);
+    this.teamUserDataService.setObserverValue(teamUserId, value, this.exhibitId);
   }
 
   compare(a: string, b: string, isAsc: boolean) {

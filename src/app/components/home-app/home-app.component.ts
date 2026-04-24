@@ -190,21 +190,8 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         // team
         if (this.exhibitId && this.selectedTeamId) {
           this.uiDataService.setTeam(exhibitId, this.selectedTeamId);
-          // xAPI
-          if (this.selectedTeamId !== this.teamDataService.getMyTeamId()) {
-            // observed
-            if (this.selectedSection === Section.archive) {
-              this.xApiService
-                .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
-                .pipe(take(1))
-                .subscribe();
-            } else if (this.selectedSection === Section.wall) {
-              this.xApiService
-                .observedExhibitWall(this.exhibitId, this.selectedTeamId)
-                .pipe(take(1))
-                .subscribe();
-            }
-          } else {
+          // xAPI for team members (not observers)
+          if (this.selectedTeamId === this.teamDataService.getMyTeamId()) {
             // viewed
             if (this.selectedSection === Section.archive) {
               this.xApiService
@@ -309,9 +296,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   changeTeam(teamId: string) {
     let oldTeamId = this.selectedTeamId;
     if (oldTeamId !== teamId) {
-      // make sure to send a Guid for old team ID
       oldTeamId = oldTeamId ? oldTeamId : teamId;
-      // signalR hub: leave the old team and join the new team
       this.signalRService.switchTeam(oldTeamId, teamId);
     }
     this.selectedTeamId = teamId;
@@ -319,6 +304,20 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.uiDataService.setTeam(this.exhibitId, teamId);
     this.cardDataService.setActive('');
     this.loadTeamData();
+    const myTeamId = this.teamDataService.getMyTeamId();
+    if (myTeamId && this.selectedTeamId && this.exhibitId && this.selectedTeamId !== myTeamId) {
+      if (this.selectedSection === Section.archive) {
+        this.xApiService
+          .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
+          .pipe(take(1))
+          .subscribe();
+      } else if (this.selectedSection === Section.wall) {
+        this.xApiService
+          .observedExhibitWall(this.exhibitId, this.selectedTeamId)
+          .pipe(take(1))
+          .subscribe();
+      }
+    }
   }
 
   logout() {
