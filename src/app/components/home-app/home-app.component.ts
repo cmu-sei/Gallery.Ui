@@ -42,7 +42,7 @@ import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { Section } from 'src/app/utilities/enumerations';
-import { XApiService } from 'src/app/generated/api';
+import { XApiService } from 'src/app/services/xapi/xapi.service';
 
 @Component({
   selector: 'app-home-app',

@@ -42,7 +42,7 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
-import { XApiService } from 'src/app/generated/api';
+import { XApiService } from 'src/app/services/xapi/xapi.service';
 
 @Component({
   selector: 'app-archive',
