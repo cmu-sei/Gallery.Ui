@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -95,4 +94,5 @@ model/typeInfo.ts
 model/unreadArticles.ts
 model/user.ts
 model/userArticle.ts
+param.ts
 variables.ts
