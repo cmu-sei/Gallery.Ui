@@ -401,6 +401,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.selectedSection = sectionOrCardId;
         this.cardDataService.setActive('');
         this.uiDataService.setSection(this.exhibitId, sectionOrCardId);
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: { exhibit: this.exhibitId, section: sectionOrCardId },
+          queryParamsHandling: 'merge'
+        });
         break;
       case 'admin':
         this.gotoAdmin();
@@ -409,6 +414,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.selectedSection = Section.archive;
         this.cardDataService.setActive(sectionOrCardId);
         this.uiDataService.setSection(this.exhibitId, this.selectedSection);
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: { exhibit: this.exhibitId, section: this.selectedSection, card: sectionOrCardId },
+          queryParamsHandling: 'merge'
+        });
         break;
     }
   }
