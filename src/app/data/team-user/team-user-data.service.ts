@@ -104,7 +104,7 @@ export class TeamUserDataService {
       });
   }
 
-  setObserverValue(teamUserId: string, value: boolean) {
+  setObserverValue(teamUserId: string, value: boolean, exhibitId?: string) {
     if (value) {
       this.teamUserService
         .setObserver(teamUserId)

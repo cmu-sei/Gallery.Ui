@@ -229,8 +229,15 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
     this.teamUserDataService.delete(teamUser.id);
   }
 
+  getExhibitIdFromTeam(teamId: string): string | null {
+    const team = this.teamList.find((t) => t.id === teamId);
+    return team?.exhibitId || null;
+  }
+
   setObserverValue(teamUserId: string, value: boolean) {
-    this.teamUserDataService.setObserverValue(teamUserId, value);
+    const team = this.teamList.find((t) => t.id === this.teamId);
+    const exhibitId = team?.exhibitId || null;
+    this.teamUserDataService.setObserverValue(teamUserId, value, exhibitId);
   }
 
   onAnotherTeam(userId: string): boolean {

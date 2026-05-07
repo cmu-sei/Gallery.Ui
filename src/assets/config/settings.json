@@ -17,6 +17,7 @@
     "UseLocalAuthStorage": false,
     "IsEmailActive": false,
     "useAccessTokenExpirationRedirect": true,
+    "XApiEnabled": false,
     "AppTopBarHexColor": "#008740",
     "AppTopBarHexTextColor": "#FFFFFF",
     "HeaderBarSettings": {

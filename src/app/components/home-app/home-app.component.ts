@@ -42,7 +42,7 @@ import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { Section } from 'src/app/utilities/enumerations';
-import { XApiService } from 'src/app/generated/api';
+import { XApiService } from 'src/app/services/xapi/xapi.service';
 
 @Component({
   selector: 'app-home-app',
@@ -190,22 +190,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         // team
         if (this.exhibitId && this.selectedTeamId) {
           this.uiDataService.setTeam(exhibitId, this.selectedTeamId);
-          // xAPI
-          if (this.selectedTeamId !== this.teamDataService.getMyTeamId()) {
-            // observed
-            if (this.selectedSection === Section.archive) {
-              this.xApiService
-                .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
-                .pipe(take(1))
-                .subscribe();
-            } else if (this.selectedSection === Section.wall) {
-              this.xApiService
-                .observedExhibitWall(this.exhibitId, this.selectedTeamId)
-                .pipe(take(1))
-                .subscribe();
-            }
-          } else {
-            // viewed
+          const myTeamId = this.teamDataService.getMyTeamId();
+          if (this.selectedTeamId === myTeamId) {
+            // Viewing own team
             if (this.selectedSection === Section.archive) {
               this.xApiService
                 .viewedExhibitArchive(this.exhibitId)
@@ -220,6 +207,19 @@ export class HomeAppComponent implements OnDestroy, OnInit {
             } else if (this.selectedSection === Section.wall) {
               this.xApiService
                 .viewedExhibitWall(this.exhibitId)
+                .pipe(take(1))
+                .subscribe();
+            }
+          } else if (myTeamId) {
+            // Observing another team
+            if (this.selectedSection === Section.archive) {
+              this.xApiService
+                .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
+                .pipe(take(1))
+                .subscribe();
+            } else if (this.selectedSection === Section.wall) {
+              this.xApiService
+                .observedExhibitWall(this.exhibitId, this.selectedTeamId)
                 .pipe(take(1))
                 .subscribe();
             }
@@ -309,9 +309,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   changeTeam(teamId: string) {
     let oldTeamId = this.selectedTeamId;
     if (oldTeamId !== teamId) {
-      // make sure to send a Guid for old team ID
       oldTeamId = oldTeamId ? oldTeamId : teamId;
-      // signalR hub: leave the old team and join the new team
       this.signalRService.switchTeam(oldTeamId, teamId);
     }
     this.selectedTeamId = teamId;
@@ -319,6 +317,20 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.uiDataService.setTeam(this.exhibitId, teamId);
     this.cardDataService.setActive('');
     this.loadTeamData();
+    const myTeamId = this.teamDataService.getMyTeamId();
+    if (myTeamId && this.selectedTeamId && this.exhibitId && this.selectedTeamId !== myTeamId) {
+      if (this.selectedSection === Section.archive) {
+        this.xApiService
+          .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
+          .pipe(take(1))
+          .subscribe();
+      } else if (this.selectedSection === Section.wall) {
+        this.xApiService
+          .observedExhibitWall(this.exhibitId, this.selectedTeamId)
+          .pipe(take(1))
+          .subscribe();
+      }
+    }
   }
 
   logout() {
@@ -389,6 +401,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.selectedSection = sectionOrCardId;
         this.cardDataService.setActive('');
         this.uiDataService.setSection(this.exhibitId, sectionOrCardId);
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: { exhibit: this.exhibitId, section: sectionOrCardId },
+          queryParamsHandling: 'merge'
+        });
         break;
       case 'admin':
         this.gotoAdmin();
@@ -397,6 +414,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.selectedSection = Section.archive;
         this.cardDataService.setActive(sectionOrCardId);
         this.uiDataService.setSection(this.exhibitId, this.selectedSection);
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: { exhibit: this.exhibitId, section: this.selectedSection, card: sectionOrCardId },
+          queryParamsHandling: 'merge'
+        });
         break;
     }
   }

@@ -10,7 +10,7 @@ import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ComnSettingsService } from '@cmusei/crucible-common';
-import { XApiService } from 'src/app/generated/api';
+import { XApiService } from 'src/app/services/xapi/xapi.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
