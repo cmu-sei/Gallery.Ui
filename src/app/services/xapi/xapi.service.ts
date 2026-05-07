@@ -36,13 +36,73 @@ export class XApiService {
   }
 
   /**
-   * Logs xAPI observed statement when user observes the archive
+   * Logs xAPI previewed statement when user previews an article
    */
-  observedArchive(exhibitId: string, teamId: string): Observable<any> {
+  previewedArticle(exhibitId: string, articleId: string): Observable<any> {
     if (!this.enabled) {
       return of(null);
     }
-    return this.generatedXApiService.observedArchive(exhibitId, teamId).pipe(
+    return this.generatedXApiService.previewedArticle(exhibitId, articleId).pipe(
+      catchError((error) => {
+        console.error('xAPI tracking error:', error);
+        return of(null);
+      })
+    );
+  }
+
+  /**
+   * Logs xAPI viewed statement when user views a card
+   */
+  viewedCard(exhibitId: string, cardId: string): Observable<any> {
+    if (!this.enabled) {
+      return of(null);
+    }
+    return this.generatedXApiService.viewedCard(exhibitId, cardId).pipe(
+      catchError((error) => {
+        console.error('xAPI tracking error:', error);
+        return of(null);
+      })
+    );
+  }
+
+  /**
+   * Logs xAPI viewed statement when user views the exhibit wall
+   */
+  viewedExhibitWall(exhibitId: string): Observable<any> {
+    if (!this.enabled) {
+      return of(null);
+    }
+    return this.generatedXApiService.viewedExhibitWall(exhibitId).pipe(
+      catchError((error) => {
+        console.error('xAPI tracking error:', error);
+        return of(null);
+      })
+    );
+  }
+
+  /**
+   * Logs xAPI viewed statement when user views the exhibit archive
+   */
+  viewedExhibitArchive(exhibitId: string): Observable<any> {
+    if (!this.enabled) {
+      return of(null);
+    }
+    return this.generatedXApiService.viewedExhibitArchive(exhibitId).pipe(
+      catchError((error) => {
+        console.error('xAPI tracking error:', error);
+        return of(null);
+      })
+    );
+  }
+
+  /**
+   * Logs xAPI observed statement when user observes the archive
+   */
+  observedExhibitArchive(exhibitId: string, teamId: string): Observable<any> {
+    if (!this.enabled) {
+      return of(null);
+    }
+    return this.generatedXApiService.observedExhibitArchive(exhibitId, teamId).pipe(
       catchError((error) => {
         console.error('xAPI tracking error:', error);
         return of(null);
@@ -53,11 +113,11 @@ export class XApiService {
   /**
    * Logs xAPI observed statement when user observes the wall
    */
-  observedWall(exhibitId: string, teamId: string): Observable<any> {
+  observedExhibitWall(exhibitId: string, teamId: string): Observable<any> {
     if (!this.enabled) {
       return of(null);
     }
-    return this.generatedXApiService.observedWall(exhibitId, teamId).pipe(
+    return this.generatedXApiService.observedExhibitWall(exhibitId, teamId).pipe(
       catchError((error) => {
         console.error('xAPI tracking error:', error);
         return of(null);
