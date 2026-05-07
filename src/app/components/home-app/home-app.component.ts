@@ -190,9 +190,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         // team
         if (this.exhibitId && this.selectedTeamId) {
           this.uiDataService.setTeam(exhibitId, this.selectedTeamId);
-          // xAPI for team members (not observers)
-          if (this.selectedTeamId === this.teamDataService.getMyTeamId()) {
-            // viewed
+          const myTeamId = this.teamDataService.getMyTeamId();
+          if (this.selectedTeamId === myTeamId) {
+            // Viewing own team
             if (this.selectedSection === Section.archive) {
               this.xApiService
                 .viewedExhibitArchive(this.exhibitId)
@@ -207,6 +207,19 @@ export class HomeAppComponent implements OnDestroy, OnInit {
             } else if (this.selectedSection === Section.wall) {
               this.xApiService
                 .viewedExhibitWall(this.exhibitId)
+                .pipe(take(1))
+                .subscribe();
+            }
+          } else if (myTeamId) {
+            // Observing another team
+            if (this.selectedSection === Section.archive) {
+              this.xApiService
+                .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
+                .pipe(take(1))
+                .subscribe();
+            } else if (this.selectedSection === Section.wall) {
+              this.xApiService
+                .observedExhibitWall(this.exhibitId, this.selectedTeamId)
                 .pipe(take(1))
                 .subscribe();
             }
