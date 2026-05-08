@@ -180,6 +180,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
           }
           this.loadExhibitData();
         } else {
+          this.exhibitId = '';
+          this.exhibitDataService.setActive('');
+          this.collectionDataService.setActive('');
           this.exhibitDataService.loadMine();
         }
         // card

@@ -58,6 +58,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   canCreateExhibits = false;
   readonly SystemPermission = SystemPermission;
   showSection$: Observable<string>;
+  originalExhibitId: string;
 
   constructor(
     @Inject(DOCUMENT) private _document: HTMLDocument,
@@ -81,6 +82,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Admin';
+    this.originalExhibitId = this.exhibitQuery.getActiveId() as string;
 
     // observe the collections
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
@@ -157,8 +159,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
 
   exitAdmin() {
     this.router.navigate([''], {
-      queryParams: { section: Section.archive },
-      queryParamsHandling: 'merge',
+      queryParams: { exhibit: this.originalExhibitId || undefined },
     });
   }
 
