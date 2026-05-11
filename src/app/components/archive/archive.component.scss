@@ -196,6 +196,7 @@
 mat-card-actions {
   display: flex;
   flex-direction: column;
+  margin-top: auto;
 }
 
 .action-buttons {
@@ -227,6 +228,8 @@ mat-card-actions {
   box-sizing: border-box;
   margin: 1rem .25em;
   min-width: 360px;
+  display: flex;
+  flex-direction: column;
 }
 
 @media screen and (min-width: 40em) {
