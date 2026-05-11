@@ -6,8 +6,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 <mat-sidenav-container class="appcontent-container" autosize>
   <mat-sidenav #sidenav mode="side" [(opened)]="isSidebarOpen" class="appbarmenu-container">
     <div class="sidenav-content-wrapper">
-    <mat-toolbar class="sidenav-header" title="Exit Administration" [routerLink]="['/']">
-      <a class="nolink" [routerLink]="['/']">
+    <mat-toolbar class="sidenav-header" title="Exit Administration" (click)="exitAdmin()">
+      <a class="nolink">
         <div class="cssLayoutRowStartCenter">
           <mat-icon class="icon-35px crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
           <h2 class="icon-text">Administration</h2>

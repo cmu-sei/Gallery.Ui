@@ -127,7 +127,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.hideTopbar = this.inIframe();
     // Set the display settings from config file
     this.titleText = this.settingsService.settings.AppTopBarText;
-    this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle;
   }
 
   ngOnInit() {
@@ -180,7 +179,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
           }
           this.loadExhibitData();
         } else {
+          this.exhibitId = '';
+          this.exhibitDataService.setActive('');
+          this.collectionDataService.setActive('');
           this.exhibitDataService.loadMine();
+          this._document.getElementById('appTitle').innerHTML =
+            this.settingsService.settings.AppTitle;
         }
         // card
         const cardId = params.get('card');
