@@ -43,6 +43,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
 }
 
 .app-model-container {
@@ -93,13 +94,24 @@
   width: 30%;
 }
 
-a {
-  color: var(--mat-sys-primary);
-  text-decoration: underline;
+/* unvisited link */
+a:link {
+  color: var(--mat-sys-on-background);
+}
 
-  &:visited {
-    color: var(--mat-sys-primary);
-  }
+/* visited link */
+a:visited {
+  color: var(--mat-sys-on-background);
+}
+
+/* mouse over link */
+a:hover {
+  color: var(--mat-sys-outline);
+}
+
+/* selected link */
+a:active {
+  color: var(--mat-sys-on-background);
 }
 
 .collection-container {
