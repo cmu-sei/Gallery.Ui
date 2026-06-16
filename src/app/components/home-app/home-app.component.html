@@ -64,15 +64,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
               </a>
             </mat-cell>
           </ng-container>
+          <!-- Description Column -->
+          <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
+            <mat-cell *matCellDef="let exhibit">{{ exhibit.description }}</mat-cell>
+          </ng-container>
           <!-- Collection Column -->
           <ng-container matColumnDef="collection">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Collection</mat-header-cell>
             <mat-cell *matCellDef="let exhibit">{{ getCollectionName(exhibit.collectionId) }}</mat-cell>
-          </ng-container>
-          <!-- Created By Column -->
-          <ng-container matColumnDef="createdBy">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Created By</mat-header-cell>
-            <mat-cell *matCellDef="let exhibit">{{ getUserName(exhibit.createdBy) }}</mat-cell>
           </ng-container>
           <!-- Date Created Column -->
           <ng-container matColumnDef="dateCreated">
@@ -80,8 +80,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"yyyy-MM-dd HH:mm" }}</mat-cell>
           </ng-container>
           <mat-header-row
-            *matHeaderRowDef="['name', 'collection', 'createdBy', 'dateCreated']; sticky: true"></mat-header-row>
-          <mat-row *matRowDef="let exhibit; columns: ['name', 'collection', 'createdBy', 'dateCreated']"></mat-row>
+            *matHeaderRowDef="['name', 'description', 'collection', 'dateCreated']; sticky: true"></mat-header-row>
+          <mat-row *matRowDef="let exhibit; columns: ['name', 'description', 'collection', 'dateCreated']"></mat-row>
         </mat-table>
         <!-- Filter No Results Found -->
         @if (exhibitList.data.length === 0) {
@@ -89,6 +89,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           No results found
         </div>
         }
+        <mat-paginator
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          showFirstLastButtons
+          aria-label="Select page of exhibits">
+        </mat-paginator>
       </div>
     </div>
     }

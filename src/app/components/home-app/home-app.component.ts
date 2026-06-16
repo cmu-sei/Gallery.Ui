@@ -5,6 +5,7 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild, DOCUMENT } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
@@ -62,6 +63,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         }
       };
       this.exhibitList.sort = sort;
+    }
+  }
+  @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
+    if (paginator) {
+      this.exhibitList.paginator = paginator;
     }
   }
   apiMessage =
