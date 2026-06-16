@@ -142,13 +142,17 @@ a:active {
 
 .background {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   min-height: 0;
 }
 
 .mat-mdc-table {
   width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .mat-mdc-header-row {
