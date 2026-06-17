@@ -39,6 +39,12 @@ export class AdminCardEditDialogComponent {
     this.data.card.description,
     []
   );
+  public collectionIdFormControl = new UntypedFormControl(
+    this.data.card.collectionId,
+    [Validators.required]
+  );
+  public collectionList = this.data.collectionList;
+  public hideCollectionSelector = this.data.hideCollectionSelector || false;
 
   constructor(
     public dialogService: DialogService,

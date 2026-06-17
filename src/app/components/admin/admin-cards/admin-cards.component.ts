@@ -104,7 +104,9 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
     const dialogRef = this.dialog.open(AdminCardEditDialogComponent, {
       width: '480px',
       data: {
-        card: card
+        card: card,
+        // We are already in a collection context, so the collection is fixed.
+        hideCollectionSelector: true,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
