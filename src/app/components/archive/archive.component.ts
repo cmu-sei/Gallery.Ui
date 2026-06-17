@@ -42,7 +42,7 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
-import { XApiService } from 'src/app/generated/api';
+import { XApiService } from 'src/app/services/xapi/xapi.service';
 
 @Component({
   selector: 'app-archive',
@@ -361,15 +361,16 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   openShareDialog(userArticle: UserArticle) {
+    const isEmailActive = this.settingsService.settings.IsEmailActive;
     const dialogRef = this.dialog.open(ArticleShareDialogComponent, {
       width: 'auto',
       maxWidth: '90vw',
-      minWidth: '900px',
-      minHeight: '700px',
+      minWidth: isEmailActive ? '800px' : '500px',
+      minHeight: isEmailActive ? '600px' : undefined,
       data: {
         article: userArticle.article,
         teamList: this.shareTeamList,
-        isEmailActive: this.settingsService.settings.IsEmailActive,
+        isEmailActive: isEmailActive,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {
@@ -405,9 +406,13 @@ export class ArchiveComponent implements OnDestroy {
     this.showCardList = [];
     if (this.teamCardList.length > 0 && this.cardList.length > 0) {
       this.teamCardList.forEach((tc) => {
-        const card = { ...this.cardList.find((c) => c.id === tc.cardId) };
-        this.showCardList.push(card);
-        if (tc.canPostArticles) {
+        const found = this.cardList.find((c) => c.id === tc.cardId);
+        if (!found) return;
+        const card = { ...found };
+        if (!this.showCardList.some((c) => c.id === card.id)) {
+          this.showCardList.push(card);
+        }
+        if (tc.canPostArticles && !this.postCardList.some((c) => c.id === card.id)) {
           this.postCardList.push(card);
         }
       });

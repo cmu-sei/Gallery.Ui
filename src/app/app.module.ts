@@ -56,6 +56,7 @@ import {
   ComnSettingsConfig,
   ComnSettingsModule,
   ComnSettingsService,
+  ComnHeaderBarModule,
 } from '@cmusei/crucible-common';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
@@ -114,11 +115,21 @@ import { ApiModule as SwaggerCodegenApiModule } from './generated/api/api.module
 import { ArchiveComponent } from './components/archive/archive.component';
 import { WallComponent } from './components/wall/wall.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import {
+  NgxMatDatepickerActions,
+  NgxMatDatepickerApply,
+  NgxMatDatepickerCancel,
+  NgxMatDatepickerClear,
+  NgxMatDatepickerInput,
+  NgxMatDatepickerToggle,
+  NgxMatDatetimepicker,
+} from '@ngxmc/datetime-picker';
 import { TeamSelectorComponent } from './components/team-selector/team-selector.component';
 import { UIDataService } from './data/ui/ui-data.service';
 
 const settings: ComnSettingsConfig = {
   url: 'assets/config/settings.json',
+  sharedUrl: 'assets/config/settings.shared.json',
   envUrl: 'assets/config/settings.env.json',
 };
 
@@ -159,8 +170,6 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AdminRolesComponent,
     AdminExhibitRolesComponent,
     AdminCollectionRolesComponent,
-    AdminExhibitsComponent,
-    AdminCollectionsComponent,
     AdminSystemRolesComponent,
     ArticleComponent,
     ArticleEditDialogComponent,
@@ -208,7 +217,15 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     CdkTreeModule,
     ComnAuthModule.forRoot(),
     ComnSettingsModule.forRoot(),
+    ComnHeaderBarModule,
     AngularEditorModule,
+    NgxMatDatetimepicker,
+    NgxMatDatepickerToggle,
+    NgxMatDatepickerInput,
+    NgxMatDatepickerActions,
+    NgxMatDatepickerApply,
+    NgxMatDatepickerCancel,
+    NgxMatDatepickerClear,
     MatFormFieldModule,
     MatLabel,
     MatSelect,

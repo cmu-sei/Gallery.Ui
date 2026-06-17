@@ -51,8 +51,37 @@ export class PermissionDataService {
     return this._permissions.includes(permission);
   }
 
+  shouldLoadAllCollections(): boolean {
+    const allCollectionPermissions = [
+      SystemPermission.ViewCollections,
+      SystemPermission.EditCollections,
+      SystemPermission.ManageCollections,
+      SystemPermission.ViewExhibits,
+      SystemPermission.EditExhibits,
+      SystemPermission.ManageExhibits,
+    ];
+    return this._permissions.some(p => allCollectionPermissions.includes(p));
+  }
+
   canViewAdministration() {
-    return this._permissions.some((y) => y.startsWith('View'));
+    const adminPermissions = [
+      SystemPermission.ViewCollections,
+      SystemPermission.EditCollections,
+      SystemPermission.ManageCollections,
+      SystemPermission.CreateCollections,
+      SystemPermission.ViewExhibits,
+      SystemPermission.EditExhibits,
+      SystemPermission.ManageExhibits,
+      SystemPermission.CreateExhibits,
+      SystemPermission.ViewUsers,
+      SystemPermission.ManageUsers,
+      SystemPermission.ViewRoles,
+      SystemPermission.ManageRoles,
+      SystemPermission.ViewGroups,
+      SystemPermission.ManageGroups
+    ];
+
+    return this._permissions.some((perm) => adminPermissions.includes(perm));
   }
 
   loadExhibitPermissions(): Observable<ExhibitPermissionClaim[]> {
@@ -74,13 +103,11 @@ export class PermissionDataService {
   }
 
   canEditExhibit(ExhibitId: string): boolean {
-    return this.canExhibit(SystemPermission.EditExhibits, ExhibitId, ExhibitPermission.EditExhibit) ||
-      this.canExhibit(SystemPermission.ManageExhibits, ExhibitId, ExhibitPermission.ManageExhibit);
+    return this.canExhibit(SystemPermission.EditExhibits, ExhibitId, ExhibitPermission.EditExhibit);
   }
 
   canEditCollection(collectionId: string): boolean {
-    return this.canCollection(SystemPermission.EditCollections, collectionId, CollectionPermission.EditCollection) ||
-      this.canCollection(SystemPermission.ManageCollections, collectionId, CollectionPermission.ManageCollection);
+    return this.canCollection(SystemPermission.EditCollections, collectionId, CollectionPermission.EditCollection);
   }
 
   canManageExhibit(ExhibitId: string): boolean {

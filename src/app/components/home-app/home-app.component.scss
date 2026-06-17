@@ -5,34 +5,45 @@
 @include mat.elevation-classes();
 @include mat.app-background();
 
+:host {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
 .elevate {
   @include mat.elevation(2);
 }
 
-.list-container {
+.app-home-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  max-height: 800px;
-  min-width: 300px;
-  margin: auto;
-  width: 80%;
-  overflow-y: auto;
-  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
+  width: 100%;
+  height: 100%;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  overflow: hidden;
 }
 
-.app-home-container {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
-  height: 100%;
-  text-align: center;
+.main-area {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 44px - 20px);
+  min-height: 0;
   overflow: hidden;
-  height: 100%;
-  background-color: var(--mat-sys-background);
-  color: var(--mat-sys-on-background);
+  padding-bottom: 8px;
+}
+
+.list-container {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
 }
 
 .app-model-container {
@@ -83,13 +94,24 @@
   width: 30%;
 }
 
-a {
-  color: var(--mat-sys-primary);
-  text-decoration: underline;
+/* unvisited link */
+a:link {
+  color: var(--mat-sys-on-background);
+}
 
-  &:visited {
-    color: var(--mat-sys-primary);
-  }
+/* visited link */
+a:visited {
+  color: var(--mat-sys-on-background);
+}
+
+/* mouse over link */
+a:hover {
+  color: var(--mat-sys-outline);
+}
+
+/* selected link */
+a:active {
+  color: var(--mat-sys-on-background);
 }
 
 .collection-container {
@@ -118,9 +140,26 @@ a {
   height: 90px;
 }
 
+.background {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
 .mat-mdc-table {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  max-height: calc(100vh - 300px);
+}
+
+.mat-mdc-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--mat-sys-surface, inherit);
 }
 
 .searchBox {

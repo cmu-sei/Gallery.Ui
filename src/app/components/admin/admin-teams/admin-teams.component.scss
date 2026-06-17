@@ -93,3 +93,8 @@
 .button-cell {
   width: 90px;
 }
+
+.scrollable-region {
+  max-height: 500px;
+  overflow-y: auto;
+}

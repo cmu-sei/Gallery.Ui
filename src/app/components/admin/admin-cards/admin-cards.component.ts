@@ -80,8 +80,6 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    // Don't load collections here - parent component already loaded them
-    // The subscription in constructor will populate collectionList
     this.loadCards();
   }
 
@@ -107,7 +105,8 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
       width: '480px',
       data: {
         card: card,
-        hideCollectionSelector: true, // We're already in a collection context
+        // We are already in a collection context, so the collection is fixed.
+        hideCollectionSelector: true,
       },
     });
     dialogRef.componentInstance.editComplete.subscribe((result) => {

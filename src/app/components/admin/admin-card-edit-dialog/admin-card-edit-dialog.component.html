@@ -14,6 +14,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
         <input type="text" matInput [formControl]="cardNameFormControl" placeholder="Name (required)"
           (blur)="saveCard('name')" value="{{data.card.name}}">
         @if (cardNameFormControl.hasError('required')) {
@@ -27,6 +28,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Description</mat-label>
         <textarea matInput [formControl]="cardDescriptionFormControl" placeholder="Description"
           (blur)="saveCard('description')" value="{{data.card.description}}"></textarea>
       </mat-form-field>

@@ -1,5 +1,5 @@
 /*
- Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+ Copyright 2026 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the
  project root for license information.
 */
@@ -17,7 +17,7 @@
  */
 
 
-export type GenericParameterAttributes = 'None' | 'Covariant' | 'Contravariant' | 'VarianceMask' | 'ReferenceTypeConstraint' | 'NotNullableValueTypeConstraint' | 'DefaultConstructorConstraint' | 'SpecialConstraintMask';
+export type GenericParameterAttributes = 'None' | 'Covariant' | 'Contravariant' | 'VarianceMask' | 'ReferenceTypeConstraint' | 'NotNullableValueTypeConstraint' | 'DefaultConstructorConstraint' | 'SpecialConstraintMask' | 'AllowByRefLike';
 
 export const GenericParameterAttributes = {
     None: 'None' as GenericParameterAttributes,
@@ -27,6 +27,7 @@ export const GenericParameterAttributes = {
     ReferenceTypeConstraint: 'ReferenceTypeConstraint' as GenericParameterAttributes,
     NotNullableValueTypeConstraint: 'NotNullableValueTypeConstraint' as GenericParameterAttributes,
     DefaultConstructorConstraint: 'DefaultConstructorConstraint' as GenericParameterAttributes,
-    SpecialConstraintMask: 'SpecialConstraintMask' as GenericParameterAttributes
+    SpecialConstraintMask: 'SpecialConstraintMask' as GenericParameterAttributes,
+    AllowByRefLike: 'AllowByRefLike' as GenericParameterAttributes
 };
 

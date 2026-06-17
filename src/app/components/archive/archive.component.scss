@@ -5,6 +5,9 @@
 
 :host {
   @include mat.form-field-density(-5);
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .top-row mat-form-field {
@@ -193,6 +196,7 @@
 mat-card-actions {
   display: flex;
   flex-direction: column;
+  margin-top: auto;
 }
 
 .action-buttons {
@@ -215,7 +219,7 @@ mat-card-actions {
   display: flex;
   align-content: flex-start;
   flex-wrap: wrap;
-  height: calc(100vh - 104px);
+  height: calc(100% - 104px);
   overflow-y: auto;
 }
 
@@ -224,6 +228,8 @@ mat-card-actions {
   box-sizing: border-box;
   margin: 1rem .25em;
   min-width: 360px;
+  display: flex;
+  flex-direction: column;
 }
 
 @media screen and (min-width: 40em) {

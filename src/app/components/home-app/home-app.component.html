@@ -3,7 +3,7 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div class="app-home-container">
+<div class="app-home-container" fxLayout="column" fxLayoutAlign="center stretch" fxFlexFill>
   @if (!hideTopbar) {
   <app-topbar [title]="titleText" [topbarView]="TopbarView.GALLERY_HOME" [imageFilePath]="topbarImage"
     (urlNavigate)="topBarNavigate($event)"></app-topbar>
@@ -22,13 +22,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </span>
   }
   @if (permissions) {
-  <span>
+  <div class="main-area">
     @if (!exhibitId) {
     <div class="top-row">
       <div class="one-cell last-cell">
+        @if (canViewAdministration) {
         <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
           <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
         </button>
+        }
       </div>
     </div>
     }
@@ -38,20 +40,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <div class="icon-text-container">
         <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
         <span class="exhibit-title text">My Exhibits</span>
-        <!-- Collection Dropdown -->
-        <mat-form-field class="width-30 collection-container">
-          <mat-label>Collection</mat-label>
-          <mat-select placeholder="Collection" [value]="collectionId"
-            (selectionChange)="selectCollection($event.value)">
-            @for (collection of collectionList; track collection.id) {
-            <mat-option [value]="collection.id">
-              {{ collection.name }}
-            </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <span>&nbsp;&nbsp;</span>
-        @if (!exhibitId && collectionId) {
         <div class="searchBox">
           <!-- Search Bar -->
           <mat-form-field style="width: 320px">
@@ -64,14 +52,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             }
           </mat-form-field>
         </div>
-        }
       </div>
-      @if (!exhibitId && collectionId) {
-      <div class="exhibit-container background text" autosize>
+      <div class="background text" autosize>
         <mat-table class="width-100 mat-table" [dataSource]="exhibitList" matSort>
           <!-- Name Column -->
           <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
             <mat-cell *matCellDef="let exhibit">
               <a [routerLink]="['/']" [queryParams]="getQueryParams(exhibit.id)">
                 {{ exhibit.name }}
@@ -80,44 +66,46 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           </ng-container>
           <!-- Description Column -->
           <ng-container matColumnDef="description">
-            <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
             <mat-cell *matCellDef="let exhibit">{{ exhibit.description }}</mat-cell>
           </ng-container>
-          <!-- Created By Column -->
-          <ng-container matColumnDef="createdBy">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Created By</mat-header-cell>
-            <mat-cell *matCellDef="let exhibit">{{ getUserName(exhibit.createdBy) }}</mat-cell>
+          <!-- Collection Column -->
+          <ng-container matColumnDef="collection">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Collection</mat-header-cell>
+            <mat-cell *matCellDef="let exhibit">{{ getCollectionName(exhibit.collectionId) }}</mat-cell>
           </ng-container>
           <!-- Date Created Column -->
           <ng-container matColumnDef="dateCreated">
-            <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
-            <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"MM/dd/yyyy HH:mm" }}</mat-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Created</mat-header-cell>
+            <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"yyyy-MM-dd HH:mm" }}</mat-cell>
           </ng-container>
-          <mat-header-row *matHeaderRowDef="['name', 'description', 'createdBy', 'dateCreated']"></mat-header-row>
-          <mat-row *matRowDef="let exhibit; columns: ['name', 'description', 'createdBy', 'dateCreated']"></mat-row>
+          <mat-header-row
+            *matHeaderRowDef="['name', 'description', 'collection', 'dateCreated']; sticky: true"></mat-header-row>
+          <mat-row *matRowDef="let exhibit; columns: ['name', 'description', 'collection', 'dateCreated']"></mat-row>
         </mat-table>
         <!-- Filter No Results Found -->
-        @if (exhibitList.length === 0) {
+        @if (exhibitList.data.length === 0) {
         <div class="text no-results">
           No results found
         </div>
         }
+        <mat-paginator
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          showFirstLastButtons
+          aria-label="Select page of exhibits">
+        </mat-paginator>
       </div>
-      }
     </div>
     }
     @if (exhibitId && selectedSection === 'wall') {
-    <span>
-      <app-wall [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
-        (sectionSelected)="gotoSection($event)"></app-wall>
-    </span>
+    <app-wall [showAdminButton]="canViewAdministration" [showAdvanceButton]="canManageCurrentExhibit"
+      [exhibit]="exhibit" (changeTeam)="changeTeam($event)"
+      (sectionSelected)="gotoSection($event)"></app-wall>
     }
     @if (exhibitId && selectedSection === 'archive') {
-    <span>
-      <app-archive [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
-        (sectionSelected)="gotoSection($event)"></app-archive>
-    </span>
+    <app-archive [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
+      (sectionSelected)="gotoSection($event)"></app-archive>
     }
-  </span>
+  </div>
   }
 </div>

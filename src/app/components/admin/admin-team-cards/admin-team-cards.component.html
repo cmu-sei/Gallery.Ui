@@ -23,7 +23,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-label>Card</mat-label>
       <mat-select placeholder="Card" [(ngModel)]="selectedCardId" (selectionChange)="sortChanged(sort)">
         <mat-option value=''>All Cards</mat-option>
-        @for (card of cardList; track card) {
+        @for (card of cardList; track card.id) {
         <mat-option [value]="card.id">
           {{ card.name }}
         </mat-option>
@@ -31,7 +31,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-select>
     </mat-form-field>
   </div>
-  <div class="three-cell">&nbsp;</div>
+  <div class="five-cell">
+    <mat-form-field class="filter-selection">
+      <input matInput [formControl]="filterControl" placeholder="Search" />
+      @if (filterControl.value) {
+      <button mat-icon-button matSuffix (click)="clearFilter()" style="outline: none;" title="Clear Search">
+        <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
+      </button>
+      }
+    </mat-form-field>
+  </div>
 </div>
 
 <mat-accordion displayMode="flat">
@@ -50,8 +59,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="header-cell one-cell" mat-sort-header="inject">Inject</div>
   </section>
 
-  <section class="srollable-region">
-    @for (teamCard of filteredTeamCardList; track teamCard) {
+  <section class="scrollable-region">
+    @for (teamCard of filteredTeamCardList; track teamCard.id) {
     <mat-expansion-panel disabled>
       @if (!isLoading) {
       <mat-expansion-panel-header class="row">

@@ -5,8 +5,9 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <mat-sidenav-container class="appcontent-container" autosize>
   <mat-sidenav #sidenav mode="side" [(opened)]="isSidebarOpen" class="appbarmenu-container">
+    <div class="sidenav-content-wrapper">
     <mat-toolbar class="sidenav-header" title="Exit Administration" (click)="exitAdmin()">
-      <a class="nolink" (click)="exitAdmin()">
+      <a class="nolink">
         <div class="cssLayoutRowStartCenter">
           <mat-icon class="icon-35px crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
           <h2 class="icon-text">Administration</h2>
@@ -66,7 +67,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       }
     </mat-list>
     @if (!hideTopbar) {
-    <div class="app-versions" style="margin-bottom: 58px;">
+    <div class="app-versions">
       Versions: UI {{ uiVersion }}, API {{ apiVersion }}
     </div>
     }
@@ -82,6 +83,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           : 'assets/img/crucible-logo-dark.png'
       " />
     }
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
     @if (!hideTopbar) {

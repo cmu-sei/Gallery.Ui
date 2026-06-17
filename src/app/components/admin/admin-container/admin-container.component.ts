@@ -58,6 +58,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   canCreateExhibits = false;
   readonly SystemPermission = SystemPermission;
   showSection$: Observable<string>;
+  originalExhibitId: string;
 
   constructor(
     @Inject(DOCUMENT) private _document: HTMLDocument,
@@ -81,12 +82,10 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Admin';
+    this.originalExhibitId = this.exhibitQuery.getActiveId() as string;
 
-    this.collectionDataService.load();
     // observe the collections
     this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.canViewCollections = this.canViewCollections || collections.length > 0;
-      this.canViewExhibits = collections.length > 0;
       this.permissionDataService.load().subscribe();
       this.permissionDataService.loadCollectionPermissions().subscribe();
       this.permissionDataService.loadExhibitPermissions().subscribe();
@@ -118,6 +117,11 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.userDataService.load().pipe(take(1)).subscribe();
     this.permissionDataService.load().pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.updatePermissions();
+      if (this.permissionDataService.shouldLoadAllCollections()) {
+        this.collectionDataService.load();
+      } else {
+        this.collectionDataService.loadMine();
+      }
     });
     this.permissionDataService.loadCollectionPermissions().subscribe();
     this.permissionDataService.loadExhibitPermissions().subscribe();
@@ -139,6 +143,12 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   }
 
   updatePermissions() {
+    this.canViewCollections = this.permissionDataService.hasPermission(SystemPermission.ViewCollections)
+      || this.permissionDataService.hasPermission(SystemPermission.EditCollections)
+      || this.permissionDataService.hasPermission(SystemPermission.ManageCollections);
+    this.canViewExhibits = this.permissionDataService.hasPermission(SystemPermission.ViewExhibits)
+      || this.permissionDataService.hasPermission(SystemPermission.EditExhibits)
+      || this.permissionDataService.hasPermission(SystemPermission.ManageExhibits);
     this.canViewUsers = this.permissionDataService.hasPermission(SystemPermission.ViewUsers);
     this.canViewRoles = this.permissionDataService.hasPermission(SystemPermission.ViewRoles);
     this.canViewGroups = this.permissionDataService.hasPermission(SystemPermission.ViewGroups);
@@ -149,8 +159,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
 
   exitAdmin() {
     this.router.navigate([''], {
-      queryParams: { section: Section.archive },
-      queryParamsHandling: 'merge',
+      queryParams: { exhibit: this.originalExhibitId || undefined },
     });
   }
 

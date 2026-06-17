@@ -18,6 +18,9 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
+  "exclude": [
+    "../../libraries/**/node_modules"
+  ],
   "angularCompilerOptions": {
     "strictTemplates": true,
     "strictInjectionParameters": true

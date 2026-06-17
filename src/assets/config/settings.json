@@ -8,7 +8,7 @@
         "response_type": "code",
         "scope": "openid profile gallery steamfitter",
         "automaticSilentRenew": true,
-        
+
     "silent_redirect_uri": "http://localhost:4723/auth-callback-silent.html"
     },
     "AppTitle": "Gallery",
@@ -17,6 +17,17 @@
     "UseLocalAuthStorage": false,
     "IsEmailActive": false,
     "useAccessTokenExpirationRedirect": true,
+    "XApiEnabled": false,
     "AppTopBarHexColor": "#008740",
-    "AppTopBarHexTextColor": "#FFFFFF"
+    "AppTopBarHexTextColor": "#FFFFFF",
+    "HeaderBarSettings": {
+        "banner_background_color": "#007a33ff",
+        "classification_text": "UNCLASSIFIED",
+        "classification_text_color": "#ffffff",
+        "classification_text_fontsize": "14",
+        "message_text": "Maintenance Message",
+        "message_text_color": "#ffff00",
+        "message_text_fontsize": "14",
+        "enabled": false
+    }
 }

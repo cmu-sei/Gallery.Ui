@@ -65,10 +65,10 @@ export class AdminTeamEditDialogComponent {
     if (!saveChanges) {
       this.editComplete.emit({ saveChanges: false, team: null });
     } else {
-      this.data.team.name = this.teamNameFormControl.value.toString().trim();
+      this.data.team.name = this.teamNameFormControl.value?.toString().trim() || '';
       this.data.team.shortName = this.teamShortNameFormControl.value
-        .toString()
-        .trim();
+        ?.toString()
+        .trim() || '';
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,
@@ -84,14 +84,14 @@ export class AdminTeamEditDialogComponent {
   saveTeam(changedField): void {
     switch (changedField) {
       case 'name':
-        this.data.team.name = this.teamNameFormControl.value.toString();
+        this.data.team.name = this.teamNameFormControl.value?.toString() || '';
         break;
       case 'shortName':
         this.data.team.shortName =
-          this.teamShortNameFormControl.value.toString();
+          this.teamShortNameFormControl.value?.toString() || '';
         break;
       case 'email':
-        this.data.team.email = this.emailFormControl.value.toString();
+        this.data.team.email = this.emailFormControl.value?.toString() || '';
         break;
       default:
         break;

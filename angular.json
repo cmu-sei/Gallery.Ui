@@ -77,9 +77,21 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": {
+                "scripts": true,
+                "styles": true,
+                "vendor": true
+              },
+              "namedChunks": true
+            },
+            "localNPM": {
+              "tsConfig": "tsconfig.local-npm.json"
             }
-          },
-          "defaultConfiguration": ""
+          }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -87,9 +99,16 @@
             "port": 4723,
             "buildTarget": "gallery-ui:build"
           },
+          "defaultConfiguration": "development",
           "configurations": {
             "production": {
               "buildTarget": "gallery-ui:build:production"
+            },
+            "development": {
+              "buildTarget": "gallery-ui:build:development"
+            },
+            "localNPM": {
+              "buildTarget": "gallery-ui:build:development,localNPM"
             }
           }
         },

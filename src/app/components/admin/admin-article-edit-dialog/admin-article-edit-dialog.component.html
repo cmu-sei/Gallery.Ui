@@ -14,11 +14,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
   </button>
 </div>
-@if (!!data && data.article !== undefined && data.article !== null) {
+@if (!!data && data.article !== undefined && data.article !== null && articleNameFormControl) {
 <div mat-dialog-content>
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
         <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)"
           (blur)="saveArticle('name')" value="{{ data.article.name }}" [errorStateMatcher]="matcher" />
         @if (articleNameFormControl.hasError('required')) {
@@ -32,6 +33,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Summary</mat-label>
         <input matInput placeholder="Summary (required)" [formControl]="summaryFormControl"
           (blur)="saveArticle('summary')" value="{{ data.article.summary }}" [errorStateMatcher]="matcher" />
         @if (summaryFormControl.hasError('required')) {
@@ -66,12 +68,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field>
+        <mat-label>Card</mat-label>
         <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
           <mat-option></mat-option>
-          @for (card of data.cardList; track card) {
-          <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
-            {{ card.name }}
-          </mat-option>
+          @if (data.cardList) {
+            @for (card of data.cardList; track card.id) {
+            <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
+              {{ card.name }}
+            </mat-option>
+            }
           }
         </mat-select>
       </mat-form-field>
@@ -80,11 +85,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field>
+        <mat-label>Status</mat-label>
         <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
-          @for (itemStatusOption of itemStatusList; track itemStatusOption) {
-          <mat-option [value]="itemStatusOption">
-            {{ itemStatusOption }}
-          </mat-option>
+          @if (itemStatusList) {
+            @for (itemStatusOption of itemStatusList; track itemStatusOption) {
+            <mat-option [value]="itemStatusOption">
+              {{ itemStatusOption }}
+            </mat-option>
+            }
           }
         </mat-select>
       </mat-form-field>
@@ -93,12 +101,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field>
+        <mat-label>Source Type</mat-label>
         <mat-select placeholder="Source Type" [formControl]="sourceTypeFormControl"
           (selectionChange)="saveArticle('sourceType')">
-          @for (sourceTypeOption of sourceTypeList; track sourceTypeOption) {
-          <mat-option [value]="sourceTypeOption">
-            {{ sourceTypeOption }}
-          </mat-option>
+          @if (sourceTypeList) {
+            @for (sourceTypeOption of sourceTypeList; track sourceTypeOption) {
+            <mat-option [value]="sourceTypeOption">
+              {{ sourceTypeOption }}
+            </mat-option>
+            }
           }
         </mat-select>
       </mat-form-field>
@@ -107,6 +118,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Source Name</mat-label>
         <input matInput placeholder="Source Name" [formControl]="sourceNameFormControl"
           (blur)="saveArticle('sourceName')" value="{{ data.article.sourceName }}" />
       </mat-form-field>
@@ -115,6 +127,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>URL</mat-label>
         <input matInput placeholder="URL for more info" [formControl]="urlFormControl" (blur)="saveArticle('url')"
           value="{{ data.article.url }}" />
       </mat-form-field>
@@ -130,6 +143,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Move</mat-label>
         <input matInput placeholder="Move" [formControl]="moveFormControl" (blur)="saveArticle('move')"
           value="{{ data.article.move }}" />
       </mat-form-field>
@@ -138,19 +152,35 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Inject</mat-label>
         <input matInput placeholder="Inject" [formControl]="injectFormControl" (blur)="saveArticle('inject')"
           value="{{ data.article.inject }}" />
       </mat-form-field>
     </div>
   </div>
+  @if (datePostedFormControl) {
   <div class="add-margin">
     <div>
-      <mat-form-field>
-        <input matInput placeholder="Posted Date / Time" [formControl]="datePostedFormControl"
-          (inputChange)="saveArticle('datePosted')" (dateChange)="saveArticle('datePosted')" />
+      <mat-form-field class="datetime-field">
+        <mat-label>Posted Date / Time</mat-label>
+        <input matInput [ngxMatDatetimePicker]="picker" [formControl]="datePostedFormControl"
+          (dateChange)="saveArticle('datePosted')" style="display: none;">
+        <span (click)="picker.open()" style="cursor: pointer;">
+          {{datePostedFormControl.value | date: 'dd MMM yyyy HH:mm'}} {{ getTimezoneAbbr() }}
+        </span>
+        <mat-datepicker-toggle matSuffix title="Choose Date/Time" [for]="$any(picker)">
+        </mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #picker [showSpinners]=true [showSeconds]=false [stepHour]=1 [stepMinute]=5
+          [stepSecond]=1 [touchUi]=false [enableMeridian]=true [disableMinute]=false [hideTime]=false [color]="'warn'">
+          <ngx-mat-datepicker-actions>
+            <button mat-stroked-button ngxMatDatepickerApply>Save</button>
+            <button mat-stroked-button ngxMatDatepickerCancel>Cancel</button>
+          </ngx-mat-datepicker-actions>
+        </ngx-mat-datetime-picker>
       </mat-form-field>
     </div>
   </div>
+  }
   <div class="cssLayoutRowStartCenter bottom-button">
     <div class="delete-button">
       <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px">

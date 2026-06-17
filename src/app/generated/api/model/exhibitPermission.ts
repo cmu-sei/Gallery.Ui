@@ -1,5 +1,5 @@
 /*
- Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+ Copyright 2026 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the
  project root for license information.
 */
@@ -17,11 +17,12 @@
  */
 
 
-export type ExhibitPermission = 'ViewExhibit' | 'EditExhibit' | 'ManageExhibit';
+export type ExhibitPermission = 'ViewExhibit' | 'EditExhibit' | 'ManageExhibit' | 'ParticipateExhibit';
 
 export const ExhibitPermission = {
     ViewExhibit: 'ViewExhibit' as ExhibitPermission,
     EditExhibit: 'EditExhibit' as ExhibitPermission,
-    ManageExhibit: 'ManageExhibit' as ExhibitPermission
+    ManageExhibit: 'ManageExhibit' as ExhibitPermission,
+    ParticipateExhibit: 'ParticipateExhibit' as ExhibitPermission
 };
 

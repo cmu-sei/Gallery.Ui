@@ -20,6 +20,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
         <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)"
           (blur)="saveArticle('name')" [value]="data.article.name" [errorStateMatcher]="matcher">
         @if (articleNameFormControl.hasError('required')) {
@@ -33,6 +34,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>Summary</mat-label>
         <input matInput placeholder="Summary (required)" [formControl]="summaryFormControl"
           (blur)="saveArticle('summary')" value="{{data.article.summary}}" [errorStateMatcher]="matcher" />
         @if (summaryFormControl.hasError('required')) {
@@ -62,6 +64,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
+        <mat-label>URL</mat-label>
         <input matInput placeholder="URL for more info" [formControl]="urlFormControl" (blur)="saveArticle('url')"
           value="{{data.article.url}}" />
       </mat-form-field>
@@ -77,6 +80,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field>
+        <mat-label>Card</mat-label>
         <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
           @for (card of data.cardList; track card.id) {
           <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
@@ -90,6 +94,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="add-margin">
     <div>
       <mat-form-field>
+        <mat-label>Status</mat-label>
         <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
           @for (itemStatusOption of itemStatusList; track itemStatusOption) {
           <mat-option [value]="itemStatusOption">

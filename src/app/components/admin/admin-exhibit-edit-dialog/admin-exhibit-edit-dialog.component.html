@@ -4,7 +4,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div mat-dialog-title>
-  Edit Exhibit
+  {{ data.exhibit.id ? 'Edit Exhibit' : 'Add Exhibit' }}
   <button mat-icon-button (click)="handleEditComplete(false)" title="Cancel" class="close-button" tabindex="-1">
     <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
   </button>
@@ -73,6 +73,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           (blur)="saveExhibit('scenarioId')" value="{{data.exhibit.scenarioId}}" [disabled]="!data.canEdit">
       </mat-form-field>
     </div>
+  </div>
+  <div class="add-margin">
+    <mat-checkbox [(ngModel)]="data.exhibit.showAdvanceButton" [disabled]="!data.canEdit">
+      Show Advance Button
+    </mat-checkbox>
   </div>
   <div class="cssLayoutRowStartCenter bottom-button">
     <div class="delete-button">

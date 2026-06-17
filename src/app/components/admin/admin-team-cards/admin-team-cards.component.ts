@@ -97,6 +97,11 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     this.cardDataService.loadByExhibit(this.exhibitId);
     this.teamCardDataService.loadByExhibit(this.exhibitId);
     this.filterControl.setValue(this.filterString);
+    this.filterControl.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((term) => {
+        this.applyFilter(term);
+      });
     this.sortChanged(this.sort);
   }
 
@@ -217,6 +222,10 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   getTeamName(teamId: string) {
     const team = this.teamList?.find((t) => t.id === teamId);
     return team ? team.name : ' ';
+  }
+
+  clearFilter() {
+    this.filterControl.setValue('');
   }
 
   handleInput(event: KeyboardEvent): void {

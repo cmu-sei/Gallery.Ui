@@ -4,6 +4,9 @@
 
 import { Component, Inject, OnDestroy, OnInit, ViewChild, DOCUMENT } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
@@ -40,7 +43,7 @@ import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { Section } from 'src/app/utilities/enumerations';
-import { XApiService } from 'src/app/generated/api';
+import { XApiService } from 'src/app/services/xapi/xapi.service';
 
 @Component({
   selector: 'app-home-app',
@@ -50,12 +53,28 @@ import { XApiService } from 'src/app/generated/api';
 })
 export class HomeAppComponent implements OnDestroy, OnInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild(MatSort) set sort(sort: MatSort) {
+    if (sort) {
+      this.exhibitList.sortingDataAccessor = (exhibit, column) => {
+        switch (column) {
+          case 'collection': return this.getCollectionName(exhibit.collectionId) || '';
+          case 'dateCreated': return exhibit.dateCreated ? new Date(exhibit.dateCreated).toISOString() : '';
+          default: return exhibit[column as keyof Exhibit] as string;
+        }
+      };
+      this.exhibitList.sort = sort;
+    }
+  }
+  @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
+    if (paginator) {
+      this.exhibitList.paginator = paginator;
+    }
+  }
   apiMessage =
     'The GALLERY API web service appears to be experiencing technical difficulties.';
   titleText = 'Gallery';
   exhibitId = '';
   exhibit: Exhibit;
-  collectionId = '';
   collection: Collection;
   currentMove = -1;
   currentInject = -1;
@@ -65,7 +84,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   collectionList: Collection[] = [];
   collectionLoadCount = 0;
   allExhibits: Exhibit[] = [];
-  exhibitList: Exhibit[] = [];
+  exhibitList = new MatTableDataSource<Exhibit>();
   teamList: Team[] = [];
   selectedTeamId = '';
   isAuthorizedUser = false;
@@ -80,6 +99,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   permissions: SystemPermission[] = [];
   canViewAdministration = false;
   readonly SystemPermission = SystemPermission;
+
+  get canManageCurrentExhibit(): boolean {
+    if (!this.exhibitId) return false;
+    return this.permissionDataService.canManageExhibit(this.exhibitId);
+  }
 
   constructor(
     @Inject(DOCUMENT) private _document: HTMLDocument,
@@ -109,7 +133,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.hideTopbar = this.inIframe();
     // Set the display settings from config file
     this.titleText = this.settingsService.settings.AppTopBarText;
-    this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle;
   }
 
   ngOnInit() {
@@ -130,19 +153,21 @@ export class HomeAppComponent implements OnDestroy, OnInit {
       .subscribe(
         (x) => {
           this.permissions = this.permissionDataService.permissions;
-          this.canViewAdministration = this.permissions.some((y) => y.startsWith('View'));
+          this.canViewAdministration = this.permissionDataService.canViewAdministration();
         }
       );
+    this.permissionDataService.loadExhibitPermissions().subscribe();
   }
 
   startup() {
+    // load collections
+    this.collectionDataService.loadMine();
     // subscribe to route changes
     this.activatedRoute.queryParamMap
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((params) => {
         // exhibit and collection
         const exhibitId = params.get('exhibit');
-        const collectionId = params.get('collection');
         if (exhibitId) {
           this.exhibitId = exhibitId;
           this.exhibitDataService.loadById(exhibitId);
@@ -159,15 +184,14 @@ export class HomeAppComponent implements OnDestroy, OnInit {
             this.selectedSection = Section.archive;
           }
           this.loadExhibitData();
-        } else if (collectionId) {
-          this.exhibitId = '';
-          this.collectionId = collectionId;
-          this.loadCollectionData();
         } else {
           this.exhibitId = '';
-          this.collectionDataService.loadMine();
+          this.exhibitDataService.setActive('');
+          this.collectionDataService.setActive('');
+          this.exhibitDataService.loadMine();
+          this._document.getElementById('appTitle').innerHTML =
+            this.settingsService.settings.AppTitle;
         }
-        this.collectionDataService.setActive(this.collectionId);
         // card
         const cardId = params.get('card');
         if (exhibitId && cardId) {
@@ -176,22 +200,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         // team
         if (this.exhibitId && this.selectedTeamId) {
           this.uiDataService.setTeam(exhibitId, this.selectedTeamId);
-          // xAPI
-          if (this.selectedTeamId !== this.teamDataService.getMyTeamId()) {
-            // observed
-            if (this.selectedSection === Section.archive) {
-              this.xApiService
-                .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
-                .pipe(take(1))
-                .subscribe();
-            } else if (this.selectedSection === Section.wall) {
-              this.xApiService
-                .observedExhibitWall(this.exhibitId, this.selectedTeamId)
-                .pipe(take(1))
-                .subscribe();
-            }
-          } else {
-            // viewed
+          const myTeamId = this.teamDataService.getMyTeamId();
+          if (this.selectedTeamId === myTeamId) {
+            // Viewing own team
             if (this.selectedSection === Section.archive) {
               this.xApiService
                 .viewedExhibitArchive(this.exhibitId)
@@ -206,6 +217,19 @@ export class HomeAppComponent implements OnDestroy, OnInit {
             } else if (this.selectedSection === Section.wall) {
               this.xApiService
                 .viewedExhibitWall(this.exhibitId)
+                .pipe(take(1))
+                .subscribe();
+            }
+          } else if (myTeamId) {
+            // Observing another team
+            if (this.selectedSection === Section.archive) {
+              this.xApiService
+                .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
+                .pipe(take(1))
+                .subscribe();
+            } else if (this.selectedSection === Section.wall) {
+              this.xApiService
+                .observedExhibitWall(this.exhibitId, this.selectedTeamId)
                 .pipe(take(1))
                 .subscribe();
             }
@@ -240,7 +264,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
             !inIntialState &&
             (this.exhibit.currentMove !== this.currentMove ||
               this.exhibit.currentInject !== this.currentInject);
-          this.collectionId = this.exhibit.collectionId;
           this.currentMove = this.exhibit.currentMove;
           this.currentInject = this.exhibit.currentInject;
           if (moveOrInjectChanged) {
@@ -296,9 +319,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   changeTeam(teamId: string) {
     let oldTeamId = this.selectedTeamId;
     if (oldTeamId !== teamId) {
-      // make sure to send a Guid for old team ID
       oldTeamId = oldTeamId ? oldTeamId : teamId;
-      // signalR hub: leave the old team and join the new team
       this.signalRService.switchTeam(oldTeamId, teamId);
     }
     this.selectedTeamId = teamId;
@@ -306,6 +327,20 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.uiDataService.setTeam(this.exhibitId, teamId);
     this.cardDataService.setActive('');
     this.loadTeamData();
+    const myTeamId = this.teamDataService.getMyTeamId();
+    if (myTeamId && this.selectedTeamId && this.exhibitId && this.selectedTeamId !== myTeamId) {
+      if (this.selectedSection === Section.archive) {
+        this.xApiService
+          .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
+          .pipe(take(1))
+          .subscribe();
+      } else if (this.selectedSection === Section.wall) {
+        this.xApiService
+          .observedExhibitWall(this.exhibitId, this.selectedTeamId)
+          .pipe(take(1))
+          .subscribe();
+      }
+    }
   }
 
   logout() {
@@ -320,13 +355,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     }
   }
 
-  loadCollectionData() {
-    this.collectionDataService.loadById(this.collectionId);
-    this.collectionDataService.setActive(this.collectionId);
-    this.uiDataService.setCollection(this.collectionId);
-    this.exhibitDataService.loadMineByCollection(this.collectionId);
-  }
-
   loadExhibitData() {
     // process the change
     this.exhibitDataService.setActive(this.exhibitId);
@@ -335,7 +363,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
 
   loadTeamData() {
     // process the change
-    if (this.selectedTeamId) {
+    if (this.exhibitId && this.selectedTeamId) {
       this.cardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
       this.cardDataService.setActive('all');
       this.teamCardDataService.loadByExhibitTeam(
@@ -349,13 +377,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     }
   }
 
-  selectCollection(collectionId: string) {
-    this.collectionId = collectionId;
-    this.exhibitId = '';
-    this.loadCollectionData();
+  getCollectionName(collectionId: string) {
+    return this.collectionList.find(c => c.id === collectionId)?.name;
   }
 
   handleExhibitMoveOrInjectChange() {
+    if (!this.exhibitId) return;
     this.teamCardDataService.loadByExhibitTeam(
       this.exhibitId,
       this.selectedTeamId
@@ -384,6 +411,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.selectedSection = sectionOrCardId;
         this.cardDataService.setActive('');
         this.uiDataService.setSection(this.exhibitId, sectionOrCardId);
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: { exhibit: this.exhibitId, section: sectionOrCardId },
+          queryParamsHandling: 'merge'
+        });
         break;
       case 'admin':
         this.gotoAdmin();
@@ -392,6 +424,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.selectedSection = Section.archive;
         this.cardDataService.setActive(sectionOrCardId);
         this.uiDataService.setSection(this.exhibitId, this.selectedSection);
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: { exhibit: this.exhibitId, section: this.selectedSection, card: sectionOrCardId },
+          queryParamsHandling: 'merge'
+        });
         break;
     }
   }
@@ -399,9 +436,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   applyFilter(filterValue: string) {
     console.log('applyFilter: ' + filterValue);
     this.filterString = filterValue;
-    this.exhibitList = this.allExhibits.filter((exhibit) => {
-      const createdBy = this.getUserName(exhibit.createdBy)?.toLowerCase();
-      return createdBy.includes(this.filterString?.toLowerCase());
+    const filter = this.filterString?.toLowerCase() ?? '';
+    this.exhibitList.data = this.allExhibits.filter((exhibit) => {
+      const name = exhibit.name?.toLowerCase() ?? '';
+      const collection = this.getCollectionName(exhibit.collectionId)?.toLowerCase() ?? '';
+      const createdBy = this.getUserName(exhibit.createdBy)?.toLowerCase() ?? '';
+      return name.includes(filter) || collection.includes(filter) || createdBy.includes(filter);
     });
   }
 
@@ -413,8 +453,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   clearFilter() {
-    this.filterString = '';
-    this.exhibitDataService.loadMineByCollection(this.collectionId);
+    this.applyFilter('');
   }
 
   topBarNavigate(url): void {
