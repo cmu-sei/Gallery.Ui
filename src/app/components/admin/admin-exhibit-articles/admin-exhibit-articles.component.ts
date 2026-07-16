@@ -10,9 +10,9 @@ import { ArticleQuery } from 'src/app/data/article/article.query';
 import { ArticleTeamDataService } from 'src/app/data/team/article-team-data.service';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
+import { CrucibleDialogService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 
 @Component({
     selector: 'app-admin-exhibit-articles',
@@ -53,7 +53,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   private unsubscribe$ = new Subject();
 
   constructor(
-    public dialogService: DialogService,
+    private crucibleDialog: CrucibleDialogService,
     private articleDataService: ArticleDataService,
     private articleQuery: ArticleQuery,
     private articleTeamDataService: ArticleTeamDataService,
@@ -123,13 +123,16 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   }
 
   deleteArticleTeam(article: Article): void {
-    this.dialogService
-      .confirm(
-        'Delete Article',
-        'Are you sure that you want to delete ' + article.name + '?'
-      )
-      .subscribe((result) => {
-        if (result['confirm']) {
+    this.crucibleDialog
+      .confirm({
+        title: 'Delete Article',
+        message: 'Are you sure that you want to delete ' + article.name + '?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
           this.articleDataService.delete(article.id);
         }
       });

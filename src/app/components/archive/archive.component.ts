@@ -38,9 +38,8 @@ import { Section } from 'src/app/utilities/enumerations';
 import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
 import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dialog/article-edit-dialog.component';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ComnSettingsService } from '@cmusei/crucible-common';
+import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/services/xapi/xapi.service';
 
@@ -95,7 +94,7 @@ export class ArchiveComponent implements OnDestroy {
   constructor(
     @Inject(DOCUMENT) private _document: HTMLDocument,
     private dialog: MatDialog,
-    public dialogService: DialogService,
+    private crucibleDialog: CrucibleDialogService,
     private articleDataService: ArticleDataService,
     private userArticleQuery: UserArticleQuery,
     private userArticleDataService: UserArticleDataService,
@@ -484,13 +483,16 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   deleteArticle(article: Article): void {
-    this.dialogService
-      .confirm(
-        'Delete Article',
-        'Are you sure that you want to delete ' + article.name + '?'
-      )
-      .subscribe((result) => {
-        if (result['confirm']) {
+    this.crucibleDialog
+      .confirm({
+        title: 'Delete Article',
+        message: 'Are you sure that you want to delete ' + article.name + '?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
           this.articleDataService.delete(article.id);
         }
       });

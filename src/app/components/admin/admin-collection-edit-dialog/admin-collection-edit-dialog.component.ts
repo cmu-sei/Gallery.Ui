@@ -4,13 +4,13 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import {
   UntypedFormControl,
+  UntypedFormGroup,
   FormGroupDirective,
   NgForm,
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class UserErrorStateMatcher implements ErrorStateMatcher {
@@ -40,14 +40,14 @@ export class AdminCollectionEditDialogComponent {
     this.data.collection.description,
     []
   );
+  public form = new UntypedFormGroup({
+    name: this.collectionNameFormControl,
+    description: this.descriptionFormControl,
+  });
 
   constructor(
-    public dialogService: DialogService,
-    dialogRef: MatDialogRef<AdminCollectionEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    dialogRef.disableClose = true;
-  }
+  ) {}
 
   errorFree() {
     return !(

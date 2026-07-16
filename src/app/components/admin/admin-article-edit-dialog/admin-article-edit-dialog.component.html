@@ -3,19 +3,17 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div mat-dialog-title>
-  @if (data.article.id) {
-  <span>Edit Article</span>
-  }
-  @if (!data.article.id) {
-  <span>Add Article</span>
-  }
-  <button mat-icon-button (click)="handleEditComplete(false)" title="Cancel" class="close-button" tabindex="-1">
-    <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
-  </button>
-</div>
+<crucible-dialog
+  [dialogTitle]="data.article.id ? 'Edit Article' : 'Add Article'"
+  [form]="form"
+  submitLabel="Save"
+  [submitDisabled]="!errorFree() || !form.dirty"
+  [guardUnsavedWork]="form.dirty"
+  (submit)="handleEditComplete(true)"
+  (cancel)="handleEditComplete(false)"
+>
 @if (!!data && data.article !== undefined && data.article !== null && articleNameFormControl) {
-<div mat-dialog-content>
+<div crucibleDialogContent>
   <div class="add-margin">
     <div>
       <mat-form-field class="full-width">
@@ -135,7 +133,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </div>
   <div class="add-margin">
     <div class="full-width">
-      <mat-checkbox [(ngModel)]="data.article.openInNewTab">
+      <mat-checkbox [formControl]="openInNewTabFormControl">
         Open URL in new tab
       </mat-checkbox>
     </div>
@@ -181,17 +179,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
   }
-  <div class="cssLayoutRowStartCenter bottom-button">
-    <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()" style="margin-left: 40px">
-        Save
-      </button>
-    </div>
-    <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(false)">
-        Cancel
-      </button>
-    </div>
-  </div>
 </div>
 }
+</crucible-dialog>

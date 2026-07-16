@@ -17,12 +17,11 @@ import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
-import { ComnSettingsService } from '@cmusei/crucible-common';
+import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminArticleEditDialogComponent } from 'src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
@@ -59,7 +58,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
 
   constructor(
     private dialog: MatDialog,
-    public dialogService: DialogService,
+    private crucibleDialog: CrucibleDialogService,
     private settingsService: ComnSettingsService,
     private articleDataService: ArticleDataService,
     private articleQuery: ArticleQuery,
@@ -197,13 +196,16 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
   }
 
   deleteArticle(article: Article): void {
-    this.dialogService
-      .confirm(
-        'Delete Article',
-        'Are you sure that you want to delete ' + article.name + '?'
-      )
-      .subscribe((result) => {
-        if (result['confirm']) {
+    this.crucibleDialog
+      .confirm({
+        title: 'Delete Article',
+        message: 'Are you sure that you want to delete ' + article.name + '?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
           this.articleDataService.delete(article.id);
         }
       });

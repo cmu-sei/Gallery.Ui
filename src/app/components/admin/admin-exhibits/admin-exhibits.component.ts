@@ -32,11 +32,10 @@ import { CollectionDataService } from 'src/app/data/collection/collection-data.s
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
-import { ComnSettingsService } from '@cmusei/crucible-common';
+import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { AdminExhibitEditDialogComponent } from '../admin-exhibit-edit-dialog/admin-exhibit-edit-dialog.component';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
@@ -79,7 +78,7 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
   constructor(
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
-    public dialogService: DialogService,
+    private crucibleDialog: CrucibleDialogService,
     private cardDataService: CardDataService,
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
@@ -240,13 +239,16 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
   }
 
   deleteExhibit(exhibit: Exhibit): void {
-    this.dialogService
-      .confirm(
-        'Delete Exhibit',
-        'Are you sure that you want to delete this exhibit?'
-      )
-      .subscribe((result) => {
-        if (result['confirm']) {
+    this.crucibleDialog
+      .confirm({
+        title: 'Delete Exhibit',
+        message: 'Are you sure that you want to delete this exhibit?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
           this.exhibitDataService.delete(exhibit.id);
         }
       });

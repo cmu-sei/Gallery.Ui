@@ -19,12 +19,11 @@ import {
 } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
-import { ComnSettingsService } from '@cmusei/crucible-common';
+import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
@@ -59,7 +58,7 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   constructor(
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
-    public dialogService: DialogService,
+    private crucibleDialog: CrucibleDialogService,
     private collectionDataService: CollectionDataService,
     private collectionQuery: CollectionQuery,
     private permissionDataService: PermissionDataService
@@ -169,13 +168,16 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   }
 
   deleteCollection(collection: Collection): void {
-    this.dialogService
-      .confirm(
-        'Delete Collection',
-        'Are you sure that you want to delete ' + collection.name + '?'
-      )
-      .subscribe((result) => {
-        if (result['confirm']) {
+    this.crucibleDialog
+      .confirm({
+        title: 'Delete Collection',
+        message: 'Are you sure that you want to delete ' + collection.name + '?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
           this.collectionDataService.delete(collection.id);
         }
       });

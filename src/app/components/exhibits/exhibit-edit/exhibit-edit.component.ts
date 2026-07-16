@@ -13,7 +13,6 @@ import { ResultQuery } from 'src/app/data/result/result.query';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { TaskDataService } from 'src/app/data/task/task-data.service';
 import { TaskQuery } from 'src/app/data/task/task.query';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 import {
   Exhibit,
   ExhibitStatus,
@@ -41,8 +40,7 @@ export class ExhibitEditComponent {
     private exhibitQuery: ExhibitQuery,
     private taskDataService: TaskDataService,
     private taskQuery: TaskQuery,
-    private resultQuery: ResultQuery,
-    public dialogService: DialogService
+    private resultQuery: ResultQuery
   ) {}
 
   refreshTaskList() {

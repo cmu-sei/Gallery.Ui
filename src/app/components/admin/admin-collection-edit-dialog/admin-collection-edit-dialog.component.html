@@ -3,55 +3,45 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div mat-dialog-title>
-  @if (data && data.collection && data.collection.id) {
-  <span>Edit Collection</span>
+<crucible-dialog
+  [dialogTitle]="data && data.collection && data.collection.id ? 'Edit Collection' : 'New Collection'"
+  [form]="form"
+  submitLabel="Save"
+  [submitDisabled]="!errorFree() || !form.dirty"
+  [guardUnsavedWork]="form.dirty"
+  (submit)="handleEditComplete(true)"
+  (cancel)="handleEditComplete(false)"
+>
+  @if (!!data && data.collection !== undefined && data.collection !== null) {
+    <div crucibleDialogContent>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Name</mat-label>
+            <input type="text" matInput [formControl]="collectionNameFormControl" placeholder="Name (required)"
+              (blur)="saveCollection('name')" value="{{data.collection.name}}">
+            @if (collectionNameFormControl.hasError('required')) {
+            <mat-error>
+              Name is <strong>required</strong>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput placeholder="Description" [formControl]="descriptionFormControl"
+              (blur)="saveCollection('description')" value="{{data.collection.description}}"></textarea>
+            @if (descriptionFormControl.hasError('required')) {
+            <mat-error>
+              Description is <strong>required</strong>
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
   }
-  @if (!data || !data.collection || !data.collection.id) {
-  <span>New Collection</span>
-  }
-  <button mat-icon-button (click)="handleEditComplete(false)" title="Cancel" class="close-button" tabindex="-1">
-    <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
-  </button>
-</div>
-@if (!!data && data.collection !== undefined && data.collection !== null) {
-<div mat-dialog-content>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Name</mat-label>
-        <input type="text" matInput [formControl]="collectionNameFormControl" placeholder="Name (required)"
-          (blur)="saveCollection('name')" value="{{data.collection.name}}">
-        @if (collectionNameFormControl.hasError('required')) {
-        <mat-error>
-          Name is <strong>required</strong>
-        </mat-error>
-        }
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Description</mat-label>
-        <textarea matInput placeholder="Description" [formControl]="descriptionFormControl"
-          (blur)="saveCollection('description')" value="{{data.collection.description}}"></textarea>
-        @if (descriptionFormControl.hasError('required')) {
-        <mat-error>
-          Description is <strong>required</strong>
-        </mat-error>
-        }
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="cssLayoutRowStartCenter bottom-button">
-    <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(true)" [disabled]="!errorFree()"
-        style="margin-left: 40px;">Save</button>
-    </div>
-    <div class="delete-button">
-      <button mat-stroked-button (click)="handleEditComplete(false)">Cancel</button>
-    </div>
-  </div>
-</div>
-}
+</crucible-dialog>

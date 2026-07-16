@@ -1,10 +1,9 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
@@ -35,6 +34,11 @@ export class ArticleShareDialogComponent {
       this.data.article.id +
       '" rel="noopener noreferrer" target="_blank">Article Text</a></p>'
   );
+  form = new UntypedFormGroup({
+    teams: this.shareTeamsControl,
+    subject: this.subjectFormControl,
+    message: this.messageFormControl,
+  });
   editorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -64,11 +68,8 @@ export class ArticleShareDialogComponent {
   };
 
   constructor(
-    public dialogService: DialogService,
-    dialogRef: MatDialogRef<ArticleShareDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    dialogRef.disableClose = true;
     if (this.data.article.url) {
       this.messageFormControl.setValue(
         this.messageFormControl.value +

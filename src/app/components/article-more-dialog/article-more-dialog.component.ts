@@ -2,8 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
@@ -36,12 +35,9 @@ export class ArticleMoreDialogComponent {
   };
 
   constructor(
-    public dialogService: DialogService,
     private sanitizer: DomSanitizer,
-    dialogRef: MatDialogRef<ArticleMoreDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    dialogRef.disableClose = true;
     if (this.data.useUrl) {
       this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
         this.data.article.url

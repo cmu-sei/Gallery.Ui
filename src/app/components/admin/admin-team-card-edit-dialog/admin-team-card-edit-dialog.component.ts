@@ -2,9 +2,14 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { UntypedFormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  FormGroupDirective,
+  NgForm,
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SystemMessageService } from 'src/app/services/system-message/system-message.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -40,6 +45,20 @@ export class AdminTeamCardEditDialogComponent {
     this.data.teamCard.inject,
     []
   );
+  public isShownOnWallFormControl = new UntypedFormControl(
+    this.data.teamCard.isShownOnWall
+  );
+  public canPostArticlesFormControl = new UntypedFormControl(
+    this.data.teamCard.canPostArticles
+  );
+  public form = new UntypedFormGroup({
+    teamId: this.teamIdFormControl,
+    cardId: this.cardIdFormControl,
+    move: this.moveFormControl,
+    inject: this.injectFormControl,
+    isShownOnWall: this.isShownOnWallFormControl,
+    canPostArticles: this.canPostArticlesFormControl,
+  });
   public matcher = new UserErrorStateMatcher();
   private teamIdList: string[] = [];
   private allTeamsWasChecked = false;
@@ -47,10 +66,8 @@ export class AdminTeamCardEditDialogComponent {
 
   constructor(
     public systemMessage: SystemMessageService,
-    dialogRef: MatDialogRef<AdminTeamCardEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    dialogRef.disableClose = true;
     data.teamList.forEach((team) => {
       this.teamIdList.push(team.id);
     });
@@ -76,6 +93,8 @@ export class AdminTeamCardEditDialogComponent {
     if (!saveChanges) {
       this.editComplete.emit({ saveChanges: false, teamCard: null });
     } else {
+      this.data.teamCard.isShownOnWall = this.isShownOnWallFormControl.value;
+      this.data.teamCard.canPostArticles = this.canPostArticlesFormControl.value;
       if (this.errorFree) {
         if (this.isDuplicateTeamCard()) {
           this.systemMessage.displayMessage(
