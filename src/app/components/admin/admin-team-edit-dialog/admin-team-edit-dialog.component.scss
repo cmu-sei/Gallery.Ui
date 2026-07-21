@@ -29,6 +29,14 @@
 .add-margin {
     margin-top: 8px;
     margin-bottom: 8px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 }
 
 .bottom-button {

@@ -333,7 +333,6 @@ export class ArchiveComponent implements OnDestroy {
         width: 'auto',
         maxWidth: '90vw',
         minWidth: '900px',
-        minHeight: '700px',
         data: {
           article: userArticle.article,
           useUrl: useUrl,
