@@ -1,6 +1,6 @@
 // Copyright 2025 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NameValidatorModel } from './name-dialog.models';
@@ -16,15 +16,13 @@ export class NameDialogComponent {
   public message: string;
   public removeArtifacts = true;
   public form: FormGroup;
-  public validators: Array<NameValidatorModel>;
+  public validators: Array<NameValidatorModel> = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<NameDialogComponent>,
     private formBuilder: FormBuilder
   ) {
-    this.dialogRef.disableClose = true;
-
     this.form = this.formBuilder.group({
       name: [data.nameValue, [Validators.required]],
     });
@@ -45,19 +43,18 @@ export class NameDialogComponent {
   }
 
   onClick(): void {
-    this.data.artifacts && this.data.artifacts.length > 0
-      ? (this.data.removeArtifacts = this.removeArtifacts)
-      : (this.data.removeArtifacts = false);
-    this.data.nameValue = this.form?.get('name').value;
-    this.data.wasCancelled = false;
-    this.dialogRef.close(this.data);
+    const result = {
+      ...this.data,
+      removeArtifacts:
+        this.data.artifacts && this.data.artifacts.length > 0
+          ? this.removeArtifacts
+          : false,
+      nameValue: this.form?.get('name').value,
+    };
+    this.dialogRef.close(result);
   }
 
   onCancel(): void {
-    this.data.artifacts && this.data.artifacts.length > 0
-      ? (this.data.removeArtifacts = this.removeArtifacts)
-      : (this.data.removeArtifacts = false);
-    this.data.wasCancelled = true;
-    this.dialogRef.close(this.data);
+    this.dialogRef.close();
   }
 }

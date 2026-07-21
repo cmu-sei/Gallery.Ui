@@ -5,14 +5,14 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import {
   UntypedFormControl,
+  UntypedFormGroup,
   FormGroupDirective,
   NgForm,
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItemStatus, SourceType } from 'src/app/generated/api';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -73,6 +73,8 @@ export class AdminArticleEditDialogComponent implements OnInit {
   public sourceNameFormControl!: UntypedFormControl;
   public urlFormControl!: UntypedFormControl;
   public datePostedFormControl!: UntypedFormControl;
+  public openInNewTabFormControl!: UntypedFormControl;
+  public form!: UntypedFormGroup;
 
   public matcher = new UserErrorStateMatcher();
   itemStatusList: ItemStatus[] = [
@@ -93,12 +95,8 @@ export class AdminArticleEditDialogComponent implements OnInit {
   ];
 
   constructor(
-    public dialogService: DialogService,
-    dialogRef: MatDialogRef<AdminArticleEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    dialogRef.disableClose = true;
-  }
+  ) {}
 
   editorStyle = {
     'min-height': '100px',
@@ -151,6 +149,23 @@ export class AdminArticleEditDialogComponent implements OnInit {
       this.data.article.datePosted || new Date(),
       []
     );
+    this.openInNewTabFormControl = new UntypedFormControl(
+      this.data.article.openInNewTab
+    );
+    this.form = new UntypedFormGroup({
+      name: this.articleNameFormControl,
+      summary: this.summaryFormControl,
+      description: this.descriptionFormControl,
+      cardId: this.cardIdFormControl,
+      move: this.moveFormControl,
+      inject: this.injectFormControl,
+      status: this.statusFormControl,
+      sourceType: this.sourceTypeFormControl,
+      sourceName: this.sourceNameFormControl,
+      url: this.urlFormControl,
+      datePosted: this.datePostedFormControl,
+      openInNewTab: this.openInNewTabFormControl,
+    });
 
     this.articleNameFormControl.markAsTouched();
     this.summaryFormControl.markAllAsTouched();
@@ -192,6 +207,7 @@ export class AdminArticleEditDialogComponent implements OnInit {
       this.data.article.summary = this.summaryFormControl.value
         .toString()
         .trim();
+      this.data.article.openInNewTab = this.openInNewTabFormControl.value;
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,

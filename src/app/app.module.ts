@@ -1,6 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { A11yModule } from '@angular/cdk/a11y';
 import { CdkTableModule } from '@angular/cdk/table';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import {
@@ -57,6 +58,7 @@ import {
   ComnSettingsModule,
   ComnSettingsService,
   ComnHeaderBarModule,
+  CRUCIBLE_DIALOG_IMPORTS,
 } from '@cmusei/crucible-common';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
@@ -79,7 +81,6 @@ import { AdminTeamCardEditDialogComponent } from './components/admin/admin-team-
 import { AdminTeamEditDialogComponent } from './components/admin/admin-team-edit-dialog/admin-team-edit-dialog.component';
 import { AdminTeamsComponent } from './components/admin/admin-teams/admin-teams.component';
 import { AdminTeamUsersComponent } from './components/admin/admin-team-users/admin-team-users.component';
-import { AdminUserEditDialogComponent } from './components/admin/admin-user-edit-dialog/admin-user-edit-dialog.component';
 import { AdminUsersComponent } from './components/admin/admin-users/admin-users.component';
 import { ArticleComponent } from './components/article/article.component';
 import { ArticleEditDialogComponent } from './components/article-edit-dialog/article-edit-dialog.component';
@@ -102,12 +103,10 @@ import { ExhibitMembershipListComponent } from './components/exhibits/exhibit-me
 import { AdminSystemRolesComponent } from './components/admin/admin-roles/admin-system-roles/admin-system-roles.component';
 import { AdminUserListComponent } from './components/admin/admin-users/admin-user-list/admin-user-list.component';
 import { HomeAppComponent } from './components/home-app/home-app.component';
-import { CwdDialogsModule } from './components/shared/confirm-dialog/cwd-dialogs.module';
 import { NameDialogComponent } from './components/shared/name-dialog/name-dialog.component';
 import { SystemMessageComponent } from './components/shared/system-message/system-message.component';
 import { TopbarComponent } from './components/shared/top-bar/topbar.component';
 import { UserDataService } from './data/user/user-data.service';
-import { DialogService } from './services/dialog/dialog.service';
 import { ErrorService } from './services/error/error.service';
 import { SystemMessageService } from './services/system-message/system-message.service';
 import { BASE_PATH } from './generated/api';
@@ -161,7 +160,6 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     AdminTeamsComponent,
     AdminTeamUsersComponent,
     AdminUsersComponent,
-    AdminUserEditDialogComponent,
     AdminUserListComponent,
     AdminGroupsComponent,
     AdminGroupsDetailComponent,
@@ -195,8 +193,9 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    CwdDialogsModule,
+    A11yModule,
     SwaggerCodegenApiModule,
+    ...CRUCIBLE_DIALOG_IMPORTS,
     FormsModule,
     ReactiveFormsModule,
     MatButtonToggleModule,
@@ -258,7 +257,6 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
     MatTooltipModule,
   ],
   providers: [
-    DialogService,
     SystemMessageService,
     UIDataService,
     UserDataService,

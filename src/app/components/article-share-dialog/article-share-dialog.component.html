@@ -3,14 +3,17 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div mat-dialog-title>
-  Share Article
-  <button mat-icon-button (click)="handleShareIsComplete(false)" title="Cancel" class="close-button" tabindex="-1">
-    <mat-icon class="mdi-24px center-self" fontIcon="mdi-close-circle-outline"></mat-icon>
-  </button>
-</div>
+<crucible-dialog
+  dialogTitle="Share Article"
+  [form]="form"
+  submitLabel="Share"
+  [submitDisabled]="!form.dirty || !shareTeamsControl.value || shareTeamsControl.value.length === 0"
+  [guardUnsavedWork]="form.dirty"
+  (submit)="handleShareIsComplete(true)"
+  (cancel)="handleShareIsComplete(false)"
+>
 @if (!!data && data.article !== undefined && data.article !== null) {
-<div mat-dialog-content>
+<div crucibleDialogContent>
   <mat-form-field appearance="fill" style="width: 100%;">
     <mat-label>Share with ...</mat-label>
     <mat-select [formControl]="shareTeamsControl" multiple style="width: 100%;">
@@ -41,14 +44,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </div>
   </div>
   }
-  <div class="cssLayoutRowStartCenter bottom-button">
-    <div class="delete-button">
-      <button mat-stroked-button (click)="handleShareIsComplete(true)" style="margin-left: 40px;"
-        [disabled]="!shareTeamsControl.value || shareTeamsControl.value.length === 0">Share</button>
-    </div>
-    <div class="delete-button">
-      <button mat-stroked-button (click)="handleShareIsComplete(false)">Cancel</button>
-    </div>
-  </div>
 </div>
 }
+</crucible-dialog>

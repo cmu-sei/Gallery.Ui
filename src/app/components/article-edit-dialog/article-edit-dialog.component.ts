@@ -5,14 +5,14 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import {
   UntypedFormControl,
+  UntypedFormGroup,
   FormGroupDirective,
   NgForm,
   Validators,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItemStatus, SourceType } from 'src/app/generated/api';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -99,6 +99,23 @@ export class ArticleEditDialogComponent {
     this.data.article.datePosted,
     []
   );
+  public openInNewTabFormControl = new UntypedFormControl(
+    this.data.article.openInNewTab ?? false
+  );
+  public form = new UntypedFormGroup({
+    name: this.articleNameFormControl,
+    summary: this.summaryFormControl,
+    description: this.descriptionFormControl,
+    cardId: this.cardIdFormControl,
+    move: this.moveFormControl,
+    inject: this.injectFormControl,
+    status: this.statusFormControl,
+    sourceType: this.sourceTypeFormControl,
+    sourceName: this.sourceNameFormControl,
+    url: this.urlFormControl,
+    datePosted: this.datePostedFormControl,
+    openInNewTab: this.openInNewTabFormControl,
+  });
 
   public matcher = new UserErrorStateMatcher();
   itemStatusList: ItemStatus[] = [
@@ -120,12 +137,8 @@ export class ArticleEditDialogComponent {
   teamIdList: string[] = [];
 
   constructor(
-    public dialogService: DialogService,
-    dialogRef: MatDialogRef<ArticleEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    dialogRef.disableClose = true;
-  }
+  ) {}
 
   editorStyle = {
     'min-height': '100px',
@@ -169,6 +182,7 @@ export class ArticleEditDialogComponent {
       this.data.article.summary = this.summaryFormControl.value
         .toString()
         .trim();
+      this.data.article.openInNewTab = this.openInNewTabFormControl.value;
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,

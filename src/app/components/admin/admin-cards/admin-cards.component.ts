@@ -8,12 +8,11 @@ import { Sort } from '@angular/material/sort';
 import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
-import { ComnSettingsService } from '@cmusei/crucible-common';
+import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminCardEditDialogComponent } from 'src/app/components/admin/admin-card-edit-dialog/admin-card-edit-dialog.component';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 
 @Component({
@@ -44,7 +43,7 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
   constructor(
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
-    public dialogService: DialogService,
+    private crucibleDialog: CrucibleDialogService,
     private cardDataService: CardDataService,
     private cardQuery: CardQuery,
     private permissionDataService: PermissionDataService
@@ -142,13 +141,16 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
   }
 
   deleteCard(card: Card): void {
-    this.dialogService
-      .confirm(
-        'Delete Card',
-        'Are you sure that you want to delete ' + card.name + '?'
-      )
-      .subscribe((result) => {
-        if (result['confirm']) {
+    this.crucibleDialog
+      .confirm({
+        title: 'Delete Card',
+        message: 'Are you sure that you want to delete ' + card.name + '?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
           this.cardDataService.delete(card.id);
         }
       });

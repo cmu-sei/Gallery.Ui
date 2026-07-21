@@ -14,7 +14,6 @@ import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminTeamCardEditDialogComponent } from 'src/app/components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
 
@@ -53,7 +52,6 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   constructor(
     private settingsService: ComnSettingsService,
     private dialog: MatDialog,
-    public dialogService: DialogService,
     private cardDataService: CardDataService,
     private cardQuery: CardQuery,
     private teamQuery: TeamQuery,
@@ -113,6 +111,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
         move: 0,
         inject: 0,
         isShownOnWall: true,
+        canPostArticles: false,
       };
     } else {
       teamCard = { ...teamCard };
