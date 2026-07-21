@@ -100,7 +100,7 @@ export class ArticleEditDialogComponent {
     []
   );
   public openInNewTabFormControl = new UntypedFormControl(
-    this.data.article.openInNewTab
+    this.data.article.openInNewTab ?? false
   );
   public form = new UntypedFormGroup({
     name: this.articleNameFormControl,

@@ -50,7 +50,7 @@ export class AdminExhibitEditDialogComponent {
     [Validators.required]
   );
   public showAdvanceButtonFormControl = new UntypedFormControl(
-    this.data.exhibit.showAdvanceButton
+    this.data.exhibit.showAdvanceButton ?? false
   );
   public form = new UntypedFormGroup({
     name: this.nameFormControl,

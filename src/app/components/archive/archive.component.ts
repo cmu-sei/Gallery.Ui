@@ -451,6 +451,7 @@ export class ArchiveComponent implements OnDestroy {
         sourceType: SourceType.Reporting,
         sourceName: this.teamDataService.getMyTeam().shortName,
         datePosted: datePosted,
+        openInNewTab: false,
       };
     } else {
       article = { ...article };

@@ -49,7 +49,7 @@ export class AdminTeamCardEditDialogComponent {
     this.data.teamCard.isShownOnWall
   );
   public canPostArticlesFormControl = new UntypedFormControl(
-    this.data.teamCard.canPostArticles
+    this.data.teamCard.canPostArticles ?? false
   );
   public form = new UntypedFormGroup({
     teamId: this.teamIdFormControl,

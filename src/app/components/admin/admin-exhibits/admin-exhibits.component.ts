@@ -178,6 +178,7 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
         currentMove: 0,
         currentInject: 0,
         scenarioId: '',
+        showAdvanceButton: false,
       };
     } else {
       exhibit = { ...exhibit };

@@ -111,6 +111,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
         move: 0,
         inject: 0,
         isShownOnWall: true,
+        canPostArticles: false,
       };
     } else {
       teamCard = { ...teamCard };
