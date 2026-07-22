@@ -3,7 +3,7 @@ Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<div class="app-home-container" fxLayout="column" fxLayoutAlign="center stretch" fxFlexFill>
+<div class="app-home-container">
   @if (!hideTopbar) {
   <app-topbar [title]="titleText" [topbarView]="TopbarView.GALLERY_HOME" [imageFilePath]="topbarImage"
     (urlNavigate)="topBarNavigate($event)"></app-topbar>
@@ -23,6 +23,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   }
   @if (permissions) {
   <div class="main-area">
+    <!-- Exhibits Container -->
     @if (!exhibitId) {
     <div class="top-row">
       <div class="one-cell last-cell">
@@ -33,9 +34,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         }
       </div>
     </div>
-    }
-    <!-- Exhibits Container -->
-    @if (!exhibitId) {
+
     <div class="elevate list-container">
       <div class="icon-text-container">
         <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
@@ -89,18 +88,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           No results found
         </div>
         }
-        <mat-paginator
-          [pageSizeOptions]="[10, 25, 50, 100]"
-          showFirstLastButtons
-          aria-label="Select page of exhibits">
+        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons aria-label="Select page of exhibits">
         </mat-paginator>
       </div>
     </div>
     }
     @if (exhibitId && selectedSection === 'wall') {
     <app-wall [showAdminButton]="canViewAdministration" [showAdvanceButton]="canManageCurrentExhibit"
-      [exhibit]="exhibit" (changeTeam)="changeTeam($event)"
-      (sectionSelected)="gotoSection($event)"></app-wall>
+      [exhibit]="exhibit" (changeTeam)="changeTeam($event)" (sectionSelected)="gotoSection($event)"></app-wall>
     }
     @if (exhibitId && selectedSection === 'archive') {
     <app-archive [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"

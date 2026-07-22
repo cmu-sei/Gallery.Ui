@@ -28,10 +28,8 @@
 .main-area {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 44px - 20px);
+  height: calc(100%);
   min-height: 0;
-  overflow: hidden;
-  padding-bottom: 8px;
 }
 
 .list-container {
@@ -44,23 +42,6 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
-}
-
-.app-model-container {
-  display: flex;
-  flex-flow: column;
-  overflow: hidden;
-  justify-content: left;
-  text-align: left;
-  flex: 70;
-  overflow: auto;
-  height: calc(100% - 57px);
-}
-
-.app-score-container {
-  flex-flow: column;
-  text-align: center;
-  flex: 30;
 }
 
 .gallery-logo {
@@ -112,10 +93,6 @@ a:hover {
 /* selected link */
 a:active {
   color: var(--mat-sys-on-background);
-}
-
-.collection-container {
-  margin: auto;
 }
 
 .exhibit-title {
