@@ -45,6 +45,12 @@ body {
   overflow: hidden;
 }
 
+.angular-editor-textarea img {
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
 // classes for icon sizing
 .icon-35px {
   width: 35px !important;
