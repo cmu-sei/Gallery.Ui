@@ -53,8 +53,4 @@ export class NameDialogComponent {
     };
     this.dialogRef.close(result);
   }
-
-  onCancel(): void {
-    this.dialogRef.close();
-  }
 }
