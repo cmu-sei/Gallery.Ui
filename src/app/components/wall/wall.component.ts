@@ -117,7 +117,7 @@ export class WallComponent implements OnDestroy {
         },
         error: (err) => {
           this.isAdvancing = false;
-          const message = err?.error?.Detail || err?.error?.title || 'Already at the last move/inject.';
+          const message = err?.error?.detail || err?.error?.title || 'Already at the last move/inject.';
           this.snackBar.open(message, 'OK', { duration: 5000 });
         }
       });
