@@ -10,7 +10,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   [submitDisabled]="!form.valid || !form.dirty"
   [guardUnsavedWork]="form.dirty"
   (submit)="onClick()"
-  (cancel)="onCancel()"
 >
   <div crucibleDialogContent [formGroup]="form">
     @if (message) {
