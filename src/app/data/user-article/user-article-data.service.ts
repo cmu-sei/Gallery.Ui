@@ -180,15 +180,15 @@ export class UserArticleDataService {
 
   shareUserArticle(userArticleId: string, shareDetails: ShareDetails) {
     this.userArticleStore.setLoading(true);
-    this.userArticleService
+    return this.userArticleService
       .shareUserArticle(userArticleId, shareDetails)
       .pipe(
-        tap(() => {
-          this.userArticleStore.setLoading(false);
+        tap({
+          next: () => this.userArticleStore.setLoading(false),
+          error: () => this.userArticleStore.setLoading(false),
         }),
         take(1)
-      )
-      .subscribe();
+      );
   }
 
   setIsRead(id: string, isRead: boolean) {

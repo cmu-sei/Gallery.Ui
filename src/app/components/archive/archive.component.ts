@@ -39,6 +39,7 @@ import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
 import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dialog/article-edit-dialog.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/services/xapi/xapi.service';
@@ -107,7 +108,8 @@ export class ArchiveComponent implements OnDestroy {
     private uiDataService: UIDataService,
     private router: Router,
     private settingsService: ComnSettingsService,
-    private xApiService: XApiService
+    private xApiService: XApiService,
+    private snackBar: MatSnackBar
   ) {
     this._document.getElementById('appTitle').innerHTML =
       this.settingsService.settings.AppTitle + ' Archive';
@@ -374,12 +376,21 @@ export class ArchiveComponent implements OnDestroy {
     dialogRef.componentInstance.editComplete.subscribe((result) => {
       if (result.saveChanges && result.shareDetails) {
         result.shareDetails.exhibitId = this.exhibitId;
-        this.userArticleDataService.shareUserArticle(
-          userArticle.id,
-          result.shareDetails
-        );
+        this.userArticleDataService
+          .shareUserArticle(userArticle.id, result.shareDetails)
+          .subscribe({
+            next: () => {
+              dialogRef.close();
+              this.snackBar.open('Article shared.', 'OK', { duration: 5000 });
+            },
+            error: (err) => {
+              const message = err?.error?.detail || err?.error?.title || 'The article could not be shared.';
+              this.snackBar.open(message, 'OK', { duration: 5000 });
+            },
+          });
+      } else {
+        dialogRef.close();
       }
-      dialogRef.close();
     });
   }
 
