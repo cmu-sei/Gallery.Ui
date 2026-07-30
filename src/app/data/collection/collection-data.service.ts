@@ -31,6 +31,9 @@ export class CollectionDataService {
   private pageSize: Observable<number>;
   private pageIndex: Observable<number>;
   public uploadProgress = new Subject<number>();
+  // Shared by load()/loadMine() so a stale response from either one can be
+  // detected and dropped instead of clobbering a more recent request's result.
+  private collectionsRequestId = 0;
 
   constructor(
     private collectionStore: CollectionStore,
@@ -122,40 +125,54 @@ export class CollectionDataService {
 
   load() {
     this.collectionStore.setLoading(true);
+    const requestId = ++this.collectionsRequestId;
     this.collectionService
       .getCollections()
       .pipe(
         tap(() => {
-          this.collectionStore.setLoading(false);
+          if (requestId === this.collectionsRequestId) {
+            this.collectionStore.setLoading(false);
+          }
         }),
         take(1)
       )
       .subscribe(
         (collections) => {
-          this.collectionStore.set(collections);
+          if (requestId === this.collectionsRequestId) {
+            this.collectionStore.set(collections);
+          }
         },
         (error) => {
-          this.collectionStore.set([]);
+          if (requestId === this.collectionsRequestId) {
+            this.collectionStore.set([]);
+          }
         }
       );
   }
 
   loadMine() {
     this.collectionStore.setLoading(true);
+    const requestId = ++this.collectionsRequestId;
     this.collectionService
       .getMyCollections()
       .pipe(
         tap(() => {
-          this.collectionStore.setLoading(false);
+          if (requestId === this.collectionsRequestId) {
+            this.collectionStore.setLoading(false);
+          }
         }),
         take(1)
       )
       .subscribe(
         (collections) => {
-          this.collectionStore.set(collections);
+          if (requestId === this.collectionsRequestId) {
+            this.collectionStore.set(collections);
+          }
         },
         (error) => {
-          this.collectionStore.set([]);
+          if (requestId === this.collectionsRequestId) {
+            this.collectionStore.set([]);
+          }
         }
       );
   }
