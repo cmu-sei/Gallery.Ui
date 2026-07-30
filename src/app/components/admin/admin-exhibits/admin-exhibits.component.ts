@@ -12,7 +12,6 @@ import {
   Component,
   Input,
   OnDestroy,
-  AfterViewInit,
   ViewChild,
   ElementRef,
 } from '@angular/core';
@@ -54,7 +53,7 @@ import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.servi
     ]),
   ],
 })
-export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
+export class AdminExhibitsComponent implements OnDestroy {
   @Input() userList: User[];
   canCreate = false;
   teamList: Team[];
@@ -72,8 +71,16 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
   uploadProgress = 0;
   canManageExpandedExhibit = false;
   @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
-  @ViewChild(MatSort) matSort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) set matSortRef(ms: MatSort) {
+    if (ms) {
+      this.dataSource.sort = ms;
+    }
+  }
+  @ViewChild(MatPaginator) set paginatorRef(p: MatPaginator) {
+    if (p) {
+      this.dataSource.paginator = p;
+    }
+  }
 
   constructor(
     private settingsService: ComnSettingsService,
@@ -149,11 +156,6 @@ export class AdminExhibitsComponent implements OnDestroy, AfterViewInit {
           this.setExhibitList(exhibits);
         }
       });
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.matSort;
-    this.dataSource.paginator = this.paginator;
   }
 
   setExhibitList(exhibits: Exhibit[]) {
