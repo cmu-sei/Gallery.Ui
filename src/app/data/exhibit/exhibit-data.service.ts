@@ -11,6 +11,7 @@ import { Exhibit, ExhibitService, ItemStatus } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ export class ExhibitDataService {
     private exhibitStore: ExhibitStore,
     private exhibitQuery: ExhibitQuery,
     private exhibitService: ExhibitService,
+    private snackBar: MatSnackBar,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -307,9 +309,11 @@ export class ExhibitDataService {
         next: (exhibit) => {
           this.exhibitStore.upsert(exhibit.id, exhibit);
         },
-        error: () => {
+        error: (err) => {
           this.exhibitStore.setLoading(false);
           this.uploadProgress.next(0);
+          const message = err?.error?.detail || err?.error?.title || 'The uploaded file could not be processed.';
+          this.snackBar.open(message, 'OK', { duration: 5000 });
         }
       });
   }
