@@ -99,6 +99,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   permissions: SystemPermission[] = [];
   canViewAdministration = false;
   readonly SystemPermission = SystemPermission;
+  readonly Section = Section;
 
   get canManageCurrentExhibit(): boolean {
     if (!this.exhibitId) return false;
@@ -460,12 +461,6 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.router.navigate(['/']).then(() => {
       window.location.reload();
     });
-  }
-
-  getQueryParams(exhibitId: string) {
-    const queryParams = { exhibit: exhibitId };
-    this.uiDataService.setSection(exhibitId, Section.archive);
-    return queryParams;
   }
 
   ngOnDestroy() {
