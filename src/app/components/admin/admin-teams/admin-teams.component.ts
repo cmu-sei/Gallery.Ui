@@ -175,11 +175,14 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
       });
       if (filteredTeams && filteredTeams.length > 0 && this.filterString) {
         const filterString = this.filterString.toLowerCase();
-        filteredTeams = filteredTeams.filter(
-          (a) =>
-            a.shortName.toLowerCase().includes(filterString) ||
-            a.name.toLowerCase().includes(filterString)
-        );
+        filteredTeams = filteredTeams.filter((a) => {
+          const aShortName = a.shortName ? a.shortName.toLowerCase() : '';
+          const aName = a.name ? a.name.toLowerCase() : '';
+          return (
+            aShortName.includes(filterString) ||
+            aName.includes(filterString)
+          );
+        });
       }
     }
     return filteredTeams;
