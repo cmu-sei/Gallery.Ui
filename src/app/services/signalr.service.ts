@@ -19,16 +19,21 @@ import {
 } from 'src/app/generated/api';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { UserArticleDataService } from '../data/user-article/user-article-data.service';
+import { UserArticleQuery } from 'src/app/data/user-article/user-article.query';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
+import { CardQuery } from 'src/app/data/card/card.query';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionMembershipDataService } from '../data/collection/collection-membership-data.service';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitMembershipDataService } from '../data/exhibit/exhibit-membership-data.service';
+import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { GroupMembershipDataService } from '../data/group/group-membership.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
+import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamCardDataService } from 'src/app/data/team-card/team-card-data.service';
+import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { TeamUserDataService } from '../data/team-user/team-user-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -54,16 +59,21 @@ export class SignalRService implements OnDestroy {
     private settingsService: ComnSettingsService,
     private articleDataService: ArticleDataService,
     private cardDataService: CardDataService,
+    private cardQuery: CardQuery,
     private collectionDataService: CollectionDataService,
     private collectionMembershipDataService: CollectionMembershipDataService,
     private exhibitDataService: ExhibitDataService,
     private exhibitMembershipDataService: ExhibitMembershipDataService,
+    private exhibitQuery: ExhibitQuery,
     private groupMembershipDataService: GroupMembershipDataService,
     private teamDataService: TeamDataService,
+    private teamQuery: TeamQuery,
     private teamCardDataService: TeamCardDataService,
+    private teamCardQuery: TeamCardQuery,
     private teamUserDataService: TeamUserDataService,
     private userDataService: UserDataService,
-    private userArticleDataService: UserArticleDataService
+    private userArticleDataService: UserArticleDataService,
+    private userArticleQuery: UserArticleQuery
   ) {
     this.authService.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.reconnect();
@@ -205,30 +215,88 @@ export class SignalRService implements OnDestroy {
     });
   }
 
+  // The hub addresses Card/TeamCard/UserArticle events to the recipient's *user*
+  // group, so a user who belongs to teams in several exhibits receives events for
+  // all of them. The Wall/Archive stores are flat and id-keyed, so an event from
+  // another exhibit would otherwise be upserted into the exhibit currently open.
+  // The admin area deliberately works across exhibits (it loads cards by
+  // collection), so these filters only apply outside it.
+  private isScopedToActiveExhibit(): boolean {
+    return (
+      this.applicationArea !== ApplicationArea.admin &&
+      !!this.exhibitQuery.getActiveId()
+    );
+  }
+
+  // A Card carries only collectionId, so it cannot be tied to a single exhibit.
+  // Scope it by the active exhibit's collection instead: the Wall/Archive load
+  // cards for the active exhibit's collection (CardService.GetByExhibitAsync
+  // filters on exhibit.CollectionId), so a card outside that collection can
+  // never belong in these stores.
+  private isCardInActiveExhibit(card: Card): boolean {
+    if (!this.isScopedToActiveExhibit()) {
+      return true;
+    }
+    const activeExhibit = this.exhibitQuery.getActive() as Exhibit;
+    return !activeExhibit || card.collectionId === activeExhibit.collectionId;
+  }
+
+  // A TeamCard carries teamId, and the team store holds the active exhibit's
+  // teams (TeamDataService.loadMine(exhibitId)), so an unknown teamId belongs to
+  // a different exhibit. Only filter once the teams have actually loaded, so a
+  // TeamCard arriving before them is not dropped.
+  private isTeamCardInActiveExhibit(teamCard: TeamCard): boolean {
+    if (!this.isScopedToActiveExhibit() || this.teamQuery.getCount() === 0) {
+      return true;
+    }
+    return this.teamQuery.hasEntity(teamCard.teamId);
+  }
+
   private addCardHandlers() {
     this.hubConnection.on('CardUpdated', (card: Card) => {
+      if (!this.isCardInActiveExhibit(card)) {
+        return;
+      }
       this.cardDataService.updateStore(card);
     });
 
     this.hubConnection.on('CardCreated', (card: Card) => {
+      if (!this.isCardInActiveExhibit(card)) {
+        return;
+      }
       this.cardDataService.updateStore(card);
     });
 
+    // A delete carries only an id. Removing an id the store never held is
+    // already a no-op, but Akita still emits a new state and every Wall/Archive
+    // subscriber recomputes, so skip it.
     this.hubConnection.on('CardDeleted', (id: string) => {
+      if (!this.cardQuery.hasEntity(id)) {
+        return;
+      }
       this.cardDataService.deleteFromStore(id);
     });
   }
 
   private addTeamCardHandlers() {
     this.hubConnection.on('TeamCardUpdated', (teamCard: TeamCard) => {
+      if (!this.isTeamCardInActiveExhibit(teamCard)) {
+        return;
+      }
       this.teamCardDataService.updateStore(teamCard);
     });
 
     this.hubConnection.on('TeamCardCreated', (teamCard: TeamCard) => {
+      if (!this.isTeamCardInActiveExhibit(teamCard)) {
+        return;
+      }
       this.teamCardDataService.updateStore(teamCard);
     });
 
     this.hubConnection.on('TeamCardDeleted', (id: string) => {
+      if (!this.teamCardQuery.hasEntity(id)) {
+        return;
+      }
       this.teamCardDataService.deleteFromStore(id);
     });
   }
@@ -279,18 +347,35 @@ export class SignalRService implements OnDestroy {
     });
   }
 
+  // A UserArticle carries its own exhibitId, so it can be scoped directly.
+  private isUserArticleInActiveExhibit(userArticle: UserArticle): boolean {
+    if (!this.isScopedToActiveExhibit()) {
+      return true;
+    }
+    return userArticle.exhibitId === this.exhibitQuery.getActiveId();
+  }
+
   private addUserArticleHandlers() {
     this.hubConnection.on('UserArticleUpdated', (userArticle: UserArticle) => {
+      if (!this.isUserArticleInActiveExhibit(userArticle)) {
+        return;
+      }
       this.userArticleDataService.setAsDates(userArticle);
       this.userArticleDataService.updateStore(userArticle);
     });
 
     this.hubConnection.on('UserArticleCreated', (userArticle: UserArticle) => {
+      if (!this.isUserArticleInActiveExhibit(userArticle)) {
+        return;
+      }
       this.userArticleDataService.setAsDates(userArticle);
       this.userArticleDataService.updateStore(userArticle);
     });
 
     this.hubConnection.on('UserArticleDeleted', (id: string) => {
+      if (!this.userArticleQuery.hasEntity(id)) {
+        return;
+      }
       this.userArticleDataService.deleteFromStore(id);
     });
   }
