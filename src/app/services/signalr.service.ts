@@ -263,7 +263,9 @@ export class SignalRService implements OnDestroy {
   // team and compare that. Bare store membership is not safe on its own: the team
   // store is shared with the admin Exhibits view (loadByExhibitId) and is never
   // cleared on exhibit exit, so between setActive(B) and loadMine(B) resolving it
-  // can still hold exhibit A's teams.
+  // can still hold exhibit A's teams. When the team cannot be resolved, defer to
+  // TeamDataService.loadedExhibitId, which records which exhibit the store's
+  // contents were actually loaded for, rather than inferring it from them.
   private isTeamCardInActiveExhibit(teamCard: TeamCard): boolean {
     if (!this.isScopedToActiveExhibit()) {
       return true;
@@ -275,9 +277,11 @@ export class SignalRService implements OnDestroy {
       return team.exhibitId === activeExhibitId;
     }
     // The team is unknown, or predates exhibitId. Absence only means "foreign" if
-    // the store has actually been loaded for the active exhibit; if it holds no
-    // team of the active exhibit it is empty or still stale, so accept.
-    return !this.teamQuery.hasEntity((t) => t.exhibitId === activeExhibitId);
+    // the store's contents are known to be exactly the active exhibit's teams,
+    // which is what loadedExhibitId records. Any other value - a different
+    // exhibit, or null while a load is in flight, failed or never ran - means the
+    // store cannot answer, so accept rather than drop a legitimate event.
+    return this.teamDataService.loadedExhibitId !== activeExhibitId;
   }
 
   private addCardHandlers() {
