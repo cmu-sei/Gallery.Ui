@@ -204,6 +204,10 @@ export class AdminExhibitsComponent implements OnDestroy {
     });
   }
 
+  trackByFn(index: number, item: Exhibit) {
+    return item.id;
+  }
+
   toggleExpand(exhibit: Exhibit) {
     this.canManageExpandedExhibit = false;
     const isExpanded = this.expandedExhibitId === exhibit.id;
