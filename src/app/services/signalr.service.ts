@@ -187,12 +187,28 @@ export class SignalRService implements OnDestroy {
     });
   }
 
+  // A Team carries exhibitId, so keep foreign teams out of the store that
+  // isTeamCardInActiveExhibit resolves against. Accept when the exhibitId is
+  // absent, so a team that predates the field is never dropped.
+  private isTeamInActiveExhibit(team: Team): boolean {
+    if (!this.isScopedToActiveExhibit() || !team.exhibitId) {
+      return true;
+    }
+    return team.exhibitId === this.exhibitQuery.getActiveId();
+  }
+
   private addTeamHandlers() {
     this.hubConnection.on('TeamUpdated', (team: Team) => {
+      if (!this.isTeamInActiveExhibit(team)) {
+        return;
+      }
       this.teamDataService.updateStore(team);
     });
 
     this.hubConnection.on('TeamCreated', (team: Team) => {
+      if (!this.isTeamInActiveExhibit(team)) {
+        return;
+      }
       this.teamDataService.updateStore(team);
     });
 
@@ -229,10 +245,12 @@ export class SignalRService implements OnDestroy {
   }
 
   // A Card carries only collectionId, so it cannot be tied to a single exhibit.
-  // Scope it by the active exhibit's collection instead: the Wall/Archive load
-  // cards for the active exhibit's collection (CardService.GetByExhibitAsync
-  // filters on exhibit.CollectionId), so a card outside that collection can
-  // never belong in these stores.
+  // Scope it by the active exhibit's collection instead. This is looser than the
+  // Wall/Archive load, which goes through CardService.GetByExhibitTeamAsync and
+  // filters tc.Card.CollectionId == exhibit.CollectionId && tc.TeamId == teamId,
+  // but a card outside the collection can never belong in these stores, and one
+  // inside it with no matching TeamCard is already invisible to both
+  // wall.setShownCardList() and archive.setCardLists().
   private isCardInActiveExhibit(card: Card): boolean {
     if (!this.isScopedToActiveExhibit()) {
       return true;
@@ -241,15 +259,25 @@ export class SignalRService implements OnDestroy {
     return !activeExhibit || card.collectionId === activeExhibit.collectionId;
   }
 
-  // A TeamCard carries teamId, and the team store holds the active exhibit's
-  // teams (TeamDataService.loadMine(exhibitId)), so an unknown teamId belongs to
-  // a different exhibit. Only filter once the teams have actually loaded, so a
-  // TeamCard arriving before them is not dropped.
+  // A TeamCard carries only teamId, but a Team carries exhibitId, so resolve the
+  // team and compare that. Bare store membership is not safe on its own: the team
+  // store is shared with the admin Exhibits view (loadByExhibitId) and is never
+  // cleared on exhibit exit, so between setActive(B) and loadMine(B) resolving it
+  // can still hold exhibit A's teams.
   private isTeamCardInActiveExhibit(teamCard: TeamCard): boolean {
-    if (!this.isScopedToActiveExhibit() || this.teamQuery.getCount() === 0) {
+    if (!this.isScopedToActiveExhibit()) {
       return true;
     }
-    return this.teamQuery.hasEntity(teamCard.teamId);
+    const activeExhibitId = this.exhibitQuery.getActiveId();
+    const team = this.teamQuery.getEntity(teamCard.teamId);
+    if (team && team.exhibitId) {
+      // Authoritative: the team itself says which exhibit it belongs to.
+      return team.exhibitId === activeExhibitId;
+    }
+    // The team is unknown, or predates exhibitId. Absence only means "foreign" if
+    // the store has actually been loaded for the active exhibit; if it holds no
+    // team of the active exhibit it is empty or still stale, so accept.
+    return !this.teamQuery.hasEntity((t) => t.exhibitId === activeExhibitId);
   }
 
   private addCardHandlers() {
