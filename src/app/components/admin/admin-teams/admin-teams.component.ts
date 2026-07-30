@@ -209,10 +209,9 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
         return (aEmail < bEmail ? -1 : 1) * (isAsc ? 1 : -1);
         break;
       default:
-        return (
-          (a.shortName.toLowerCase() < b.shortName.toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        const aShort = a.shortName ? a.shortName.toLowerCase() : '';
+        const bShort = b.shortName ? b.shortName.toLowerCase() : '';
+        return (aShort < bShort ? -1 : 1) * (isAsc ? 1 : -1);
         break;
     }
   }
