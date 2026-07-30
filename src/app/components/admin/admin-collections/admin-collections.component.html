@@ -22,7 +22,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </div>
   <div class="table-container">
     @if (!isLoading) {
-    <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+    <table mat-table [dataSource]="dataSource" matSort [trackBy]="trackByFn" multiTemplateDataRows>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>
