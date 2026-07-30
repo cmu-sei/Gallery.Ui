@@ -198,10 +198,9 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
     const isAsc = direction !== 'desc';
     switch (column) {
       case 'name':
-        return (
-          (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        const aName = a.name ? a.name.toLowerCase() : '';
+        const bName = b.name ? b.name.toLowerCase() : '';
+        return (aName < bName ? -1 : 1) * (isAsc ? 1 : -1);
         break;
       case 'email':
         const aEmail = a.email ? a.email.toLowerCase() : '';
