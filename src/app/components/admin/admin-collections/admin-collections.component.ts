@@ -188,7 +188,7 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   }
 
   copyCollection(id: string): void {
-    this.permissionDataService.loadCollectionPermissions().subscribe();
+    this.collectionDataService.copy(id);
   }
 
   downloadCollection(collection: Collection) {
