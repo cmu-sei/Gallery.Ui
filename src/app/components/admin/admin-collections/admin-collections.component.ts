@@ -145,6 +145,10 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
     });
   }
 
+  trackByFn(index: number, item: Collection) {
+    return item.id;
+  }
+
   toggleExpand(collectionId: string) {
     this.expandedCollectionId =
       this.expandedCollectionId === collectionId ? null : collectionId;
