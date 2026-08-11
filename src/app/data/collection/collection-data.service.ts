@@ -11,6 +11,7 @@ import { Collection, CollectionService } from 'src/app/generated/api';
 import { map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
 import { PermissionDataService } from '../permission/permission-data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,7 @@ export class CollectionDataService {
     private collectionQuery: CollectionQuery,
     private collectionService: CollectionService,
     private permissionDataService: PermissionDataService,
+    private snackBar: MatSnackBar,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -248,9 +250,11 @@ export class CollectionDataService {
         (collection) => {
           this.collectionStore.upsert(collection.id, collection);
         },
-        (error) => {
+        (err) => {
           this.collectionStore.setLoading(false);
           this.uploadProgress.next(0);
+          const message = err?.error?.detail || err?.error?.title || 'The uploaded file could not be processed.';
+          this.snackBar.open(message, 'OK', { duration: 5000 });
         }
       );
   }
