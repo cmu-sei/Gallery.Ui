@@ -159,15 +159,17 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     this.filterString = filterValue.trim().toLowerCase();
     this.filteredTeamCardList = this.teamCardList
       .filter((teamCard) => {
-        const teamName = this.getTeamName(teamCard.teamId).toLowerCase();
-        const cardName = this.getCardName(teamCard.cardId).toLowerCase();
+        const teamName = this.getTeamName(teamCard.teamId);
+        const cardName = this.getCardName(teamCard.cardId);
+        const teamNameLower = teamName ? teamName.toLowerCase() : '';
+        const cardNameLower = cardName ? cardName.toLowerCase() : '';
         return (
           (this.selectedTeamId === '' ||
             teamCard.teamId === this.selectedTeamId) &&
           (this.selectedCardId === '' ||
             teamCard.cardId === this.selectedCardId) &&
-          (teamName.includes(this.filterString) ||
-            cardName.includes(this.filterString))
+          (teamNameLower.includes(this.filterString) ||
+            cardNameLower.includes(this.filterString))
         );
       })
       .sort((a: TeamCard, b: TeamCard) =>
@@ -189,19 +191,17 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     const isAsc = direction !== 'desc';
     switch (column) {
       case 'teamId':
-        return (
-          (this.getTeamName(a.teamId).toLowerCase() <
-          this.getTeamName(b.teamId).toLowerCase()
-            ? -1
-            : 1) * (isAsc ? 1 : -1)
-        );
+        const aTeamName = this.getTeamName(a.teamId);
+        const bTeamName = this.getTeamName(b.teamId);
+        const aTeamNameLower = aTeamName ? aTeamName.toLowerCase() : '';
+        const bTeamNameLower = bTeamName ? bTeamName.toLowerCase() : '';
+        return (aTeamNameLower < bTeamNameLower ? -1 : 1) * (isAsc ? 1 : -1);
       case 'cardId':
-        return (
-          (this.getCardName(a.cardId).toLowerCase() <
-          this.getCardName(b.cardId).toLowerCase()
-            ? -1
-            : 1) * (isAsc ? 1 : -1)
-        );
+        const aCardName = this.getCardName(a.cardId);
+        const bCardName = this.getCardName(b.cardId);
+        const aCardNameLower = aCardName ? aCardName.toLowerCase() : '';
+        const bCardNameLower = bCardName ? bCardName.toLowerCase() : '';
+        return (aCardNameLower < bCardNameLower ? -1 : 1) * (isAsc ? 1 : -1);
       case 'move':
         return (a.move < b.move ? -1 : 1) * (isAsc ? 1 : -1);
       case 'inject':
