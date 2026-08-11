@@ -8,8 +8,14 @@ import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Collection, CollectionService } from 'src/app/generated/api';
-import { map, take, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  Observable,
+  combineLatest,
+  of,
+  Subject,
+} from 'rxjs';
 import { PermissionDataService } from '../permission/permission-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -31,9 +37,10 @@ export class CollectionDataService {
   private pageSize: Observable<number>;
   private pageIndex: Observable<number>;
   public uploadProgress = new Subject<number>();
-  // Shared by load()/loadMine() so a stale response from either one can be
-  // detected and dropped instead of clobbering a more recent request's result.
-  private collectionsRequestId = 0;
+  // Both load() and loadMine() replace the whole store, so they must not race.
+  // Funneling them through one subject + switchMap makes the newest request
+  // win and cancels the superseded one instead of discarding its response.
+  private collectionsLoad$ = new Subject<'all' | 'mine'>();
 
   constructor(
     private collectionStore: CollectionStore,
@@ -99,6 +106,20 @@ export class CollectionDataService {
             : []
       )
     );
+    // The service is root-provided, so this subscription lives for the
+    // application's lifetime. set() already clears the loading flag, on both
+    // the success and the caught-error path.
+    this.collectionsLoad$
+      .pipe(
+        tap(() => this.collectionStore.setLoading(true)),
+        switchMap((scope) =>
+          (scope === 'all'
+            ? this.collectionService.getCollections()
+            : this.collectionService.getMyCollections()
+          ).pipe(catchError(() => of([] as Collection[])))
+        )
+      )
+      .subscribe((collections) => this.collectionStore.set(collections));
   }
 
   private sortCollections(
@@ -124,57 +145,11 @@ export class CollectionDataService {
   }
 
   load() {
-    this.collectionStore.setLoading(true);
-    const requestId = ++this.collectionsRequestId;
-    this.collectionService
-      .getCollections()
-      .pipe(
-        tap(() => {
-          if (requestId === this.collectionsRequestId) {
-            this.collectionStore.setLoading(false);
-          }
-        }),
-        take(1)
-      )
-      .subscribe(
-        (collections) => {
-          if (requestId === this.collectionsRequestId) {
-            this.collectionStore.set(collections);
-          }
-        },
-        (error) => {
-          if (requestId === this.collectionsRequestId) {
-            this.collectionStore.set([]);
-          }
-        }
-      );
+    this.collectionsLoad$.next('all');
   }
 
   loadMine() {
-    this.collectionStore.setLoading(true);
-    const requestId = ++this.collectionsRequestId;
-    this.collectionService
-      .getMyCollections()
-      .pipe(
-        tap(() => {
-          if (requestId === this.collectionsRequestId) {
-            this.collectionStore.setLoading(false);
-          }
-        }),
-        take(1)
-      )
-      .subscribe(
-        (collections) => {
-          if (requestId === this.collectionsRequestId) {
-            this.collectionStore.set(collections);
-          }
-        },
-        (error) => {
-          if (requestId === this.collectionsRequestId) {
-            this.collectionStore.set([]);
-          }
-        }
-      );
+    this.collectionsLoad$.next('mine');
   }
 
   loadById(id: string) {
