@@ -82,12 +82,9 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
         this.dataSource.data = this.collectionList;
         this.permissionDataService.loadCollectionPermissions().subscribe();
       });
-    // Load collections based on user permissions
-    if (this.permissionDataService.shouldLoadAllCollections()) {
-      this.collectionDataService.load();
-    } else {
-      this.collectionDataService.loadMine();
-    }
+    // Collections are already loaded by AdminContainerComponent, which is the
+    // only route that ever mounts this component; loading them again here
+    // just duplicated the GET and fed the loadMine()/load() race.
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
