@@ -58,7 +58,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <ng-container matColumnDef="name">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
             <mat-cell *matCellDef="let exhibit">
-              <a [routerLink]="['/']" [queryParams]="getQueryParams(exhibit.id)">
+              <a [routerLink]="['/']" [queryParams]="{ exhibit: exhibit.id, section: Section.archive }">
                 {{ exhibit.name }}
               </a>
             </mat-cell>
