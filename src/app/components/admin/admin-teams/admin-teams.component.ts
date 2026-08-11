@@ -175,11 +175,14 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
       });
       if (filteredTeams && filteredTeams.length > 0 && this.filterString) {
         const filterString = this.filterString.toLowerCase();
-        filteredTeams = filteredTeams.filter(
-          (a) =>
-            a.shortName.toLowerCase().includes(filterString) ||
-            a.name.toLowerCase().includes(filterString)
-        );
+        filteredTeams = filteredTeams.filter((a) => {
+          const aShortName = a.shortName ? a.shortName.toLowerCase() : '';
+          const aName = a.name ? a.name.toLowerCase() : '';
+          return (
+            aShortName.includes(filterString) ||
+            aName.includes(filterString)
+          );
+        });
       }
     }
     return filteredTeams;
@@ -198,10 +201,9 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
     const isAsc = direction !== 'desc';
     switch (column) {
       case 'name':
-        return (
-          (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        const aName = a.name ? a.name.toLowerCase() : '';
+        const bName = b.name ? b.name.toLowerCase() : '';
+        return (aName < bName ? -1 : 1) * (isAsc ? 1 : -1);
         break;
       case 'email':
         const aEmail = a.email ? a.email.toLowerCase() : '';
@@ -209,10 +211,9 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
         return (aEmail < bEmail ? -1 : 1) * (isAsc ? 1 : -1);
         break;
       default:
-        return (
-          (a.shortName.toLowerCase() < b.shortName.toLowerCase() ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        const aShort = a.shortName ? a.shortName.toLowerCase() : '';
+        const bShort = b.shortName ? b.shortName.toLowerCase() : '';
+        return (aShort < bShort ? -1 : 1) * (isAsc ? 1 : -1);
         break;
     }
   }
