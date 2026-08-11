@@ -30,6 +30,19 @@ export class TeamDataService {
   private pageSize: Observable<number>;
   private pageIndex: Observable<number>;
   private myTeam = {} as Team;
+  // Which exhibit the store's contents were last successfully loaded for, or
+  // null if that is not known. Written only where the store is replaced
+  // wholesale. Lets SignalRService tell "team absent because it is foreign" from
+  // "team absent because the store describes another exhibit, failed to load, or
+  // was never loaded" without guessing from the contents. Deliberately not
+  // cleared while a load is in flight: it keeps naming the exhibit the current
+  // contents actually came from, so a re-entrant load for the exhibit already
+  // held does not blank it and open a window that accepts foreign events.
+  private _loadedExhibitId: string | null = null;
+
+  get loadedExhibitId(): string | null {
+    return this._loadedExhibitId;
+  }
 
   constructor(
     private teamStore: TeamStore,
@@ -139,9 +152,14 @@ export class TeamDataService {
       .subscribe(
         (teams) => {
           this.teamStore.set(teams);
+          this._loadedExhibitId = exhibitId;
         },
         (error) => {
+          // The load failed, so the now-empty store is an artifact of the
+          // failure, not evidence that the exhibit has no teams. Clear the
+          // marker so callers treat the store as unable to answer.
           this.teamStore.set([]);
+          this._loadedExhibitId = null;
         }
       );
   }
@@ -159,15 +177,21 @@ export class TeamDataService {
       .subscribe(
         (teams) => {
           this.teamStore.set(teams);
+          this._loadedExhibitId = exhibitId;
         },
         (error) => {
+          // The load failed, so the now-empty store is an artifact of the
+          // failure, not evidence that the exhibit has no teams. Clear the
+          // marker so callers treat the store as unable to answer.
           this.teamStore.set([]);
+          this._loadedExhibitId = null;
         }
       );
   }
 
   unload() {
     this.teamStore.set([]);
+    this._loadedExhibitId = null;
     this.setActive('');
   }
 
