@@ -3,16 +3,17 @@
 
 :host {
   flex: 1;
+  overflow: hidden;
   min-height: 0;
 }
 
 .wall-container {
   display: flex;
   flex-flow: column;
-  justify-content: center;
   text-align: center;
   width: 100%;
   height: 100%;
+  min-height: 0;
 }
 
 .top-row {
@@ -57,7 +58,9 @@
   display: flex;
   align-content: flex-start;
   flex-wrap: wrap;
-  height: calc(100% - 64px);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .card {
