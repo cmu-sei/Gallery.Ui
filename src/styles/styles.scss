@@ -45,8 +45,11 @@ body {
   overflow: hidden;
 }
 
+// Keep editor content images inside the page without overriding an author's
+// explicit width. Forcing width:auto !important here also defeated inline
+// widths and the width attribute, which made SVGs with only a viewBox (no
+// intrinsic size) stretch to the full container width.
 .angular-editor-textarea img {
-  width: auto !important;
   max-width: 100% !important;
   height: auto !important;
 }
