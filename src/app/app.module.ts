@@ -62,6 +62,7 @@ import {
 } from '@cmusei/crucible-common';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminContainerComponent } from './components/admin/admin-container/admin-container.component';
@@ -188,7 +189,7 @@ export function getBasePath(settingsSvc: ComnSettingsService) {
   exports: [MatSortModule],
   bootstrap: [AppComponent],
   imports: [
-    AkitaNgDevtools,
+    environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,
     BrowserModule,
     AppRoutingModule,
