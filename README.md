@@ -38,7 +38,17 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Unit tests run on Vitest (jsdom) through Angular's `@angular/build:unit-test` builder, with zone change detection like the app.
+
+```bash
+npm test                 # run every spec once (ng test --watch=false)
+npm run test:watch       # watch mode (ng test)
+npm run test:coverage    # run once with coverage and the thresholds in angular.json
+```
+
+Run a subset with `npx ng test --watch=false --include='src/app/data/card/**/*.spec.ts'`.
+
+Shared test helpers (default providers, API and SignalR stubs, permission providers, render helper) live in `src/app/test-utils/`. They are copied from the shared Crucible UI test standard; only `default-test-providers.ts` and `mock-permission-data.service.ts` are specific to Gallery.
 
 ## Running end-to-end tests
 
