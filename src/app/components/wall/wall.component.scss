@@ -130,30 +130,28 @@ $card-width-max: 360px;
 .card-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
   box-sizing: border-box;
   height: 66px;
   padding: 0 $inset;
   border-top: 1px solid var(--mat-sys-outline-variant);
 }
 
-.card-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 13px;
-  color: var(--mat-sys-on-surface-variant);
-}
-
+// same place and style as the date on archive cards
 .card-date {
   display: flex;
   align-items: center;
   gap: 4px;
+  min-height: 18px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .card-unread {
-  align-self: flex-start;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 13px;
   padding: 2px 10px;
   border-radius: 12px;
   font-weight: 600;
@@ -169,6 +167,7 @@ $card-width-max: 360px;
 
 .details-button {
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .mdi-18px {
