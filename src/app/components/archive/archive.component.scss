@@ -3,65 +3,93 @@
 
 @use "@angular/material" as mat;
 
+$inset: 16px;
+$card-width-min: 300px;
+$card-width-max: 360px;
+// below this the source type filters move to their own row under the search and team controls
+$filters-own-row: 1280px;
+
 :host {
   @include mat.form-field-density(-5);
   flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   min-height: 0;
 }
 
-.top-row mat-form-field {
-  margin-bottom: 0;
-  vertical-align: middle;
-  padding-top: 5px;
-  padding-bottom: 5px;
+.archive {
+  flex: none;
+}
+
+.top-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px $inset;
+  width: 100%;
+  min-height: 50px;
+  padding: 6px $inset;
+  box-sizing: border-box;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }
 
 .top-row .mat-mdc-form-field-subscript-wrapper {
   display: none;
 }
 
-.top-row .mat-mdc-text-field-wrapper {
-  padding-bottom: 0;
-}
-
-.archive {
+.toolbar-group {
   display: flex;
-  flex: 100;
-  flex-direction: "row";
-  flex-wrap: nowrap;
-  height: 66px;
-}
-
-.summary-text {
-  width: 90%;
-  margin-left: 5%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.article-action {
-  color: var(--mat-sys-primary) !important;
-  align-self: center;
   align-items: center;
-  justify-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
-.article-read {
-  background: transparent !important;
-  color: var(--mat-sys-primary) !important;
-  margin: 20px 20px 5px 20px;
-  border: 1px solid var(--mat-sys-outline-variant);
+// the search box gives up width before the filter buttons do
+.search-group {
+  flex: 1 1 320px;
 }
 
-.article-unread {
-  background: var(--mat-sys-primary) !important;
-  color: var(--mat-sys-on-primary) !important;
-  margin: 20px 20px 5px 20px;
+.search-field {
+  flex: 1 1 200px;
+  min-width: 120px;
+  max-width: 280px;
 }
 
-.article-unread .mat-icon {
-  color: var(--mat-sys-on-primary) !important;
+.card-selector {
+  flex: 0 0 160px;
+}
+
+.filter-group {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nav-group {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+// the team selector is a fixed 300px box; let it size to its content so it sits against the icons
+.nav-group app-team-selector ::ng-deep .container {
+  width: auto;
+  align-items: center;
+}
+
+@media screen and (max-width: $filters-own-row) {
+  .filter-group {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
+
+.filter-button {
+  height: 28px;
+  padding: 0 12px;
+  font-size: 13px;
 }
 
 .active-button {
@@ -69,183 +97,154 @@
   color: var(--mat-sys-on-primary) !important;
 }
 
+.active-button {
+  border-color: var(--mat-sys-primary) !important;
+}
+
+// only the active filters carry the brand color
 .inactive-button {
   background-color: transparent !important;
-  color: var(--mat-sys-primary) !important;
+  color: var(--mat-sys-on-surface-variant) !important;
 }
 
-.max-width {
-  flex: 1;
-  width: 100%;
-}
-
-.mat-placeholder {
-  font-size: 10px;
-}
-
-.mat-mdc-select {
-  font-size: 10px;
-}
-
-.tiny {
-  font-size: 10px;
-  width: 160px;
-}
-
-.shift-left {
-  margin-left: -15px;
-}
-
-.add-button {
-  margin-bottom: 12px;
-}
-
-.mat-mdc-outlined-button.tiny,
-.mat-mdc-unelevated-button.tiny {
-  font-size: 10px;
-  height: 20px;
-  line-height: 20px;
-  margin: 2px;
-}
-
-.top-row {
-  display: flex;
-  flex: 1;
-  flex-wrap: nowrap;
-  width: 100%;
-  min-width: 1010px;
-  max-height: 65px;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  align-items: center;
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($card-width-min, $card-width-max));
+  // cards clip their overflow, which lets auto rows shrink below the content to fit the scroll area
+  grid-auto-rows: max-content;
+  justify-content: start;
+  align-content: start;
+  gap: $inset;
+  padding: $inset;
   box-sizing: border-box;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
+}
+
+// unread fills the source row, spanning the card like the wall's status strip
+.article-unread .card-meta,
+.article-unread .source-icon {
+  color: var(--mat-sys-on-primary);
+}
+
+.article-unread .card-meta {
+  background-color: var(--mat-sys-primary);
+  border-bottom-color: var(--mat-sys-primary);
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 6px $inset;
+  box-sizing: border-box;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.source-icon {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.source-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.unread-chip {
+  flex-shrink: 0;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  // inverted so it reads on the filled source row
+  color: var(--mat-sys-primary);
+  background-color: var(--mat-sys-on-primary);
+}
+
+.card-body {
+  flex: 1;
+  padding: 12px $inset;
+}
+
+.article-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// fixed line counts keep title, date and summary on the same y across a row
+.article-title {
+  --lines: 2;
+  --line-height: 1.3em;
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.summary-text {
+  --lines: 3;
+  --line-height: 1.45em;
+  margin: 0;
+  font-size: 14px;
+}
+
+.article-title,
+.summary-text {
+  overflow-wrap: anywhere;
+  line-height: var(--line-height);
+  min-height: calc(var(--lines) * var(--line-height));
+  display: -webkit-box;
+  -webkit-line-clamp: var(--lines);
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.search-cell {
+.card-footer {
   display: flex;
-  flex: 2;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 0 4px;
+  min-height: 52px;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  border-top: 1px solid var(--mat-sys-outline-variant);
 }
 
-.button-cell {
-  width: 80px;
-}
-
-.selector-cell {
-  flex: 2;
-}
-
-.source-type-cell {
-  flex: 6;
-  min-width: 430px;
-  padding-left: 10px;
-}
-
-.card-cell {
-  display: flex;
-  flex: 1;
-  padding-left: 10px;
-  align-items: center;
-}
-
-.card-selector {
-  width: 100px;
+.article-action {
+  color: var(--mat-sys-primary) !important;
 }
 
 .mat-icon {
   overflow: visible;
 }
 
-.mat-icon.point {
-  cursor: pointer;
-}
-
-.example-spacer {
-  flex: 1 1 auto;
-}
-
-.source-icon {
-  margin-top: 8px;
+.mdi-18px {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
 }
 
 .center {
   display: flex;
   justify-content: center;
-}
-
-.article-title {
-  margin-top: 8px;
-  font-size: 16pt;
-  font-weight: bold;
-}
-
-.article-subtitle {
-  font-size: 14pt;
-  font-weight: bold;
-  color: inherit;
-  margin-bottom: 8px;
-  min-height: 12px;
-}
-
-.img-article {
-  height: 350px;
-}
-
-mat-card-actions {
-  display: flex;
-  flex-direction: column;
-  margin-top: auto;
-}
-
-.action-buttons {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  flex-wrap: wrap;
-  text-align: center;
-  justify-content: center;
-}
-
-.one-cell,
-.button-cell {
-  flex: 0 1 auto;
-  min-width: fit-content;
-}
-
-.cards {
-  width: 100%;
-  display: flex;
-  align-content: flex-start;
-  flex-wrap: wrap;
-  height: calc(100% - 64px);
-  overflow-y: auto;
-}
-
-.card {
-  flex: 1 0 500px;
-  box-sizing: border-box;
-  margin: 1rem .25em;
-  min-width: 360px;
-  display: flex;
-  flex-direction: column;
-}
-
-@media screen and (min-width: 40em) {
-  .card {
-    max-width: calc(50% - 1em);
-  }
-}
-
-@media screen and (min-width: 60em) {
-  .card {
-    max-width: calc(33.3% - 1em);
-  }
-}
-
-@media screen and (min-width: 80em) {
-  .card {
-    max-width: calc(25% - 1em);
-  }
 }
