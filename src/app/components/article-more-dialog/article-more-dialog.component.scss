@@ -35,7 +35,9 @@
   width: 100%;
   max-width: 8.5in;
   min-height: 11in;
-  padding: 0.75in;
+  padding: 0.5in;
+  // fixed-width article markup scrolls inside the sheet instead of spilling past it
+  overflow-x: auto;
   margin: 0 auto;
   background: white;
   color: rgba(0, 0, 0, 0.87);
@@ -49,6 +51,23 @@
     background-color: white !important;
     color: rgba(0, 0, 0, 0.87) !important;
     font-family: inherit !important;
+  }
+
+  // authored fixed widths (e.g. table width="720") shrink to the text area so the margins stay even
+  ::ng-deep .angular-editor-textarea table,
+  ::ng-deep .angular-editor-textarea img {
+    max-width: 100%;
+  }
+
+  ::ng-deep .angular-editor-textarea img {
+    height: auto;
+  }
+}
+
+// a narrow window gives the margins back to the content
+@media screen and (max-width: 8.5in) {
+  .page {
+    padding: 24px;
   }
 }
 
