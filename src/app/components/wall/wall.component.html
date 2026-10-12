@@ -57,9 +57,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <div class="card-footer">
         @if (card.datePosted.getFullYear() > 1970) {
         @if (card.unreadCount > 0) {
-        <span class="card-unread">{{ card.unreadCount }} unread</span>
+        <span class="card-unread"
+          [title]="card.unreadCount + (card.unreadCount === 1 ? ' unread article on this card' : ' unread articles on this card')">{{ card.unreadCount }} unread</span>
         }
-        <button mat-stroked-button class="details-button" (click)="gotoArchive(card.id)">Details</button>
+        <button mat-stroked-button class="details-button" title="Open this card's articles in the archive"
+          (click)="gotoArchive(card.id)">Details</button>
         } @else {
         <span class="card-empty">No articles posted</span>
         }
