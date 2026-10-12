@@ -5,7 +5,6 @@
 
 $inset: 16px;
 $card-width-min: 300px;
-$card-width-max: 360px;
 // below this the source type filters move to their own row under the search and team controls
 $filters-own-row: 1280px;
 
@@ -109,10 +108,9 @@ $filters-own-row: 1280px;
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax($card-width-min, $card-width-max));
+  grid-template-columns: repeat(auto-fill, minmax($card-width-min, 1fr));
   // cards clip their overflow, which lets auto rows shrink below the content to fit the scroll area
   grid-auto-rows: max-content;
-  justify-content: start;
   align-content: start;
   gap: $inset;
   padding: $inset;

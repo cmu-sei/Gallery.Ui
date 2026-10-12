@@ -3,7 +3,6 @@
 
 $inset: 16px;
 $card-width-min: 300px;
-$card-width-max: 360px;
 
 :host {
   flex: 1;
@@ -58,10 +57,9 @@ $card-width-max: 360px;
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax($card-width-min, $card-width-max));
+  grid-template-columns: repeat(auto-fill, minmax($card-width-min, 1fr));
   // cards clip their overflow, which lets auto rows shrink below the content to fit the scroll area
   grid-auto-rows: max-content;
-  justify-content: start;
   gap: $inset;
   align-content: start;
   padding: $inset;
