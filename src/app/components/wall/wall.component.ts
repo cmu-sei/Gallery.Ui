@@ -74,12 +74,39 @@ export class WallComponent implements OnDestroy {
     this.sectionSelected.emit(cardId);
   }
 
+  // the wall labels a card by the condition it describes, not by the raw article status name
   getDisplayedStatus(itemStatus: ItemStatus) {
-    if (itemStatus === ItemStatus.Unused) {
-      return 'Not Applicable';
+    switch (itemStatus) {
+      case ItemStatus.Open:
+        return 'Normal';
+      case ItemStatus.Affected:
+        return 'Degraded';
+      case ItemStatus.Critical:
+        return 'Severe';
+      case ItemStatus.Closed:
+        return 'Offline';
+      default:
+        return '';
     }
+  }
 
-    return itemStatus.toString();
+  statusClass(itemStatus: ItemStatus) {
+    return itemStatus ? itemStatus.toLowerCase() + '-status' : '';
+  }
+
+  statusIcon(itemStatus: ItemStatus) {
+    switch (itemStatus) {
+      case ItemStatus.Open:
+        return 'mdi-check-circle';
+      case ItemStatus.Affected:
+        return 'mdi-alert';
+      case ItemStatus.Critical:
+        return 'mdi-alert-octagon';
+      case ItemStatus.Closed:
+        return 'mdi-close-octagon';
+      default:
+        return '';
+    }
   }
 
   // matches the ItemStatus enum values in the API, where a lower value is more severe

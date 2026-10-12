@@ -1,6 +1,10 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+$inset: 16px;
+$card-width-min: 300px;
+$card-width-max: 360px;
+
 :host {
   flex: 1;
   overflow: hidden;
@@ -10,7 +14,6 @@
 .wall-container {
   display: flex;
   flex-flow: column;
-  text-align: center;
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -23,23 +26,24 @@
   box-sizing: border-box;
   min-height: 50px;
   max-height: 50px;
+  padding: 0 $inset;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: $inset;
 }
 
-.button-cell {
-  width: 80px;
-}
-
-.selector-cell {
-  flex: 2;
-}
-
-.move-inject-cell {
-  flex: 9;
+.toolbar-group {
   display: flex;
   align-items: center;
-  padding-left: 10px;
+  gap: 8px;
+  min-width: 0;
+}
+
+// the team selector is a fixed 300px box; let it size to its content so it sits against the icons
+.toolbar-group app-team-selector ::ng-deep .container {
+  width: auto;
+  align-items: center;
 }
 
 .move-inject-label {
@@ -49,95 +53,148 @@
 }
 
 .advance-button {
-  margin-left: 12px;
   transform: scale(0.85);
 }
 
 .cards {
-  width: 100%;
-  display: flex;
-  align-content: flex-start;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($card-width-min, $card-width-max));
+  // cards clip their overflow, which lets auto rows shrink below the content to fit the scroll area
+  grid-auto-rows: max-content;
+  justify-content: start;
+  gap: $inset;
+  align-content: start;
+  padding: $inset;
+  box-sizing: border-box;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
 }
 
 .card {
-  flex: 1 0 500px;
-  box-sizing: border-box;
-  margin: 1rem .25em;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
 }
 
-.gallery-icon {
-  transform: scale(0.8);
-  width: 60px;
-  margin-bottom: 10px;
+.card-status {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 30px;
+  gap: 6px;
+  padding: 6px $inset;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: black;
+  background-color: var(--card-status-color);
+}
+
+.card-body {
+  flex: 1;
+  padding: 12px $inset;
+}
+
+// fixed line counts keep title, description and footer on the same y across a row
+.card-title {
+  --lines: 2;
+  --line-height: 1.3em;
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.card-description {
+  --lines: 3;
+  --line-height: 1.45em;
+  margin: 0;
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.card-title,
+.card-description {
+  overflow-wrap: anywhere;
+  line-height: var(--line-height);
+  min-height: calc(var(--lines) * var(--line-height));
+  display: -webkit-box;
+  -webkit-line-clamp: var(--lines);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-sizing: border-box;
+  height: 66px;
+  padding: 0 $inset;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.card-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-unread {
+  align-self: flex-start;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: var(--mat-sys-on-primary);
+  background-color: var(--mat-sys-primary);
+}
+
+.card-empty {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.details-button {
+  flex-shrink: 0;
+}
+
+.mdi-18px {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
 }
 
 .closed-status {
-  background-color: #ff3333;
-  color: black;
+  --card-status-color: #ff3333;
 }
 
 .critical-status {
-  background-color: rgb(250, 163, 2);
-  color: black;
+  --card-status-color: rgb(250, 163, 2);
 }
 
 .affected-status {
-  background-color: rgb(250, 235, 100);
-  color: black;
+  --card-status-color: rgb(250, 235, 100);
 }
 
 .open-status {
-  background-color: rgb(163, 235, 163);
-  color: black;
-}
-
-.notapplicable-status {
-  background-color: #b5b5b5;
-  color: black;
-}
-
-.card-title-text {
-  font-weight: bold;
-  text-align: center;
-}
-
-.card-subtitle-text {
-  color: rgba(0, 0, 0, 0.54);
-  text-align: center;
-}
-
-.sys-text {
-  color: var(--mat-sys-text);
-  border-color: var(--mat-sys-text);
+  --card-status-color: rgb(163, 235, 163);
 }
 
 .center {
   display: flex;
   justify-content: center;
-}
-
-.full-width {
-  width: 100%;
-}
-
-@media screen and (min-width: 40em) {
-  .card {
-    max-width: calc(50% - 1em);
-  }
-}
-
-@media screen and (min-width: 60em) {
-  .card {
-    max-width: calc(33.3% - 1em);
-  }
-}
-
-@media screen and (min-width: 80em) {
-  .card {
-    max-width: calc(25% - 1em);
-  }
 }

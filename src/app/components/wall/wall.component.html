@@ -5,7 +5,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div class="wall-container">
   <div class="top-row">
-    <div class="move-inject-cell">
+    <div class="toolbar-group">
       @if (exhibit) {
       <span class="move-inject-label">Move {{ exhibit.currentMove }}, Inject {{ exhibit.currentInject }}</span>
       }
@@ -17,10 +17,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </button>
       }
     </div>
-    <div class="selector-cell">
-      <app-team-selector (changeTeam)="changeTeamRequest($event)" style="float: right;"></app-team-selector>
-    </div>
-    <div class="button-cell">
+    <div class="toolbar-group">
+      <app-team-selector (changeTeam)="changeTeamRequest($event)"></app-team-selector>
       <button mat-icon-button (click)="gotoArchive('archive')" style="outline: none;" title="Archive">
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-archive"></mat-icon>
       </button>
@@ -33,39 +31,36 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </div>
   <section class="cards">
     @for (card of shownCardList; track card.id) {
-    <mat-card appearance="outlined"
-      [ngClass]="'card ' + card.displayedStatus.toLowerCase().replace(' ', '') + '-status'">
-      <mat-card-header class="center">
-        <mat-card-title class="card-title-text">{{ card.name }}</mat-card-title>
-        <mat-card-subtitle class="card-subtitle-text">{{ card.description }}</mat-card-subtitle>
-      </mat-card-header>
-      @if (card.datePosted.getFullYear() > 1970) {
-      <mat-card-content>
-        <div class="center">
-          <mat-icon class="sys-text" fontIcon="mdi-calendar-clock-outline" alt="Simulated Date/Time"></mat-icon>
-          {{
-          card.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }} ET
-        </div>
-        <h3>@if (card.unreadCount > 0) {
-          <span>{{ card.unreadCount }} unread article</span>
-          }@if (card.unreadCount > 1) {
-          <span>s</span>
-          }&nbsp;
-        </h3>
-      </mat-card-content>
+    <mat-card appearance="outlined" [ngClass]="'card ' + statusClass(card.status)">
+      @if (card.displayedStatus) {
+      <div class="card-status">
+        <mat-icon class="mdi-18px" [fontIcon]="statusIcon(card.status)"></mat-icon>
+        <span>{{ card.displayedStatus }}</span>
+      </div>
+      } @else {
+      <!-- keeps titles level with the cards that do show a status -->
+      <div class="card-status card-status-none" aria-hidden="true"></div>
       }
-      @if (card.datePosted.getFullYear() <= 1970) { <mat-card-content>
-        <div class="center">
-          <span style="float: left;">&nbsp;</span>
-        </div>
-        <h3>No articles posted</h3>
-        </mat-card-content>
-        }
-        <mat-card-actions class="center">
-          @if (card.datePosted.getFullYear() > 1970) {
-          <button mat-stroked-button class="sys-text" (click)="gotoArchive(card.id)">Details</button>
+      <div class="card-body">
+        <h2 class="card-title" [title]="card.name">{{ card.name }}</h2>
+        <p class="card-description" [title]="card.description || ''">{{ card.description }}</p>
+      </div>
+      <div class="card-footer">
+        @if (card.datePosted.getFullYear() > 1970) {
+        <div class="card-meta">
+          <span class="card-date" title="Simulated Date/Time">
+            <mat-icon class="mdi-18px" fontIcon="mdi-calendar-clock-outline"></mat-icon>
+            {{ card.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }} ET
+          </span>
+          @if (card.unreadCount > 0) {
+          <span class="card-unread">{{ card.unreadCount }} unread</span>
           }
-        </mat-card-actions>
+        </div>
+        <button mat-stroked-button class="details-button" (click)="gotoArchive(card.id)">Details</button>
+        } @else {
+        <span class="card-empty">No articles posted</span>
+        }
+      </div>
     </mat-card>
     }
   </section>
