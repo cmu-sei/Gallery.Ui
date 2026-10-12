@@ -15,18 +15,17 @@ Gallery uses a monochrome gray Material 3 SCSS palette with runtime top-bar colo
 |------|---------------|---------|
 | `src/assets/config/settings.json` | `"AppTopBarHexColor": "#008740"` | Runtime config -- top bar background color |
 | `src/assets/config/settings.json` | `"AppTopBarHexTextColor": "#FFFFFF"` | Runtime config -- top bar text color |
-| `src/app/app.component.ts` | `'#C41230'` / `'#FFFFFF'` fallbacks in `setTheme()` | Runtime fallbacks when settings are not provided |
 
 To change the top bar color for a deployment, update `AppTopBarHexColor` and `AppTopBarHexTextColor` in `settings.json`.
 
 # Generate code to get data from the API
-Run `npm run swagger:gen`
+Run `npm run swagger-gen`
 # Angular
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 21 (Angular 21.2). Node `^20.19.0 || ^22.12.0 || >=24.0.0` is required.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4723/`. The app will automatically reload if you change any of the source files.
+Run `npm start` (`ng serve`) for a dev server. Navigate to `http://localhost:4723/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
@@ -34,7 +33,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `npm run build` (`ng build`) to build the project. The build artifacts will be stored in the `dist/browser` directory. The default configuration is `development`; use `--configuration production` for a production build.
 
 ## Running unit tests
 
@@ -52,7 +51,11 @@ Shared test helpers (default providers, API and SignalR stubs, permission provid
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+`npm run e2e` (`ng e2e`) is configured in `angular.json` with the Protractor builder (`@angular-devkit/build-angular:protractor`), but neither that package nor Protractor is a dependency in `package.json`, so the command does not currently work.
+
+## Linting
+
+Run `npm run lint` (`eslint -c .eslintrc.js --ext .ts src/`).
 
 
 
