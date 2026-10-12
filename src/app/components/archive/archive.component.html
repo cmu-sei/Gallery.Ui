@@ -68,7 +68,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <h2 class="article-title" [title]="userArticle.article.name">{{ userArticle.article.name }}</h2>
       <div class="article-date" title="Simulated Date/Time">
         <mat-icon class="mdi-18px" fontIcon="mdi-calendar-clock-outline"></mat-icon>
-        {{ userArticle.article.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }} ET
+        {{ userArticle.article.datePosted.toLocaleString('en-US', {year: '2-digit', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'}) }}
       </div>
       <p class="summary-text" [title]="userArticle.article.summary || ''">{{ userArticle.article.summary }}</p>
     </div>
