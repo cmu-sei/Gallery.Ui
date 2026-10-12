@@ -167,15 +167,6 @@ $filters-own-row: 1280px;
 }
 
 
-.unread-chip {
-  flex-shrink: 0;
-  padding: 1px 8px;
-  border-radius: 10px;
-  font-size: 12px;
-  // inverted so it reads on the filled source row
-  color: var(--mat-sys-primary);
-  background-color: var(--mat-sys-on-primary);
-}
 
 .card-body {
   flex: 1;

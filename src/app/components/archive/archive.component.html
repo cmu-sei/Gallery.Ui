@@ -60,7 +60,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         [title]="userArticle.article.sourceType"></mat-icon>
       <span class="source-name" [title]="userArticle.article.sourceName || ''">{{ userArticle.article.sourceName }}</span>
       @if (!userArticle.isRead) {
-      <span class="unread-chip">Unread</span>
+      <!-- the filled row is the visible cue; this keeps it for screen readers -->
+      <span class="cdk-visually-hidden">Unread</span>
       }
     </div>
     <div class="card-body">
