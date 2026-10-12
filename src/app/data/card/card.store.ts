@@ -2,12 +2,13 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { Card as CardEntity } from 'src/app/generated/api';
+import { Card as CardEntity, ItemStatus } from 'src/app/generated/api';
 import { Injectable } from '@angular/core';
 
 export interface Card extends CardEntity {
   datePosted?: Date;
   unreadCount?: number;
+  status?: ItemStatus;
   displayedStatus?: string;
 }
 

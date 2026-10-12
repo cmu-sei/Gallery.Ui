@@ -82,6 +82,30 @@ export class WallComponent implements OnDestroy {
     return itemStatus.toString();
   }
 
+  // matches the ItemStatus enum values in the API, where a lower value is more severe
+  private statusSeverity(itemStatus: ItemStatus) {
+    switch (itemStatus) {
+      case ItemStatus.Closed:
+        return 10;
+      case ItemStatus.Critical:
+        return 20;
+      case ItemStatus.Affected:
+        return 40;
+      case ItemStatus.Open:
+        return 50;
+      default:
+        return Number.MAX_SAFE_INTEGER;
+    }
+  }
+
+  getMostSevereStatus(userArticles: UserArticle[]) {
+    return userArticles
+      .map(ua => ua.article?.status)
+      .filter(status => status && status !== ItemStatus.Unused)
+      .reduce((worst, status) =>
+        this.statusSeverity(status) < this.statusSeverity(worst) ? status : worst, ItemStatus.Unused);
+  }
+
   setShownCardList() {
     const shownCardList: Card[] = [];
     this.cardList.forEach(card => {
@@ -94,12 +118,13 @@ export class WallComponent implements OnDestroy {
         if (userArticles.length > 0) {
           cardToAdd.datePosted = userArticles[0].article?.datePosted;
           cardToAdd.unreadCount = userArticles.filter(ua => !ua.isRead).length;
-          cardToAdd.displayedStatus = this.getDisplayedStatus(userArticles[0].article.status);
+          cardToAdd.status = this.getMostSevereStatus(userArticles);
         } else {
           cardToAdd.datePosted = new Date('1/1/1900');
           cardToAdd.unreadCount = 0;
-          cardToAdd.displayedStatus = this.getDisplayedStatus(ItemStatus.Unused);
+          cardToAdd.status = ItemStatus.Unused;
         }
+        cardToAdd.displayedStatus = this.getDisplayedStatus(cardToAdd.status);
         shownCardList.push(cardToAdd);
       }
     });
