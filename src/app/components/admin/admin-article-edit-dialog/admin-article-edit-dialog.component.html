@@ -164,7 +164,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <input matInput [ngxMatDatetimePicker]="picker" [formControl]="datePostedFormControl"
           (dateChange)="saveArticle('datePosted')" style="display: none;">
         <span (click)="picker.open()" style="cursor: pointer;">
-          {{datePostedFormControl.value | date: 'dd MMM yyyy HH:mm'}} {{ getTimezoneAbbr() }}
+          {{datePostedFormControl.value | date: 'dd MMM yyyy HH:mm'}} {{ getTimezoneAbbr(datePostedFormControl.value) }}
         </span>
         <mat-datepicker-toggle matSuffix title="Choose Date/Time" [for]="$any(picker)">
         </mat-datepicker-toggle>
