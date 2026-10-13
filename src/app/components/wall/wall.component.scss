@@ -82,12 +82,7 @@ $card-width-min: 300px;
   align-items: center;
   box-sizing: border-box;
   min-height: 30px;
-  gap: 6px;
   padding: 6px $inset;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: .04em;
-  text-transform: uppercase;
   color: black;
   background-color: var(--card-status-color);
 }

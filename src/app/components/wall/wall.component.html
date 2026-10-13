@@ -32,10 +32,10 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <section class="cards">
     @for (card of shownCardList; track card.id) {
     <mat-card appearance="outlined" [ngClass]="'card ' + statusClass(card.status)">
-      @if (card.displayedStatus) {
+      @if (statusIcon(card.status)) {
       <div class="card-status">
-        <mat-icon class="mdi-18px" [fontIcon]="statusIcon(card.status)"></mat-icon>
-        <span>{{ card.displayedStatus }}</span>
+        <mat-icon class="mdi-18px" [fontIcon]="statusIcon(card.status)" aria-hidden="true"></mat-icon>
+        <span class="cdk-visually-hidden">Status: {{ card.status }}</span>
       </div>
       } @else {
       <!-- keeps titles level with the cards that do show a status -->

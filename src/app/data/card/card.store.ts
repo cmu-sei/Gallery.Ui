@@ -9,7 +9,6 @@ export interface Card extends CardEntity {
   datePosted?: Date;
   unreadCount?: number;
   status?: ItemStatus;
-  displayedStatus?: string;
 }
 
 export interface CardState extends EntityState<Card> {}

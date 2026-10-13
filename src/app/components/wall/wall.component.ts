@@ -74,22 +74,6 @@ export class WallComponent implements OnDestroy {
     this.sectionSelected.emit(cardId);
   }
 
-  // the wall labels a card by the condition it describes, not by the raw article status name
-  getDisplayedStatus(itemStatus: ItemStatus) {
-    switch (itemStatus) {
-      case ItemStatus.Open:
-        return 'Normal';
-      case ItemStatus.Affected:
-        return 'Degraded';
-      case ItemStatus.Critical:
-        return 'Severe';
-      case ItemStatus.Closed:
-        return 'Offline';
-      default:
-        return '';
-    }
-  }
-
   statusClass(itemStatus: ItemStatus) {
     return itemStatus ? itemStatus.toLowerCase() + '-status' : '';
   }
@@ -127,7 +111,6 @@ export class WallComponent implements OnDestroy {
           cardToAdd.unreadCount = 0;
           cardToAdd.status = ItemStatus.Unused;
         }
-        cardToAdd.displayedStatus = this.getDisplayedStatus(cardToAdd.status);
         shownCardList.push(cardToAdd);
       }
     });
