@@ -216,3 +216,24 @@ mat-paginator {
 }
 
 /* end of FlexLayout replacements */
+
+/* item status colors, set on an element so its children can use --item-status-color */
+.gray-status {
+  --item-status-color: #b5b5b5;
+}
+
+.green-status {
+  --item-status-color: rgb(163, 235, 163);
+}
+
+.yellow-status {
+  --item-status-color: rgb(250, 235, 100);
+}
+
+.orange-status {
+  --item-status-color: rgb(250, 163, 2);
+}
+
+.red-status {
+  --item-status-color: #ff3333;
+}

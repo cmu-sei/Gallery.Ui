@@ -119,11 +119,11 @@ export class ArticleEditDialogComponent {
 
   public matcher = new UserErrorStateMatcher();
   itemStatusList: ItemStatus[] = [
-    ItemStatus.Unused,
-    ItemStatus.Affected,
-    ItemStatus.Closed,
-    ItemStatus.Critical,
-    ItemStatus.Open,
+    ItemStatus.Gray,
+    ItemStatus.Green,
+    ItemStatus.Yellow,
+    ItemStatus.Orange,
+    ItemStatus.Red,
   ];
   sourceTypeList: SourceType[] = [
     SourceType.Intel,

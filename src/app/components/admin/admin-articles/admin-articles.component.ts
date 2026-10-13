@@ -129,7 +129,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
         cardId: '',
         move: 0,
         inject: 0,
-        status: ItemStatus.Unused,
+        status: ItemStatus.Gray,
         sourceType: SourceType.Intel,
         sourceName: '',
         url: '',

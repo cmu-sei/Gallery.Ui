@@ -218,7 +218,7 @@ export class ArchiveComponent implements OnDestroy {
   }
 
   getCardStatus(itemStatus: ItemStatus) {
-    if (itemStatus === ItemStatus.Unused) {
+    if (itemStatus === ItemStatus.Gray) {
       return 'Not Applicable';
     }
 
@@ -459,7 +459,7 @@ export class ArchiveComponent implements OnDestroy {
         exhibitId: this.exhibitId,
         move: this.exhibit.currentMove,
         inject: this.exhibit.currentInject,
-        status: ItemStatus.Unused,
+        status: ItemStatus.Gray,
         sourceType: SourceType.Reporting,
         sourceName: this.teamDataService.getMyTeam().shortName,
         datePosted: datePosted,

@@ -80,13 +80,13 @@ export class WallComponent implements OnDestroy {
 
   statusIcon(itemStatus: ItemStatus) {
     switch (itemStatus) {
-      case ItemStatus.Open:
+      case ItemStatus.Green:
         return 'mdi-check-circle';
-      case ItemStatus.Affected:
+      case ItemStatus.Yellow:
         return 'mdi-alert';
-      case ItemStatus.Critical:
+      case ItemStatus.Orange:
         return 'mdi-alert-octagon';
-      case ItemStatus.Closed:
+      case ItemStatus.Red:
         return 'mdi-close-octagon';
       default:
         return '';
@@ -109,7 +109,7 @@ export class WallComponent implements OnDestroy {
         } else {
           cardToAdd.datePosted = new Date('1/1/1900');
           cardToAdd.unreadCount = 0;
-          cardToAdd.status = ItemStatus.Unused;
+          cardToAdd.status = ItemStatus.Gray;
         }
         shownCardList.push(cardToAdd);
       }

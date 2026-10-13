@@ -84,7 +84,7 @@ $card-width-min: 300px;
   min-height: 30px;
   padding: 6px $inset;
   color: black;
-  background-color: var(--card-status-color);
+  background-color: var(--item-status-color);
 }
 
 .card-body {
@@ -168,22 +168,6 @@ $card-width-min: 300px;
   height: 18px;
   font-size: 18px;
   line-height: 18px;
-}
-
-.closed-status {
-  --card-status-color: #ff3333;
-}
-
-.critical-status {
-  --card-status-color: rgb(250, 163, 2);
-}
-
-.affected-status {
-  --card-status-color: rgb(250, 235, 100);
-}
-
-.open-status {
-  --card-status-color: rgb(163, 235, 163);
 }
 
 .center {
