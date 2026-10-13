@@ -217,7 +217,7 @@ mat-paginator {
 
 /* end of FlexLayout replacements */
 
-/* item status colors, set on an element so its children can use --item-status-color */
+/* item status colors, shared by the wall card strip and the status dropdown swatches */
 .gray-status {
   --item-status-color: #b5b5b5;
 }
@@ -236,4 +236,15 @@ mat-paginator {
 
 .red-status {
   --item-status-color: #ff3333;
+}
+
+.item-status-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  border: 1px solid rgba(0, 0, 0, .4);
+  border-radius: 50%;
+  vertical-align: -1px;
+  background-color: var(--item-status-color);
 }
