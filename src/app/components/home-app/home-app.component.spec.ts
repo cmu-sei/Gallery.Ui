@@ -293,6 +293,58 @@ describe('HomeAppComponent', () => {
   });
 
   /**
+   * Verifies: each value canManageExhibit accepts, held alone, gives the wall the advance button.
+   * Interacts with: canManageCurrentExhibit (real PermissionDataService.canManageExhibit), WallStubComponent inputs.
+   * Data: ?exhibit=x1&section=wall; per row, exactly system ManageExhibits or exactly ManageExhibit on x1.
+   */
+  it.each(
+    (
+      [
+        [
+          'system ManageExhibits',
+          { system: [SystemPermission.ManageExhibits] },
+        ],
+        [
+          'ManageExhibit on x1',
+          {
+            exhibit: [
+              {
+                exhibitId: 'x1',
+                permissions: [ExhibitPermission.ManageExhibit],
+              },
+            ],
+          },
+        ],
+      ] satisfies [string, PermissionGrants][]
+    ).map(([label, grants]) => ({ label, grants })),
+  )(
+    'passes the advance button to the wall with exactly $label',
+    async ({ grants }) => {
+      const { stub } = await renderHome(grants, {
+        exhibit: 'x1',
+        section: 'wall',
+      });
+
+      expect(stub(WallStubComponent)?.showAdvanceButton).toBe(true);
+    },
+  );
+
+  /**
+   * Verifies: a neighbouring system permission (EditExhibits, a near miss for system ManageExhibits) gives the wall no advance button.
+   * Interacts with: canManageCurrentExhibit, WallStubComponent inputs.
+   * Data: ?exhibit=x1&section=wall; system EditExhibits only.
+   */
+  it('passes no advance button with system EditExhibits', async () => {
+    const { stub } = await renderHome(
+      { system: [SystemPermission.EditExhibits] },
+      { exhibit: 'x1', section: 'wall' },
+    );
+
+    expect(stub(WallStubComponent)?.showAdvanceButton).toBe(false);
+    expect(stub(WallStubComponent)?.exhibit?.id).toBe('x1');
+  });
+
+  /**
    * Verifies: without manage rights on this exhibit (Edit on it, Manage on another) the wall gets no advance button, and without a system permission no admin button.
    * Interacts with: canManageCurrentExhibit, canViewAdministration, WallStubComponent inputs.
    * Data: ?exhibit=x1&section=wall; EditExhibit on x1 and ManageExhibit on x2.

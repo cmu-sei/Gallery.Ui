@@ -69,6 +69,7 @@ async function renderWall(
   overrides: {
     showAdminButton?: boolean;
     showAdvanceButton?: boolean;
+    exhibit?: Exhibit;
     advance?: () => Observable<Exhibit>;
   } = {},
 ) {
@@ -89,7 +90,7 @@ async function renderWall(
       },
     ],
     componentInputs: {
-      exhibit: EXHIBIT,
+      exhibit: overrides.exhibit ?? EXHIBIT,
       showAdminButton: overrides.showAdminButton ?? false,
       showAdvanceButton: overrides.showAdvanceButton ?? false,
     },
@@ -178,6 +179,49 @@ describe('WallComponent', () => {
     expect(
       screen.queryByRole('button', { name: 'Advance' }),
     ).not.toBeInTheDocument();
+  });
+
+  /**
+   * Verifies: with showAdminButton false (home-app passes canViewAdministration false) no Administration button renders, while the ungated Archive button still does.
+   * Interacts with: showAdminButton input.
+   * Data: showAdminButton false.
+   */
+  it('hides Administration when showAdminButton is false', async () => {
+    await renderWall({ showAdminButton: false });
+
+    expect(screen.queryByTitle('Administration')).not.toBeInTheDocument();
+    expect(screen.getByTitle('Archive')).toBeInTheDocument();
+  });
+
+  /**
+   * Verifies: with showAdvanceButton false (home-app passes canManageCurrentExhibit false) no Advance button renders, even though the exhibit shows it.
+   * Interacts with: showAdvanceButton input, exhibit.showAdvanceButton.
+   * Data: showAdvanceButton false, exhibit.showAdvanceButton true (move 1, inject 2).
+   */
+  it('hides Advance when showAdvanceButton is false', async () => {
+    await renderWall({ showAdvanceButton: false });
+
+    expect(
+      screen.queryByRole('button', { name: 'Advance' }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText('Move 1, Inject 2')).toBeInTheDocument();
+  });
+
+  /**
+   * Verifies: Advance stays hidden when the exhibit turns it off, even for a user allowed to advance.
+   * Interacts with: showAdvanceButton input, exhibit.showAdvanceButton.
+   * Data: showAdvanceButton true, exhibit.showAdvanceButton false.
+   */
+  it('hides Advance when the exhibit does not show it', async () => {
+    await renderWall({
+      showAdvanceButton: true,
+      exhibit: { ...EXHIBIT, showAdvanceButton: false },
+    });
+
+    expect(
+      screen.queryByRole('button', { name: 'Advance' }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText('Move 1, Inject 2')).toBeInTheDocument();
   });
 
   /**

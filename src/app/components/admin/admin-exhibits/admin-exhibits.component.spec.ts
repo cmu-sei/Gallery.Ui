@@ -247,6 +247,11 @@ describe('AdminExhibitsComponent', () => {
           ['Delete Drill'],
         ],
         [
+          'system ManageExhibits',
+          { system: [SystemPermission.ManageExhibits] },
+          ['Delete Drill'],
+        ],
+        [
           'ViewExhibit on x1',
           exhibitGrant('x1', ExhibitPermission.ViewExhibit),
           [],
@@ -310,6 +315,64 @@ describe('AdminExhibitsComponent', () => {
       stub(AdminExhibitArticlesStubComponent)?.canEdit,
       stub(AdminObserversStubComponent)?.canEdit,
     ]).toEqual([true, true, true, true]);
+  });
+
+  /**
+   * Verifies: each value canManageExhibit accepts, held alone, shows the Memberships panel of the opened exhibit.
+   * Interacts with: toggleExpand (canManageExpandedExhibit from the real PermissionDataService.canManageExhibit), ExhibitMembershipsStubComponent.
+   * Data: per row, exactly system ManageExhibits or exactly ManageExhibit on x1.
+   */
+  it.each(
+    (
+      [
+        [
+          'system ManageExhibits',
+          { system: [SystemPermission.ManageExhibits] },
+        ],
+        [
+          'ManageExhibit on x1',
+          exhibitGrant('x1', ExhibitPermission.ManageExhibit),
+        ],
+      ] satisfies [string, PermissionGrants][]
+    ).map(([label, grants]) => ({ label, grants })),
+  )('shows the Memberships panel with exactly $label', async ({ grants }) => {
+    const { stub } = await renderExhibits(grants);
+
+    await userEvent
+      .setup()
+      .click(within(screen.getByRole('table')).getByText('Drill'));
+
+    expect(stub(ExhibitMembershipsStubComponent)?.exhibitId).toBe('x1');
+  });
+
+  /**
+   * Verifies: a neighbouring permission (Edit on the exhibit or system EditExhibits, or Manage on another exhibit) opens the exhibit without the Memberships panel.
+   * Interacts with: toggleExpand (canManageExpandedExhibit), ExhibitMembershipsStubComponent, AdminTeamsStubComponent.
+   * Data: per row, the near-miss grant; exhibit x1 opened.
+   */
+  it.each(
+    (
+      [
+        [
+          'EditExhibit on x1',
+          exhibitGrant('x1', ExhibitPermission.EditExhibit),
+        ],
+        ['system EditExhibits', { system: [SystemPermission.EditExhibits] }],
+        [
+          'ManageExhibit on x2',
+          exhibitGrant('x2', ExhibitPermission.ManageExhibit),
+        ],
+      ] satisfies [string, PermissionGrants][]
+    ).map(([label, grants]) => ({ label, grants })),
+  )('hides the Memberships panel with $label', async ({ grants }) => {
+    const { stub } = await renderExhibits(grants);
+
+    await userEvent
+      .setup()
+      .click(within(screen.getByRole('table')).getByText('Drill'));
+
+    expect(stub(AdminTeamsStubComponent)?.exhibitId).toBe('x1');
+    expect(stub(ExhibitMembershipsStubComponent)).toBeUndefined();
   });
 
   /**
