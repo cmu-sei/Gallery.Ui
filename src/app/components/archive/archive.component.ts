@@ -77,6 +77,7 @@ export class ArchiveComponent implements OnDestroy {
   sort: Sort = { active: 'datePosted', direction: 'desc' };
   pageSize = 25;
   pageIndex = 0;
+  sourceTypeFilters = ['Intel', 'Reporting', 'Orders', 'News', 'Social', 'Phone', 'Email'];
   sourceIcon: { [key: string]: string } = {
     Intel: 'mdi-shield-lock',
     Reporting: 'mdi-file-chart',

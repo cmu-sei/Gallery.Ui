@@ -74,12 +74,23 @@ export class WallComponent implements OnDestroy {
     this.sectionSelected.emit(cardId);
   }
 
-  getDisplayedStatus(itemStatus: ItemStatus) {
-    if (itemStatus === ItemStatus.Unused) {
-      return 'Not Applicable';
-    }
+  statusClass(itemStatus: ItemStatus) {
+    return itemStatus ? itemStatus.toLowerCase() + '-status' : '';
+  }
 
-    return itemStatus.toString();
+  statusIcon(itemStatus: ItemStatus) {
+    switch (itemStatus) {
+      case ItemStatus.Open:
+        return 'mdi-check-circle';
+      case ItemStatus.Affected:
+        return 'mdi-alert';
+      case ItemStatus.Critical:
+        return 'mdi-alert-octagon';
+      case ItemStatus.Closed:
+        return 'mdi-close-octagon';
+      default:
+        return '';
+    }
   }
 
   setShownCardList() {
@@ -94,11 +105,11 @@ export class WallComponent implements OnDestroy {
         if (userArticles.length > 0) {
           cardToAdd.datePosted = userArticles[0].article?.datePosted;
           cardToAdd.unreadCount = userArticles.filter(ua => !ua.isRead).length;
-          cardToAdd.displayedStatus = this.getDisplayedStatus(userArticles[0].article.status);
+          cardToAdd.status = userArticles[0].article?.status;
         } else {
           cardToAdd.datePosted = new Date('1/1/1900');
           cardToAdd.unreadCount = 0;
-          cardToAdd.displayedStatus = this.getDisplayedStatus(ItemStatus.Unused);
+          cardToAdd.status = ItemStatus.Unused;
         }
         shownCardList.push(cardToAdd);
       }

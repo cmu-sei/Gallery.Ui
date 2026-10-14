@@ -4,174 +4,103 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <div class="archive">
-  <div class="max-width">
-    <div class="top-row">
-      <div class="search-cell">
-        @if (canAddArticles()) {
-        <button mat-button (click)="addOrEditArticle(null)" style="outline: none;" title="Add an Article">
-          <mat-icon class="add-button mdi-18px" fontIcon="mdi-plus-circle"></mat-icon>
+  <div class="top-row">
+    <div class="toolbar-group search-group">
+      @if (canAddArticles()) {
+      <button mat-icon-button (click)="addOrEditArticle(null)" style="outline: none;" title="Add an Article">
+        <mat-icon class="mdi-24px" fontIcon="mdi-plus-circle"></mat-icon>
+      </button>
+      }
+      <mat-form-field class="search-field" subscriptSizing="dynamic">
+        <input matInput placeholder="Search the Archive" [formControl]="filterControl" />
+        @if (filterControl.value) {
+        <button mat-icon-button matSuffix (click)="applyFilter('')" title="Clear Search">
+          <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
         </button>
         }
-        @if (!canAddArticles()) {
-        <span style="width: 20px;">&nbsp;</span>
-        }
-        <mat-form-field subscriptSizing="dynamic">
-          <input matInput placeholder="Search the Archive" class="tiny" [formControl]="filterControl" />
-          @if (filterControl.value) {
-          <button mat-icon-button matSuffix (click)="applyFilter('')" title="Clear Search">
-            <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
-          </button>
+      </mat-form-field>
+      <mat-form-field class="card-selector" subscriptSizing="dynamic">
+        <mat-select [(ngModel)]="cardId" (selectionChange)="changeCard($event.value)">
+          <mat-option [value]="'all'">All Cards</mat-option>
+          @for (card of showCardList; track card.id) {
+          <mat-option [value]="card.id">
+            {{card.name}}
+          </mat-option>
           }
-        </mat-form-field>
-      </div>
-      <div class="card-cell">
-        <mat-form-field class="card-selector" subscriptSizing="dynamic">
-          <mat-select [(ngModel)]="cardId" (selectionChange)="changeCard($event.value)">
-            <mat-option [value]="'all'">All Cards</mat-option>
-            @for (card of showCardList; track card.id) {
-            <mat-option [value]="card.id">
-              {{card.name}}
-            </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="source-type-cell">
-        <!-- Intel -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Intel')"
-          [ngClass]="{'active-button': sourceTypeList.indexOf('Intel') > -1, 'inactive-button': sourceTypeList.indexOf('Intel') < 0}">
-          <mat-icon fontIcon="{{ sourceIcon['Intel'] }}" class="mdi-18px shift-left"></mat-icon>
-          Intel
-        </button>
-        <!-- Reporting -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Reporting')"
-          [ngClass]="{'active-button': sourceTypeList.indexOf('Reporting') > -1, 'inactive-button': sourceTypeList.indexOf('Reporting') < 0}">
-          <mat-icon fontIcon="{{ sourceIcon['Reporting'] }}" class="mdi-18px shift-left"></mat-icon>
-          Reporting
-        </button>
-        <!-- Orders -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Orders')"
-          [ngClass]="{'active-button': sourceTypeList.indexOf('Orders') > -1, 'inactive-button': sourceTypeList.indexOf('Orders') < 0}">
-          <mat-icon fontIcon="{{ sourceIcon['Orders'] }}" class="mdi-18px shift-left"></mat-icon>
-          Orders
-        </button>
-        <!-- News -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('News')"
-          [ngClass]="{'active-button': sourceTypeList.indexOf('News') > -1, 'inactive-button': sourceTypeList.indexOf('News') < 0}">
-          <mat-icon fontIcon="{{ sourceIcon['News'] }}" class="mdi-18px shift-left"></mat-icon>
-          News
-        </button>
-        <!-- Social -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Social')"
-          [ngClass]="{'active-button': sourceTypeList.indexOf('Social') > -1, 'inactive-button': sourceTypeList.indexOf('Social') < 0}">
-          <mat-icon fontIcon="{{ sourceIcon['Social'] }}" class="mdi-18px shift-left"></mat-icon>
-          Social
-        </button>
-        <!-- Phone -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Phone')"
-          [ngClass]="{'active-button': sourceTypeList.indexOf('Phone') > -1, 'inactive-button': sourceTypeList.indexOf('Phone') < 0}">
-          <mat-icon fontIcon="{{ sourceIcon['Phone'] }}" class="mdi-18px shift-left"></mat-icon>
-          Phone
-        </button>
-        <!-- Email -->
-        <button mat-stroked-button class="tiny" title="Filter on/off" (click)="filterBySourceType('Email')"
-          [ngClass]="{'active-button': sourceTypeList.indexOf('Email') > -1, 'inactive-button': sourceTypeList.indexOf('Email') < 0}">
-          <mat-icon fontIcon="{{ sourceIcon['Email'] }}" class="mdi-18px shift-left"></mat-icon>
-          Email
-        </button>
-      </div>
-      <div class="selector-cell">
-        <app-team-selector (changeTeam)="changeTeamRequest($event)"></app-team-selector>
-      </div>
-      <div class="button-cell">
-        <button mat-icon-button (click)="gotoWallSection()" style="outline: none;" title="Wall">
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-wall"></mat-icon>
-        </button>
-        @if (showAdminButton) {
-        <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
-        </button>
-        }
-      </div>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="toolbar-group filter-group">
+      @for (sourceType of sourceTypeFilters; track sourceType) {
+      <button mat-stroked-button class="filter-button" title="Filter on/off" (click)="filterBySourceType(sourceType)"
+        [ngClass]="{'active-button': sourceTypeList.indexOf(sourceType) > -1, 'inactive-button': sourceTypeList.indexOf(sourceType) < 0}">
+        <mat-icon [fontIcon]="sourceIcon[sourceType]" class="mdi-18px"></mat-icon>
+        {{ sourceType }}
+      </button>
+      }
+    </div>
+    <div class="toolbar-group nav-group">
+      <app-team-selector (changeTeam)="changeTeamRequest($event)"></app-team-selector>
+      <button mat-icon-button (click)="gotoWallSection()" style="outline: none;" title="Wall">
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-wall"></mat-icon>
+      </button>
+      @if (showAdminButton) {
+      <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
+      </button>
+      }
     </div>
   </div>
 </div>
 <section class="cards">
   @for (userArticle of filteredUserArticleList; track userArticle.id) {
-  <mat-card appearance="outlined" class="card">
-    <mat-card-header [ngClass]="getIsReadClass(userArticle)">
-      <div mat-card-avatar>
-        <mat-icon style="overflow:visible" fontIcon="{{ sourceIcon[userArticle.article.sourceType] }}"
-          title="{{ userArticle.article.sourceType }}" class="mdi-48px center-self title source-icon"></mat-icon>
+  <mat-card appearance="outlined" class="card" [ngClass]="getIsReadClass(userArticle)">
+    <div class="card-meta">
+      <mat-icon class="mdi-18px source-icon" [fontIcon]="sourceIcon[userArticle.article.sourceType]"
+        [title]="userArticle.article.sourceType"></mat-icon>
+      <span class="source-name" [title]="userArticle.article.sourceName || ''">{{ userArticle.article.sourceName }}</span>
+      @if (!userArticle.isRead) {
+      <!-- the filled row is the visible cue; this keeps it for screen readers -->
+      <span class="cdk-visually-hidden">Unread</span>
+      }
+    </div>
+    <div class="card-body">
+      <h2 class="article-title" [title]="userArticle.article.name">{{ userArticle.article.name }}</h2>
+      <div class="article-date" title="Simulated Date/Time">
+        <mat-icon class="mdi-18px" fontIcon="mdi-calendar-clock-outline"></mat-icon>
+        {{ userArticle.article.datePosted.toLocaleString('en-US', {year: '2-digit', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'}) }}
       </div>
-      <mat-card-title class="article-title">{{userArticle.article.name}}</mat-card-title>
-      <mat-card-subtitle class="article-subtitle">{{userArticle.article.sourceName}}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="article-text" contenteditable="false">
-      <div class="center">
-        <span style="float: left;"><mat-icon fontIcon="mdi-calendar-clock-outline" alt="Simulated Date/Time"></mat-icon>
-          {{ userArticle.article.datePosted.toLocaleString('en-US', {timeZone: 'America/New_York'}) | date:'short' }}
-          ET</span>
-      </div>
-      <div class="summary-text">
-        {{ userArticle.article.summary }}
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <div class="action-buttons">
-        <div class="one-cell">
-          <button mat-button class="article-action" title="View" (click)="openMoreDialog(userArticle, false)">
-            <mat-icon fontIcon="mdi-eye" alt="View Media"></mat-icon> View
-          </button>
-        </div>
-        <div class="one-cell">
-          @if (!userArticle.isRead) {
-          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)"
-            [disabled]="!myTeamIsSelected()">
-            <mat-icon fontIcon="mdi-checkbox-blank-outline" alt="UserArticle Read"></mat-icon> Read
-          </button>
-          }
-          @if (userArticle.isRead) {
-          <button mat-button class="article-action" title="Read/Unread" (click)="toggleReadStatus(userArticle)"
-            [disabled]="!myTeamIsSelected()">
-            <mat-icon fontIcon="mdi-checkbox-marked-outline" alt="UserArticle Read"></mat-icon> Read
-          </button>
-          }
-        </div>
-        <div class="one-cell">
-          <button mat-button class="article-action" title="Share UserArticle" (click)="openShareDialog(userArticle)"
-            [disabled]="!myTeamIsSelected()">
-            <mat-icon fontIcon="mdi-share-variant" alt="Share UserArticle"></mat-icon> Share
-          </button>
-        </div>
-      </div>
-      <div class="action-buttons">
-        <div class="one-cell">
-          @if (userArticle.article.url) {
-          <button mat-button class="article-action" title="More Article Info"
-            (click)="openMoreDialog(userArticle, true)">
-            <mat-icon fontIcon="mdi-eye-plus" alt="View Media"></mat-icon> More
-          </button>
-          }
-        </div>
-        <div class="button-cell">
-          @if (userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)) {
-          <button mat-button class="article-action" (click)="addOrEditArticle(userArticle.article)"
-            style="outline: none;" title="Edit {{ userArticle.article.name }}" [disabled]="!myTeamIsSelected()">
-            <mat-icon fontIcon="mdi-square-edit-outline"></mat-icon> Edit
-          </button>
-          }
-        </div>
-        <div class="one-cell">
-          @if (userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)) {
-          <button mat-button class="article-action" (click)="deleteArticle(userArticle.article)" style="outline: none;"
-            title="Delete {{ userArticle.article.name }}" [disabled]="!myTeamIsSelected()">
-            <mat-icon fontIcon="mdi-trash-can-outline"></mat-icon> Delete
-          </button>
-          }
-        </div>
-      </div>
-    </mat-card-actions>
+      <p class="summary-text" [title]="userArticle.article.summary || ''">{{ userArticle.article.summary }}</p>
+    </div>
+    <div class="card-footer">
+      <button mat-button class="article-action" title="View article" (click)="openMoreDialog(userArticle, false)">
+        <mat-icon fontIcon="mdi-eye" alt="View Media"></mat-icon> View
+      </button>
+      @if (userArticle.article.url) {
+      <button mat-button class="article-action" title="More Article Info" (click)="openMoreDialog(userArticle, true)">
+        <mat-icon fontIcon="mdi-eye-plus" alt="View Media"></mat-icon> More
+      </button>
+      }
+      <button mat-button class="article-action" [title]="userArticle.isRead ? 'Mark as unread' : 'Mark as read'" (click)="toggleReadStatus(userArticle)"
+        [disabled]="!myTeamIsSelected()">
+        <mat-icon [fontIcon]="userArticle.isRead ? 'mdi-checkbox-marked-outline' : 'mdi-checkbox-blank-outline'"
+          alt="UserArticle Read"></mat-icon> Read
+      </button>
+      <button mat-button class="article-action" title="Share to other teams" (click)="openShareDialog(userArticle)"
+        [disabled]="!myTeamIsSelected()">
+        <mat-icon fontIcon="mdi-share-variant" alt="Share UserArticle"></mat-icon> Share
+      </button>
+      @if (userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)) {
+      <button mat-button class="article-action" (click)="addOrEditArticle(userArticle.article)"
+        style="outline: none;" title="Edit {{ userArticle.article.name }}" [disabled]="!myTeamIsSelected()">
+        <mat-icon fontIcon="mdi-square-edit-outline"></mat-icon> Edit
+      </button>
+      <button mat-button class="article-action" (click)="deleteArticle(userArticle.article)" style="outline: none;"
+        title="Delete {{ userArticle.article.name }}" [disabled]="!myTeamIsSelected()">
+        <mat-icon fontIcon="mdi-trash-can-outline"></mat-icon> Delete
+      </button>
+      }
+    </div>
   </mat-card>
   }
 </section>

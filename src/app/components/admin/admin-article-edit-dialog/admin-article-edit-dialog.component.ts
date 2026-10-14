@@ -277,9 +277,13 @@ export class AdminArticleEditDialogComponent implements OnInit {
     return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
   }
 
-  getTimezoneAbbr(): string {
+  // the abbreviation comes from the date being labeled, so a November date reads EST even in October
+  getTimezoneAbbr(value?: Date | string): string {
     try {
-      const date = new Date();
+      const date = value ? new Date(value) : new Date();
+      if (isNaN(date.getTime())) {
+        return 'UTC';
+      }
       const timeZone = this.getUserTimezone();
       const formatted = date.toLocaleTimeString('en-US', {
         timeZoneName: 'short',

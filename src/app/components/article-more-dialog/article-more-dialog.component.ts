@@ -21,7 +21,7 @@ export class ArticleMoreDialogComponent {
   editorConfig: AngularEditorConfig = {
     editable: false,
     height: 'auto',
-    minHeight: '1200px',
+    minHeight: '0',
     width: '100%',
     minWidth: '0',
     translate: 'yes',
