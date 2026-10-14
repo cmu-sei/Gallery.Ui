@@ -73,8 +73,10 @@ $card-width-min: 300px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: var(--mat-sys-surface-container-low);
-  color: var(--mat-sys-on-surface);
+  // the whole card takes the status color, as it always has; the colors are light, so the text is black in both themes
+  --mat-card-outlined-outline-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--item-status-color);
+  color: black;
 }
 
 .card-status {
@@ -83,8 +85,8 @@ $card-width-min: 300px;
   box-sizing: border-box;
   min-height: 30px;
   padding: 6px $inset;
-  color: black;
-  background-color: var(--item-status-color);
+  // a shade darker than the card so the strip still reads as its own band
+  background-color: color-mix(in srgb, var(--item-status-color), black 15%);
 }
 
 .card-body {
@@ -106,7 +108,7 @@ $card-width-min: 300px;
   --line-height: 1.45em;
   margin: 0;
   font-size: 14px;
-  color: var(--mat-sys-on-surface-variant);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .card-title,
@@ -127,7 +129,7 @@ $card-width-min: 300px;
   box-sizing: border-box;
   height: 66px;
   padding: 0 $inset;
-  border-top: 1px solid var(--mat-sys-outline-variant);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 // same place and style as the date on archive cards
@@ -138,7 +140,7 @@ $card-width-min: 300px;
   min-height: 18px;
   margin-bottom: 8px;
   font-size: 13px;
-  color: var(--mat-sys-on-surface-variant);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .card-unread {
@@ -148,19 +150,22 @@ $card-width-min: 300px;
   padding: 2px 10px;
   border-radius: 12px;
   font-weight: 600;
-  color: var(--mat-sys-on-primary);
-  background-color: var(--mat-sys-primary);
+  // the primary color would vanish on a red or orange card
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .card-empty {
   font-size: 14px;
   font-style: italic;
-  color: var(--mat-sys-on-surface-variant);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .details-button {
   flex-shrink: 0;
   margin-left: auto;
+  --mat-button-outlined-label-text-color: black;
+  --mat-button-outlined-outline-color: rgba(0, 0, 0, 0.5);
 }
 
 .mdi-18px {
