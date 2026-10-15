@@ -1,7 +1,15 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { describe, it, expect, vi, beforeEach, onTestFinished } from 'vitest';
+import {
+  afterEach,
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  onTestFinished,
+} from 'vitest';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -65,12 +73,40 @@ const USER_ARTICLES: UserArticle[] = [
   },
 ];
 
+function article(
+  id: string,
+  overrides: Partial<NonNullable<UserArticle['article']>>,
+  isRead = false,
+  posted = '2026-01-02T10:00:00Z',
+): UserArticle {
+  return {
+    id,
+    isRead,
+    actualDatePosted: new Date(posted),
+    article: {
+      id: `a-${id}`,
+      cardId: 'c1',
+      status: ItemStatus.Critical,
+      datePosted: new Date(posted),
+      ...overrides,
+    },
+  };
+}
+
+/** The wall card whose title is `name`. */
+function card(name: string): HTMLElement {
+  return screen
+    .getByRole('heading', { level: 2, name })
+    .closest('mat-card') as HTMLElement;
+}
+
 async function renderWall(
   overrides: {
     showAdminButton?: boolean;
     showAdvanceButton?: boolean;
     exhibit?: Exhibit;
     advance?: () => Observable<Exhibit>;
+    userArticles?: UserArticle[];
   } = {},
 ) {
   const exhibitApi = {
@@ -97,7 +133,9 @@ async function renderWall(
     configureTestBed: () => {
       TestBed.inject(CardStore).set(structuredClone(CARDS));
       TestBed.inject(TeamCardStore).set(structuredClone(TEAM_CARDS));
-      TestBed.inject(UserArticleStore).set(structuredClone(USER_ARTICLES));
+      TestBed.inject(UserArticleStore).set(
+        structuredClone(overrides.userArticles ?? USER_ARTICLES),
+      );
     },
   });
   const sections: string[] = [];
@@ -116,28 +154,196 @@ describe('WallComponent', () => {
     onTestFinished(() => title.remove());
   });
 
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   /**
    * Verifies: only cards the team shows on the wall render, with the latest article's status, the unread count, and "No articles posted" for a card without articles.
    * Interacts with: real CardQuery, TeamCardQuery and UserArticleQuery.
    * Data: c1 (one unread Critical article), c2 (no articles), c3 (not shown on the wall).
    */
   it('shows the wall cards with their article state', async () => {
-    const { container } = await renderWall();
+    await renderWall();
 
-    const titles = Array.from(container.querySelectorAll('mat-card-title')).map(
-      (t) => t.textContent?.trim(),
-    );
-    expect(titles).toEqual(['Power', 'Water']);
-    const [power, water] = Array.from(container.querySelectorAll('mat-card'));
+    expect(
+      screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent),
+    ).toEqual(['Power', 'Water']);
+    const power = card('Power');
+    const water = card('Water');
     expect(power).toHaveClass('critical-status');
     expect(
-      within(power as HTMLElement).getByText('1 unread article'),
+      within(power).getByRole('img', { name: 'Status: Critical' }),
     ).toBeInTheDocument();
+    expect(within(power).getByText('Grid status')).toBeInTheDocument();
     expect(
-      within(water as HTMLElement).getByText('No articles posted'),
+      within(power).getByTitle('1 unread article on this card'),
+    ).toHaveTextContent('1 unread');
+    expect(
+      within(power).getByRole('button', { name: 'Details' }),
     ).toBeInTheDocument();
-    expect(water).toHaveClass('notapplicable-status');
+    expect(within(water).getByText('No articles posted')).toBeInTheDocument();
+    expect(water).toHaveClass('unused-status');
+    expect(within(water).queryByRole('img')).not.toBeInTheDocument();
+    expect(
+      within(water).queryByRole('button', { name: 'Details' }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(water).queryByTitle('Simulated Date/Time'),
+    ).not.toBeInTheDocument();
+    expect(within(water).getByText('Utility status')).toBeInTheDocument();
   });
+
+  /**
+   * Verifies: each status of the card's latest article gives the card its status class and a status image named for the status, with that status's icon.
+   * Interacts with: statusClass and statusIcon through the rendered card.
+   * Data: c1's one article with the row's status.
+   */
+  it.each([
+    { status: ItemStatus.Open, icon: 'mdi-check-circle' },
+    { status: ItemStatus.Affected, icon: 'mdi-alert' },
+    { status: ItemStatus.Critical, icon: 'mdi-alert-octagon' },
+    { status: ItemStatus.Closed, icon: 'mdi-close-octagon' },
+  ])('shows the $status status with its icon', async ({ status, icon }) => {
+    await renderWall({ userArticles: [article('ua1', { status })] });
+
+    const power = card('Power');
+    expect(power).toHaveClass(`${status.toLowerCase()}-status`);
+    const image = within(power).getByRole('img', { name: `Status: ${status}` });
+    expect(image.querySelector('mat-icon')).toHaveAttribute(
+      'data-mat-icon-name',
+      icon,
+    );
+  });
+
+  /**
+   * Verifies: a card whose latest article is Unused gets the unused class and no status image, but still its date and Details.
+   * Interacts with: statusClass and statusIcon with ItemStatus.Unused.
+   * Data: c1's one article, Unused.
+   */
+  it('shows no status image for an Unused article', async () => {
+    await renderWall({
+      userArticles: [article('ua1', { status: ItemStatus.Unused })],
+    });
+
+    const power = card('Power');
+    expect(power).toHaveClass('unused-status');
+    expect(within(power).queryByRole('img')).not.toBeInTheDocument();
+    expect(within(power).getByTitle('Simulated Date/Time')).toBeInTheDocument();
+    expect(
+      within(power).getByRole('button', { name: 'Details' }),
+    ).toBeInTheDocument();
+  });
+
+  /**
+   * Verifies: a card whose latest article has no status gets no status class and no status image, but still its date and Details.
+   * Interacts with: statusClass and statusIcon with an undefined status.
+   * Data: c1's one article without a status.
+   */
+  it('shows no status for an article without one', async () => {
+    await renderWall({ userArticles: [article('ua1', { status: undefined })] });
+
+    const power = card('Power');
+    expect(
+      power.className.split(' ').filter((c) => c.endsWith('-status')),
+    ).toEqual([]);
+    expect(within(power).queryByRole('img')).not.toBeInTheDocument();
+    expect(within(power).getByTitle('Simulated Date/Time')).toBeInTheDocument();
+    expect(
+      within(power).getByRole('button', { name: 'Details' }),
+    ).toBeInTheDocument();
+  });
+
+  /**
+   * Verifies: the newest article (by actual post time) decides the card's status and date, and the unread count counts every unread article, in the plural.
+   * Interacts with: setShownCardList sorting by actualDatePosted.
+   * Data: c1 has an older unread Critical article, a newer unread Open article and a read one; TZ America/New_York.
+   */
+  it("takes the newest article's status and date and counts every unread one", async () => {
+    vi.stubEnv('TZ', 'America/New_York');
+    await renderWall({
+      userArticles: [
+        article(
+          'ua1',
+          { status: ItemStatus.Critical },
+          false,
+          '2026-01-02T10:00:00Z',
+        ),
+        article(
+          'ua2',
+          { status: ItemStatus.Open },
+          false,
+          '2026-01-03T10:00:00Z',
+        ),
+        article(
+          'ua3',
+          { status: ItemStatus.Closed },
+          true,
+          '2026-01-01T10:00:00Z',
+        ),
+      ],
+    });
+
+    const power = card('Power');
+    expect(power).toHaveClass('open-status');
+    expect(
+      within(power).getByRole('img', { name: 'Status: Open' }),
+    ).toBeInTheDocument();
+    expect(within(power).getByTitle('Simulated Date/Time')).toHaveTextContent(
+      '1/3/26, 5:00 AM EST',
+    );
+    expect(
+      within(power).getByTitle('2 unread articles on this card'),
+    ).toHaveTextContent('2 unread');
+  });
+
+  /**
+   * Verifies: a card whose articles are all read shows no unread count but keeps Details.
+   * Interacts with: the unread count in the card footer.
+   * Data: c1's one article, read.
+   */
+  it('shows no unread count when every article is read', async () => {
+    await renderWall({ userArticles: [article('ua1', {}, true)] });
+
+    const power = card('Power');
+    expect(within(power).queryByText(/unread/)).not.toBeInTheDocument();
+    expect(
+      within(power).getByRole('button', { name: 'Details' }),
+    ).toBeInTheDocument();
+  });
+
+  /**
+   * Verifies: the card date is labelled in the viewer's time zone with the zone abbreviation in effect on that date.
+   * Interacts with: the card date (toLocaleString with timeZoneName short).
+   * Data: c1's one article posted at the row's time; TZ set per row.
+   */
+  it.each([
+    {
+      tz: 'America/New_York',
+      date: '2026-01-02T10:00:00Z',
+      label: '1/2/26, 5:00 AM EST',
+    },
+    {
+      tz: 'America/New_York',
+      date: '2026-07-02T10:00:00Z',
+      label: '7/2/26, 6:00 AM EDT',
+    },
+    {
+      tz: 'America/Chicago',
+      date: '2026-01-02T10:00:00Z',
+      label: '1/2/26, 4:00 AM CST',
+    },
+  ])(
+    'labels the card date in the viewer zone ($label)',
+    async ({ tz, date, label }) => {
+      vi.stubEnv('TZ', tz);
+      await renderWall({ userArticles: [article('ua1', {}, false, date)] });
+
+      expect(
+        within(card('Power')).getByTitle('Simulated Date/Time'),
+      ).toHaveTextContent(label);
+    },
+  );
 
   /**
    * Verifies: Details on a card with articles asks for that card's archive section, and the Archive button for the whole archive.

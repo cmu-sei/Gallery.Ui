@@ -64,7 +64,7 @@ describe('ArticleMoreDialogComponent', () => {
   });
 
   /**
-   * Verifies: an article without a URL shows its description, and Cancel reports openNewTab false.
+   * Verifies: an article without a URL shows its description read-only with no reserved page height, and Cancel reports openNewTab false.
    * Interacts with: angular-editor, crucible-dialog (real), editComplete output; user-event.
    * Data: useUrl false.
    */
@@ -72,9 +72,11 @@ describe('ArticleMoreDialogComponent', () => {
     const { container, completions } = await renderMore(false);
 
     expect(container.querySelector('iframe')).toBeNull();
-    expect(
-      await screen.findByText('Power is out downtown.'),
-    ).toBeInTheDocument();
+    const text = await screen.findByText('Power is out downtown.');
+    // The read-only page grows with its text instead of reserving a tall page.
+    const page = text.closest('[contenteditable]') as HTMLElement;
+    expect(page).toHaveAttribute('contenteditable', 'false');
+    expect(page.style.minHeight).toBe('0px');
     await userEvent
       .setup()
       .click(screen.getByRole('button', { name: 'Cancel' }));

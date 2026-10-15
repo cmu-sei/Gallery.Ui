@@ -62,7 +62,7 @@ describe('ArticleComponent', () => {
   });
 
   /**
-   * Verifies: the article named in the route is loaded, made active, reported to xAPI, and its description rendered.
+   * Verifies: the article named in the route is loaded, made active, reported to xAPI, and its description rendered read-only with no reserved page height.
    * Interacts with: ArticleService.getArticle via the real ArticleDataService and ArticleQuery, XApiService.viewedArticle, angular-editor.
    * Data: route params articleId a1, exhibitId e1.
    */
@@ -76,9 +76,11 @@ describe('ArticleComponent', () => {
     expect(viewedArticle).toHaveBeenCalledWith('e1', 'a1');
     expect(TestBed.inject(ArticleQuery).getActiveId()).toBe('a1');
     expect(document.getElementById('appTitle')).toHaveTextContent('Article');
-    expect(
-      await screen.findByText('Power is out downtown.'),
-    ).toBeInTheDocument();
+    const text = await screen.findByText('Power is out downtown.');
+    // The read-only page grows with its text instead of reserving a tall page.
+    const page = text.closest('[contenteditable]') as HTMLElement;
+    expect(page).toHaveAttribute('contenteditable', 'false');
+    expect(page.style.minHeight).toBe('0px');
   });
 
   /**

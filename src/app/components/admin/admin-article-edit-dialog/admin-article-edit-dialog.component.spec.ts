@@ -1,7 +1,7 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { screen, within } from '@testing-library/angular';
@@ -90,6 +90,10 @@ function actions() {
 }
 
 describe('AdminArticleEditDialogComponent', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   /**
    * Verifies: an existing article opens as "Edit Article" with its fields filled, and Save reports the trimmed edits.
    * Interacts with: crucible-dialog (real), angular-editor, editComplete output; user-event.
@@ -156,4 +160,44 @@ describe('AdminArticleEditDialogComponent', () => {
 
     expect(completions).toEqual([{ saveChanges: false, article: null }]);
   });
+
+  /**
+   * Verifies: the posted date is shown in the viewer's zone, labelled with the zone abbreviation in effect on that date rather than today's, for a Date or an ISO string.
+   * Interacts with: getTimezoneAbbr(datePostedFormControl.value), the date pipe.
+   * Data: article a1 posted at the row's time; TZ set per row.
+   */
+  it.each([
+    {
+      tz: 'America/New_York',
+      posted: new Date('2026-01-02T10:00:00Z'),
+      label: '02 Jan 2026 05:00 EST',
+    },
+    {
+      tz: 'America/New_York',
+      posted: new Date('2026-07-02T10:00:00Z'),
+      label: '02 Jul 2026 06:00 EDT',
+    },
+    {
+      tz: 'America/New_York',
+      posted: '2026-11-20T17:00:00Z',
+      label: '20 Nov 2026 12:00 EST',
+    },
+    {
+      tz: 'Asia/Tokyo',
+      posted: new Date('2026-01-02T10:00:00Z'),
+      label: '02 Jan 2026 19:00 GMT+9',
+    },
+  ])(
+    'labels the posted date with the zone in effect on it ($label)',
+    async ({ tz, posted, label }) => {
+      vi.stubEnv('TZ', tz);
+
+      await renderArticleDialog({
+        ...structuredClone(ARTICLE),
+        datePosted: posted as Date,
+      });
+
+      expect(screen.getByText(label)).toBeInTheDocument();
+    },
+  );
 });
