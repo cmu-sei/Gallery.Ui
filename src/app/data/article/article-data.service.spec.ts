@@ -27,7 +27,7 @@ function makeArticle(overrides: Partial<Article> = {}): Article {
     cardId: 'k1',
     move: 0,
     inject: 0,
-    status: 'Open',
+    status: 'Green',
     sourceType: 'News',
     dateCreated: new Date('2026-01-01T00:00:00Z'),
     dateModified: new Date('2026-01-02T00:00:00Z'),
@@ -110,10 +110,10 @@ describe('ArticleQuery', () => {
     ]);
     const a2 = recordEmissions(query.selectById('a2'));
 
-    store.update('a2', { status: 'Critical' });
+    store.update('a2', { status: 'Orange' });
 
     expect(query.getAll().map((a) => a.id)).toEqual(['a1', 'a2']);
-    expect(a2.map((a) => a.status)).toEqual(['Open', 'Critical']);
+    expect(a2.map((a) => a.status)).toEqual(['Green', 'Orange']);
   });
 });
 
@@ -208,20 +208,20 @@ describe('ArticleDataService', () => {
   /**
    * Verifies: updateArticle() stores the server's version with parsed dates.
    * Interacts with: ArticleService.updateArticle, real ArticleQuery.
-   * Data: a1's status changed to Closed by the server.
+   * Data: a1's status changed to Red by the server.
    */
   it('updateArticle() stores the server response', () => {
-    const updateArticle = vi.fn(() => of(wireArticle({ status: 'Closed' })));
+    const updateArticle = vi.fn(() => of(wireArticle({ status: 'Red' })));
     const { service, store, query } = setup({ api: { updateArticle } });
     store.set([makeArticle()]);
 
-    service.updateArticle(makeArticle({ status: 'Affected' }));
+    service.updateArticle(makeArticle({ status: 'Yellow' }));
 
     expect(updateArticle).toHaveBeenCalledWith(
       'a1',
-      expect.objectContaining({ status: 'Affected' }),
+      expect.objectContaining({ status: 'Yellow' }),
     );
-    expect(query.getEntity('a1')?.status).toBe('Closed');
+    expect(query.getEntity('a1')?.status).toBe('Red');
     expect(query.getEntity('a1')?.dateModified).toBeInstanceOf(Date);
     expect(query.getValue().loading).toBe(false);
   });

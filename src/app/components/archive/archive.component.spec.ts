@@ -86,7 +86,7 @@ function userArticle(
       cardId: 'k1',
       move: 1,
       inject: 1,
-      status: ItemStatus.Open,
+      status: ItemStatus.Green,
       sourceType: SourceType.News,
       sourceName: 'Daily News',
       datePosted: new Date('2026-01-02T10:00:00Z'),
@@ -262,6 +262,24 @@ describe('ArchiveComponent', () => {
       .click(screen.getByRole('button', { name: 'Intel' }));
 
     expect(titles()).toEqual(['Article ua2']);
+  });
+
+  /**
+   * Verifies: the search matches the fields the archive shows, but not the article's status color, which it never displays.
+   * Interacts with: filterControl and sortChanged through the search box; user-event.
+   * Data: ua1 is Green from Daily News, ua2 is Intel from Blue.
+   */
+  it('searches the shown fields but not the status', async () => {
+    await renderArchive();
+    const user = userEvent.setup();
+    const search = screen.getByPlaceholderText('Search the Archive');
+
+    await user.type(search, 'daily');
+    expect(titles()).toEqual(['Article ua1']);
+
+    await user.clear(search);
+    await user.type(search, 'green');
+    expect(screen.queryAllByRole('heading', { level: 2 })).toEqual([]);
   });
 
   /**
@@ -566,7 +584,7 @@ describe('ArchiveComponent', () => {
         exhibitId: 'e1',
         move: 1,
         inject: 1,
-        status: ItemStatus.Unused,
+        status: ItemStatus.Gray,
         sourceType: SourceType.Reporting,
         sourceName: 'Blue',
         datePosted: expect.any(Date),

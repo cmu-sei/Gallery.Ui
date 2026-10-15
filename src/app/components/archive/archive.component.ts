@@ -217,14 +217,6 @@ export class ArchiveComponent implements OnDestroy {
     return name;
   }
 
-  getCardStatus(itemStatus: ItemStatus) {
-    if (itemStatus === ItemStatus.Gray) {
-      return 'Not Applicable';
-    }
-
-    return itemStatus.toString();
-  }
-
   changeCard(cardId: string) {
     this.cardId = cardId;
     this.sortChanged(this.sort);
@@ -257,9 +249,6 @@ export class ArchiveComponent implements OnDestroy {
                 .toLowerCase()
                 .includes(this.filterString.toLowerCase()) ||
               a.article.sourceName
-                .toLowerCase()
-                .includes(this.filterString.toLowerCase()) ||
-              a.article.status
                 .toLowerCase()
                 .includes(this.filterString.toLowerCase()))
         );

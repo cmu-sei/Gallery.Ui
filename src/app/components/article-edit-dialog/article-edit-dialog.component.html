@@ -95,7 +95,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
           @for (itemStatusOption of itemStatusList; track itemStatusOption) {
           <mat-option [value]="itemStatusOption">
-            <span class="item-status-swatch" [ngClass]="itemStatusOption.toLowerCase() + '-status'" aria-hidden="true"></span>
+            <span class="item-status-swatch" [ngClass]="statusClass(itemStatusOption)" aria-hidden="true"></span>
             {{ itemStatusOption }}
           </mat-option>
           }

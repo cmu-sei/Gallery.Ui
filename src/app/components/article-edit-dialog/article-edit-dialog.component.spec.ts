@@ -24,7 +24,7 @@ const ARTICLE: Article = {
   name: 'Outage',
   summary: 'Power is out',
   description: '<p>Downtown grid failure.</p>',
-  status: ItemStatus.Critical,
+  status: ItemStatus.Orange,
   sourceType: SourceType.News,
   sourceName: 'Daily News',
   move: 1,
