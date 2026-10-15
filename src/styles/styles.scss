@@ -216,3 +216,35 @@ mat-paginator {
 }
 
 /* end of FlexLayout replacements */
+
+/* item status colors, shared by the wall card strip and the status dropdown swatches */
+.gray-status {
+  --item-status-color: #b5b5b5;
+}
+
+.green-status {
+  --item-status-color: rgb(163, 235, 163);
+}
+
+.yellow-status {
+  --item-status-color: rgb(250, 235, 100);
+}
+
+.orange-status {
+  --item-status-color: rgb(250, 163, 2);
+}
+
+.red-status {
+  --item-status-color: #ff3333;
+}
+
+.item-status-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  border: 1px solid rgba(0, 0, 0, .4);
+  border-radius: 50%;
+  vertical-align: -1px;
+  background-color: var(--item-status-color);
+}

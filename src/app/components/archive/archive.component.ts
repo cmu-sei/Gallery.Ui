@@ -217,14 +217,6 @@ export class ArchiveComponent implements OnDestroy {
     return name;
   }
 
-  getCardStatus(itemStatus: ItemStatus) {
-    if (itemStatus === ItemStatus.Unused) {
-      return 'Not Applicable';
-    }
-
-    return itemStatus.toString();
-  }
-
   changeCard(cardId: string) {
     this.cardId = cardId;
     this.sortChanged(this.sort);
@@ -257,9 +249,6 @@ export class ArchiveComponent implements OnDestroy {
                 .toLowerCase()
                 .includes(this.filterString.toLowerCase()) ||
               a.article.sourceName
-                .toLowerCase()
-                .includes(this.filterString.toLowerCase()) ||
-              a.article.status
                 .toLowerCase()
                 .includes(this.filterString.toLowerCase()))
         );
@@ -459,7 +448,7 @@ export class ArchiveComponent implements OnDestroy {
         exhibitId: this.exhibitId,
         move: this.exhibit.currentMove,
         inject: this.exhibit.currentInject,
-        status: ItemStatus.Unused,
+        status: ItemStatus.Gray,
         sourceType: SourceType.Reporting,
         sourceName: this.teamDataService.getMyTeam().shortName,
         datePosted: datePosted,

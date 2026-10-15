@@ -34,13 +34,6 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   moveList: number[] = [];
   selectedCardId = '';
   sort: Sort = {active: 'move', direction: 'asc'};
-  itemStatusList: ItemStatus[] = [
-    ItemStatus.Unused,
-    ItemStatus.Affected,
-    ItemStatus.Closed,
-    ItemStatus.Critical,
-    ItemStatus.Open
-  ];
   sourceTypeList: SourceType[] = [
     SourceType.Intel,
     SourceType.News,
@@ -106,7 +99,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
       description: '',
       move: 0,
       inject: 0,
-      status: ItemStatus.Unused,
+      status: ItemStatus.Gray,
       sourceType: SourceType.Intel,
       sourceName: '',
       datePosted: datePosted

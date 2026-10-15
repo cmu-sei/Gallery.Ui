@@ -75,7 +75,7 @@ $card-width-min: 300px;
   overflow: hidden;
   // the whole card takes the status color, as it always has; the colors are light, so the text is black in both themes
   --mat-card-outlined-outline-color: rgba(0, 0, 0, 0.2);
-  background-color: var(--card-status-color);
+  background-color: var(--item-status-color);
   color: black;
 }
 
@@ -86,7 +86,7 @@ $card-width-min: 300px;
   min-height: 30px;
   padding: 6px $inset;
   // a shade darker than the card so the strip still reads as its own band
-  background-color: color-mix(in srgb, var(--card-status-color), black 15%);
+  background-color: color-mix(in srgb, var(--item-status-color), black 15%);
 }
 
 .card-body {
@@ -173,26 +173,6 @@ $card-width-min: 300px;
   height: 18px;
   font-size: 18px;
   line-height: 18px;
-}
-
-.closed-status {
-  --card-status-color: #ff3333;
-}
-
-.critical-status {
-  --card-status-color: rgb(250, 163, 2);
-}
-
-.affected-status {
-  --card-status-color: rgb(250, 235, 100);
-}
-
-.open-status {
-  --card-status-color: rgb(163, 235, 163);
-}
-
-.unused-status {
-  --card-status-color: #b5b5b5;
 }
 
 .center {

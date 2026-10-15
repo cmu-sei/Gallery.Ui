@@ -17,13 +17,13 @@
  */
 
 
-export type ItemStatus = 'Unused' | 'Closed' | 'Critical' | 'Affected' | 'Open';
+export type ItemStatus = 'Gray' | 'Red' | 'Orange' | 'Yellow' | 'Green';
 
 export const ItemStatus = {
-    Unused: 'Unused' as ItemStatus,
-    Closed: 'Closed' as ItemStatus,
-    Critical: 'Critical' as ItemStatus,
-    Affected: 'Affected' as ItemStatus,
-    Open: 'Open' as ItemStatus
+    Gray: 'Gray' as ItemStatus,
+    Red: 'Red' as ItemStatus,
+    Orange: 'Orange' as ItemStatus,
+    Yellow: 'Yellow' as ItemStatus,
+    Green: 'Green' as ItemStatus
 };
 
