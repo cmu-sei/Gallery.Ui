@@ -12,7 +12,8 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ItemStatus, SourceType } from 'src/app/generated/api';
+import { SourceType } from 'src/app/generated/api';
+import { ITEM_STATUS_ORDER, itemStatusClass } from 'src/app/utilities/item-status';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -118,13 +119,8 @@ export class ArticleEditDialogComponent {
   });
 
   public matcher = new UserErrorStateMatcher();
-  itemStatusList: ItemStatus[] = [
-    ItemStatus.Gray,
-    ItemStatus.Green,
-    ItemStatus.Yellow,
-    ItemStatus.Orange,
-    ItemStatus.Red,
-  ];
+  itemStatusList = ITEM_STATUS_ORDER;
+  statusClass = itemStatusClass;
   sourceTypeList: SourceType[] = [
     SourceType.Intel,
     SourceType.News,

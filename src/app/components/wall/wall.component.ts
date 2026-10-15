@@ -14,6 +14,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ComnSettingsService } from '@cmusei/crucible-common';
+import { itemStatusClass } from 'src/app/utilities/item-status';
 
 @Component({
   selector: 'app-wall',
@@ -74,9 +75,7 @@ export class WallComponent implements OnDestroy {
     this.sectionSelected.emit(cardId);
   }
 
-  statusClass(itemStatus: ItemStatus) {
-    return itemStatus ? itemStatus.toLowerCase() + '-status' : '';
-  }
+  statusClass = itemStatusClass;
 
   statusIcon(itemStatus: ItemStatus) {
     switch (itemStatus) {

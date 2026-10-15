@@ -67,7 +67,7 @@ const USER_ARTICLES: UserArticle[] = [
     article: {
       id: 'a1',
       cardId: 'c1',
-      status: ItemStatus.Critical,
+      status: ItemStatus.Orange,
       datePosted: new Date('2026-01-02T10:00:00Z'),
     },
   },
@@ -86,7 +86,7 @@ function article(
     article: {
       id: `a-${id}`,
       cardId: 'c1',
-      status: ItemStatus.Critical,
+      status: ItemStatus.Orange,
       datePosted: new Date(posted),
       ...overrides,
     },
@@ -161,7 +161,7 @@ describe('WallComponent', () => {
   /**
    * Verifies: only cards the team shows on the wall render, with the latest article's status, the unread count, and "No articles posted" for a card without articles.
    * Interacts with: real CardQuery, TeamCardQuery and UserArticleQuery.
-   * Data: c1 (one unread Critical article), c2 (no articles), c3 (not shown on the wall).
+   * Data: c1 (one unread Orange article), c2 (no articles), c3 (not shown on the wall).
    */
   it('shows the wall cards with their article state', async () => {
     await renderWall();
@@ -171,9 +171,9 @@ describe('WallComponent', () => {
     ).toEqual(['Power', 'Water']);
     const power = card('Power');
     const water = card('Water');
-    expect(power).toHaveClass('critical-status');
+    expect(power).toHaveClass('orange-status');
     expect(
-      within(power).getByRole('img', { name: 'Status: Critical' }),
+      within(power).getByRole('img', { name: 'Status: Orange' }),
     ).toBeInTheDocument();
     expect(within(power).getByText('Grid status')).toBeInTheDocument();
     expect(
@@ -183,7 +183,7 @@ describe('WallComponent', () => {
       within(power).getByRole('button', { name: 'Details' }),
     ).toBeInTheDocument();
     expect(within(water).getByText('No articles posted')).toBeInTheDocument();
-    expect(water).toHaveClass('unused-status');
+    expect(water).toHaveClass('gray-status');
     expect(within(water).queryByRole('img')).not.toBeInTheDocument();
     expect(
       within(water).queryByRole('button', { name: 'Details' }),
@@ -200,10 +200,10 @@ describe('WallComponent', () => {
    * Data: c1's one article with the row's status.
    */
   it.each([
-    { status: ItemStatus.Open, icon: 'mdi-check-circle' },
-    { status: ItemStatus.Affected, icon: 'mdi-alert' },
-    { status: ItemStatus.Critical, icon: 'mdi-alert-octagon' },
-    { status: ItemStatus.Closed, icon: 'mdi-close-octagon' },
+    { status: ItemStatus.Green, icon: 'mdi-check-circle' },
+    { status: ItemStatus.Yellow, icon: 'mdi-alert' },
+    { status: ItemStatus.Orange, icon: 'mdi-alert-octagon' },
+    { status: ItemStatus.Red, icon: 'mdi-close-octagon' },
   ])('shows the $status status with its icon', async ({ status, icon }) => {
     await renderWall({ userArticles: [article('ua1', { status })] });
 
@@ -217,17 +217,17 @@ describe('WallComponent', () => {
   });
 
   /**
-   * Verifies: a card whose latest article is Unused gets the unused class and no status image, but still its date and Details.
-   * Interacts with: statusClass and statusIcon with ItemStatus.Unused.
-   * Data: c1's one article, Unused.
+   * Verifies: a card whose latest article is Gray gets the gray class and no status image, but still its date and Details.
+   * Interacts with: statusClass and statusIcon with ItemStatus.Gray.
+   * Data: c1's one article, Gray.
    */
-  it('shows no status image for an Unused article', async () => {
+  it('shows no status image for a Gray article', async () => {
     await renderWall({
-      userArticles: [article('ua1', { status: ItemStatus.Unused })],
+      userArticles: [article('ua1', { status: ItemStatus.Gray })],
     });
 
     const power = card('Power');
-    expect(power).toHaveClass('unused-status');
+    expect(power).toHaveClass('gray-status');
     expect(within(power).queryByRole('img')).not.toBeInTheDocument();
     expect(within(power).getByTitle('Simulated Date/Time')).toBeInTheDocument();
     expect(
@@ -236,17 +236,20 @@ describe('WallComponent', () => {
   });
 
   /**
-   * Verifies: a card whose latest article has no status gets no status class and no status image, but still its date and Details.
-   * Interacts with: statusClass and statusIcon with an undefined status.
-   * Data: c1's one article without a status.
+   * Verifies: a card whose latest article has no status, or a status the UI doesn't know (such as a pre-rename name), falls back to the gray class and shows no status image, but still its date and Details.
+   * Interacts with: statusClass and statusIcon with a missing or unknown status.
+   * Data: c1's one article with the row's status.
    */
-  it('shows no status for an article without one', async () => {
-    await renderWall({ userArticles: [article('ua1', { status: undefined })] });
+  it.each([
+    { label: 'no status', status: undefined },
+    { label: 'an unknown status', status: 'Open' as ItemStatus },
+  ])('shows a gray card for an article with $label', async ({ status }) => {
+    await renderWall({ userArticles: [article('ua1', { status })] });
 
     const power = card('Power');
     expect(
       power.className.split(' ').filter((c) => c.endsWith('-status')),
-    ).toEqual([]);
+    ).toEqual(['gray-status']);
     expect(within(power).queryByRole('img')).not.toBeInTheDocument();
     expect(within(power).getByTitle('Simulated Date/Time')).toBeInTheDocument();
     expect(
@@ -257,7 +260,7 @@ describe('WallComponent', () => {
   /**
    * Verifies: the newest article (by actual post time) decides the card's status and date, and the unread count counts every unread article, in the plural.
    * Interacts with: setShownCardList sorting by actualDatePosted.
-   * Data: c1 has an older unread Critical article, a newer unread Open article and a read one; TZ America/New_York.
+   * Data: c1 has an older unread Orange article, a newer unread Green article and a read one; TZ America/New_York.
    */
   it("takes the newest article's status and date and counts every unread one", async () => {
     vi.stubEnv('TZ', 'America/New_York');
@@ -265,19 +268,19 @@ describe('WallComponent', () => {
       userArticles: [
         article(
           'ua1',
-          { status: ItemStatus.Critical },
+          { status: ItemStatus.Orange },
           false,
           '2026-01-02T10:00:00Z',
         ),
         article(
           'ua2',
-          { status: ItemStatus.Open },
+          { status: ItemStatus.Green },
           false,
           '2026-01-03T10:00:00Z',
         ),
         article(
           'ua3',
-          { status: ItemStatus.Closed },
+          { status: ItemStatus.Red },
           true,
           '2026-01-01T10:00:00Z',
         ),
@@ -285,9 +288,9 @@ describe('WallComponent', () => {
     });
 
     const power = card('Power');
-    expect(power).toHaveClass('open-status');
+    expect(power).toHaveClass('green-status');
     expect(
-      within(power).getByRole('img', { name: 'Status: Open' }),
+      within(power).getByRole('img', { name: 'Status: Green' }),
     ).toBeInTheDocument();
     expect(within(power).getByTitle('Simulated Date/Time')).toHaveTextContent(
       '1/3/26, 5:00 AM EST',
