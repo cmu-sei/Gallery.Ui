@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
@@ -20,7 +20,7 @@ import { MatInput } from '@angular/material/input';
 export class ArticleShareDialogComponent {
   data = inject(MAT_DIALOG_DATA);
 
-  @Output() editComplete = new EventEmitter<any>();
+  readonly editComplete = output<any>();
   shareTeamsControl = new UntypedFormControl();
   subjectFormControl = new UntypedFormControl(
     this.data.article.sourceName + ': ' + this.data.article.name

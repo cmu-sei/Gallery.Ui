@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -30,7 +30,7 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 export class AdminExhibitEditDialogComponent {
   data = inject(MAT_DIALOG_DATA);
 
-  @Output() editComplete = new EventEmitter<any>();
+  readonly editComplete = output<any>();
 
   public nameFormControl = new UntypedFormControl(this.data.exhibit.name, []);
   public descriptionFormControl = new UntypedFormControl(

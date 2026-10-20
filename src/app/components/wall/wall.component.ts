@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import { Component, EventEmitter, Input, Output, OnDestroy, DOCUMENT, inject, input } from '@angular/core';
+import { Component, Input, OnDestroy, DOCUMENT, inject, input, output } from '@angular/core';
 import { TeamCard, UserArticle, ItemStatus, Exhibit } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
@@ -40,8 +40,8 @@ export class WallComponent implements OnDestroy {
   readonly showAdminButton = input<boolean>(undefined);
   readonly showAdvanceButton = input<boolean>(undefined);
   @Input() exhibit: Exhibit;
-  @Output() changeTeam = new EventEmitter<string>();
-  @Output() sectionSelected = new EventEmitter<string>();
+  readonly changeTeam = output<string>();
+  readonly sectionSelected = output<string>();
   isLoading = false;
   isAdvancing = false;
   cardList: Card[] = [];

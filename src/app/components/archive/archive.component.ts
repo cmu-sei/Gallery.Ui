@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import { Component, EventEmitter, Output, OnDestroy, DOCUMENT, inject as inject_1, input } from '@angular/core';
+import { Component, OnDestroy, DOCUMENT, inject as inject_1, input, output } from '@angular/core';
 import {
   Article,
   Card,
@@ -72,8 +72,8 @@ export class ArchiveComponent implements OnDestroy {
   private snackBar = inject_1(MatSnackBar);
 
   readonly showAdminButton = input<boolean>(undefined);
-  @Output() changeTeam = new EventEmitter<string>();
-  @Output() sectionSelected = new EventEmitter<string>();
+  readonly changeTeam = output<string>();
+  readonly sectionSelected = output<string>();
   apiIsSick = false;
   apiMessage = 'The GALLERY API web service is not responding.';
   exhibitId = '';

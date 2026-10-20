@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the
 // project root for license information.
 
-import { Component, EventEmitter, OnInit, Output, inject as inject_1 } from '@angular/core';
+import { Component, OnInit, inject as inject_1, output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -41,7 +41,7 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 export class AdminArticleEditDialogComponent implements OnInit {
   data = inject_1(MAT_DIALOG_DATA);
 
-  @Output() editComplete = new EventEmitter<any>();
+  readonly editComplete = output<any>();
   showDescriptionError = false;
   editorConfig: AngularEditorConfig = {
     editable: true,

@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Directive, EventEmitter, Output, input } from '@angular/core';
+import { Directive, input, output } from '@angular/core';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -37,7 +37,7 @@ import { AdminUserListComponent } from './admin-user-list.component';
 @Directive({ selector: '[ngxClipboard]', standalone: false })
 class ClipboardStubDirective {
   readonly cbContent = input<string>(undefined);
-  @Output() cbOnSuccess = new EventEmitter<unknown>();
+  readonly cbOnSuccess = output<unknown>();
 }
 
 const USERS: User[] = [

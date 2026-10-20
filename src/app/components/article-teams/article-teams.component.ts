@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, Output, ViewChild, EventEmitter, inject, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
@@ -22,7 +22,7 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
   private teamQuery = inject(TeamQuery);
 
   readonly exhibitId = input<string>(undefined);
-  @Output() articleTeamsChange = new EventEmitter<Team[]>();
+  readonly articleTeamsChange = output<Team[]>();
   articleTeams: Team[] = [];
   exhibitTeams: Team[] = [];
   displayedTeamColumns: string[] = ['name', 'id'];

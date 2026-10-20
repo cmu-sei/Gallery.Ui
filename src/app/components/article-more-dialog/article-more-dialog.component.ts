@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
@@ -18,7 +18,7 @@ export class ArticleMoreDialogComponent {
   private sanitizer = inject(DomSanitizer);
   data = inject(MAT_DIALOG_DATA);
 
-  @Output() editComplete = new EventEmitter<any>();
+  readonly editComplete = output<any>();
   safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
     this.data.article.url
   );

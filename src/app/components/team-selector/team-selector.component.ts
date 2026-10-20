@@ -4,7 +4,7 @@
  project root for license information.
 */
 
-import { Component, EventEmitter, Input, Output, OnDestroy, inject } from '@angular/core';
+import { Component, Input, OnDestroy, inject, output } from '@angular/core';
 import { Team } from 'src/app/generated/api/model/models';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
@@ -22,7 +22,7 @@ export class TeamSelectorComponent implements OnDestroy {
   private teamDataService = inject(TeamDataService);
   private teamQuery = inject(TeamQuery);
 
-  @Output() changeTeam = new EventEmitter<string>();
+  readonly changeTeam = output<string>();
   teamList: Team[];
   selectedTeamId = '';
   private unsubscribe$ = new Subject();

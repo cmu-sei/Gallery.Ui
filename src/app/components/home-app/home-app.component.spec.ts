@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach, onTestFinished } from 'vitest';
-import { Component, EventEmitter, Output, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -56,7 +56,7 @@ class TopbarStubComponent {
   readonly title = input<string>(undefined);
   readonly topbarView = input<TopbarView>(undefined);
   readonly imageFilePath = input<string>(undefined);
-  @Output() urlNavigate = new EventEmitter<string>();
+  readonly urlNavigate = output<string>();
 }
 
 @Component({ selector: 'app-wall', template: '' })
@@ -64,15 +64,15 @@ class WallStubComponent {
   readonly showAdminButton = input<boolean>(undefined);
   readonly showAdvanceButton = input<boolean>(undefined);
   readonly exhibit = input<Exhibit>(undefined);
-  @Output() changeTeam = new EventEmitter<string>();
-  @Output() sectionSelected = new EventEmitter<string>();
+  readonly changeTeam = output<string>();
+  readonly sectionSelected = output<string>();
 }
 
 @Component({ selector: 'app-archive', template: '' })
 class ArchiveStubComponent {
   readonly showAdminButton = input<boolean>(undefined);
-  @Output() changeTeam = new EventEmitter<string>();
-  @Output() sectionSelected = new EventEmitter<string>();
+  readonly changeTeam = output<string>();
+  readonly sectionSelected = output<string>();
 }
 
 const EXHIBIT: Exhibit = {

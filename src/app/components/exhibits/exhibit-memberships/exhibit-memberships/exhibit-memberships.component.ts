@@ -3,7 +3,7 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, inject, input } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject, input, output } from '@angular/core';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
@@ -39,7 +39,7 @@ export class ExhibitMembershipsComponent implements OnInit {
 
   readonly embedded = input<boolean>(undefined);
   readonly exhibitId = input<string>(undefined);
-  @Output() goBack = new EventEmitter();
+  readonly goBack = output();
 
   exhibit$: Observable<Exhibit>;
 
