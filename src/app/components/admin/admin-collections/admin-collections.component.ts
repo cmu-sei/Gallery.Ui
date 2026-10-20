@@ -26,7 +26,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { MatIcon } from '@angular/material/icon';
-import { NgStyle, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatFormField, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatIconButton } from '@angular/material/button';
@@ -49,36 +49,35 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
         ]),
     ],
     imports: [
-        MatIcon,
-        NgStyle,
-        MatFormField,
-        MatInput,
-        FormsModule,
-        ReactiveFormsModule,
-        MatIconButton,
-        MatSuffix,
-        MatPaginator,
-        MatTable,
-        MatSort,
-        MatColumnDef,
-        MatHeaderCellDef,
-        MatHeaderCell,
-        MatCellDef,
-        MatCell,
-        MatSortHeader,
-        MatExpansionPanel,
-        MatExpansionPanelHeader,
-        AdminCardsComponent,
-        AdminArticlesComponent,
-        CollectionMembershipsComponent,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatRowDef,
-        MatRow,
-        MatCard,
-        MatProgressSpinner,
-        DatePipe,
-    ],
+    MatIcon,
+    MatFormField,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconButton,
+    MatSuffix,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatSortHeader,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    AdminCardsComponent,
+    AdminArticlesComponent,
+    CollectionMembershipsComponent,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatCard,
+    MatProgressSpinner,
+    DatePipe
+],
 })
 export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   collectionList: Collection[] = [];

@@ -40,7 +40,7 @@ import { PermissionDataService } from 'src/app/data/permission/permission-data.s
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
 import { MatIcon } from '@angular/material/icon';
-import { NgStyle, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
@@ -66,37 +66,36 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
         ]),
     ],
     imports: [
-        MatIcon,
-        NgStyle,
-        MatFormField,
-        MatLabel,
-        MatSelect,
-        MatOption,
-        MatPaginator,
-        MatTable,
-        MatSort,
-        MatColumnDef,
-        MatHeaderCellDef,
-        MatHeaderCell,
-        MatIconButton,
-        MatCellDef,
-        MatCell,
-        MatSortHeader,
-        MatExpansionPanel,
-        MatExpansionPanelHeader,
-        AdminTeamsComponent,
-        AdminTeamCardsComponent,
-        AdminExhibitArticlesComponent,
-        AdminObserversComponent,
-        ExhibitMembershipsComponent,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatRowDef,
-        MatRow,
-        MatCard,
-        MatProgressSpinner,
-        DatePipe,
-    ],
+    MatIcon,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatIconButton,
+    MatCellDef,
+    MatCell,
+    MatSortHeader,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    AdminTeamsComponent,
+    AdminTeamCardsComponent,
+    AdminExhibitArticlesComponent,
+    AdminObserversComponent,
+    ExhibitMembershipsComponent,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatCard,
+    MatProgressSpinner,
+    DatePipe
+],
 })
 export class AdminExhibitsComponent implements OnDestroy {
   @Input() userList: User[];
