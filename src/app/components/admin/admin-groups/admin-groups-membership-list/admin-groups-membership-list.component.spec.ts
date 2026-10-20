@@ -1,8 +1,8 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { describe, it, expect } from 'vitest';
-import { ClipboardModule } from 'ngx-clipboard';
+import { describe, it, expect, vi } from 'vitest';
+import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 import { Directive, input, output } from '@angular/core';
 import { screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -35,7 +35,10 @@ const USERS: User[] = [
   { id: 'u2', name: 'Bob' },
 ];
 
-async function renderList(canEdit: boolean) {
+async function renderList(
+  canEdit: boolean,
+  clipboard?: Partial<ClipboardService>,
+) {
   const rendered = await renderComponent(AdminGroupsMembershipListComponent, {
     imports: [
       MatButtonModule,
@@ -49,7 +52,15 @@ async function renderList(canEdit: boolean) {
       MatToolbarModule,
     ],
     componentInputs: { users: USERS, canEdit },
-    childStubs: [{ replace: ClipboardModule, with: ClipboardStubDirective }],
+    // With a ClipboardService stub, the component's real ClipboardModule runs;
+    // otherwise a stub directive stands in for it.
+    ...(clipboard
+      ? { providers: [{ provide: ClipboardService, useValue: clipboard }] }
+      : {
+          childStubs: [
+            { replace: ClipboardModule, with: ClipboardStubDirective },
+          ],
+        }),
   });
   const created: string[] = [];
   rendered.fixture.componentInstance.createMembership.subscribe((id) =>
@@ -88,15 +99,23 @@ describe('AdminGroupsMembershipListComponent', () => {
   });
 
   /**
-   * Verifies: the copy button copies the user id and confirms with a "Copied to clipboard" snackbar.
-   * Interacts with: the copy button; MatSnackBar via cbOnSuccess.
-   * Data: Alice and Bob (two rows); the clipboard stub reports success on click.
+   * Verifies: the copy button copies the user id through the component's own ngx-clipboard import and confirms with a "Copied to clipboard" snackbar. Fails if the component stops importing ClipboardModule.
+   * Interacts with: the real ClipboardDirective; a ClipboardService stub (jsdom has no clipboard); MatSnackBar via cbOnSuccess.
+   * Data: Alice and Bob (two rows); the stub reports a successful copy.
    */
-  it('copy button confirms with a snackbar', async () => {
-    await renderList(true);
+  it('copy button copies the id and confirms with a snackbar', async () => {
+    const copyFromContent = vi.fn(() => true);
+    await renderList(true, {
+      isSupported: true,
+      isTargetValid: () => false,
+      copyFromContent,
+      destroy: vi.fn(),
+      pushCopyResponse: vi.fn(),
+    });
 
     await userEvent.setup().click(screen.getByTitle('Copy: u1'));
 
+    expect(copyFromContent).toHaveBeenCalledWith('u1', undefined);
     expect(await screen.findByText('Copied to clipboard')).toBeInTheDocument();
   });
 });
