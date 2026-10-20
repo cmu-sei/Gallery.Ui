@@ -390,7 +390,7 @@ describe('ArticleDataService error paths', () => {
 
       expect(query.getValue().loading).toBe(true);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in app.module.ts:270), which shows it to the user.
+      // provided in main.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );
@@ -417,7 +417,7 @@ describe('ArticleDataService error paths', () => {
       expect(query.getCount()).toBe(1);
       expect(query.getValue().loading).toBe(false);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in app.module.ts:270), which shows it to the user.
+      // provided in main.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );

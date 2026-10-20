@@ -5,7 +5,6 @@ import { enableProdMode, provideZoneChangeDetection, ErrorHandler, importProvide
 import { platformBrowser, BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { enableAkitaProdMode, persistState } from '@datorama/akita';
 
-import { getBasePath } from './app/app.module';
 import { environment } from './environments/environment';
 import { SystemMessageService } from './app/services/system-message/system-message.service';
 import { UIDataService } from './app/data/ui/ui-data.service';
@@ -16,7 +15,8 @@ import { ErrorService } from './app/services/error/error.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { AppRoutingModule } from './app/app-routing.module';
+import { provideRouter } from '@angular/router';
+import { ROUTES } from './app/app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ApiModule as SwaggerCodegenApiModule } from './app/generated/api/api.module';
@@ -66,6 +66,10 @@ if (environment.production) {
   enableAkitaProdMode();
 }
 
+export function getBasePath(settingsSvc: ComnSettingsService) {
+  return settingsSvc.settings.ApiUrl;
+}
+
 export const storage = persistState({
   key: 'akita-cite-ui',
   include: ['auth.ui'],
@@ -73,7 +77,7 @@ export const storage = persistState({
 
 bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(environment.production ? [] : AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule, BrowserModule, AppRoutingModule, BrowserAnimationsModule, A11yModule, SwaggerCodegenApiModule, ...CRUCIBLE_DIALOG_IMPORTS, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatDialogModule, MatExpansionModule, MatGridListModule, MatIconModule, MatNativeDateModule, MatRippleModule, MatSidenavModule, MatSortModule, MatToolbarModule, MatStepperModule, MatBottomSheetModule, MatBadgeModule, CdkTableModule, MatTreeModule, CdkTreeModule, ComnAuthModule.forRoot(), ComnSettingsModule.forRoot(), ComnHeaderBarModule, AngularEditorModule, NgxMatDatetimepicker, NgxMatDatepickerToggle, NgxMatDatepickerInput, NgxMatDatepickerActions, NgxMatDatepickerApply, NgxMatDatepickerCancel, NgxMatDatepickerClear, MatFormFieldModule, MatLabel, MatSelect, MatPaginator, MatListModule, MatListItem, MatDivider, MatTabGroup, MatTab, MatOption, MatTable, MatMenuModule, MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatSelectModule, MatSlideToggleModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule),
+        importProvidersFrom(environment.production ? [] : AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule, BrowserModule, BrowserAnimationsModule, A11yModule, SwaggerCodegenApiModule, ...CRUCIBLE_DIALOG_IMPORTS, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatDialogModule, MatExpansionModule, MatGridListModule, MatIconModule, MatNativeDateModule, MatRippleModule, MatSidenavModule, MatSortModule, MatToolbarModule, MatStepperModule, MatBottomSheetModule, MatBadgeModule, CdkTableModule, MatTreeModule, CdkTreeModule, ComnAuthModule.forRoot(), ComnSettingsModule.forRoot(), ComnHeaderBarModule, AngularEditorModule, NgxMatDatetimepicker, NgxMatDatepickerToggle, NgxMatDatepickerInput, NgxMatDatepickerActions, NgxMatDatepickerApply, NgxMatDatepickerCancel, NgxMatDatepickerClear, MatFormFieldModule, MatLabel, MatSelect, MatPaginator, MatListModule, MatListItem, MatDivider, MatTabGroup, MatTab, MatOption, MatTable, MatMenuModule, MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatSelectModule, MatSlideToggleModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule),
         SystemMessageService,
         UIDataService,
         UserDataService,
@@ -86,6 +90,7 @@ bootstrapApplication(AppComponent, {
             provide: ErrorHandler,
             useClass: ErrorService,
         },
+        provideRouter(ROUTES),
         provideHttpClient(withInterceptorsFromDi()),
         provideCrucibleTheme({ brand: { color: '#008740', text: '#FFFFFF' } }),
     ]
