@@ -33,7 +33,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="toolbar-group filter-group">
       @for (sourceType of sourceTypeFilters; track sourceType) {
       <button mat-stroked-button class="filter-button" title="Filter on/off" (click)="filterBySourceType(sourceType)"
-        [ngClass]="{'active-button': sourceTypeList.indexOf(sourceType) > -1, 'inactive-button': sourceTypeList.indexOf(sourceType) < 0}">
+        [class]="{'active-button': sourceTypeList.indexOf(sourceType) > -1, 'inactive-button': sourceTypeList.indexOf(sourceType) < 0}">
         <mat-icon [fontIcon]="sourceIcon[sourceType]" class="mdi-18px"></mat-icon>
         {{ sourceType }}
       </button>
