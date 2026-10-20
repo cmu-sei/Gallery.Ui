@@ -33,7 +33,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <input matInput [formControl]="filterControl" placeholder="Search" />
     @if (filterControl.value) {
     <button matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter()">
-      <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
+      <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline" />
     </button>
     }
   </mat-form-field>
@@ -69,15 +69,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </div>
       </mat-expansion-panel-header>
       }
-      <app-admin-exhibit-article-teams [exhibitId]="exhibit().id" [articleId]="article.id" [canEdit]="canEdit()">
-      </app-admin-exhibit-article-teams>
+      <app-admin-exhibit-article-teams [exhibitId]="exhibit().id" [articleId]="article.id" [canEdit]="canEdit()" />
     </mat-expansion-panel>
     }
   </section>
 </mat-accordion>
 @if (isLoading) {
 <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
+  <mat-progress-spinner color="primary" mode="indeterminate" />
 </mat-card>
 }

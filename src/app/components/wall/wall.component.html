@@ -18,13 +18,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       }
     </div>
     <div class="toolbar-group">
-      <app-team-selector (changeTeam)="changeTeamRequest($event)"></app-team-selector>
+      <app-team-selector (changeTeam)="changeTeamRequest($event)" />
       <button mat-icon-button (click)="gotoArchive('archive')" style="outline: none;" title="Archive">
-        <mat-icon class="mdi-24px center-self" fontIcon="mdi-archive"></mat-icon>
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-archive" />
       </button>
       @if (showAdminButton()) {
       <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
-        <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog" />
       </button>
       }
     </div>
@@ -34,7 +34,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <mat-card appearance="outlined" [ngClass]="'card ' + statusClass(card.status)">
       @if (statusIcon(card.status)) {
       <div class="card-status" role="img" [attr.aria-label]="'Status: ' + card.status">
-        <mat-icon class="mdi-18px" [fontIcon]="statusIcon(card.status)" aria-hidden="true"></mat-icon>
+        <mat-icon class="mdi-18px" [fontIcon]="statusIcon(card.status)" aria-hidden="true" />
       </div>
       } @else {
       <!-- keeps titles level with the cards that do show a status -->
@@ -44,7 +44,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <h2 class="card-title" [title]="card.name">{{ card.name }}</h2>
         @if (card.datePosted.getFullYear() > 1970) {
         <div class="card-date" title="Simulated Date/Time">
-          <mat-icon class="mdi-18px" fontIcon="mdi-calendar-clock-outline"></mat-icon>
+          <mat-icon class="mdi-18px" fontIcon="mdi-calendar-clock-outline" />
           {{ card.datePosted.toLocaleString('en-US', {year: '2-digit', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'}) }}
         </div>
         } @else {

@@ -8,16 +8,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <span class="margin-auto">
       @if (sidenav && sidenav?.opened) {
       <button (click)="sidenavToggleFn()" mat-icon-button matTooltip="Close Sidebar">
-        <mat-icon class="menu-trigger" fontIcon="mdi-chevron-left"></mat-icon>
+        <mat-icon class="menu-trigger" fontIcon="mdi-chevron-left" />
       </button>
       }
       @if (sidenav && !sidenav?.opened) {
       <button (click)="sidenavToggleFn()" mat-icon-button matTooltip="Open Sidebar">
-        <mat-icon class="menu-trigger" fontIcon="mdi-chevron-right"></mat-icon>
+        <mat-icon class="menu-trigger" fontIcon="mdi-chevron-right" />
       </button>
       }
       <a mat-icon-button class="home-logo" aria-label="Gallery home" [routerLink]="['/']">
-        <mat-icon svgIcon="crucible-icon-gallery"></mat-icon>
+        <mat-icon svgIcon="crucible-icon-gallery" />
       </a>
     </span>
     <span class="view-text">{{ title().charAt(0).toUpperCase() + title().slice(1) }}</span>
@@ -27,7 +27,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     @if (teams.length > 1) {
     <div class="cssLayoutRowStartCenter">
       <button mat-button [matMenuTriggerFor]="teamMenu" style="outline: none;">
-        <mat-icon class="menu-trigger" fontIcon="mdi-chevron-down"></mat-icon>
+        <mat-icon class="menu-trigger" fontIcon="mdi-chevron-down" />
       </button>
       <mat-menu #teamMenu="matMenu" [overlapTrigger]="false">
         @for (val of teams; track val) {
@@ -44,7 +44,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="options-text">
       <button mat-button class="menu-trigger" [matMenuTriggerFor]="menu" style="outline: none;">
         <strong>{{ currentUser.name }}</strong>
-        <mat-icon class="menu-trigger" fontIcon="mdi-chevron-down"></mat-icon>
+        <mat-icon class="menu-trigger" fontIcon="mdi-chevron-down" />
       </button>
       <mat-menu #menu="matMenu" [overlapTrigger]="false">
         @if (topbarView() === TopbarView.GALLERY_ADMIN) {

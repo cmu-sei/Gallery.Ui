@@ -8,14 +8,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="toolbar-group search-group">
       @if (canAddArticles()) {
       <button mat-icon-button (click)="addOrEditArticle(null)" style="outline: none;" title="Add an Article">
-        <mat-icon class="mdi-24px" fontIcon="mdi-plus-circle"></mat-icon>
+        <mat-icon class="mdi-24px" fontIcon="mdi-plus-circle" />
       </button>
       }
       <mat-form-field class="search-field" subscriptSizing="dynamic">
         <input matInput placeholder="Search the Archive" [formControl]="filterControl" />
         @if (filterControl.value) {
         <button mat-icon-button matSuffix (click)="applyFilter('')" title="Clear Search">
-          <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
+          <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline" />
         </button>
         }
       </mat-form-field>
@@ -34,19 +34,19 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       @for (sourceType of sourceTypeFilters; track sourceType) {
       <button mat-stroked-button class="filter-button" title="Filter on/off" (click)="filterBySourceType(sourceType)"
         [class]="{'active-button': sourceTypeList.indexOf(sourceType) > -1, 'inactive-button': sourceTypeList.indexOf(sourceType) < 0}">
-        <mat-icon [fontIcon]="sourceIcon[sourceType]" class="mdi-18px"></mat-icon>
+        <mat-icon [fontIcon]="sourceIcon[sourceType]" class="mdi-18px" />
         {{ sourceType }}
       </button>
       }
     </div>
     <div class="toolbar-group nav-group">
-      <app-team-selector (changeTeam)="changeTeamRequest($event)"></app-team-selector>
+      <app-team-selector (changeTeam)="changeTeamRequest($event)" />
       <button mat-icon-button (click)="gotoWallSection()" style="outline: none;" title="Wall">
-        <mat-icon class="mdi-24px center-self" fontIcon="mdi-wall"></mat-icon>
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-wall" />
       </button>
       @if (showAdminButton()) {
       <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
-        <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog" />
       </button>
       }
     </div>
@@ -57,7 +57,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <mat-card appearance="outlined" class="card" [ngClass]="getIsReadClass(userArticle)">
     <div class="card-meta">
       <mat-icon class="mdi-18px source-icon" [fontIcon]="sourceIcon[userArticle.article.sourceType]"
-        [title]="userArticle.article.sourceType"></mat-icon>
+        [title]="userArticle.article.sourceType" />
       <span class="source-name" [title]="userArticle.article.sourceName || ''">{{ userArticle.article.sourceName }}</span>
       @if (!userArticle.isRead) {
       <!-- the filled row is the visible cue; this keeps it for screen readers -->
@@ -67,37 +67,37 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="card-body">
       <h2 class="article-title" [title]="userArticle.article.name">{{ userArticle.article.name }}</h2>
       <div class="article-date" title="Simulated Date/Time">
-        <mat-icon class="mdi-18px" fontIcon="mdi-calendar-clock-outline"></mat-icon>
+        <mat-icon class="mdi-18px" fontIcon="mdi-calendar-clock-outline" />
         {{ userArticle.article.datePosted.toLocaleString('en-US', {year: '2-digit', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'}) }}
       </div>
       <p class="summary-text" [title]="userArticle.article.summary || ''">{{ userArticle.article.summary }}</p>
     </div>
     <div class="card-footer">
       <button mat-button class="article-action" title="View article" (click)="openMoreDialog(userArticle, false)">
-        <mat-icon fontIcon="mdi-eye" alt="View Media"></mat-icon> View
+        <mat-icon fontIcon="mdi-eye" alt="View Media" /> View
       </button>
       @if (userArticle.article.url) {
       <button mat-button class="article-action" title="More Article Info" (click)="openMoreDialog(userArticle, true)">
-        <mat-icon fontIcon="mdi-eye-plus" alt="View Media"></mat-icon> More
+        <mat-icon fontIcon="mdi-eye-plus" alt="View Media" /> More
       </button>
       }
       <button mat-button class="article-action" [title]="userArticle.isRead ? 'Mark as unread' : 'Mark as read'" (click)="toggleReadStatus(userArticle)"
         [disabled]="!myTeamIsSelected()">
         <mat-icon [fontIcon]="userArticle.isRead ? 'mdi-checkbox-marked-outline' : 'mdi-checkbox-blank-outline'"
-          alt="UserArticle Read"></mat-icon> Read
+          alt="UserArticle Read" /> Read
       </button>
       <button mat-button class="article-action" title="Share to other teams" (click)="openShareDialog(userArticle)"
         [disabled]="!myTeamIsSelected()">
-        <mat-icon fontIcon="mdi-share-variant" alt="Share UserArticle"></mat-icon> Share
+        <mat-icon fontIcon="mdi-share-variant" alt="Share UserArticle" /> Share
       </button>
       @if (userArticle.article.exhibitId && sourceIsMe(userArticle.article.sourceName)) {
       <button mat-button class="article-action" (click)="addOrEditArticle(userArticle.article)"
         style="outline: none;" title="Edit {{ userArticle.article.name }}" [disabled]="!myTeamIsSelected()">
-        <mat-icon fontIcon="mdi-square-edit-outline"></mat-icon> Edit
+        <mat-icon fontIcon="mdi-square-edit-outline" /> Edit
       </button>
       <button mat-button class="article-action" (click)="deleteArticle(userArticle.article)" style="outline: none;"
         title="Delete {{ userArticle.article.name }}" [disabled]="!myTeamIsSelected()">
-        <mat-icon fontIcon="mdi-trash-can-outline"></mat-icon> Delete
+        <mat-icon fontIcon="mdi-trash-can-outline" /> Delete
       </button>
       }
     </div>
@@ -106,7 +106,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 </section>
 @if (isLoading) {
 <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
+  <mat-progress-spinner color="primary" mode="indeterminate" />
 </mat-card>
 }

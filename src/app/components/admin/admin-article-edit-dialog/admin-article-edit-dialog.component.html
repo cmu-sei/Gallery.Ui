@@ -54,7 +54,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </p>
       <div>
         <angular-editor [placeholder]="'Description'" [formControl]="descriptionFormControl" [config]="editorConfig"
-          (focus)="showDescriptionError = true" (blur)="saveArticle('description')"></angular-editor>
+          (focus)="showDescriptionError = true" (blur)="saveArticle('description')" />
         @if (descriptionFormControl.hasError('required')) {
         <mat-error>
           Description is <strong>required</strong>
@@ -68,7 +68,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-form-field>
         <mat-label>Card</mat-label>
         <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
-          <mat-option></mat-option>
+          <mat-option />
           @if (data.cardList) {
             @for (card of data.cardList; track card.id) {
             <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
@@ -167,8 +167,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <span (click)="picker.open()" style="cursor: pointer;">
           {{datePostedFormControl.value | date: 'dd MMM yyyy HH:mm'}} {{ getTimezoneAbbr(datePostedFormControl.value) }}
         </span>
-        <mat-datepicker-toggle matSuffix title="Choose Date/Time" [for]="$any(picker)">
-        </mat-datepicker-toggle>
+        <mat-datepicker-toggle matSuffix title="Choose Date/Time" [for]="$any(picker)" />
         <ngx-mat-datetime-picker #picker [showSpinners]=true [showSeconds]=false [stepHour]=1 [stepMinute]=5
           [stepSecond]=1 [touchUi]=false [enableMeridian]=true [disableMinute]=false [hideTime]=false [color]="'warn'">
           <ngx-mat-datepicker-actions>

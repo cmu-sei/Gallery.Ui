@@ -33,13 +33,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <input matInput [formControl]="filterControl" placeholder="Search" />
     @if (filterControl.value) {
     <button matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter()">
-      <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+      <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
     </button>
     }
   </mat-form-field>
   <div class="paginator">
     <mat-paginator #paginator [length]="filteredArticleList?.length" [pageIndex]="pageIndex" [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]" (page)="paginatorEvent($event)"></mat-paginator>
+      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]" (page)="paginatorEvent($event)" />
   </div>
 </div>
 
@@ -49,7 +49,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div class="header-cell button-cell">
       <button mat-icon-button (click)="addOrEditArticle(null); $event.stopPropagation()"
         style="outline: none; margin-left: 20px;" title="Add an Article" [disabled]="!canEdit">
-        <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
+        <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle" />
       </button>
     </div>
     <div class="header-cell three-cell" mat-sort-header="cardId">Card</div>
@@ -65,11 +65,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div class="cell button-cell">
           <button mat-icon-button (click)="addOrEditArticle(article)" style="outline: none;"
             title="Edit {{ article.name }}" [disabled]="!canEdit">
-            <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
+            <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline" />
           </button>
           <button mat-icon-button (click)="deleteArticle(article)" style="outline: none;"
             title="Delete {{ article.name }}" [disabled]="!canEdit">
-            <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
+            <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can-outline" />
           </button>
         </div>
         <div class="cell three-cell center-self pad-top-bottom">
@@ -93,7 +93,6 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 @if (isLoading) {
 <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
+  <mat-progress-spinner color="primary" mode="indeterminate" />
 </mat-card>
 }

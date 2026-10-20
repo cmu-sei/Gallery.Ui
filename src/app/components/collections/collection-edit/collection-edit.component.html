@@ -9,15 +9,14 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     >
     <div class="add-margin">
       <div>
-        <app-tasks
-          [taskList]="taskList"
+        <app-tasks [taskList]="taskList"
           [collectionId]="collection.id"
           [isEditable]="true"
           [isExecutable]="false"
           [isLoading]="tasksAreLoading"
           (taskListChanged)="refreshTaskList()"
           (deleteTaskRequested)="deleteTask($event)"
-        ></app-tasks>
+         />
       </div>
     </div>
   </span>

@@ -7,7 +7,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="exhibit-teams-list-container mat-elevation-z8">
     <mat-toolbar class="background">
       <mat-toolbar-row>
-        <mat-icon class="mdi-24px" fontIcon="mdi-account-multiple"></mat-icon>
+        <mat-icon class="mdi-24px" fontIcon="mdi-account-multiple" />
         <p>Exhibit Teams</p>
       </mat-toolbar-row>
       <mat-toolbar-row>
@@ -16,11 +16,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <input matInput [(ngModel)]="exhibitTeamFilterString" (keyup)="applyExhibitTeamFilter($event)" #exhibitTeamInput autocomplete="off" />
           @if (exhibitTeamFilterString) {
           <button matSuffix mat-icon-button aria-label="Clear" (click)="clearExhibitTeamFilter()">
-            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
           </button>
           }
         </mat-form-field>
-        <mat-paginator #exhibitTeamPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+        <mat-paginator #exhibitTeamPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons />
       </mat-toolbar-row>
     </mat-toolbar>
 
@@ -41,13 +41,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <div class="push-right">
             <button mat-icon-button (click)="addTeamToArticle(element.id)" style="outline: none;"
               title="Add {{ element.name }}" [disabled]="!canEdit()">
-              <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline"></mat-icon>
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline" />
             </button>
           </div>
         </mat-cell>
       </ng-container>
 
-      <mat-row *matRowDef="let row; columns: displayedTeamColumns"></mat-row>
+      <mat-row *matRowDef="let row; columns: displayedTeamColumns" />
     </mat-table>
 
     @if (exhibitTeamDataSource.filteredData.length === 0) {
@@ -58,7 +58,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="exhibit-article-teams-list-container mat-elevation-z8">
     <mat-toolbar class="background">
       <mat-toolbar-row>
-        <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
+        <mat-icon class="mdi-24px" fontIcon="mdi-account-group" />
         <p>Article Teams</p>
       </mat-toolbar-row>
       <mat-toolbar-row>
@@ -67,11 +67,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <input matInput [(ngModel)]="articleTeamFilterString" (keyup)="applyArticleTeamFilter($event)" #articleTeamInput autocomplete="off" />
           @if (articleTeamFilterString) {
           <button matSuffix mat-icon-button aria-label="Clear" (click)="clearArticleTeamFilter()">
-            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
           </button>
           }
         </mat-form-field>
-        <mat-paginator #articleTeamPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+        <mat-paginator #articleTeamPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons />
       </mat-toolbar-row>
     </mat-toolbar>
 
@@ -92,13 +92,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <div class="push-right">
             <button mat-icon-button (click)="removeTeamFromArticle(element.id)" style="outline: none;"
               title="Remove {{ element.name }}" [disabled]="!canEdit()">
-              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline" />
             </button>
           </div>
         </mat-cell>
       </ng-container>
 
-      <mat-row *matRowDef="let row; columns: displayedTeamColumns"></mat-row>
+      <mat-row *matRowDef="let row; columns: displayedTeamColumns" />
     </mat-table>
 
     @if (articleTeamDataSource.filteredData.length === 0) {
