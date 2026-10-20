@@ -10,7 +10,7 @@ import { SystemMessageService } from './app/services/system-message/system-messa
 import { UIDataService } from './app/data/ui/ui-data.service';
 import { UserDataService } from './app/data/user/user-data.service';
 import { BASE_PATH } from './app/generated/api';
-import { ComnSettingsService, provideCrucibleTheme, CRUCIBLE_DIALOG_IMPORTS, ComnAuthModule, ComnSettingsModule, ComnHeaderBarModule } from '@cmusei/crucible-common';
+import { ComnSettingsService, provideCrucibleTheme, ComnAuthModule, ComnSettingsModule, ComnHeaderBarModule } from '@cmusei/crucible-common';
 import { ErrorService } from './app/services/error/error.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
@@ -26,7 +26,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatNativeDateModule, MatRippleModule, MatOption } from '@angular/material/core';
+import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -37,13 +37,12 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { MatTreeModule } from '@angular/material/tree';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { NgxMatDatetimepicker, NgxMatDatepickerToggle, NgxMatDatepickerInput, NgxMatDatepickerActions, NgxMatDatepickerApply, NgxMatDatepickerCancel, NgxMatDatepickerClear } from '@ngxmc/datetime-picker';
-import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
-import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatListModule, MatListItem, MatDivider } from '@angular/material/list';
-import { MatTabGroup, MatTab, MatTabsModule } from '@angular/material/tabs';
-import { MatTable, MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatListModule } from '@angular/material/list';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -77,7 +76,7 @@ export const storage = persistState({
 
 bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(environment.production ? [] : AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule, BrowserModule, BrowserAnimationsModule, A11yModule, SwaggerCodegenApiModule, ...CRUCIBLE_DIALOG_IMPORTS, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatDialogModule, MatExpansionModule, MatGridListModule, MatIconModule, MatNativeDateModule, MatRippleModule, MatSidenavModule, MatSortModule, MatToolbarModule, MatStepperModule, MatBottomSheetModule, MatBadgeModule, CdkTableModule, MatTreeModule, CdkTreeModule, ComnAuthModule.forRoot(), ComnSettingsModule.forRoot(), ComnHeaderBarModule, AngularEditorModule, NgxMatDatetimepicker, NgxMatDatepickerToggle, NgxMatDatepickerInput, NgxMatDatepickerActions, NgxMatDatepickerApply, NgxMatDatepickerCancel, NgxMatDatepickerClear, MatFormFieldModule, MatLabel, MatSelect, MatPaginator, MatListModule, MatListItem, MatDivider, MatTabGroup, MatTab, MatOption, MatTable, MatMenuModule, MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatSelectModule, MatSlideToggleModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule),
+        importProvidersFrom(environment.production ? [] : AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule, BrowserModule, BrowserAnimationsModule, A11yModule, SwaggerCodegenApiModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatDialogModule, MatExpansionModule, MatGridListModule, MatIconModule, MatNativeDateModule, MatRippleModule, MatSidenavModule, MatSortModule, MatToolbarModule, MatStepperModule, MatBottomSheetModule, MatBadgeModule, CdkTableModule, MatTreeModule, CdkTreeModule, ComnAuthModule.forRoot(), ComnSettingsModule.forRoot(), ComnHeaderBarModule, AngularEditorModule, MatFormFieldModule, MatListModule, MatMenuModule, MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatSelectModule, MatSlideToggleModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule),
         SystemMessageService,
         UIDataService,
         UserDataService,
