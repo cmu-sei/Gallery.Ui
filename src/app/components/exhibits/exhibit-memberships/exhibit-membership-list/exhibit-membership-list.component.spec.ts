@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect } from 'vitest';
+import { ClipboardModule } from 'ngx-clipboard';
 import { Directive, input, output } from '@angular/core';
 import { screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -18,10 +19,9 @@ import { ExhibitMembership, Group, User } from 'src/app/generated/api';
 import { renderComponent } from 'src/app/test-utils/render-component';
 import { ExhibitMembershipListComponent } from './exhibit-membership-list.component';
 
-// Stands in for ngx-clipboard's directive on the copy button. AppModule does
-// not import ClipboardModule; same case as 'logs NG0303 for the copy button
-// clipboard binding' in admin-groups-membership-list.component.spec.ts.
-@Directive({ selector: '[ngxClipboard]', standalone: false })
+// Stands in for ngx-clipboard's directive on the copy button, so the tests
+// do not touch the real clipboard.
+@Directive({ selector: '[ngxClipboard]' })
 class ClipboardStubDirective {
   readonly cbContent = input<string>(undefined);
   readonly cbOnSuccess = output<unknown>();
@@ -43,7 +43,7 @@ async function renderList(canEdit: boolean) {
       MatTableModule,
       MatToolbarModule,
     ],
-    declarations: [ExhibitMembershipListComponent, ClipboardStubDirective],
+    childStubs: [{ replace: ClipboardModule, with: ClipboardStubDirective }],
     componentInputs: { users: USERS, groups: GROUPS, canEdit },
   });
   const created: ExhibitMembership[] = [];

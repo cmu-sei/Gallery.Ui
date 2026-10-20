@@ -15,12 +15,13 @@ import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @Component({
     selector: 'app-admin-groups-membership-list',
     templateUrl: './admin-groups-membership-list.component.html',
     styleUrls: ['./admin-groups-membership-list.component.scss'],
-    imports: [MatToolbar, MatToolbarRow, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatIcon, MatPaginator, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
+    imports: [MatToolbar, MatToolbarRow, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatIcon, MatPaginator, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, ClipboardModule]
 })
 export class AdminGroupsMembershipListComponent
   implements OnInit, OnChanges, AfterViewInit

@@ -20,6 +20,7 @@ import { MatOption } from '@angular/material/autocomplete';
 import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AsyncPipe } from '@angular/common';
+import { ClipboardModule } from 'ngx-clipboard';
 
 export interface Action {
   Value: string;
@@ -30,7 +31,7 @@ export interface Action {
     selector: 'app-admin-user-list',
     templateUrl: './admin-user-list.component.html',
     styleUrls: ['./admin-user-list.component.scss'],
-    imports: [MatIcon, MatFormField, MatInput, FormsModule, MatIconButton, MatSuffix, MatPaginator, MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatSelect, MatOption, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatCard, MatProgressSpinner, AsyncPipe]
+    imports: [MatIcon, MatFormField, MatInput, FormsModule, MatIconButton, MatSuffix, MatPaginator, MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatSelect, MatOption, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatCard, MatProgressSpinner, AsyncPipe, ClipboardModule]
 })
 export class AdminUserListComponent implements OnInit, OnChanges {
   private crucibleDialog = inject(CrucibleDialogService);
