@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, ViewChild, AfterViewInit, inject } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Sort, MatSortable, MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -30,6 +30,12 @@ import { MatCheckbox } from '@angular/material/checkbox';
     imports: [MatToolbar, MatToolbarRow, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatPaginator, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatCard, MatProgressSpinner, MatCheckbox]
 })
 export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit {
+  private teamQuery = inject(TeamQuery);
+  private teamUserDataService = inject(TeamUserDataService);
+  private teamUserQuery = inject(TeamUserQuery);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+
   @Input() teamId: string;
   @Input() canEdit: boolean;
   userList: User[] = [];
@@ -52,13 +58,7 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
   @ViewChild('userPaginator') userPaginator: MatPaginator;
   @ViewChild('teamUserPaginator') teamUserPaginator: MatPaginator;
 
-  constructor(
-    private teamQuery: TeamQuery,
-    private teamUserDataService: TeamUserDataService,
-    private teamUserQuery: TeamUserQuery,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery
-  ) {
+  constructor() {
     this.userQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))

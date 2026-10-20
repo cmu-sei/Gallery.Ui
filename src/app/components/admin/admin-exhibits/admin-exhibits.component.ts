@@ -8,13 +8,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import {
-  Component,
-  Input,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -98,6 +92,18 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 ],
 })
 export class AdminExhibitsComponent implements OnDestroy {
+  private settingsService = inject(ComnSettingsService);
+  private dialog = inject(MatDialog);
+  private crucibleDialog = inject(CrucibleDialogService);
+  private cardDataService = inject(CardDataService);
+  private collectionDataService = inject(CollectionDataService);
+  private collectionQuery = inject(CollectionQuery);
+  private exhibitDataService = inject(ExhibitDataService);
+  private exhibitQuery = inject(ExhibitQuery);
+  private permissionDataService = inject(PermissionDataService);
+  private teamDataService = inject(TeamDataService);
+  private teamUserDataService = inject(TeamUserDataService);
+
   @Input() userList: User[];
   canCreate = false;
   teamList: Team[];
@@ -126,19 +132,7 @@ export class AdminExhibitsComponent implements OnDestroy {
     }
   }
 
-  constructor(
-    private settingsService: ComnSettingsService,
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private cardDataService: CardDataService,
-    private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery,
-    private exhibitDataService: ExhibitDataService,
-    private exhibitQuery: ExhibitQuery,
-    private permissionDataService: PermissionDataService,
-    private teamDataService: TeamDataService,
-    private teamUserDataService: TeamUserDataService
-  ) {
+  constructor() {
     this.dataSource.filterPredicate = (exhibit: Exhibit, filter: string) =>
       !filter ||
       exhibit.createdBy?.toLowerCase().includes(filter) ||

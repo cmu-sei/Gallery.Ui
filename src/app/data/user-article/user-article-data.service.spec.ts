@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Injector, runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
@@ -130,7 +131,10 @@ describe('UserArticleQuery', () => {
    */
   it('tracks a user article by id', () => {
     const store = new UserArticleStore();
-    const query = new UserArticleQuery(store);
+    const injector = Injector.create({
+      providers: [{ provide: UserArticleStore, useValue: store }],
+    });
+    const query = runInInjectionContext(injector, () => new UserArticleQuery());
     store.set([makeUserArticle()]);
     const seen = recordEmissions(query.selectById('ua1'));
 

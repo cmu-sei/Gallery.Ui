@@ -1,15 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { ComnAuthQuery, ComnAuthService, Theme } from '@cmusei/crucible-common';
 import { CurrentUserState } from 'src/app/data/user/user.store';
 import { Observable, Subject } from 'rxjs';
@@ -35,6 +27,12 @@ import { AsyncPipe } from '@angular/common';
     imports: [MatToolbar, MatToolbarRow, MatIconButton, MatTooltip, MatIcon, RouterLink, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatSlideToggle, AsyncPipe]
 })
 export class TopbarComponent implements OnInit, OnDestroy {
+  private authService = inject(ComnAuthService);
+  private currentUserQuery = inject(CurrentUserQuery);
+  private authQuery = inject(ComnAuthQuery);
+  private uiDataService = inject(UIDataService);
+  private permissionDataService = inject(PermissionDataService);
+
   @Input() title?: string;
   @Input() sidenav?;
   @Input() teams?;
@@ -52,14 +50,6 @@ export class TopbarComponent implements OnInit, OnDestroy {
   unsubscribe$: Subject<null> = new Subject<null>();
   TopbarView = TopbarView;
   canViewAdmin = false;
-
-  constructor(
-    private authService: ComnAuthService,
-    private currentUserQuery: CurrentUserQuery,
-    private authQuery: ComnAuthQuery,
-    private uiDataService: UIDataService,
-    private permissionDataService: PermissionDataService
-  ) {}
 
   ngOnInit() {
     this.permissionDataService

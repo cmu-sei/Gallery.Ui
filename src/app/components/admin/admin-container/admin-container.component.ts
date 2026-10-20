@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, DOCUMENT, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map, tap, take, takeUntil } from 'rxjs/operators';
@@ -45,6 +45,23 @@ import { AdminGroupsComponent } from '../admin-groups/admin-groups.component';
     imports: [MatSidenavContainer, MatSidenav, MatToolbar, MatIcon, MatList, MatListItem, NgClass, MatListItemIcon, MatIconButton, MatSidenavContent, TopbarComponent, AdminCollectionsComponent, AdminExhibitsComponent, AdminUsersComponent, AdminRolesComponent, AdminGroupsComponent, AsyncPipe]
 })
 export class AdminContainerComponent implements OnDestroy, OnInit {
+  private _document = inject<HTMLDocument>(DOCUMENT);
+  private router = inject(Router);
+  private signalRService = inject(SignalRService);
+  private collectionDataService = inject(CollectionDataService);
+  private collectionQuery = inject(CollectionQuery);
+  private exhibitDataService = inject(ExhibitDataService);
+  private exhibitQuery = inject(ExhibitQuery);
+  private authService = inject(ComnAuthService);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+  private healthCheckService = inject(HealthCheckService);
+  private settingsService = inject(ComnSettingsService);
+  private authQuery = inject(ComnAuthQuery);
+  private currentUserQuery = inject(CurrentUserQuery);
+  private permissionDataService = inject(PermissionDataService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
   titleText = 'GALLERY';
   displayedSection = '';
   isSidebarOpen = true;
@@ -72,25 +89,9 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   showSection$: Observable<string>;
   originalExhibitId: string;
 
-  constructor(
-    @Inject(DOCUMENT) private _document: HTMLDocument,
-    private router: Router,
-    private signalRService: SignalRService,
-    private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery,
-    private exhibitDataService: ExhibitDataService,
-    private exhibitQuery: ExhibitQuery,
-    private authService: ComnAuthService,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery,
-    activatedRoute: ActivatedRoute,
-    private healthCheckService: HealthCheckService,
-    private settingsService: ComnSettingsService,
-    private authQuery: ComnAuthQuery,
-    private currentUserQuery: CurrentUserQuery,
-    private permissionDataService: PermissionDataService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {
+  constructor() {
+    const activatedRoute = inject(ActivatedRoute);
+
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Admin';

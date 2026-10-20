@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject as inject_1 } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Team, TeamCard } from 'src/app/generated/api/model/models';
@@ -33,6 +33,14 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [MatFormField, MatLabel, MatSelect, FormsModule, MatOption, MatInput, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, MatCard, MatProgressSpinner]
 })
 export class AdminTeamCardsComponent implements OnInit, OnDestroy {
+  private settingsService = inject_1(ComnSettingsService);
+  private dialog = inject_1(MatDialog);
+  private cardDataService = inject_1(CardDataService);
+  private cardQuery = inject_1(CardQuery);
+  private teamQuery = inject_1(TeamQuery);
+  private teamCardDataService = inject_1(TeamCardDataService);
+  private teamCardQuery = inject_1(TeamCardQuery);
+
   @Input() teamList: Team[];
   @Input() collectionId: string;
   @Input() exhibitId: string;
@@ -58,15 +66,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   isLoading = false;
   private unsubscribe$ = new Subject();
 
-  constructor(
-    private settingsService: ComnSettingsService,
-    private dialog: MatDialog,
-    private cardDataService: CardDataService,
-    private cardQuery: CardQuery,
-    private teamQuery: TeamQuery,
-    private teamCardDataService: TeamCardDataService,
-    private teamCardQuery: TeamCardQuery
-  ) {
+  constructor() {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;

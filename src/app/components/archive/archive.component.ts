@@ -2,15 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  Output,
-  OnDestroy,
-  DOCUMENT
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnDestroy, DOCUMENT, inject as inject_1 } from '@angular/core';
 import {
   Article,
   Card,
@@ -61,6 +53,24 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, ReactiveFormsModule, MatSuffix, MatSelect, MatOption, MatButton, NgClass, TeamSelectorComponent, MatCard, MatProgressSpinner]
 })
 export class ArchiveComponent implements OnDestroy {
+  private _document = inject_1<HTMLDocument>(DOCUMENT);
+  private dialog = inject_1(MatDialog);
+  private crucibleDialog = inject_1(CrucibleDialogService);
+  private articleDataService = inject_1(ArticleDataService);
+  private userArticleQuery = inject_1(UserArticleQuery);
+  private userArticleDataService = inject_1(UserArticleDataService);
+  private cardQuery = inject_1(CardQuery);
+  private exhibitQuery = inject_1(ExhibitQuery);
+  private teamDataService = inject_1(TeamDataService);
+  private teamService = inject_1(TeamService);
+  private teamQuery = inject_1(TeamQuery);
+  private teamCardQuery = inject_1(TeamCardQuery);
+  private uiDataService = inject_1(UIDataService);
+  private router = inject_1(Router);
+  private settingsService = inject_1(ComnSettingsService);
+  private xApiService = inject_1(XApiService);
+  private snackBar = inject_1(MatSnackBar);
+
   @Input() showAdminButton: boolean;
   @Output() changeTeam = new EventEmitter<string>();
   @Output() sectionSelected = new EventEmitter<string>();
@@ -103,25 +113,7 @@ export class ArchiveComponent implements OnDestroy {
     height: '200px',
   };
 
-  constructor(
-    @Inject(DOCUMENT) private _document: HTMLDocument,
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private articleDataService: ArticleDataService,
-    private userArticleQuery: UserArticleQuery,
-    private userArticleDataService: UserArticleDataService,
-    private cardQuery: CardQuery,
-    private exhibitQuery: ExhibitQuery,
-    private teamDataService: TeamDataService,
-    private teamService: TeamService,
-    private teamQuery: TeamQuery,
-    private teamCardQuery: TeamCardQuery,
-    private uiDataService: UIDataService,
-    private router: Router,
-    private settingsService: ComnSettingsService,
-    private xApiService: XApiService,
-    private snackBar: MatSnackBar
-  ) {
+  constructor() {
     this._document.getElementById('appTitle').innerHTML =
       this.settingsService.settings.AppTitle + ' Archive';
     // subscribe to userArticles

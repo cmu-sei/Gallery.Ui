@@ -7,7 +7,7 @@ import {
   CardState,
   CardStore,
 } from './card.store';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @QueryConfig({
@@ -18,8 +18,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CardQuery extends QueryEntity<CardState> {
-  constructor(protected store: CardStore) {
+  protected store: CardStore;
+
+  constructor() {
+    const store = inject(CardStore);
+
     super(store);
+  
+    this.store = store;
   }
 
   selectById(id: string): Observable<Card> {

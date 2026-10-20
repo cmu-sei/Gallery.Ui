@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject as inject_1 } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Article, Exhibit, ItemStatus, SourceType, Team} from 'src/app/generated/api/model/models';
@@ -31,6 +31,12 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [MatFormField, MatLabel, MatSelect, MatOption, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, AdminExhibitArticleTeamsComponent, MatCard, MatProgressSpinner]
 })
 export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
+  private crucibleDialog = inject_1(CrucibleDialogService);
+  private articleDataService = inject_1(ArticleDataService);
+  private articleQuery = inject_1(ArticleQuery);
+  private articleTeamDataService = inject_1(ArticleTeamDataService);
+  private cardQuery = inject_1(CardQuery);
+
   @Input() exhibit: Exhibit;
   @Input() teamList: Team[];
   @Input() canEdit: boolean;
@@ -55,13 +61,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   ];
   private unsubscribe$ = new Subject();
 
-  constructor(
-    private crucibleDialog: CrucibleDialogService,
-    private articleDataService: ArticleDataService,
-    private articleQuery: ArticleQuery,
-    private articleTeamDataService: ArticleTeamDataService,
-    private cardQuery: CardQuery
-  ) {
+  constructor() {
     this.articleDataService.unload();
     this.sortChanged(this.sort);
     this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {

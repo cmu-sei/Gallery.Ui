@@ -4,7 +4,7 @@
 import { Order, Query, QueryConfig, QueryEntity } from '@datorama/akita';
 import { UserArticleState, UserArticleStore } from './user-article.store';
 import { UserArticle } from 'src/app/generated/api';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 
@@ -16,8 +16,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UserArticleQuery extends QueryEntity<UserArticleState> {
-  constructor(protected store: UserArticleStore) {
+  protected store: UserArticleStore;
+
+  constructor() {
+    const store = inject(UserArticleStore);
+
     super(store);
+  
+    this.store = store;
   }
 
   selectById(id: string): Observable<UserArticle> {

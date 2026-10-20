@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -27,6 +27,8 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
     imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError]
 })
 export class AdminCardEditDialogComponent {
+  data = inject(MAT_DIALOG_DATA);
+
   @Output() editComplete = new EventEmitter<any>();
 
   public cardNameFormControl = new UntypedFormControl(this.data.card.name, [
@@ -40,10 +42,6 @@ export class AdminCardEditDialogComponent {
     name: this.cardNameFormControl,
     description: this.cardDescriptionFormControl,
   });
-
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
 
   errorFree() {
     return !(

@@ -4,7 +4,7 @@
 import { Order, Query, QueryConfig, QueryEntity } from '@datorama/akita';
 import { TeamCardState, TeamCardStore } from './team-card.store';
 import { TeamCard } from 'src/app/generated/api';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 
@@ -16,8 +16,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class TeamCardQuery extends QueryEntity<TeamCardState> {
-  constructor(protected store: TeamCardStore) {
+  protected store: TeamCardStore;
+
+  constructor() {
+    const store = inject(TeamCardStore);
+
     super(store);
+  
+    this.store = store;
   }
 
   selectById(id: string): Observable<TeamCard> {

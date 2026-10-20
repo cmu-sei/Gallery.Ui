@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Injector, runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, Subject, throwError } from 'rxjs';
@@ -81,7 +82,10 @@ describe('TeamQuery', () => {
    */
   it('sorts by name and tracks a team by id', () => {
     const store = new TeamStore();
-    const query = new TeamQuery(store);
+    const injector = Injector.create({
+      providers: [{ provide: TeamStore, useValue: store }],
+    });
+    const query = runInInjectionContext(injector, () => new TeamQuery());
     store.set([
       makeTeam({ id: 't2', name: 'Red Team' }),
       makeTeam({ id: 't1', name: 'Blue Team' }),

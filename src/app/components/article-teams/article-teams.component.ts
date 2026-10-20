@@ -1,15 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  Input,
-  Output,
-  ViewChild,
-  EventEmitter,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, ViewChild, EventEmitter, inject } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
@@ -27,6 +19,8 @@ import { MatIcon } from '@angular/material/icon';
     imports: [MatTable, MatSort, MatColumnDef, MatCellDef, MatCell, MatIconButton, MatIcon, MatRowDef, MatRow]
 })
 export class ArticleTeamsComponent implements OnDestroy, OnInit {
+  private teamQuery = inject(TeamQuery);
+
   @Input() exhibitId: string;
   @Output() articleTeamsChange = new EventEmitter<Team[]>();
   articleTeams: Team[] = [];
@@ -40,8 +34,6 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
   private unsubscribe$ = new Subject();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-
-  constructor(private teamQuery: TeamQuery) {}
 
   ngOnInit() {
     this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });

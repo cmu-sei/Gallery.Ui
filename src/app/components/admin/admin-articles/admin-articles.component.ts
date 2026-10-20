@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject as inject_1 } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
@@ -40,6 +40,16 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [MatFormField, MatLabel, MatSelect, MatOption, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatPaginator, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, MatCard, MatProgressSpinner]
 })
 export class AdminArticlesComponent implements OnDestroy, OnInit {
+  private dialog = inject_1(MatDialog);
+  private crucibleDialog = inject_1(CrucibleDialogService);
+  private settingsService = inject_1(ComnSettingsService);
+  private articleDataService = inject_1(ArticleDataService);
+  private articleQuery = inject_1(ArticleQuery);
+  private cardDataService = inject_1(CardDataService);
+  private cardQuery = inject_1(CardQuery);
+  private collectionDataService = inject_1(CollectionDataService);
+  private permissionDataService = inject_1(PermissionDataService);
+
   @Input() selectedCollectionId: string;
   canEdit = false;
   pageSize = 10;
@@ -65,17 +75,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
   sort: Sort = { active: 'datePosted', direction: 'desc' };
   private unsubscribe$ = new Subject();
 
-  constructor(
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private settingsService: ComnSettingsService,
-    private articleDataService: ArticleDataService,
-    private articleQuery: ArticleQuery,
-    private cardDataService: CardDataService,
-    private cardQuery: CardQuery,
-    private collectionDataService: CollectionDataService,
-    private permissionDataService: PermissionDataService
-  ) {
+  constructor() {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;

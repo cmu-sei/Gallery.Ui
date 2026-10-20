@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-import { Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, ViewChild, inject } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -29,6 +29,12 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [MatToolbar, MatToolbarRow, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatPaginator, MatCard, MatProgressSpinner, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class AdminObserversComponent implements OnDestroy, OnInit {
+  private teamQuery = inject(TeamQuery);
+  private teamUserDataService = inject(TeamUserDataService);
+  private teamUserQuery = inject(TeamUserQuery);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+
   @Input() exhibitId: string;
   @Input() canEdit: boolean;
   userList: User[] = [];
@@ -45,13 +51,7 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   @ViewChild('observerPaginator', { static: true }) observerPaginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(
-    private teamQuery: TeamQuery,
-    private teamUserDataService: TeamUserDataService,
-    private teamUserQuery: TeamUserQuery,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery
-  ) {
+  constructor() {
     this.userQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))

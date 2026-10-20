@@ -3,15 +3,7 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
@@ -37,6 +29,15 @@ import { AsyncPipe } from '@angular/common';
     imports: [CollectionMembershipListComponent, CollectionMemberListComponent, AsyncPipe]
 })
 export class CollectionMembershipsComponent implements OnInit, OnChanges {
+  private collectionQuery = inject(CollectionQuery);
+  private collectionMembershipDataService = inject(CollectionMembershipDataService);
+  private collectionRolesDataService = inject(CollectionRoleDataService);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+  private groupDataService = inject(GroupDataService);
+  private permissionDataService = inject(PermissionDataService);
+  private activatedRoute = inject(ActivatedRoute);
+
   @Input() embedded: boolean;
   @Input() collectionId: string;
   @Output() goBack = new EventEmitter();
@@ -55,17 +56,6 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
   groupMembers$ = this.selectGroups(true);
 
   canEdit$: Observable<boolean>;
-
-  constructor(
-    private collectionQuery: CollectionQuery,
-    private collectionMembershipDataService: CollectionMembershipDataService,
-    private collectionRolesDataService: CollectionRoleDataService,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery,
-    private groupDataService: GroupDataService,
-    private permissionDataService: PermissionDataService,
-    private activatedRoute: ActivatedRoute
-  ) {}
 
   ngOnInit(): void {
     forkJoin([

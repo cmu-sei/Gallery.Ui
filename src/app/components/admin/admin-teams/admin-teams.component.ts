@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Team, User } from 'src/app/generated/api';
@@ -31,6 +31,14 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [MatAccordion, MatSort, MatIconButton, MatIcon, MatSortHeader, MatFormField, MatInput, FormsModule, ReactiveFormsModule, MatSuffix, MatExpansionPanel, MatExpansionPanelHeader, AdminTeamUsersComponent, MatCard, MatProgressSpinner]
 })
 export class AdminTeamsComponent implements OnInit, OnDestroy {
+  private settingsService = inject(ComnSettingsService);
+  private dialog = inject(MatDialog);
+  private crucibleDialog = inject(CrucibleDialogService);
+  private teamDataService = inject(TeamDataService);
+  private teamQuery = inject(TeamQuery);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+
   @Input() exhibitId: string;
   @Input() canEdit: boolean;
   filterControl: UntypedFormControl = new UntypedFormControl();
@@ -51,15 +59,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
   sortedTeams: Team[] = [];
   private unsubscribe$ = new Subject();
 
-  constructor(
-    private settingsService: ComnSettingsService,
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private teamDataService: TeamDataService,
-    private teamQuery: TeamQuery,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery
-  ) {
+  constructor() {
     this.teamQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))

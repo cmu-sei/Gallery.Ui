@@ -8,7 +8,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef, inject } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -80,6 +80,13 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 ],
 })
 export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
+  private settingsService = inject(ComnSettingsService);
+  private dialog = inject(MatDialog);
+  private crucibleDialog = inject(CrucibleDialogService);
+  private collectionDataService = inject(CollectionDataService);
+  private collectionQuery = inject(CollectionQuery);
+  private permissionDataService = inject(PermissionDataService);
+
   collectionList: Collection[] = [];
   isLoading = false;
   editCollection: Collection = {};
@@ -95,14 +102,7 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatSort) matSort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(
-    private settingsService: ComnSettingsService,
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery,
-    private permissionDataService: PermissionDataService
-  ) {
+  constructor() {
     this.dataSource.filterPredicate = (collection: Collection, filter: string) =>
       !filter ||
       collection.name?.toLowerCase().includes(filter) ||

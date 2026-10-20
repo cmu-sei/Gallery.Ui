@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject as inject_1 } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
@@ -29,6 +29,13 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatPaginator, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, MatCard, MatProgressSpinner]
 })
 export class AdminCardsComponent implements OnDestroy, OnInit {
+  private settingsService = inject_1(ComnSettingsService);
+  private dialog = inject_1(MatDialog);
+  private crucibleDialog = inject_1(CrucibleDialogService);
+  private cardDataService = inject_1(CardDataService);
+  private cardQuery = inject_1(CardQuery);
+  private permissionDataService = inject_1(PermissionDataService);
+
   @Input() selectedCollectionId: string;
   canEdit = false;
   pageSize = 10;
@@ -47,14 +54,7 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
   sort: Sort = { active: 'datePosted', direction: 'desc' };
   private unsubscribe$ = new Subject();
 
-  constructor(
-    private settingsService: ComnSettingsService,
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private cardDataService: CardDataService,
-    private cardQuery: CardQuery,
-    private permissionDataService: PermissionDataService
-  ) {
+  constructor() {
     this.cardQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))

@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject as inject_1 } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -32,6 +32,9 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
     imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatSelect, FormsModule, ReactiveFormsModule, MatOption, MatTooltip, MatInput, MatCheckbox]
 })
 export class AdminTeamCardEditDialogComponent {
+  systemMessage = inject_1(SystemMessageService);
+  data = inject_1(MAT_DIALOG_DATA);
+
   @Output() editComplete = new EventEmitter<any>();
 
   public teamIdFormControl = new UntypedFormControl(
@@ -66,10 +69,9 @@ export class AdminTeamCardEditDialogComponent {
   private allTeamsWasChecked = false;
   ALL_TEAMS = 'All Teams';
 
-  constructor(
-    public systemMessage: SystemMessageService,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
+  constructor() {
+    const data = this.data;
+
     data.teamList.forEach((team) => {
       this.teamIdList.push(team.id);
     });

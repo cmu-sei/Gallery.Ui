@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, AfterViewInit, Input, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, Input, ViewChild, inject } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
@@ -25,6 +25,9 @@ import { MatIconButton } from '@angular/material/button';
     imports: [MatToolbar, MatToolbarRow, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatPaginator, MatTable, MatSort, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow]
 })
 export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, AfterViewInit {
+  private teamQuery = inject(TeamQuery);
+  private articleTeamDataService = inject(ArticleTeamDataService);
+
   @Input() exhibitId: string;
   @Input() articleId: string;
   @Input() canEdit: boolean;
@@ -43,11 +46,6 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild('exhibitTeamPaginator', { static: false }) exhibitTeamPaginator: MatPaginator;
   @ViewChild('articleTeamPaginator', { static: false }) articleTeamPaginator: MatPaginator;
-
-  constructor(
-    private teamQuery: TeamQuery,
-    private articleTeamDataService: ArticleTeamDataService
-  ) {}
 
   ngOnInit() {
     this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });

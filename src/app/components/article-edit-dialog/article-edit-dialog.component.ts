@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the
 // project root for license information.
 
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject as inject_1 } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -36,6 +36,8 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
     imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError, AngularEditorModule, MatCheckbox, MatSelect, MatOption, MatTooltip, NgClass]
 })
 export class ArticleEditDialogComponent {
+  data = inject_1(MAT_DIALOG_DATA);
+
   @Output() editComplete = new EventEmitter<any>();
   editorConfig: AngularEditorConfig = {
     editable: true,
@@ -133,10 +135,6 @@ export class ArticleEditDialogComponent {
     SourceType.Orders,
   ];
   teamIdList: string[] = [];
-
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
 
   editorStyle = {
     'min-height': '100px',

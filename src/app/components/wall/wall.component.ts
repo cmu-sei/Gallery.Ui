@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import { Component, EventEmitter, Inject, Input, Output, OnDestroy, DOCUMENT } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnDestroy, DOCUMENT, inject } from '@angular/core';
 import { TeamCard, UserArticle, ItemStatus, Exhibit } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
@@ -28,6 +28,15 @@ import { NgClass } from '@angular/common';
     imports: [MatButton, TeamSelectorComponent, MatIconButton, MatIcon, MatCard, NgClass]
 })
 export class WallComponent implements OnDestroy {
+  private _document = inject<HTMLDocument>(DOCUMENT);
+  private cardQuery = inject(CardQuery);
+  private teamCardQuery = inject(TeamCardQuery);
+  private userArticleQuery = inject(UserArticleQuery);
+  private exhibitDataService = inject(ExhibitDataService);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+  private settingsService = inject(ComnSettingsService);
+
   @Input() showAdminButton: boolean;
   @Input() showAdvanceButton: boolean;
   @Input() exhibit: Exhibit;
@@ -41,16 +50,7 @@ export class WallComponent implements OnDestroy {
   userArticleList: UserArticle[] = [];
   private unsubscribe$ = new Subject();
 
-  constructor(
-    @Inject(DOCUMENT) private _document: HTMLDocument,
-    private cardQuery: CardQuery,
-    private teamCardQuery: TeamCardQuery,
-    private userArticleQuery: UserArticleQuery,
-    private exhibitDataService: ExhibitDataService,
-    private snackBar: MatSnackBar,
-    private router: Router,
-    private settingsService: ComnSettingsService
-  ) {
+  constructor() {
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Wall';
     this.cardQuery.selectAll()
       .pipe(takeUntil(this.unsubscribe$))

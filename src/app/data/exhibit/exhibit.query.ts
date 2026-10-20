@@ -4,7 +4,7 @@
 import { Order, Query, QueryConfig, QueryEntity } from '@datorama/akita';
 import { ExhibitState, ExhibitStore } from './exhibit.store';
 import { Exhibit } from 'src/app/generated/api';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 
@@ -16,8 +16,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ExhibitQuery extends QueryEntity<ExhibitState> {
-  constructor(protected store: ExhibitStore) {
+  protected store: ExhibitStore;
+
+  constructor() {
+    const store = inject(ExhibitStore);
+
     super(store);
+  
+    this.store = store;
   }
 
   selectById(id: string): Observable<Exhibit> {

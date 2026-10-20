@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import { Component, Inject, OnDestroy, OnInit, ViewChild, DOCUMENT } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, DOCUMENT, inject } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -63,6 +63,29 @@ import { DatePipe } from '@angular/common';
     imports: [TopbarComponent, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatProgressSpinner, MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, MatSuffix, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, RouterLink, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, WallComponent, ArchiveComponent, DatePipe]
 })
 export class HomeAppComponent implements OnDestroy, OnInit {
+  private _document = inject<HTMLDocument>(DOCUMENT);
+  private authService = inject(ComnAuthService);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+  private currentUserQuery = inject(CurrentUserQuery);
+  private permissionDataService = inject(PermissionDataService);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+  private settingsService = inject(ComnSettingsService);
+  private authQuery = inject(ComnAuthQuery);
+  private signalRService = inject(SignalRService);
+  private userArticleDataService = inject(UserArticleDataService);
+  private cardDataService = inject(CardDataService);
+  private exhibitDataService = inject(ExhibitDataService);
+  private exhibitQuery = inject(ExhibitQuery);
+  private teamDataService = inject(TeamDataService);
+  private teamQuery = inject(TeamQuery);
+  private teamCardDataService = inject(TeamCardDataService);
+  private collectionDataService = inject(CollectionDataService);
+  private collectionQuery = inject(CollectionQuery);
+  private uiDataService = inject(UIDataService);
+  private xApiService = inject(XApiService);
+
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild(MatSort) set sort(sort: MatSort) {
     if (sort) {
@@ -117,30 +140,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     return this.permissionDataService.canManageExhibit(this.exhibitId);
   }
 
-  constructor(
-    @Inject(DOCUMENT) private _document: HTMLDocument,
-    private authService: ComnAuthService,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery,
-    private currentUserQuery: CurrentUserQuery,
-    private permissionDataService: PermissionDataService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private settingsService: ComnSettingsService,
-    private authQuery: ComnAuthQuery,
-    private signalRService: SignalRService,
-    private userArticleDataService: UserArticleDataService,
-    private cardDataService: CardDataService,
-    private exhibitDataService: ExhibitDataService,
-    private exhibitQuery: ExhibitQuery,
-    private teamDataService: TeamDataService,
-    private teamQuery: TeamQuery,
-    private teamCardDataService: TeamCardDataService,
-    private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery,
-    private uiDataService: UIDataService,
-    private xApiService: XApiService
-  ) {
+  constructor() {
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
     // Set the display settings from config file

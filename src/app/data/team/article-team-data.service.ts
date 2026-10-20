@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { TeamArticleService } from 'src/app/generated/api/api/api';
@@ -11,13 +11,11 @@ import { TeamArticle } from 'src/app/generated/api/model/models';
   providedIn: 'root',
 })
 export class ArticleTeamDataService implements OnDestroy {
+  private teamArticleService = inject(TeamArticleService);
+
   private _teamArticles: TeamArticle[] = [];
   readonly teamArticles = new BehaviorSubject<TeamArticle[]>(this._teamArticles);
   unsubscribe$: Subject<null> = new Subject<null>();
-
-  constructor(
-    private teamArticleService: TeamArticleService
-  ) {}
 
   private updateTeamArticles(teamArticles: TeamArticle[]) {
     this._teamArticles = Object.assign([], teamArticles);

@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
@@ -18,6 +18,8 @@ import { MatInput } from '@angular/material/input';
     imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatSelect, FormsModule, ReactiveFormsModule, MatOption, MatInput, AngularEditorModule, MatError]
 })
 export class ArticleShareDialogComponent {
+  data = inject(MAT_DIALOG_DATA);
+
   @Output() editComplete = new EventEmitter<any>();
   shareTeamsControl = new UntypedFormControl();
   subjectFormControl = new UntypedFormControl(
@@ -72,9 +74,7 @@ export class ArticleShareDialogComponent {
     toolbarHiddenButtons: [['backgroundColor']],
   };
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
+  constructor() {
     if (this.data.article.url) {
       this.messageFormControl.setValue(
         this.messageFormControl.value +

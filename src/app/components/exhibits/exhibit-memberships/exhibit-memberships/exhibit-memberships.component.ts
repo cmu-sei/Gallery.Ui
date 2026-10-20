@@ -3,15 +3,7 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
@@ -37,6 +29,14 @@ import { AsyncPipe } from '@angular/common';
     imports: [ExhibitMembershipListComponent, ExhibitMemberListComponent, AsyncPipe]
 })
 export class ExhibitMembershipsComponent implements OnInit {
+  private exhibitQuery = inject(ExhibitQuery);
+  private exhibitMembershipDataService = inject(ExhibitMembershipDataService);
+  private exhibitRolesDataService = inject(ExhibitRoleDataService);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+  private groupDataService = inject(GroupDataService);
+  private permissionDataService = inject(PermissionDataService);
+
   @Input() embedded: boolean;
   @Input() exhibitId: string;
   @Output() goBack = new EventEmitter();
@@ -54,16 +54,6 @@ export class ExhibitMembershipsComponent implements OnInit {
   groupMembers$ = this.selectGroups(true);
 
   canEdit$: Observable<boolean>;
-
-  constructor(
-    private exhibitQuery: ExhibitQuery,
-    private exhibitMembershipDataService: ExhibitMembershipDataService,
-    private exhibitRolesDataService: ExhibitRoleDataService,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery,
-    private groupDataService: GroupDataService,
-    private permissionDataService: PermissionDataService
-  ) { }
 
   ngOnInit(): void {
     forkJoin([

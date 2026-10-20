@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Injector, runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { TeamUser, TeamUserService } from 'src/app/generated/api';
@@ -79,7 +80,10 @@ describe('TeamUserQuery', () => {
    */
   it('tracks a team user by id', () => {
     const store = new TeamUserStore();
-    const query = new TeamUserQuery(store);
+    const injector = Injector.create({
+      providers: [{ provide: TeamUserStore, useValue: store }],
+    });
+    const query = runInInjectionContext(injector, () => new TeamUserQuery());
     store.set([makeTeamUser()]);
     const seen = recordEmissions(query.selectById('tu1'));
 
