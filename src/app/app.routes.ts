@@ -4,11 +4,6 @@
 import { Routes } from '@angular/router';
 import { ComnAuthGuardService } from '@cmusei/crucible-common';
 
-
-
-
-
-
 export const ROUTES: Routes = [
   {
     path: '',
