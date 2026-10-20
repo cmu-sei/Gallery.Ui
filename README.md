@@ -17,7 +17,7 @@ Gallery uses a monochrome gray Material 3 SCSS palette (`src/styles/_theme-color
 | `src/assets/config/settings.json` | `"AppTopBarHexTextColor": "#FFFFFF"` | Runtime config -- top bar text color |
 | `src/assets/config/settings.json` | `"AppLightModePrimaryHexColor": "#008740"` / `"AppLightModePrimaryHexTextColor": "#FFFFFF"` | Runtime config -- primary color and its text color in light mode |
 | `src/assets/config/settings.json` | `"AppDarkModePrimaryHexColor": "#00A34D"` / `"AppDarkModePrimaryHexTextColor": "#000000"` | Runtime config -- primary color and its text color in dark mode (falls back to the light-mode value) |
-| `src/main.ts` | `provideCrucibleTheme({ brand: { color: '#008740', text: '#FFFFFF' } })` | Fallbacks when a top bar or light-mode key is not set |
+| `src/app/app.config.ts` | `provideCrucibleTheme({ brand: { color: '#008740', text: '#FFFFFF' } })` | Fallbacks when a top bar or light-mode key is not set |
 
 The app loads `settings.json`, then `settings.shared.json` and `settings.env.json` from `src/assets/config/` when they exist, and merges them in that order, so later files override earlier ones. To change the colors for a deployment, set these keys in `settings.env.json`.
 

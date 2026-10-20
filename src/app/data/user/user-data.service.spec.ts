@@ -267,7 +267,7 @@ describe('UserDataService error paths', () => {
     expect(query.getEntity('u1')?.name).toBe('Alice');
     expect(query.getValue().loading).toBe(false);
     // update() subscribes with no error callback; the error reaches the app's
-    // global ErrorHandler (ErrorService, provided in main.ts), which
+    // global ErrorHandler (ErrorService, provided in app.config.ts), which
     // shows it. Callers such as admin-container.component.ts that subscribe to
     // load() without an error callback hand their error to it the same way.
     expect(errors).toEqual([failure]);

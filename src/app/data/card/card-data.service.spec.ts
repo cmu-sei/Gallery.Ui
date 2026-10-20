@@ -384,7 +384,7 @@ describe('CardDataService error paths', () => {
 
       expect(query.getValue().loading).toBe(true);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in main.ts), which shows it to the user.
+      // provided in app.config.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );
@@ -409,7 +409,7 @@ describe('CardDataService error paths', () => {
       expect(query.getCount()).toBe(1);
       expect(query.getValue().loading).toBe(false);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in main.ts), which shows it to the user.
+      // provided in app.config.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );

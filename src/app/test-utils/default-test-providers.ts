@@ -52,10 +52,10 @@ import {
 } from '../generated/api';
 
 // 3. RouterQuery, only if the app uses @datorama/akita-ng-router-store.
-//    (main.ts imports AkitaNgRouterStoreModule.)
+//    (app.config.ts imports AkitaNgRouterStoreModule.)
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-// 4. BASE_PATH: only main.ts provides it, for the generated client; no data
+// 4. BASE_PATH: only app.config.ts provides it, for the generated client; no data
 //    or hub service injects it, so it is not listed.
 
 // 5. Every other common-library service the app injects: CrucibleThemeService
