@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
@@ -33,10 +33,10 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
   pageEvent: PageEvent;
   private unsubscribe$ = new Subject();
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  readonly sort = viewChild(MatSort);
 
   ngOnInit() {
-    this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
+    this.sort().sort(<MatSortable>{ id: 'name', start: 'asc' });
     this.teamQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -62,7 +62,7 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
       newAllTeams.splice(index, 1);
     });
     this.exhibitTeamDataSource = new MatTableDataSource(newAllTeams);
-    this.exhibitTeamDataSource.sort = this.sort;
+    this.exhibitTeamDataSource.sort = this.sort();
   }
 
   addTeamToArticle(team: Team): void {

@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit, inject, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, inject, input, viewChild } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Sort, MatSortable, MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -55,8 +55,8 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
   private unsubscribe$ = new Subject();
   sort: Sort = { active: 'name', direction: 'asc' };
 
-  @ViewChild('userPaginator') userPaginator: MatPaginator;
-  @ViewChild('teamUserPaginator') teamUserPaginator: MatPaginator;
+  readonly userPaginator = viewChild<MatPaginator>('userPaginator');
+  readonly teamUserPaginator = viewChild<MatPaginator>('teamUserPaginator');
 
   constructor() {
     this.userQuery
@@ -105,8 +105,8 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
   }
 
   ngAfterViewInit() {
-    this.userDataSource.paginator = this.userPaginator;
-    this.teamUserDataSource.paginator = this.teamUserPaginator;
+    this.userDataSource.paginator = this.userPaginator();
+    this.teamUserDataSource.paginator = this.teamUserPaginator();
 
     // Set up filter predicate for team users
     this.teamUserDataSource.filterPredicate = (data: TeamUser, filter: string) => {

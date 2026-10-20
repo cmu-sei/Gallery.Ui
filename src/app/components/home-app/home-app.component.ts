@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import { Component, OnDestroy, OnInit, ViewChild, DOCUMENT, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, DOCUMENT, inject, viewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -86,7 +86,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   private uiDataService = inject(UIDataService);
   private xApiService = inject(XApiService);
 
-  @ViewChild('sidenav') sidenav: MatSidenav;
+  readonly sidenav = viewChild<MatSidenav>('sidenav');
   @ViewChild(MatSort) set sort(sort: MatSort) {
     if (sort) {
       this.exhibitList.sortingDataAccessor = (exhibit, column) => {

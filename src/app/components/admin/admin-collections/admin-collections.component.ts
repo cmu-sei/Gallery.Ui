@@ -8,7 +8,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit, ElementRef, inject, viewChild } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -98,9 +98,9 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   private unsubscribe$ = new Subject();
   isBusy = false;
   uploadProgress = 0;
-  @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
-  @ViewChild(MatSort) matSort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  readonly jsonInput = viewChild<ElementRef<HTMLInputElement>>('jsonInput');
+  readonly matSort = viewChild(MatSort);
+  readonly paginator = viewChild(MatPaginator);
 
   constructor() {
     this.dataSource.filterPredicate = (collection: Collection, filter: string) =>
@@ -140,8 +140,8 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.matSort;
-    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.matSort();
+    this.dataSource.paginator = this.paginator();
     this.dataSource.sortingDataAccessor = (collection: Collection, sortHeaderId: string) => {
       if (sortHeaderId === 'dateCreated') {
         const d = collection.dateCreated instanceof Date
@@ -263,7 +263,7 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
     this.uploadProgress = 0;
     this.isBusy = true;
     this.collectionDataService.uploadJson(file, 'events', true);
-    this.jsonInput.nativeElement.value = null;
+    this.jsonInput().nativeElement.value = null;
   }
 
   ngOnDestroy() {

@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, NgZone, ViewChild, inject, output } from '@angular/core';
+import { Component, Input, NgZone, inject, output, viewChild } from '@angular/core';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { Collection } from 'src/app/generated/api';
 
@@ -18,7 +18,7 @@ export class CollectionEditComponent {
   @Input() collection: Collection;
   readonly editComplete = output<boolean>();
   readonly editCollection = output<Collection>();
-  @ViewChild(CollectionEditComponent) child;
+  readonly child = viewChild(CollectionEditComponent);
 
   isLoading = this.collectionQuery.selectLoading();
 

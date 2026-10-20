@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, AfterViewInit, ViewChild, inject, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, inject, input, viewChild } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
@@ -43,12 +43,12 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
   pageEvent: PageEvent;
   private unsubscribe$ = new Subject();
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild('exhibitTeamPaginator', { static: false }) exhibitTeamPaginator: MatPaginator;
-  @ViewChild('articleTeamPaginator', { static: false }) articleTeamPaginator: MatPaginator;
+  readonly sort = viewChild(MatSort);
+  readonly exhibitTeamPaginator = viewChild<MatPaginator>('exhibitTeamPaginator');
+  readonly articleTeamPaginator = viewChild<MatPaginator>('articleTeamPaginator');
 
   ngOnInit() {
-    this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
+    this.sort().sort(<MatSortable>{ id: 'name', start: 'asc' });
     this.articleTeamDataService.teamArticles
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((teamArticles) => {
@@ -80,8 +80,8 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
   }
 
   ngAfterViewInit(): void {
-    this.exhibitTeamDataSource.paginator = this.exhibitTeamPaginator;
-    this.articleTeamDataSource.paginator = this.articleTeamPaginator;
+    this.exhibitTeamDataSource.paginator = this.exhibitTeamPaginator();
+    this.articleTeamDataSource.paginator = this.articleTeamPaginator();
   }
 
   setDataSources() {
@@ -101,7 +101,7 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
       newAllTeams.splice(index, 1);
     });
     this.exhibitTeamDataSource = new MatTableDataSource(newAllTeams);
-    this.exhibitTeamDataSource.sort = this.sort;
+    this.exhibitTeamDataSource.sort = this.sort();
     this.exhibitTeamDataSource.filterPredicate = (data: Team, filter: string) => {
       return data.name?.toLowerCase().includes(filter) || data.shortName?.toLowerCase().includes(filter);
     };

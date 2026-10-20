@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-import { Component, OnDestroy, OnInit, ViewChild, inject, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -47,9 +47,9 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   teamUserFilterString = '';
   observerFilterString = '';
   private unsubscribe$ = new Subject();
-  @ViewChild('teamUserPaginator', { static: true }) teamUserPaginator: MatPaginator;
-  @ViewChild('observerPaginator', { static: true }) observerPaginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  readonly teamUserPaginator = viewChild<MatPaginator>('teamUserPaginator');
+  readonly observerPaginator = viewChild<MatPaginator>('observerPaginator');
+  readonly sort = viewChild(MatSort);
 
   constructor() {
     this.userQuery
@@ -92,10 +92,10 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
-    this.observerDataSource.sort = this.sort;
-    this.observerDataSource.paginator = this.observerPaginator;
-    this.teamUserDataSource.paginator = this.teamUserPaginator;
+    this.sort().sort(<MatSortable>{ id: 'name', start: 'asc' });
+    this.observerDataSource.sort = this.sort();
+    this.observerDataSource.paginator = this.observerPaginator();
+    this.teamUserDataSource.paginator = this.teamUserPaginator();
 
     // Set up filter predicates
     this.teamUserDataSource.filterPredicate = (data: TeamUser, filter: string) => {

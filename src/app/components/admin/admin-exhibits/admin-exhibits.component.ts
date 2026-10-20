@@ -8,7 +8,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, OnDestroy, ViewChild, ElementRef, inject, input } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef, inject, input, viewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -120,7 +120,7 @@ export class AdminExhibitsComponent implements OnDestroy {
   isBusy = false;
   uploadProgress = 0;
   canManageExpandedExhibit = false;
-  @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
+  readonly jsonInput = viewChild<ElementRef<HTMLInputElement>>('jsonInput');
   @ViewChild(MatSort) set matSortRef(ms: MatSort) {
     if (ms) {
       this.dataSource.sort = ms;
@@ -360,7 +360,7 @@ export class AdminExhibitsComponent implements OnDestroy {
     this.collectionDataService.setActive('');
     this.exhibitList = [];
     this.exhibitDataService.uploadJson(file, 'events', true);
-    this.jsonInput.nativeElement.value = null;
+    this.jsonInput().nativeElement.value = null;
   }
 
   ngOnDestroy() {
