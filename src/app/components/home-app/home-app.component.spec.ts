@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach, onTestFinished } from 'vitest';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -53,24 +53,24 @@ import { ArchiveComponent } from 'src/app/components/archive/archive.component';
 
 @Component({ selector: 'app-topbar', template: '' })
 class TopbarStubComponent {
-  @Input() title?: string;
-  @Input() topbarView?: TopbarView;
-  @Input() imageFilePath?: string;
+  readonly title = input<string>(undefined);
+  readonly topbarView = input<TopbarView>(undefined);
+  readonly imageFilePath = input<string>(undefined);
   @Output() urlNavigate = new EventEmitter<string>();
 }
 
 @Component({ selector: 'app-wall', template: '' })
 class WallStubComponent {
-  @Input() showAdminButton?: boolean;
-  @Input() showAdvanceButton?: boolean;
-  @Input() exhibit?: Exhibit;
+  readonly showAdminButton = input<boolean>(undefined);
+  readonly showAdvanceButton = input<boolean>(undefined);
+  readonly exhibit = input<Exhibit>(undefined);
   @Output() changeTeam = new EventEmitter<string>();
   @Output() sectionSelected = new EventEmitter<string>();
 }
 
 @Component({ selector: 'app-archive', template: '' })
 class ArchiveStubComponent {
-  @Input() showAdminButton?: boolean;
+  readonly showAdminButton = input<boolean>(undefined);
   @Output() changeTeam = new EventEmitter<string>();
   @Output() sectionSelected = new EventEmitter<string>();
 }
@@ -289,9 +289,9 @@ describe('HomeAppComponent', () => {
       { exhibit: 'x1', section: 'wall' },
     );
 
-    expect(stub(WallStubComponent)?.showAdminButton).toBe(true);
-    expect(stub(WallStubComponent)?.showAdvanceButton).toBe(true);
-    expect(stub(WallStubComponent)?.exhibit?.id).toBe('x1');
+    expect(stub(WallStubComponent)?.showAdminButton()).toBe(true);
+    expect(stub(WallStubComponent)?.showAdvanceButton()).toBe(true);
+    expect(stub(WallStubComponent)?.exhibit()?.id).toBe('x1');
   });
 
   /**
@@ -327,7 +327,7 @@ describe('HomeAppComponent', () => {
         section: 'wall',
       });
 
-      expect(stub(WallStubComponent)?.showAdvanceButton).toBe(true);
+      expect(stub(WallStubComponent)?.showAdvanceButton()).toBe(true);
     },
   );
 
@@ -342,8 +342,8 @@ describe('HomeAppComponent', () => {
       { exhibit: 'x1', section: 'wall' },
     );
 
-    expect(stub(WallStubComponent)?.showAdvanceButton).toBe(false);
-    expect(stub(WallStubComponent)?.exhibit?.id).toBe('x1');
+    expect(stub(WallStubComponent)?.showAdvanceButton()).toBe(false);
+    expect(stub(WallStubComponent)?.exhibit()?.id).toBe('x1');
   });
 
   /**
@@ -362,8 +362,8 @@ describe('HomeAppComponent', () => {
       { exhibit: 'x1', section: 'wall' },
     );
 
-    expect(stub(WallStubComponent)?.showAdvanceButton).toBe(false);
-    expect(stub(WallStubComponent)?.showAdminButton).toBe(false);
+    expect(stub(WallStubComponent)?.showAdvanceButton()).toBe(false);
+    expect(stub(WallStubComponent)?.showAdminButton()).toBe(false);
   });
 
   /**
@@ -378,7 +378,7 @@ describe('HomeAppComponent', () => {
         { exhibit: 'x1', section: 'archive' },
       );
 
-    expect(stub(ArchiveStubComponent)?.showAdminButton).toBe(true);
+    expect(stub(ArchiveStubComponent)?.showAdminButton()).toBe(true);
     expect(stub(WallStubComponent)).toBeUndefined();
     expect(TestBed.inject(TeamQuery).getActiveId()).toBe('t1');
     expect(signalR.switchTeam).toHaveBeenCalledWith('t1', 't1');
@@ -405,7 +405,7 @@ describe('HomeAppComponent', () => {
       { exhibit: 'x1', section: 'archive' },
     );
 
-    expect(stub(ArchiveStubComponent)?.showAdminButton).toBe(false);
+    expect(stub(ArchiveStubComponent)?.showAdminButton()).toBe(false);
   });
 
   /**

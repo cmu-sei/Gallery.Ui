@@ -20,7 +20,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-icon svgIcon="crucible-icon-gallery"></mat-icon>
       </a>
     </span>
-    <span class="view-text">{{ title.charAt(0).toUpperCase() + title.slice(1) }}</span>
+    <span class="view-text">{{ title().charAt(0).toUpperCase() + title().slice(1) }}</span>
     @if (teams && team && teams.length > 0) {
     <div class="team-text">Team:</div>
     <b class="team-text">{{ team.name }}</b>
@@ -47,12 +47,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-icon class="menu-trigger" fontIcon="mdi-chevron-down"></mat-icon>
       </button>
       <mat-menu #menu="matMenu" [overlapTrigger]="false">
-        @if (topbarView === TopbarView.GALLERY_ADMIN) {
+        @if (topbarView() === TopbarView.GALLERY_ADMIN) {
         <button [routerLink]="['/']" mat-menu-item>
           Exit Administration
         </button>
         }
-        @if (topbarView !== TopbarView.GALLERY_ADMIN && canViewAdmin) {
+        @if (topbarView() !== TopbarView.GALLERY_ADMIN && canViewAdmin) {
         <button [routerLink]="['/admin']" mat-menu-item>
           Administration
         </button>

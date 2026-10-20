@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, input } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Team, User } from 'src/app/generated/api';
@@ -39,8 +39,8 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
   private userDataService = inject(UserDataService);
   private userQuery = inject(UserQuery);
 
-  @Input() exhibitId: string;
-  @Input() canEdit: boolean;
+  readonly exhibitId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   filterControl: UntypedFormControl = new UntypedFormControl();
   filterString = '';
   newTeam: Team = { id: '', name: '' };
@@ -97,7 +97,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
       team = {
         name: '',
         shortName: '',
-        exhibitId: this.exhibitId,
+        exhibitId: this.exhibitId(),
       };
     } else {
       team = { ...team };
@@ -176,7 +176,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
     let filteredTeams: Team[] = [];
     if (teams) {
       teams.forEach((t) => {
-        if (t.exhibitId === this.exhibitId) {
+        if (t.exhibitId === this.exhibitId()) {
           filteredTeams.push({ ...t });
         } else {
         }

@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, Input, ViewChild, AfterViewInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit, inject, input } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Sort, MatSortable, MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -36,8 +36,8 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
   private userDataService = inject(UserDataService);
   private userQuery = inject(UserQuery);
 
-  @Input() teamId: string;
-  @Input() canEdit: boolean;
+  readonly teamId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   userList: User[] = [];
   teamUsers: TeamUser[] = [];
   otherTeamUsers: TeamUser[] = [];
@@ -71,8 +71,8 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((tUsers) => {
-        this.teamUsers = tUsers.filter((tu) => tu.teamId === this.teamId);
-        this.otherTeamUsers = tUsers.filter((tu) => tu.teamId !== this.teamId);
+        this.teamUsers = tUsers.filter((tu) => tu.teamId === this.teamId());
+        this.otherTeamUsers = tUsers.filter((tu) => tu.teamId !== this.teamId());
         this.setDataSources();
       });
     // observe the exhibit teams
@@ -97,10 +97,10 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
     this.filterControl.setValue('');
     this.teamUsers = this.teamUserQuery
       .getAll()
-      .filter((tu) => tu.teamId === this.teamId);
+      .filter((tu) => tu.teamId === this.teamId());
     this.otherTeamUsers = this.teamUserQuery
       .getAll()
-      .filter((tu) => tu.teamId !== this.teamId);
+      .filter((tu) => tu.teamId !== this.teamId());
     this.setDataSources();
   }
 
@@ -227,7 +227,7 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
 
   addUserToTeam(user: User): void {
     const teamUser = {
-      teamId: this.teamId,
+      teamId: this.teamId(),
       userId: user.id,
     } as TeamUser;
     this.teamUserDataService.add(teamUser);
@@ -243,7 +243,7 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
   }
 
   setObserverValue(teamUserId: string, value: boolean) {
-    const team = this.teamList.find((t) => t.id === this.teamId);
+    const team = this.teamList.find((t) => t.id === this.teamId());
     const exhibitId = team?.exhibitId || null;
     this.teamUserDataService.setObserverValue(teamUserId, value, exhibitId);
   }

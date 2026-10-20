@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy, inject as inject_1 } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject as inject_1, input } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Team, TeamCard } from 'src/app/generated/api/model/models';
@@ -42,9 +42,9 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   private teamCardQuery = inject_1(TeamCardQuery);
 
   @Input() teamList: Team[];
-  @Input() collectionId: string;
-  @Input() exhibitId: string;
-  @Input() canEdit: boolean;
+  readonly collectionId = input<string>(undefined);
+  readonly exhibitId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   cardList: Card[] = [];
   teamCardList: TeamCard[] = [];
   selectedTeamId = '';
@@ -101,8 +101,9 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.cardDataService.loadByExhibit(this.exhibitId);
-    this.teamCardDataService.loadByExhibit(this.exhibitId);
+    const exhibitId = this.exhibitId();
+    this.cardDataService.loadByExhibit(exhibitId);
+    this.teamCardDataService.loadByExhibit(exhibitId);
     this.filterControl.setValue(this.filterString);
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))

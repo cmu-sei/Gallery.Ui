@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-import { Component, OnDestroy, OnInit, Input, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, input } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -35,8 +35,8 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   private userDataService = inject(UserDataService);
   private userQuery = inject(UserQuery);
 
-  @Input() exhibitId: string;
-  @Input() canEdit: boolean;
+  readonly exhibitId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   userList: User[] = [];
   teamUsers: TeamUser[] = [];
   displayedObserverColumns: string[] = ['team', 'name', 'id'];
@@ -141,15 +141,15 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   }
 
   addObserver(id: string): void {
-    this.teamUserDataService.setObserverValue(id, true, this.exhibitId);
+    this.teamUserDataService.setObserverValue(id, true, this.exhibitId());
   }
 
   removeObserver(id: string): void {
-    this.teamUserDataService.setObserverValue(id, false, this.exhibitId);
+    this.teamUserDataService.setObserverValue(id, false, this.exhibitId());
   }
 
   setObserverValue(teamUserId: string, value: boolean) {
-    this.teamUserDataService.setObserverValue(teamUserId, value, this.exhibitId);
+    this.teamUserDataService.setObserverValue(teamUserId, value, this.exhibitId());
   }
 
   compare(a: string, b: string, isAsc: boolean) {

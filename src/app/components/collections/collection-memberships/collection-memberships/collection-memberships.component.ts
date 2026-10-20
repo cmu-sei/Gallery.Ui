@@ -3,7 +3,7 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, inject, input } from '@angular/core';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
@@ -38,8 +38,8 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
   private permissionDataService = inject(PermissionDataService);
   private activatedRoute = inject(ActivatedRoute);
 
-  @Input() embedded: boolean;
-  @Input() collectionId: string;
+  readonly embedded = input<boolean>(undefined);
+  readonly collectionId = input<string>(undefined);
   @Output() goBack = new EventEmitter();
 
   collection$: Observable<Collection>;
@@ -60,7 +60,7 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     forkJoin([
       this.collectionMembershipDataService.loadMemberships(
-        this.collectionId
+        this.collectionId()
       ),
       this.userDataService.load(),
       this.collectionRolesDataService.loadRoles(),
@@ -69,17 +69,17 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
     this.permissionDataService
       .loadCollectionPermissions()
       .subscribe((x) =>
-        this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId)));
+        this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId())));
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.collection$ = this.collectionQuery
-      .selectEntity(this.collectionId)
+      .selectEntity(this.collectionId())
       .pipe(
         filter((x) => x != null),
         tap(
           (x) => {
-            this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId));
+            this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId()));
           })
       );
   }
@@ -128,9 +128,9 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
   }
 
   createMembership(collectionMembership: CollectionMembership) {
-    collectionMembership.collectionId = this.collectionId;
+    collectionMembership.collectionId = this.collectionId();
     this.collectionMembershipDataService
-      .createMembership(this.collectionId, collectionMembership)
+      .createMembership(this.collectionId(), collectionMembership)
       .subscribe();
   }
 

@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy, OnInit, inject as inject_1 } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject as inject_1, input } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Article, Exhibit, ItemStatus, SourceType, Team} from 'src/app/generated/api/model/models';
@@ -37,9 +37,9 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   private articleTeamDataService = inject_1(ArticleTeamDataService);
   private cardQuery = inject_1(CardQuery);
 
-  @Input() exhibit: Exhibit;
-  @Input() teamList: Team[];
-  @Input() canEdit: boolean;
+  readonly exhibit = input<Exhibit>(undefined);
+  readonly teamList = input<Team[]>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   filterControl: UntypedFormControl = new UntypedFormControl();
   filterString = '';
   isLoading = false;
@@ -80,9 +80,10 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    if (this.exhibit && this.exhibit.collectionId) {
-      this.articleDataService.loadByCollection(this.exhibit.collectionId);
-      this.articleTeamDataService.getTeamArticlesFromApi(this.exhibit.id);
+    const exhibit = this.exhibit();
+    if (exhibit && exhibit.collectionId) {
+      this.articleDataService.loadByCollection(exhibit.collectionId);
+      this.articleTeamDataService.getTeamArticlesFromApi(exhibit.id);
     }
     this.filterControl.setValue(this.filterString);
     this.loadInitialData();

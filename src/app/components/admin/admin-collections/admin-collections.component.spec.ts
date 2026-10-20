@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { screen, within } from '@testing-library/angular';
@@ -45,12 +45,12 @@ import { CollectionMembershipsComponent } from 'src/app/components/collections/c
 
 @Component({ selector: 'app-admin-cards', template: '' })
 class AdminCardsStubComponent {
-  @Input() selectedCollectionId?: string;
+  readonly selectedCollectionId = input<string>(undefined);
 }
 
 @Component({ selector: 'app-admin-articles', template: '' })
 class AdminArticlesStubComponent {
-  @Input() selectedCollectionId?: string;
+  readonly selectedCollectionId = input<string>(undefined);
 }
 
 @Component({
@@ -58,8 +58,8 @@ class AdminArticlesStubComponent {
   template: '',
 })
 class CollectionMembershipsStubComponent {
-  @Input() collectionId?: string;
-  @Input() embedded?: boolean;
+  readonly collectionId = input<string>(undefined);
+  readonly embedded = input<boolean>(undefined);
 }
 
 const COLLECTIONS: Collection[] = [
@@ -273,11 +273,11 @@ describe('AdminCollectionsComponent', () => {
     const cards = fixture.debugElement.query(
       By.directive(AdminCardsStubComponent),
     ).componentInstance as AdminCardsStubComponent;
-    expect(cards.selectedCollectionId).toBe('c1');
+    expect(cards.selectedCollectionId()).toBe('c1');
     const memberships = fixture.debugElement.query(
       By.directive(CollectionMembershipsStubComponent),
     ).componentInstance as CollectionMembershipsStubComponent;
-    expect(memberships.collectionId).toBe('c1');
+    expect(memberships.collectionId()).toBe('c1');
   });
 
   /**

@@ -44,7 +44,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <button mat-icon-button (click)="gotoWallSection()" style="outline: none;" title="Wall">
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-wall"></mat-icon>
       </button>
-      @if (showAdminButton) {
+      @if (showAdminButton()) {
       <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
       </button>

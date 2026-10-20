@@ -9,7 +9,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       @if (exhibit) {
       <span class="move-inject-label">Move {{ exhibit.currentMove }}, Inject {{ exhibit.currentInject }}</span>
       }
-      @if (showAdvanceButton && exhibit?.showAdvanceButton) {
+      @if (showAdvanceButton() && exhibit?.showAdvanceButton) {
       <button mat-flat-button class="advance-button" (click)="advanceExhibit()"
         [disabled]="isAdvancing"
         title="Advance the exhibit to the next move/inject for all participants">
@@ -22,7 +22,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <button mat-icon-button (click)="gotoArchive('archive')" style="outline: none;" title="Archive">
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-archive"></mat-icon>
       </button>
-      @if (showAdminButton) {
+      @if (showAdminButton()) {
       <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
       </button>

@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect } from 'vitest';
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, EventEmitter, Output, input } from '@angular/core';
 import { screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +22,7 @@ import { AdminGroupsMembershipListComponent } from './admin-groups-membership-li
 // does not import ClipboardModule (see the NG0303 test below).
 @Directive({ selector: '[ngxClipboard]' })
 class ClipboardStubDirective {
-  @Input() cbContent?: string;
+  readonly cbContent = input<string>(undefined);
   @Output() cbOnSuccess = new EventEmitter<unknown>();
 }
 

@@ -3,7 +3,7 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, inject, input } from '@angular/core';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
@@ -37,8 +37,8 @@ export class ExhibitMembershipsComponent implements OnInit {
   private groupDataService = inject(GroupDataService);
   private permissionDataService = inject(PermissionDataService);
 
-  @Input() embedded: boolean;
-  @Input() exhibitId: string;
+  readonly embedded = input<boolean>(undefined);
+  readonly exhibitId = input<string>(undefined);
   @Output() goBack = new EventEmitter();
 
   exhibit$: Observable<Exhibit>;
@@ -57,12 +57,12 @@ export class ExhibitMembershipsComponent implements OnInit {
 
   ngOnInit(): void {
     forkJoin([
-      this.exhibitMembershipDataService.loadMemberships(this.exhibitId),
+      this.exhibitMembershipDataService.loadMemberships(this.exhibitId()),
       this.userDataService.load(),
       this.exhibitRolesDataService.loadRoles(),
       this.groupDataService.load(),
     ]).subscribe();
-    this.canEdit$ = of(this.permissionDataService.canEditExhibit(this.exhibitId));
+    this.canEdit$ = of(this.permissionDataService.canEditExhibit(this.exhibitId()));
   }
 
   selectUsers(members: boolean) {
@@ -109,9 +109,9 @@ export class ExhibitMembershipsComponent implements OnInit {
   }
 
   createMembership(exhibitMembership: ExhibitMembership) {
-    exhibitMembership.exhibitId = this.exhibitId;
+    exhibitMembership.exhibitId = this.exhibitId();
     this.exhibitMembershipDataService
-      .createMembership(this.exhibitId, exhibitMembership)
+      .createMembership(this.exhibitId(), exhibitMembership)
       .subscribe();
   }
 

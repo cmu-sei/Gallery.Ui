@@ -3,7 +3,7 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, OnChanges, OnInit, Output, ViewChild, inject, input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -26,14 +26,11 @@ import { MatIconButton } from '@angular/material/button';
 export class ExhibitMembershipListComponent implements OnInit, OnChanges, AfterViewInit {
   snackBar = inject(MatSnackBar);
 
-  @Input()
-  users: User[];
+  readonly users = input<User[]>(undefined);
 
-  @Input()
-  groups: Group[];
+  readonly groups = input<Group[]>(undefined);
 
-  @Input()
-  canEdit: boolean;
+  readonly canEdit = input<boolean>(undefined);
 
   @Output()
   createMembership = new EventEmitter<ExhibitMembership>();
@@ -60,7 +57,7 @@ export class ExhibitMembershipListComponent implements OnInit, OnChanges, AfterV
     this.dataSource.data = this.buildModel();
 
     this.displayedColumns = this.viewColumns.concat(
-      this.canEdit ? this.editColumns : []
+      this.canEdit() ? this.editColumns : []
     );
   }
 
@@ -79,7 +76,7 @@ export class ExhibitMembershipListComponent implements OnInit, OnChanges, AfterV
   buildModel(): ExhibitMemberModel[] {
     const exhibitMemberModels = [] as ExhibitMemberModel[];
 
-    this.users.forEach((x) => {
+    this.users().forEach((x) => {
       exhibitMemberModels.push({
         user: x,
         group: null,
@@ -89,7 +86,7 @@ export class ExhibitMembershipListComponent implements OnInit, OnChanges, AfterV
       });
     });
 
-    this.groups.forEach((x) => {
+    this.groups().forEach((x) => {
       exhibitMemberModels.push({
         user: null,
         group: x,

@@ -44,7 +44,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <div>
             @if (!onAnotherTeam(element.id)) {
             <button mat-icon-button (click)="addUserToTeam(element)" style="outline: none;"
-              title="Add {{ element.name }} to Team" [disabled]="!canEdit">
+              title="Add {{ element.name }} to Team" [disabled]="!canEdit()">
               <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline"></mat-icon>
             </button>
             }
@@ -106,7 +106,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-header-cell *matHeaderCellDef mat-sort-header>Observer</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <mat-checkbox [checked]="element.isObserver" (change)="setObserverValue(element.id, $event.checked)"
-            [disabled]="!canEdit"></mat-checkbox>
+            [disabled]="!canEdit()"></mat-checkbox>
         </mat-cell>
       </ng-container>
 
@@ -115,7 +115,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-cell *matCellDef="let element">
           <div>
             <button mat-icon-button (click)="removeUserFromTeam(element)" style="outline: none;"
-              title="Remove {{ element.name }} from Team" [disabled]="!canEdit">
+              title="Remove {{ element.name }} from Team" [disabled]="!canEdit()">
               <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
             </button>
           </div>

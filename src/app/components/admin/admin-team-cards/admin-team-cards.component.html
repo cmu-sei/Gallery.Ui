@@ -47,7 +47,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <section matSort (matSortChange)="sortChanged($event)" class="header-row">
     <div class="header-cell two-cell">
       <button mat-icon-button (click)="addOrEditTeamCard(null)" style="outline: none;" title="Add Team"
-        [disabled]="!canEdit">
+        [disabled]="!canEdit()">
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
     </div>
@@ -65,10 +65,10 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       @if (!isLoading) {
       <mat-expansion-panel-header class="row">
         <div class="cell two-cell button-div">
-          <button mat-icon-button (click)="addOrEditTeamCard(teamCard)" title="Edit TeamCard" [disabled]="!canEdit">
+          <button mat-icon-button (click)="addOrEditTeamCard(teamCard)" title="Edit TeamCard" [disabled]="!canEdit()">
             <mat-icon class="mdi-24px" fontIcon="mdi-square-edit-outline"></mat-icon>
           </button>
-          <button mat-icon-button (click)="deleteTeamCard(teamCard)" title="Delete TeamCard" [disabled]="!canEdit">
+          <button mat-icon-button (click)="deleteTeamCard(teamCard)" title="Delete TeamCard" [disabled]="!canEdit()">
             <mat-icon class="mdi-24px" fontIcon="mdi-trash-can-outline"></mat-icon>
           </button>
         </div>

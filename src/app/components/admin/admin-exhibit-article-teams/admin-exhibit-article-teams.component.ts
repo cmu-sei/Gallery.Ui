@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, AfterViewInit, Input, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, ViewChild, inject, input } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
@@ -28,9 +28,9 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
   private teamQuery = inject(TeamQuery);
   private articleTeamDataService = inject(ArticleTeamDataService);
 
-  @Input() exhibitId: string;
-  @Input() articleId: string;
-  @Input() canEdit: boolean;
+  readonly exhibitId = input<string>(undefined);
+  readonly articleId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   articleTeams: Team[] = [];
   exhibitTeams: Team[] = [];
 
@@ -57,8 +57,8 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
           teamArticles
             .filter(
               (ta) =>
-                ta.exhibitId === this.exhibitId &&
-                ta.articleId === this.articleId
+                ta.exhibitId === this.exhibitId() &&
+                ta.articleId === this.articleId()
             )
             .forEach((ta) => {
               const team = this.exhibitTeams.find((t) => t.id === ta.teamId);
@@ -134,9 +134,9 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
     );
     if (index === -1) {
       this.articleTeamDataService.addTeamToArticle(
-        this.exhibitId,
+        this.exhibitId(),
         teamId,
-        this.articleId
+        this.articleId()
       );
     }
   }
@@ -150,7 +150,7 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
       (et) => et.id === teamId
     );
     if (index !== -1) {
-      this.articleTeamDataService.removeTeamArticle(teamId, this.articleId);
+      this.articleTeamDataService.removeTeamArticle(teamId, this.articleId());
     }
   }
 

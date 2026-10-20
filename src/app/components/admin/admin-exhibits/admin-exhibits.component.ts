@@ -8,7 +8,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, Input, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef, inject, input } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -104,7 +104,7 @@ export class AdminExhibitsComponent implements OnDestroy {
   private teamDataService = inject(TeamDataService);
   private teamUserDataService = inject(TeamUserDataService);
 
-  @Input() userList: User[];
+  readonly userList = input<User[]>(undefined);
   canCreate = false;
   teamList: Team[];
   collectionList: Collection[] = [];
@@ -228,7 +228,7 @@ export class AdminExhibitsComponent implements OnDestroy {
       data: {
         exhibit: exhibit,
         exhibitList: this.exhibitList,
-        userList: this.userList,
+        userList: this.userList(),
         canEdit: exhibit.id
           ? this.permissionDataService.canEditExhibit(exhibit.id)
           : true,
@@ -304,8 +304,9 @@ export class AdminExhibitsComponent implements OnDestroy {
   }
 
   getUserName(userId: string) {
-    if (this.userList && this.userList.length > 0) {
-      const user = this.userList?.find((item) => item.id === userId);
+    const userList = this.userList();
+    if (userList && userList.length > 0) {
+      const user = userList?.find((item) => item.id === userId);
       return user ? user.name : '';
     }
     return '';

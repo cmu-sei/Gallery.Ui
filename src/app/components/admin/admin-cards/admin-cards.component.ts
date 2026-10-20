@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy, OnInit, inject as inject_1 } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject as inject_1, input } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
@@ -36,7 +36,7 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
   private cardQuery = inject_1(CardQuery);
   private permissionDataService = inject_1(PermissionDataService);
 
-  @Input() selectedCollectionId: string;
+  readonly selectedCollectionId = input<string>(undefined);
   canEdit = false;
   pageSize = 10;
   pageIndex = 0;
@@ -91,9 +91,10 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
 
   loadCards() {
     this.isLoading = true;
-    this.cardDataService.loadByCollection(this.selectedCollectionId);
+    const selectedCollectionId = this.selectedCollectionId();
+    this.cardDataService.loadByCollection(selectedCollectionId);
     this.canEdit = this.permissionDataService.canEditCollection(
-      this.selectedCollectionId
+      selectedCollectionId
     );
   }
 
@@ -102,7 +103,7 @@ export class AdminCardsComponent implements OnDestroy, OnInit {
       card = {
         name: '',
         description: '',
-        collectionId: this.selectedCollectionId,
+        collectionId: this.selectedCollectionId(),
       };
     } else {
       card = { ...card };

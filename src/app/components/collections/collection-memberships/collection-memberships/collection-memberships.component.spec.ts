@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import {
@@ -32,9 +32,9 @@ import { CollectionMemberListComponent } from 'src/app/components/collections/co
   template: '',
 })
 class MembershipListStubComponent {
-  @Input() users?: User[];
-  @Input() groups?: Group[];
-  @Input() canEdit?: boolean | null;
+  readonly users = input<User[]>(undefined);
+  readonly groups = input<Group[]>(undefined);
+  readonly canEdit = input<boolean | null>(undefined);
   @Output() createMembership = new EventEmitter<CollectionMembership>();
 }
 
@@ -43,11 +43,11 @@ class MembershipListStubComponent {
   template: '',
 })
 class MemberListStubComponent {
-  @Input() memberships?: CollectionMembership[];
-  @Input() users?: User[];
-  @Input() groups?: Group[];
-  @Input() roles?: CollectionRole[];
-  @Input() canEdit?: boolean | null;
+  readonly memberships = input<CollectionMembership[]>(undefined);
+  readonly users = input<User[]>(undefined);
+  readonly groups = input<Group[]>(undefined);
+  readonly roles = input<CollectionRole[]>(undefined);
+  readonly canEdit = input<boolean | null>(undefined);
   @Output() deleteMembership = new EventEmitter<string>();
   @Output() editMembership = new EventEmitter<CollectionMembership>();
 }
@@ -138,11 +138,11 @@ describe('CollectionMembershipsComponent', () => {
       ],
     });
 
-    expect(members().users?.map((u) => u.name)).toEqual(['Alice']);
-    expect(members().groups?.map((g) => g.name)).toEqual(['Blue Cell']);
-    expect(members().roles?.map((r) => r.name)).toEqual(['Member']);
-    expect(available().users?.map((u) => u.name)).toEqual(['Bob']);
-    expect(available().groups?.map((g) => g.name)).toEqual(['Analysts']);
+    expect(members().users()?.map((u) => u.name)).toEqual(['Alice']);
+    expect(members().groups()?.map((g) => g.name)).toEqual(['Blue Cell']);
+    expect(members().roles()?.map((r) => r.name)).toEqual(['Member']);
+    expect(available().users()?.map((u) => u.name)).toEqual(['Bob']);
+    expect(available().groups()?.map((g) => g.name)).toEqual(['Analysts']);
   });
 
   /**
@@ -216,8 +216,8 @@ describe('CollectionMembershipsComponent', () => {
   )('with $label passes canEdit $expected', async ({ grants, expected }) => {
     const { available, members } = await renderMemberships(grants);
 
-    expect(available().canEdit).toBe(expected);
-    expect(members().canEdit).toBe(expected);
+    expect(available().canEdit()).toBe(expected);
+    expect(members().canEdit()).toBe(expected);
   });
 
   /**
@@ -239,8 +239,8 @@ describe('CollectionMembershipsComponent', () => {
       ],
     });
 
-    expect(available().canEdit).toBe(false);
-    expect(members().canEdit).toBe(false);
+    expect(available().canEdit()).toBe(false);
+    expect(members().canEdit()).toBe(false);
   });
 
   /**
@@ -263,7 +263,7 @@ describe('CollectionMembershipsComponent', () => {
         collectionId: 'c1',
       },
     );
-    expect(members().users?.map((u) => u.name)).toEqual(['Alice', 'Bob']);
+    expect(members().users()?.map((u) => u.name)).toEqual(['Alice', 'Bob']);
 
     members().editMembership.emit({ id: 'm1', roleId: 'r2' });
     expect(membershipsApi.updateCollectionMembership).toHaveBeenCalledWith(
@@ -279,6 +279,6 @@ describe('CollectionMembershipsComponent', () => {
     expect(membershipsApi.deleteCollectionMembership).toHaveBeenCalledWith(
       'm1',
     );
-    expect(members().users?.map((u) => u.name)).toEqual(['Bob']);
+    expect(members().users()?.map((u) => u.name)).toEqual(['Bob']);
   });
 });

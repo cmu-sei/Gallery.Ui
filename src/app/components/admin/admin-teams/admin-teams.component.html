@@ -9,7 +9,7 @@ project root for license information or contact permission@sei.cmu.edu for full 
   <section matSort (matSortChange)="sortChanged($event)" class="header-row">
     <div class="header-cell button-cell">
       <button mat-icon-button (click)="addOrEditTeam(null)" style="outline: none;" title="Add Team"
-        [disabled]="!canEdit">
+        [disabled]="!canEdit()">
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle"></mat-icon>
       </button>
     </div>
@@ -42,11 +42,11 @@ project root for license information or contact permission@sei.cmu.edu for full 
       <mat-expansion-panel-header class="row" (click)="togglePanel(team); $event.stopPropagation()">
         <div class="cell button-cell">
           <button mat-icon-button (click)="addOrEditTeam(team); $event.stopPropagation()" style="outline: none;"
-            title="Edit {{ team.name }}" [disabled]="!canEdit">
+            title="Edit {{ team.name }}" [disabled]="!canEdit()">
             <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline"></mat-icon>
           </button>
           <button mat-icon-button (click)="deleteTeam(team); $event.stopPropagation()" style="outline: none;"
-            title="Delete {{ team.name }}" [disabled]="!canEdit">
+            title="Delete {{ team.name }}" [disabled]="!canEdit()">
             <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can-outline"></mat-icon>
           </button>
         </div>
@@ -62,7 +62,7 @@ project root for license information or contact permission@sei.cmu.edu for full 
       </mat-expansion-panel-header>
       @if (team.id === editTeam.id) {
       <div class="sub-panel">
-        <app-admin-team-users [teamId]="team.id" [canEdit]="canEdit"></app-admin-team-users>
+        <app-admin-team-users [teamId]="team.id" [canEdit]="canEdit()"></app-admin-team-users>
       </div>
       }
     </mat-expansion-panel>

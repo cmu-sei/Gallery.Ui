@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
@@ -17,9 +17,9 @@ import { AdminUserListComponent } from 'src/app/components/admin/admin-users/adm
 
 @Component({ selector: 'app-admin-user-list', template: '' })
 class UserListStubComponent {
-  @Input() users?: User[] | null;
-  @Input() isLoading?: boolean | null;
-  @Input() canEdit?: boolean;
+  readonly users = input<User[] | null>(undefined);
+  readonly isLoading = input<boolean | null>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   @Output() create = new EventEmitter<User>();
   @Output() delete = new EventEmitter<string>();
 }
@@ -55,8 +55,8 @@ describe('AdminUsersComponent', () => {
   it('passes the users and canEdit true with ManageUsers', async () => {
     const { list } = await renderUsers([SystemPermission.ManageUsers]);
 
-    expect(list().users?.map((u) => u.name)).toEqual(['Alice']);
-    expect(list().canEdit).toBe(true);
+    expect(list().users()?.map((u) => u.name)).toEqual(['Alice']);
+    expect(list().canEdit()).toBe(true);
   });
 
   /**
@@ -70,7 +70,7 @@ describe('AdminUsersComponent', () => {
       SystemPermission.ManageGroups,
     ]);
 
-    expect(list().canEdit).toBe(false);
+    expect(list().canEdit()).toBe(false);
   });
 
   /**

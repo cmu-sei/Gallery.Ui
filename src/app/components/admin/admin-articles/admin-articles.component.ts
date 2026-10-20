@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy, OnInit, inject as inject_1 } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject as inject_1, input } from '@angular/core';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
@@ -50,7 +50,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
   private collectionDataService = inject_1(CollectionDataService);
   private permissionDataService = inject_1(PermissionDataService);
 
-  @Input() selectedCollectionId: string;
+  readonly selectedCollectionId = input<string>(undefined);
   canEdit = false;
   pageSize = 10;
   pageIndex = 0;
@@ -119,12 +119,13 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.loadCollectionData();
-    this.canEdit = this.permissionDataService.canEditCollection(this.selectedCollectionId);
+    this.canEdit = this.permissionDataService.canEditCollection(this.selectedCollectionId());
   }
 
   loadCollectionData() {
-    this.cardDataService.loadByCollection(this.selectedCollectionId);
-    this.articleDataService.loadByCollection(this.selectedCollectionId);
+    const selectedCollectionId = this.selectedCollectionId();
+    this.cardDataService.loadByCollection(selectedCollectionId);
+    this.articleDataService.loadByCollection(selectedCollectionId);
   }
 
   addOrEditArticle(article: Article) {
@@ -134,7 +135,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
         name: '',
         summary: '',
         description: '',
-        collectionId: this.selectedCollectionId,
+        collectionId: this.selectedCollectionId(),
         cardId: '',
         move: 0,
         inject: 0,

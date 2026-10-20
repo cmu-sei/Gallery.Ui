@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach, onTestFinished } from 'vitest';
-import { Component, Input, Type } from '@angular/core';
+import { Component, Type, input } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -42,8 +42,8 @@ import { AdminGroupsComponent } from 'src/app/components/admin/admin-groups/admi
   template: '',
 })
 class TopbarStubComponent {
-  @Input() title?: string;
-  @Input() topbarView?: TopbarView;
+  readonly title = input<string>(undefined);
+  readonly topbarView = input<TopbarView>(undefined);
 }
 
 @Component({
@@ -57,7 +57,7 @@ class AdminCollectionsStubComponent {}
   template: '',
 })
 class AdminExhibitsStubComponent {
-  @Input() userList?: User[];
+  readonly userList = input<User[]>(undefined);
 }
 
 @Component({

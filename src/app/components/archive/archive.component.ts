@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import { Component, EventEmitter, Input, Output, OnDestroy, DOCUMENT, inject as inject_1 } from '@angular/core';
+import { Component, EventEmitter, Output, OnDestroy, DOCUMENT, inject as inject_1, input } from '@angular/core';
 import {
   Article,
   Card,
@@ -71,7 +71,7 @@ export class ArchiveComponent implements OnDestroy {
   private xApiService = inject_1(XApiService);
   private snackBar = inject_1(MatSnackBar);
 
-  @Input() showAdminButton: boolean;
+  readonly showAdminButton = input<boolean>(undefined);
   @Output() changeTeam = new EventEmitter<string>();
   @Output() sectionSelected = new EventEmitter<string>();
   apiIsSick = false;

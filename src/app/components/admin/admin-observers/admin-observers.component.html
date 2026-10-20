@@ -55,7 +55,7 @@ project root for license information or contact permission@sei.cmu.edu for full 
         <mat-cell *matCellDef="let element">
           <div>
             <button mat-icon-button (click)="addObserver(element.id)" style="outline: none;"
-              title="Add {{ getUserName(element.userId) }}" [disabled]="!canEdit">
+              title="Add {{ getUserName(element.userId) }}" [disabled]="!canEdit()">
               <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline"></mat-icon>
             </button>
           </div>
@@ -120,7 +120,7 @@ project root for license information or contact permission@sei.cmu.edu for full 
         <mat-cell *matCellDef="let element">
           <div>
             <button mat-icon-button (click)="removeObserver(element.id)" style="outline: none;"
-              title="Remove {{ getUserName(element.userId) }}" [disabled]="!canEdit">
+              title="Remove {{ getUserName(element.userId) }}" [disabled]="!canEdit()">
               <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
             </button>
           </div>
