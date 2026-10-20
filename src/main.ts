@@ -76,6 +76,7 @@ export const storage = persistState({
 
 bootstrapApplication(AppComponent, {
     providers: [
+        provideZoneChangeDetection(),
         importProvidersFrom(environment.production ? [] : AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule, BrowserModule, BrowserAnimationsModule, A11yModule, SwaggerCodegenApiModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule, MatDialogModule, MatExpansionModule, MatGridListModule, MatIconModule, MatNativeDateModule, MatRippleModule, MatSidenavModule, MatSortModule, MatToolbarModule, MatStepperModule, MatBottomSheetModule, MatBadgeModule, CdkTableModule, MatTreeModule, CdkTreeModule, ComnAuthModule.forRoot(), ComnSettingsModule.forRoot(), ComnHeaderBarModule, AngularEditorModule, MatFormFieldModule, MatListModule, MatMenuModule, MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatSelectModule, MatSlideToggleModule, MatSliderModule, MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule),
         SystemMessageService,
         UIDataService,
