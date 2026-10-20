@@ -2,8 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { Sort } from '@angular/material/sort';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Team, TeamCard } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
@@ -16,12 +16,21 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminTeamCardEditDialogComponent } from 'src/app/components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-admin-team-cards',
     templateUrl: './admin-team-cards.component.html',
     styleUrls: ['./admin-team-cards.component.scss'],
-    standalone: false
+    imports: [MatFormField, MatLabel, MatSelect, FormsModule, MatOption, MatInput, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, MatCard, MatProgressSpinner]
 })
 export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   @Input() teamList: Team[];

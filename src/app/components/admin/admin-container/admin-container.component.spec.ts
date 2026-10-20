@@ -30,11 +30,16 @@ import { renderComponent } from 'src/app/test-utils/render-component';
 import { ApiStub } from 'src/app/test-utils/api-stub';
 import { activatedRouteStub } from 'src/app/test-utils/activated-route';
 import { permissionDataProviders } from 'src/app/test-utils/mock-permission-data.service';
+import { TopbarComponent } from 'src/app/components/shared/top-bar/topbar.component';
+import { AdminCollectionsComponent } from 'src/app/components/admin/admin-collections/admin-collections.component';
+import { AdminExhibitsComponent } from 'src/app/components/admin/admin-exhibits/admin-exhibits.component';
+import { AdminUsersComponent } from 'src/app/components/admin/admin-users/admin-users.component';
+import { AdminRolesComponent } from 'src/app/components/admin/admin-roles/admin-roles.component';
+import { AdminGroupsComponent } from 'src/app/components/admin/admin-groups/admin-groups.component';
 
 @Component({
   selector: 'app-topbar',
   template: '',
-  standalone: false,
 })
 class TopbarStubComponent {
   @Input() title?: string;
@@ -44,14 +49,12 @@ class TopbarStubComponent {
 @Component({
   selector: 'app-admin-collections',
   template: '',
-  standalone: false,
 })
 class AdminCollectionsStubComponent {}
 
 @Component({
   selector: 'app-admin-exhibits',
   template: '',
-  standalone: false,
 })
 class AdminExhibitsStubComponent {
   @Input() userList?: User[];
@@ -60,21 +63,18 @@ class AdminExhibitsStubComponent {
 @Component({
   selector: 'app-admin-users',
   template: '',
-  standalone: false,
 })
 class AdminUsersStubComponent {}
 
 @Component({
   selector: 'app-admin-roles',
   template: '',
-  standalone: false,
 })
 class AdminRolesStubComponent {}
 
 @Component({
   selector: 'app-admin-groups',
   template: '',
-  standalone: false,
 })
 class AdminGroupsStubComponent {}
 
@@ -122,14 +122,16 @@ async function renderAdmin(
       MatIconModule,
       MatButtonModule,
     ],
-    declarations: [
-      AdminContainerComponent,
-      TopbarStubComponent,
-      AdminCollectionsStubComponent,
-      AdminExhibitsStubComponent,
-      AdminUsersStubComponent,
-      AdminRolesStubComponent,
-      AdminGroupsStubComponent,
+    childStubs: [
+      { replace: TopbarComponent, with: TopbarStubComponent },
+      {
+        replace: AdminCollectionsComponent,
+        with: AdminCollectionsStubComponent,
+      },
+      { replace: AdminExhibitsComponent, with: AdminExhibitsStubComponent },
+      { replace: AdminUsersComponent, with: AdminUsersStubComponent },
+      { replace: AdminRolesComponent, with: AdminRolesStubComponent },
+      { replace: AdminGroupsComponent, with: AdminGroupsStubComponent },
     ],
     providers: [
       ...permissionDataProviders({ system: overrides.permissions ?? [] }),

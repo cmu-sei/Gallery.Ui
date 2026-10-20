@@ -28,11 +28,11 @@ import { renderComponent } from 'src/app/test-utils/render-component';
 import { ApiStub } from 'src/app/test-utils/api-stub';
 import { dialogRefStub } from 'src/app/test-utils/dialog-refs';
 import { AdminTeamsComponent } from './admin-teams.component';
+import { AdminTeamUsersComponent } from 'src/app/components/admin/admin-team-users/admin-team-users.component';
 
 @Component({
   selector: 'app-admin-team-users',
   template: '',
-  standalone: false,
 })
 class TeamUsersStubComponent {
   @Input() teamId?: string;
@@ -71,11 +71,10 @@ async function renderTeams(canEdit: boolean) {
       MatProgressSpinnerModule,
       MatSortModule,
     ],
-    declarations: [
-      AdminTeamsComponent,
-      TeamUsersStubComponent,
-      AdminTeamEditDialogComponent,
+    childStubs: [
+      { replace: AdminTeamUsersComponent, with: TeamUsersStubComponent },
     ],
+    declarations: [AdminTeamEditDialogComponent],
     providers: [
       { provide: TeamService, useValue: teamApi },
       {

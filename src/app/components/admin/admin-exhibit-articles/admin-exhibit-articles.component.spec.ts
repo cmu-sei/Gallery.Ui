@@ -27,11 +27,11 @@ import { CardStore } from 'src/app/data/card/card.store';
 import { renderComponent } from 'src/app/test-utils/render-component';
 import { ApiStub } from 'src/app/test-utils/api-stub';
 import { AdminExhibitArticlesComponent } from './admin-exhibit-articles.component';
+import { AdminExhibitArticleTeamsComponent } from 'src/app/components/admin/admin-exhibit-article-teams/admin-exhibit-article-teams.component';
 
 @Component({
   selector: 'app-admin-exhibit-article-teams',
   template: '',
-  standalone: false,
 })
 class ArticleTeamsStubComponent {
   @Input() exhibitId?: string;
@@ -80,7 +80,12 @@ async function renderExhibitArticles({ canEdit }: { canEdit: boolean }) {
       MatSelectModule,
       MatSortModule,
     ],
-    declarations: [AdminExhibitArticlesComponent, ArticleTeamsStubComponent],
+    childStubs: [
+      {
+        replace: AdminExhibitArticleTeamsComponent,
+        with: ArticleTeamsStubComponent,
+      },
+    ],
     providers: [
       { provide: ArticleService, useValue: articleApi },
       { provide: TeamArticleService, useValue: teamArticleApi },

@@ -18,13 +18,21 @@ import { CurrentUserQuery } from 'src/app/data/user/user.query';
 import { TopbarView } from './topbar.models';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-topbar',
     templateUrl: './topbar.component.html',
     styleUrls: ['./topbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [MatToolbar, MatToolbarRow, MatIconButton, MatTooltip, MatIcon, RouterLink, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatSlideToggle, AsyncPipe]
 })
 export class TopbarComponent implements OnInit, OnDestroy {
   @Input() title?: string;

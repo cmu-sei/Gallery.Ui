@@ -11,13 +11,14 @@ import { ArticleQuery } from 'src/app/data/article/article.query';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { XApiService } from 'src/app/services/xapi/xapi.service';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-article-app',
     templateUrl: './article.component.html',
     styleUrls: ['./article.component.scss'],
-    standalone: false
+    imports: [AngularEditorModule, FormsModule]
 })
 export class ArticleComponent implements OnDestroy {
   safeContent: SafeHtml = '';

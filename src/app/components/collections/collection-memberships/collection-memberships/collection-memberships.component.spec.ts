@@ -24,11 +24,12 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { CollectionMembershipsComponent } from './collection-memberships.component';
+import { CollectionMembershipListComponent } from 'src/app/components/collections/collection-memberships/collection-membership-list/collection-membership-list.component';
+import { CollectionMemberListComponent } from 'src/app/components/collections/collection-memberships/collection-member-list/collection-member-list.component';
 
 @Component({
   selector: 'app-collection-membership-list',
   template: '',
-  standalone: false,
 })
 class MembershipListStubComponent {
   @Input() users?: User[];
@@ -40,7 +41,6 @@ class MembershipListStubComponent {
 @Component({
   selector: 'app-collection-member-list',
   template: '',
-  standalone: false,
 })
 class MemberListStubComponent {
   @Input() memberships?: CollectionMembership[];
@@ -77,10 +77,12 @@ async function renderMemberships(grants: PermissionGrants) {
     deleteCollectionMembership: vi.fn(() => of(undefined)),
   } satisfies ApiStub<CollectionMembershipsService>;
   const rendered = await renderComponent(CollectionMembershipsComponent, {
-    declarations: [
-      CollectionMembershipsComponent,
-      MembershipListStubComponent,
-      MemberListStubComponent,
+    childStubs: [
+      {
+        replace: CollectionMembershipListComponent,
+        with: MembershipListStubComponent,
+      },
+      { replace: CollectionMemberListComponent, with: MemberListStubComponent },
     ],
     providers: [
       ...permissionDataProviders(grants),

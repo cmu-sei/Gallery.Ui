@@ -40,8 +40,13 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { AdminExhibitsComponent } from './admin-exhibits.component';
+import { AdminTeamsComponent } from 'src/app/components/admin/admin-teams/admin-teams.component';
+import { AdminTeamCardsComponent } from 'src/app/components/admin/admin-team-cards/admin-team-cards.component';
+import { AdminExhibitArticlesComponent } from 'src/app/components/admin/admin-exhibit-articles/admin-exhibit-articles.component';
+import { AdminObserversComponent } from 'src/app/components/admin/admin-observers/admin-observers.component';
+import { ExhibitMembershipsComponent } from 'src/app/components/exhibits/exhibit-memberships/exhibit-memberships/exhibit-memberships.component';
 
-@Component({ selector: 'app-admin-teams', template: '', standalone: false })
+@Component({ selector: 'app-admin-teams', template: '' })
 class AdminTeamsStubComponent {
   @Input() exhibitId?: string;
   @Input() canEdit?: boolean;
@@ -50,7 +55,6 @@ class AdminTeamsStubComponent {
 @Component({
   selector: 'app-admin-team-cards',
   template: '',
-  standalone: false,
 })
 class AdminTeamCardsStubComponent {
   @Input() teamList?: Team[];
@@ -62,7 +66,6 @@ class AdminTeamCardsStubComponent {
 @Component({
   selector: 'app-admin-exhibit-articles',
   template: '',
-  standalone: false,
 })
 class AdminExhibitArticlesStubComponent {
   @Input() exhibit?: Exhibit;
@@ -70,7 +73,7 @@ class AdminExhibitArticlesStubComponent {
   @Input() canEdit?: boolean;
 }
 
-@Component({ selector: 'app-admin-observers', template: '', standalone: false })
+@Component({ selector: 'app-admin-observers', template: '' })
 class AdminObserversStubComponent {
   @Input() exhibitId?: string;
   @Input() canEdit?: boolean;
@@ -79,7 +82,6 @@ class AdminObserversStubComponent {
 @Component({
   selector: 'app-exhibit-memberships',
   template: '',
-  standalone: false,
 })
 class ExhibitMembershipsStubComponent {
   @Input() exhibitId?: string | null;
@@ -120,13 +122,18 @@ async function renderExhibits(grants: PermissionGrants) {
       MatSortModule,
       MatTableModule,
     ],
-    declarations: [
-      AdminExhibitsComponent,
-      AdminTeamsStubComponent,
-      AdminTeamCardsStubComponent,
-      AdminExhibitArticlesStubComponent,
-      AdminObserversStubComponent,
-      ExhibitMembershipsStubComponent,
+    childStubs: [
+      { replace: AdminTeamsComponent, with: AdminTeamsStubComponent },
+      { replace: AdminTeamCardsComponent, with: AdminTeamCardsStubComponent },
+      {
+        replace: AdminExhibitArticlesComponent,
+        with: AdminExhibitArticlesStubComponent,
+      },
+      { replace: AdminObserversComponent, with: AdminObserversStubComponent },
+      {
+        replace: ExhibitMembershipsComponent,
+        with: ExhibitMembershipsStubComponent,
+      },
     ],
     providers: [
       ...permissionDataProviders(grants),

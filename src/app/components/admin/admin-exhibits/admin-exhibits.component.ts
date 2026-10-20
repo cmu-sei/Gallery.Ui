@@ -17,8 +17,8 @@ import {
 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   Collection,
   Exhibit,
@@ -39,19 +39,64 @@ import { AdminExhibitEditDialogComponent } from '../admin-exhibit-edit-dialog/ad
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
+import { MatIcon } from '@angular/material/icon';
+import { NgStyle, DatePipe } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatIconButton } from '@angular/material/button';
+import { MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { AdminTeamsComponent } from '../admin-teams/admin-teams.component';
+import { AdminTeamCardsComponent } from '../admin-team-cards/admin-team-cards.component';
+import { AdminExhibitArticlesComponent } from '../admin-exhibit-articles/admin-exhibit-articles.component';
+import { AdminObserversComponent } from '../admin-observers/admin-observers.component';
+import { ExhibitMembershipsComponent } from '../../exhibits/exhibit-memberships/exhibit-memberships/exhibit-memberships.component';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-admin-exhibits',
-  templateUrl: './admin-exhibits.component.html',
-  styleUrls: ['./admin-exhibits.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+    selector: 'app-admin-exhibits',
+    templateUrl: './admin-exhibits.component.html',
+    styleUrls: ['./admin-exhibits.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
+    imports: [
+        MatIcon,
+        NgStyle,
+        MatFormField,
+        MatLabel,
+        MatSelect,
+        MatOption,
+        MatPaginator,
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatIconButton,
+        MatCellDef,
+        MatCell,
+        MatSortHeader,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        AdminTeamsComponent,
+        AdminTeamCardsComponent,
+        AdminExhibitArticlesComponent,
+        AdminObserversComponent,
+        ExhibitMembershipsComponent,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatCard,
+        MatProgressSpinner,
+        DatePipe,
+    ],
 })
 export class AdminExhibitsComponent implements OnDestroy {
   @Input() userList: User[];

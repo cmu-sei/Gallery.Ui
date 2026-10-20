@@ -33,7 +33,7 @@ import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { Observable, Subject, take, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
-import { UntypedFormControl } from '@angular/forms';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Section } from 'src/app/utilities/enumerations';
 import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
@@ -43,12 +43,22 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/services/xapi/xapi.service';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { NgClass } from '@angular/common';
+import { TeamSelectorComponent } from '../team-selector/team-selector.component';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-archive',
-  templateUrl: './archive.component.html',
-  styleUrls: ['./archive.component.scss'],
-  standalone: false
+    selector: 'app-archive',
+    templateUrl: './archive.component.html',
+    styleUrls: ['./archive.component.scss'],
+    imports: [MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, ReactiveFormsModule, MatSuffix, MatSelect, MatOption, MatButton, NgClass, TeamSelectorComponent, MatCard, MatProgressSpinner]
 })
 export class ArchiveComponent implements OnDestroy {
   @Input() showAdminButton: boolean;

@@ -26,12 +26,15 @@ import {
 import { GroupDataService } from 'src/app/data/group/group-data.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { ActivatedRoute } from '@angular/router';
+import { CollectionMembershipListComponent } from '../collection-membership-list/collection-membership-list.component';
+import { CollectionMemberListComponent } from '../collection-member-list/collection-member-list.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-collection-memberships',
     templateUrl: './collection-memberships.component.html',
     styleUrls: ['./collection-memberships.component.scss'],
-    standalone: false
+    imports: [CollectionMembershipListComponent, CollectionMemberListComponent, AsyncPipe]
 })
 export class CollectionMembershipsComponent implements OnInit, OnChanges {
   @Input() embedded: boolean;

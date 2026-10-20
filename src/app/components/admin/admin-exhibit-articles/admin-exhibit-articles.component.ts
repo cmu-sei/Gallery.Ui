@@ -2,8 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { Sort } from '@angular/material/sort';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Article, Exhibit, ItemStatus, SourceType, Team} from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
@@ -13,12 +13,22 @@ import { CardQuery } from 'src/app/data/card/card.query';
 import { CrucibleDialogService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { AdminExhibitArticleTeamsComponent } from '../admin-exhibit-article-teams/admin-exhibit-article-teams.component';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-admin-exhibit-articles',
     templateUrl: './admin-exhibit-articles.component.html',
     styleUrls: ['./admin-exhibit-articles.component.scss'],
-    standalone: false
+    imports: [MatFormField, MatLabel, MatSelect, MatOption, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, AdminExhibitArticleTeamsComponent, MatCard, MatProgressSpinner]
 })
 export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   @Input() exhibit: Exhibit;

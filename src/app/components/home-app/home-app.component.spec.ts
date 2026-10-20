@@ -47,8 +47,11 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { HomeAppComponent } from './home-app.component';
+import { TopbarComponent } from 'src/app/components/shared/top-bar/topbar.component';
+import { WallComponent } from 'src/app/components/wall/wall.component';
+import { ArchiveComponent } from 'src/app/components/archive/archive.component';
 
-@Component({ selector: 'app-topbar', template: '', standalone: false })
+@Component({ selector: 'app-topbar', template: '' })
 class TopbarStubComponent {
   @Input() title?: string;
   @Input() topbarView?: TopbarView;
@@ -56,7 +59,7 @@ class TopbarStubComponent {
   @Output() urlNavigate = new EventEmitter<string>();
 }
 
-@Component({ selector: 'app-wall', template: '', standalone: false })
+@Component({ selector: 'app-wall', template: '' })
 class WallStubComponent {
   @Input() showAdminButton?: boolean;
   @Input() showAdvanceButton?: boolean;
@@ -65,7 +68,7 @@ class WallStubComponent {
   @Output() sectionSelected = new EventEmitter<string>();
 }
 
-@Component({ selector: 'app-archive', template: '', standalone: false })
+@Component({ selector: 'app-archive', template: '' })
 class ArchiveStubComponent {
   @Input() showAdminButton?: boolean;
   @Output() changeTeam = new EventEmitter<string>();
@@ -135,11 +138,10 @@ async function renderHome(
       MatSortModule,
       MatTableModule,
     ],
-    declarations: [
-      HomeAppComponent,
-      TopbarStubComponent,
-      WallStubComponent,
-      ArchiveStubComponent,
+    childStubs: [
+      { replace: TopbarComponent, with: TopbarStubComponent },
+      { replace: WallComponent, with: WallStubComponent },
+      { replace: ArchiveComponent, with: ArchiveStubComponent },
     ],
     providers: [
       ...permissionDataProviders(grants),

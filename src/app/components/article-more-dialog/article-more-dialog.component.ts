@@ -4,13 +4,15 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
+import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-article-more-dialog',
     templateUrl: './article-more-dialog.component.html',
     styleUrls: ['./article-more-dialog.component.scss'],
-    standalone: false
+    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, AngularEditorModule, FormsModule]
 })
 export class ArticleMoreDialogComponent {
   @Output() editComplete = new EventEmitter<any>();

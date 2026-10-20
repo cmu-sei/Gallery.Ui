@@ -4,19 +4,25 @@
 import { Component, OnDestroy, OnInit, AfterViewInit, Input, ViewChild } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
 import { Team } from 'src/app/generated/api';
 import { ArticleTeamDataService } from 'src/app/data/team/article-team-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-admin-exhibit-article-teams',
     templateUrl: './admin-exhibit-article-teams.component.html',
     styleUrls: ['./admin-exhibit-article-teams.component.scss'],
-    standalone: false
+    imports: [MatToolbar, MatToolbarRow, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatPaginator, MatTable, MatSort, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow]
 })
 export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, AfterViewInit {
   @Input() exhibitId: string;

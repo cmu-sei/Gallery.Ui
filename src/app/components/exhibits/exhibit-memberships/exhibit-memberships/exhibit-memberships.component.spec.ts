@@ -24,11 +24,12 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { ExhibitMembershipsComponent } from './exhibit-memberships.component';
+import { ExhibitMembershipListComponent } from 'src/app/components/exhibits/exhibit-memberships/exhibit-membership-list/exhibit-membership-list.component';
+import { ExhibitMemberListComponent } from 'src/app/components/exhibits/exhibit-memberships/exhibit-member-list/exhibit-member-list.component';
 
 @Component({
   selector: 'app-exhibit-membership-list',
   template: '',
-  standalone: false,
 })
 class MembershipListStubComponent {
   @Input() users?: User[];
@@ -40,7 +41,6 @@ class MembershipListStubComponent {
 @Component({
   selector: 'app-exhibit-member-list',
   template: '',
-  standalone: false,
 })
 class MemberListStubComponent {
   @Input() memberships?: ExhibitMembership[];
@@ -77,10 +77,12 @@ async function renderMemberships(grants: PermissionGrants) {
     deleteExhibitMembership: vi.fn(() => of(undefined)),
   } satisfies ApiStub<ExhibitMembershipsService>;
   const rendered = await renderComponent(ExhibitMembershipsComponent, {
-    declarations: [
-      ExhibitMembershipsComponent,
-      MembershipListStubComponent,
-      MemberListStubComponent,
+    childStubs: [
+      {
+        replace: ExhibitMembershipListComponent,
+        with: MembershipListStubComponent,
+      },
+      { replace: ExhibitMemberListComponent, with: MemberListStubComponent },
     ],
     providers: [
       ...permissionDataProviders(grants),

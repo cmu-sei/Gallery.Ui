@@ -39,13 +39,16 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { AdminCollectionsComponent } from './admin-collections.component';
+import { AdminCardsComponent } from 'src/app/components/admin/admin-cards/admin-cards.component';
+import { AdminArticlesComponent } from 'src/app/components/admin/admin-articles/admin-articles.component';
+import { CollectionMembershipsComponent } from 'src/app/components/collections/collection-memberships/collection-memberships/collection-memberships.component';
 
-@Component({ selector: 'app-admin-cards', template: '', standalone: false })
+@Component({ selector: 'app-admin-cards', template: '' })
 class AdminCardsStubComponent {
   @Input() selectedCollectionId?: string;
 }
 
-@Component({ selector: 'app-admin-articles', template: '', standalone: false })
+@Component({ selector: 'app-admin-articles', template: '' })
 class AdminArticlesStubComponent {
   @Input() selectedCollectionId?: string;
 }
@@ -53,7 +56,6 @@ class AdminArticlesStubComponent {
 @Component({
   selector: 'app-collection-memberships',
   template: '',
-  standalone: false,
 })
 class CollectionMembershipsStubComponent {
   @Input() collectionId?: string;
@@ -97,13 +99,15 @@ async function renderCollections(grants: PermissionGrants) {
       MatSortModule,
       MatTableModule,
     ],
-    declarations: [
-      AdminCollectionsComponent,
-      AdminCollectionEditDialogComponent,
-      AdminCardsStubComponent,
-      AdminArticlesStubComponent,
-      CollectionMembershipsStubComponent,
+    childStubs: [
+      { replace: AdminCardsComponent, with: AdminCardsStubComponent },
+      { replace: AdminArticlesComponent, with: AdminArticlesStubComponent },
+      {
+        replace: CollectionMembershipsComponent,
+        with: CollectionMembershipsStubComponent,
+      },
     ],
+    declarations: [AdminCollectionEditDialogComponent],
     providers: [
       ...permissionDataProviders(grants),
       { provide: CollectionService, useValue: collectionApi },

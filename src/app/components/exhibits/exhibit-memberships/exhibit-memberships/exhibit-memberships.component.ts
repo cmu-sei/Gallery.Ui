@@ -26,12 +26,15 @@ import {
 } from 'src/app/generated/api';
 import { GroupDataService } from 'src/app/data/group/group-data.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
+import { ExhibitMembershipListComponent } from '../exhibit-membership-list/exhibit-membership-list.component';
+import { ExhibitMemberListComponent } from '../exhibit-member-list/exhibit-member-list.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-exhibit-memberships',
-  templateUrl: './exhibit-memberships.component.html',
-  styleUrls: ['./exhibit-memberships.component.scss'],
-  standalone: false
+    selector: 'app-exhibit-memberships',
+    templateUrl: './exhibit-memberships.component.html',
+    styleUrls: ['./exhibit-memberships.component.scss'],
+    imports: [ExhibitMembershipListComponent, ExhibitMemberListComponent, AsyncPipe]
 })
 export class ExhibitMembershipsComponent implements OnInit {
   @Input() embedded: boolean;

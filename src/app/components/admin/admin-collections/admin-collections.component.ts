@@ -9,10 +9,10 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   Collection,
   SystemPermission,
@@ -25,19 +25,60 @@ import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
+import { MatIcon } from '@angular/material/icon';
+import { NgStyle, DatePipe } from '@angular/common';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { AdminCardsComponent } from '../admin-cards/admin-cards.component';
+import { AdminArticlesComponent } from '../admin-articles/admin-articles.component';
+import { CollectionMembershipsComponent } from '../../collections/collection-memberships/collection-memberships/collection-memberships.component';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-admin-collections',
-  templateUrl: './admin-collections.component.html',
-  styleUrls: ['./admin-collections.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+    selector: 'app-admin-collections',
+    templateUrl: './admin-collections.component.html',
+    styleUrls: ['./admin-collections.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
+    imports: [
+        MatIcon,
+        NgStyle,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        ReactiveFormsModule,
+        MatIconButton,
+        MatSuffix,
+        MatPaginator,
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        MatSortHeader,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        AdminCardsComponent,
+        AdminArticlesComponent,
+        CollectionMembershipsComponent,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatCard,
+        MatProgressSpinner,
+        DatePipe,
+    ],
 })
 export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   collectionList: Collection[] = [];

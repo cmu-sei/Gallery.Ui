@@ -9,12 +9,14 @@ import { Team } from 'src/app/generated/api/model/models';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { takeUntil, Subject } from 'rxjs';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
 
 @Component({
     selector: 'app-team-selector',
     templateUrl: './team-selector.component.html',
     styleUrls: ['./team-selector.component.scss'],
-    standalone: false
+    imports: [MatSelect, MatOption]
 })
 export class TeamSelectorComponent implements OnDestroy {
   @Output() changeTeam = new EventEmitter<string>();

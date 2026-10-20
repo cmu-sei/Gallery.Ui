@@ -1,7 +1,7 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -18,9 +18,9 @@ import { User } from 'src/app/generated/api';
 import { renderComponent } from 'src/app/test-utils/render-component';
 import { AdminGroupsMembershipListComponent } from './admin-groups-membership-list.component';
 
-// Stands in for ngx-clipboard's directive on the copy button; AppModule does
-// not import ClipboardModule (see the NG0303 test below).
-@Directive({ selector: '[ngxClipboard]', standalone: false })
+// Stands in for ngx-clipboard's directive on the copy button; the component
+// does not import ClipboardModule (see the NG0303 test below).
+@Directive({ selector: '[ngxClipboard]' })
 class ClipboardStubDirective {
   @Input() cbContent?: string;
   @Output() cbOnSuccess = new EventEmitter<unknown>();
@@ -44,15 +44,17 @@ async function renderList(canEdit: boolean, clipboard = true) {
       MatTableModule,
       MatToolbarModule,
     ],
-    declarations: [
-      AdminGroupsMembershipListComponent,
-      ...(clipboard ? [ClipboardStubDirective] : []),
-    ],
     componentInputs: { users: USERS, canEdit },
-    configureTestBed: (testBed) =>
+    configureTestBed: (testBed) => {
+      if (clipboard) {
+        testBed.overrideComponent(AdminGroupsMembershipListComponent, {
+          add: { imports: [ClipboardStubDirective] },
+        });
+      }
       // Report unknown bindings the way the app does in dev mode (console.error)
       // instead of throwing, so the NG0303 test can read them.
-      testBed.configureTestingModule({ errorOnUnknownProperties: clipboard }),
+      testBed.configureTestingModule({ errorOnUnknownProperties: clipboard });
+    },
   });
   const created: string[] = [];
   rendered.fixture.componentInstance.createMembership.subscribe((id) =>
@@ -91,21 +93,16 @@ describe('AdminGroupsMembershipListComponent', () => {
   });
 
   /**
-   * Verifies: with the module set AppModule declares this component in (no ClipboardModule), the copy button's ngx-clipboard bindings are unknown properties, logged as NG0303 (current behavior).
-   * Interacts with: Angular's dev-mode unknown-property check, console.error.
-   * Data: Alice and Bob (two rows); no clipboard directive declared.
+   * Verifies: with the component's own imports (no ClipboardModule), the copy button's ngx-clipboard bindings do nothing, so no "Copied" snackbar opens (current behavior). As a standalone component it no longer logs NG0303 at runtime.
+   * Interacts with: the copy button; MatSnackBar via cbOnSuccess.
+   * Data: Alice and Bob (two rows); no clipboard directive.
    */
-  it('logs NG0303 for the copy button clipboard binding', async () => {
-    const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
-
+  it('copy button does nothing without the clipboard directive', async () => {
     await renderList(true, false);
 
     // Current behavior; see agent-docs/ui-test-bugs/gallery.ui.md.
-    // One message per rendered row.
-    expect(errors.mock.calls.map((c) => String(c[0]))).toEqual(
-      USERS.map(() =>
-        expect.stringContaining("NG0303: Can't bind to 'cbContent'"),
-      ),
-    );
+    await userEvent.setup().click(screen.getByTitle('Copy: u1'));
+
+    expect(screen.queryByText('Copied to clipboard')).not.toBeInTheDocument();
   });
 });

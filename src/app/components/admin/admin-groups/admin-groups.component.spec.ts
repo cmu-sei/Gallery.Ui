@@ -31,11 +31,11 @@ import { ApiStub } from 'src/app/test-utils/api-stub';
 import { dialogRefStub } from 'src/app/test-utils/dialog-refs';
 import { permissionDataProviders } from 'src/app/test-utils/mock-permission-data.service';
 import { AdminGroupsComponent } from './admin-groups.component';
+import { AdminGroupsDetailComponent } from 'src/app/components/admin/admin-groups/admin-groups-detail/admin-groups-detail.component';
 
 @Component({
   selector: 'app-admin-groups-detail',
   template: '',
-  standalone: false,
 })
 class GroupsDetailStubComponent {
   @Input() groupId?: string;
@@ -71,11 +71,10 @@ async function renderGroups(permissions: SystemPermission[], confirmed = true) {
       MatTableModule,
       MatTooltipModule,
     ],
-    declarations: [
-      AdminGroupsComponent,
-      GroupsDetailStubComponent,
-      NameDialogComponent,
+    childStubs: [
+      { replace: AdminGroupsDetailComponent, with: GroupsDetailStubComponent },
     ],
+    declarations: [NameDialogComponent],
     providers: [
       ...permissionDataProviders({ system: permissions }),
       { provide: GroupService, useValue: groupApi },

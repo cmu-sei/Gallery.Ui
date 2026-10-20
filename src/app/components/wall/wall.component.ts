@@ -15,12 +15,17 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { itemStatusClass } from 'src/app/utilities/item-status';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { TeamSelectorComponent } from '../team-selector/team-selector.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatCard } from '@angular/material/card';
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-wall',
-  templateUrl: './wall.component.html',
-  styleUrls: ['./wall.component.scss'],
-  standalone: false
+    selector: 'app-wall',
+    templateUrl: './wall.component.html',
+    styleUrls: ['./wall.component.scss'],
+    imports: [MatButton, TeamSelectorComponent, MatIconButton, MatIcon, MatCard, NgClass]
 })
 export class WallComponent implements OnDestroy {
   @Input() showAdminButton: boolean;
