@@ -14,6 +14,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { ComnAuthService } from '@cmusei/crucible-common';
 import {
   Collection,
   CollectionService,
@@ -30,6 +31,7 @@ import { renderComponent } from 'src/app/test-utils/render-component';
 import { ApiStub } from 'src/app/test-utils/api-stub';
 import { activatedRouteStub } from 'src/app/test-utils/activated-route';
 import { permissionDataProviders } from 'src/app/test-utils/mock-permission-data.service';
+import { captureUnhandledRejections, flush } from 'src/app/test-utils/unhandled-rx-errors';
 
 @Component({
   selector: 'app-topbar',
@@ -94,6 +96,7 @@ async function renderAdmin(
     permissions?: SystemPermission[];
     section?: string;
     apiVersion?: Observable<string>;
+    logoutCall?: ComnAuthService['logout'];
   } = {},
 ) {
   // Distinct answers per endpoint, so a spec can tell from the real
@@ -136,6 +139,13 @@ async function renderAdmin(
       { provide: ActivatedRoute, useValue: route.route },
       { provide: Router, useValue: router },
       { provide: SignalRService, useValue: signalR },
+      ...(overrides.logoutCall ? [{
+        provide: ComnAuthService,
+        useValue: {
+          logout: overrides.logoutCall,
+          user$: of(null),
+        } satisfies Pick<ComnAuthService, 'logout' | 'user$'>,
+      }] : []),
       {
         provide: CollectionService,
         useValue: {
@@ -345,5 +355,24 @@ describe('AdminContainerComponent', () => {
     });
 
     expect(screen.getByText(/API ERROR!$/)).toBeInTheDocument();
+  });
+  /**
+   * Verifies: a failed direct logout escapes as an unhandled rejection (current behavior).
+   * Interacts with: the real logout method and ComnAuthService.logout.
+   * Data: rendered admin container; the sign-out redirect rejects.
+   */
+  it('lets a failed direct logout escape unhandled', async () => {
+    const failure = new Error('sign-out redirect failed');
+    const errors = captureUnhandledRejections();
+    let calls = 0;
+    const { fixture } = await renderAdmin({
+      logoutCall: () => { calls++; return Promise.reject(failure); },
+    });
+
+    fixture.componentInstance.logout();
+    await flush();
+
+    expect(calls).toBe(1);
+    expect(errors).toEqual([failure]);
   });
 });

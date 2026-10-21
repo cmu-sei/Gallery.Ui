@@ -140,10 +140,10 @@
               "html"
             ],
             "coverageThresholds": {
-              "statements": 81,
-              "branches": 62,
-              "functions": 82,
-              "lines": 80
+              "statements": 83,
+              "branches": 64,
+              "functions": 84,
+              "lines": 82
             }
           },
           "configurations": {

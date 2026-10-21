@@ -182,4 +182,19 @@ describe('AdminTeamCardEditDialogComponent', () => {
 
     expect(completions).toEqual([{ saveChanges: false, teamCard: null }]);
   });
+
+  /**
+   * Verifies: a direct save emits a team card with no selected team or card (current behavior).
+   * Interacts with: errorFree, handleEditComplete and editComplete output.
+   * Data: a new team card with move and inject zero; Save is disabled.
+   */
+  it('emits an invalid team card when the save handler is called directly', async () => {
+    const { fixture, completions } = await renderDialog({ move: 0, inject: 0, isShownOnWall: true, canPostArticles: false });
+    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
+    expect(fixture.componentInstance.errorFree()).toBe(false);
+
+    fixture.componentInstance.handleEditComplete(true);
+
+    expect(completions).toEqual([{ saveChanges: true, teamCard: { move: 0, inject: 0, isShownOnWall: true, canPostArticles: false } }]);
+  });
 });

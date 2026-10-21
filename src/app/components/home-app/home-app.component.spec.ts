@@ -47,6 +47,7 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { HomeAppComponent } from './home-app.component';
+import { captureUnhandledRejections, flush } from 'src/app/test-utils/unhandled-rx-errors';
 
 @Component({ selector: 'app-topbar', template: '', standalone: false })
 class TopbarStubComponent {
@@ -94,6 +95,7 @@ const TEAMS: Team[] = [
 async function renderHome(
   grants: PermissionGrants,
   queryParams: Record<string, string> = {},
+  logoutCall: ComnAuthService['logout'] = vi.fn(() => Promise.resolve()),
 ) {
   const signalR = {
     startConnection: vi.fn(() => Promise.resolve()),
@@ -154,7 +156,8 @@ async function renderHome(
         // UserDataService.setCurrentUser reads only profile.name and .sub.
         useValue: {
           user$: of({ profile: { sub: 'u1', name: 'Alice' } }),
-        } as unknown as Pick<ComnAuthService, 'user$'>,
+          logout: logoutCall,
+        } as unknown as Pick<ComnAuthService, 'user$' | 'logout'>,
       },
       {
         provide: CollectionService,
@@ -420,5 +423,22 @@ describe('HomeAppComponent', () => {
     // Current behavior; see agent-docs/ui-test-bugs/gallery.ui.md.
     expect(xApi.viewedExhibitArchive).not.toHaveBeenCalled();
     expect(xApi.observedExhibitArchive).not.toHaveBeenCalled();
+  });
+  /**
+   * Verifies: a failed direct logout escapes as an unhandled rejection (current behavior).
+   * Interacts with: the real logout method and ComnAuthService.logout.
+   * Data: rendered home page; the sign-out redirect rejects.
+   */
+  it('lets a failed direct logout escape unhandled', async () => {
+    const failure = new Error('sign-out redirect failed');
+    const errors = captureUnhandledRejections();
+    let calls = 0;
+    const { fixture } = await renderHome({}, {}, () => { calls++; return Promise.reject(failure); });
+
+    fixture.componentInstance.logout();
+    await flush();
+
+    expect(calls).toBe(1);
+    expect(errors).toEqual([failure]);
   });
 });
