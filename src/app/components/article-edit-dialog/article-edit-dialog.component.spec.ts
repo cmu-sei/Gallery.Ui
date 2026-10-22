@@ -159,4 +159,19 @@ describe('ArticleEditDialogComponent', () => {
 
     expect(completions).toEqual([{ saveChanges: false, article: null }]);
   });
+
+  /**
+   * Verifies: a direct save emits an article even when no card is selected (current behavior).
+   * Interacts with: errorFree, handleEditComplete and editComplete output.
+   * Data: article a1 with cardId empty; Save is disabled in the rendered dialog.
+   */
+  it('emits an invalid article when the save handler is called directly', async () => {
+    const { fixture, completions } = await renderArticleDialog({ ...structuredClone(ARTICLE), cardId: '' });
+    expect(actions().getByRole('button', { name: 'Save' })).toBeDisabled();
+    expect(fixture.componentInstance.errorFree()).toBe(false);
+
+    fixture.componentInstance.handleEditComplete(true);
+
+    expect(completions).toEqual([{ saveChanges: true, article: expect.objectContaining({ id: 'a1', cardId: '' }) }]);
+  });
 });

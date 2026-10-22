@@ -25,6 +25,7 @@ import {
   PermissionGrants,
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
+import { captureUnhandledRxErrors, flush } from 'src/app/test-utils/unhandled-rx-errors';
 
 async function renderTopbar(
   overrides: {
@@ -33,9 +34,10 @@ async function renderTopbar(
     topbarView?: TopbarView;
     teams?: { id: string; name: string }[];
   } = {},
+  logoutCall: ComnAuthService['logout'] = vi.fn(() => Promise.resolve()),
 ) {
   const setUserTheme = vi.fn();
-  const logout = vi.fn(() => Promise.resolve());
+  const logout = logoutCall;
   const auth: Pick<ComnAuthService, 'setUserTheme' | 'logout'> = {
     setUserTheme,
     logout,
@@ -163,6 +165,25 @@ describe('TopbarComponent', () => {
     await user.click(screen.getByRole('menuitem', { name: 'Logout' }));
 
     expect(logout).toHaveBeenCalledOnce();
+  });
+
+  /**
+   * Verifies: a failed logout from the user menu escapes as an unhandled rejection (current behavior).
+   * Interacts with: ComnAuthService.logout, the rendered menu and Angular's zone.
+   * Data: Alice clicks Logout and the sign-out redirect rejects.
+   */
+  it('lets a failed logout from the user menu escape unhandled', async () => {
+    const failure = new Error('sign-out redirect failed');
+    const errors = captureUnhandledRxErrors();
+    let calls = 0;
+    await renderTopbar({}, () => { calls++; return Promise.reject(failure); });
+
+    const user = await openUserMenu();
+    await user.click(screen.getByRole('menuitem', { name: 'Logout' }));
+    await flush();
+
+    expect(calls).toBe(1);
+    expect(errors).toEqual([failure]);
   });
 
   /**

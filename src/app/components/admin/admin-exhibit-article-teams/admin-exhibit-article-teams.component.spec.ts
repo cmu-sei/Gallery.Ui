@@ -3,7 +3,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { screen } from '@testing-library/angular';
+import { screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { of } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
@@ -70,11 +70,12 @@ describe('AdminExhibitArticleTeamsComponent', () => {
    * Data: Blue shares a1, Red does not.
    */
   it('splits the exhibit teams by whether they share the article', async () => {
-    await renderArticleTeams(true);
+    const { container } = await renderArticleTeams(true);
+    const available = within(container.querySelector('.exhibit-teams-list-container') as HTMLElement);
 
-    expect(screen.getByTitle('Add Red Team')).toBeInTheDocument();
+    expect(available.getByRole('button', { name: 'Add Red Team' })).toBeInTheDocument();
     expect(screen.getByTitle('Remove Blue Team')).toBeInTheDocument();
-    expect(screen.queryByTitle('Add Blue Team')).not.toBeInTheDocument();
+    expect(available.queryByRole('button', { name: 'Add Blue Team' })).not.toBeInTheDocument();
   });
 
   /**
@@ -83,17 +84,19 @@ describe('AdminExhibitArticleTeamsComponent', () => {
    * Data: canEdit true; Red added, Blue removed.
    */
   it('adds and removes article teams when canEdit is true', async () => {
-    const { teamArticleApi } = await renderArticleTeams(true);
+    const { container, teamArticleApi } = await renderArticleTeams(true);
+    const available = within(container.querySelector('.exhibit-teams-list-container') as HTMLElement);
+    const selected = within(container.querySelector('.exhibit-article-teams-list-container') as HTMLElement);
     const user = userEvent.setup();
 
-    await user.click(screen.getByTitle('Add Red Team'));
+    await user.click(available.getByRole('button', { name: 'Add Red Team' }));
     expect(teamArticleApi.createTeamArticle).toHaveBeenCalledWith({
       exhibitId: 'e1',
       articleId: 'a1',
       teamId: 't2',
     });
     expect(screen.getByTitle('Remove Red Team')).toBeInTheDocument();
-    expect(screen.queryByTitle('Add Red Team')).not.toBeInTheDocument();
+    expect(available.queryByRole('button', { name: 'Add Red Team' })).not.toBeInTheDocument();
 
     await user.click(screen.getByTitle('Remove Blue Team'));
     expect(teamArticleApi.deleteTeamArticleByIds).toHaveBeenCalledWith(
@@ -101,7 +104,7 @@ describe('AdminExhibitArticleTeamsComponent', () => {
       'a1',
     );
     expect(screen.getByTitle('Add Blue Team')).toBeInTheDocument();
-    expect(screen.queryByTitle('Remove Blue Team')).not.toBeInTheDocument();
+    expect(selected.queryByRole('button', { name: 'Remove Blue Team' })).not.toBeInTheDocument();
   });
 
   /**
@@ -122,10 +125,30 @@ describe('AdminExhibitArticleTeamsComponent', () => {
    * Data: Blue shares a1, published before render; canEdit true.
    */
   it('shows no article teams when the team articles were published before it mounted', async () => {
-    await renderArticleTeams(true, true);
+    const { container } = await renderArticleTeams(true, true);
+    const selected = within(container.querySelector('.exhibit-article-teams-list-container') as HTMLElement);
 
     // Current behavior; see agent-docs/ui-test-bugs/gallery.ui.md.
-    expect(screen.queryByTitle('Remove Blue Team')).not.toBeInTheDocument();
+    expect(selected.queryByRole('button', { name: 'Remove Blue Team' })).not.toBeInTheDocument();
     expect(screen.getByTitle('Add Blue Team')).toBeInTheDocument();
+  });
+
+  /**
+   * Verifies: deleting a selected team hides the last remaining unselected team from the Add list (current behavior).
+   * Interacts with: real TeamStore/TeamQuery, the team-article subscription and setDataSources.
+   * Data: Blue shares a1 and Red does not; Blue is removed from the team store before another team-article emission.
+   */
+  it('hides the last available team when a selected team disappears', async () => {
+    const { fixture, container } = await renderArticleTeams(true);
+    const available = within(container.querySelector('.exhibit-teams-list-container') as HTMLElement);
+    expect(available.getByRole('button', { name: 'Add Red Team' })).toBeInTheDocument();
+    expect(screen.getByTitle('Remove Blue Team')).toBeInTheDocument();
+
+    TestBed.inject(TeamStore).remove('t1');
+    fixture.detectChanges();
+
+    expect(available.queryByRole('button', { name: 'Add Red Team' })).not.toBeInTheDocument();
+    expect(screen.getByTitle('Remove Blue Team')).toBeInTheDocument();
+    expect(TestBed.inject(TeamStore).getValue().entities['t2'].name).toBe('Red Team');
   });
 });
