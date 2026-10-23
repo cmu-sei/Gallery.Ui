@@ -18,7 +18,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { ComnAuthService } from '@cmusei/crucible-common';
+import { ComnAuthService, ComnSettingsService } from '@cmusei/crucible-common';
 import {
   CardService,
   CollectionService,
@@ -96,6 +96,7 @@ async function renderHome(
   grants: PermissionGrants,
   queryParams: Record<string, string> = {},
   logoutCall: ComnAuthService['logout'] = vi.fn(() => Promise.resolve()),
+  backgroundImage?: string,
 ) {
   const signalR = {
     startConnection: vi.fn(() => Promise.resolve()),
@@ -151,6 +152,18 @@ async function renderHome(
       },
       { provide: SignalRService, useValue: signalR },
       { provide: XApiService, useValue: xApi },
+      {
+        provide: ComnSettingsService,
+        // The home page reads only these keys.
+        useValue: {
+          settings: {
+            AppTitle: '',
+            AppTopBarText: '',
+            AppTopBarImage: '',
+            AppLandingBackgroundImage: backgroundImage,
+          },
+        } satisfies Pick<ComnSettingsService, 'settings'>,
+      },
       {
         provide: ComnAuthService,
         // UserDataService.setCurrentUser reads only profile.name and .sub.
@@ -440,5 +453,38 @@ describe('HomeAppComponent', () => {
 
     expect(calls).toBe(1);
     expect(errors).toEqual([failure]);
+  });
+
+  /**
+   * Verifies: the exhibit list shows the background image named in settings, and none without the setting.
+   * Interacts with: ComnSettingsService.settings (stub), HomeAppComponent template.
+   * Data: AppLandingBackgroundImage set to a relative asset URL, or unset; no exhibit in the URL.
+   */
+  it.each([
+    { label: 'with', background: '/assets/local/landing-background.jpg', expected: 'url("/assets/local/landing-background.jpg")' },
+    { label: 'without', background: undefined, expected: '' },
+  ])('shows the landing background $label the setting', async ({ background, expected }) => {
+    const { container } = await renderHome({}, {}, undefined, background);
+
+    const page = container.querySelector('.app-home-container') as HTMLElement;
+    expect(page.style.getPropertyValue('--landing-background')).toBe(expected);
+    expect(page.classList.contains('has-background')).toBe(!!background);
+  });
+
+  /**
+   * Verifies: an open exhibit (wall or archive) does not get the landing background.
+   * Interacts with: ComnSettingsService.settings (stub), HomeAppComponent template.
+   * Data: AppLandingBackgroundImage set; ?exhibit=x1&section=wall.
+   */
+  it('shows no landing background behind an open exhibit', async () => {
+    const { container } = await renderHome(
+      { system: [SystemPermission.ViewExhibits] },
+      { exhibit: 'x1', section: 'wall' },
+      undefined,
+      '/assets/local/landing-background.jpg',
+    );
+
+    const page = container.querySelector('.app-home-container') as HTMLElement;
+    expect(page.classList.contains('has-background')).toBe(false);
   });
 });
