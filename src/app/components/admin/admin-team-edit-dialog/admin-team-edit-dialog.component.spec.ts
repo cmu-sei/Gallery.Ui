@@ -99,4 +99,19 @@ describe('AdminTeamEditDialogComponent', () => {
 
     expect(completions).toEqual([{ saveChanges: false, team: null }]);
   });
+
+  /**
+   * Verifies: a direct save emits a team even when its required short name is empty (current behavior).
+   * Interacts with: the real validators, handleEditComplete and editComplete output.
+   * Data: team t1 with an empty short name; Save is disabled.
+   */
+  it('emits an invalid team when the save handler is called directly', async () => {
+    const { fixture, completions } = await renderTeamDialog({ id: 't1', name: 'Blue Team', shortName: '' });
+    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
+    expect(fixture.componentInstance.errorFree()).toBe(false);
+
+    fixture.componentInstance.handleEditComplete(true);
+
+    expect(completions).toEqual([{ saveChanges: true, team: { id: 't1', name: 'Blue Team', shortName: '' } }]);
+  });
 });

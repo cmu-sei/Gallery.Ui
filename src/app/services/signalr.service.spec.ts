@@ -367,30 +367,41 @@ describe('SignalRService', () => {
       expect(hub.start).toHaveBeenCalledTimes(3);
       expect(hub.invoke).toHaveBeenCalledWith('Join');
     });
+
     /**
      * Verifies: a rejected Join, Leave or switchTeam invoke escapes unhandled, and a failed Join leaves the client unjoined.
      * Interacts with: rejectInvokes (FakeHubConnection.invoke rejects), captureUnhandledRejections.
-     * Data: a connected, joined home hub; each row calls one method after every invoke starts rejecting with "<method> failed".
+     * Data: a connected, joined home hub; one row rejects each call, including the selected team's rejoin after Join succeeds.
      */
-    it.each<[string, (s: SignalRService) => void, string]>([
-      ['join()', (s) => s.join(), 'Join'],
-      ['leave()', (s) => s.leave(), 'Leave'],
-      ['switchTeam()', (s) => s.switchTeam('t1', 't2'), 'switchTeam'],
+    it.each<[
+      string,
+      string,
+      ((s: SignalRService) => void) | undefined,
+      (s: SignalRService) => void,
+      Array<[string, ...unknown[]]>,
+    ]>([
+      ['join()', 'Join', undefined, (s) => s.join(), [['Join']]],
+      ['leave()', 'Leave', undefined, (s) => s.leave(), [['Leave']]],
+      ['switchTeam()', 'switchTeam', undefined, (s) => s.switchTeam('t1', 't2'), [['switchTeam', ['t1', 't2']]]],
+      ['join() team restore', 'switchTeam', (s) => s.switchTeam('', 't2'), (s) => s.join(), [['Join'], ['switchTeam', ['t2', 't2']]]],
     ])(
       '%s lets a rejected %s invoke escape unhandled',
-      async (_name, call, method) => {
+      async (_name, method, arrange, call, expectedCalls) => {
         const { service, hub } = await connect(ApplicationArea.home);
+        await flush();
+        arrange?.(service);
         await flush();
         const rejections = captureUnhandledRejections();
         const calls = rejectInvokes(
           hub,
           (m: string) => new Error(`${m} failed`),
+          [method],
         );
 
         call(service);
         await flush();
 
-        expect(calls.map(([m]) => m)).toEqual([method]);
+        expect(calls).toEqual(expectedCalls);
         expect(rejections).toEqual([new Error(`${method} failed`)]);
       },
     );
