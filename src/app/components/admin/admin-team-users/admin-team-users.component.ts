@@ -1,10 +1,10 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, inject, input, viewChild } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { Sort, MatSortable } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { Sort, MatSortable, MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { Team, TeamUser, User } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
@@ -13,17 +13,31 @@ import { UserDataService } from 'src/app/data/user/user-data.service';
 import { UserQuery } from 'src/app/data/user/user.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { UntypedFormControl } from '@angular/forms';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-admin-team-users',
     templateUrl: './admin-team-users.component.html',
     styleUrls: ['./admin-team-users.component.scss'],
-    standalone: false
+    imports: [MatToolbar, MatToolbarRow, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatPaginator, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatCard, MatProgressSpinner, MatCheckbox]
 })
 export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit {
-  @Input() teamId: string;
-  @Input() canEdit: boolean;
+  private teamQuery = inject(TeamQuery);
+  private teamUserDataService = inject(TeamUserDataService);
+  private teamUserQuery = inject(TeamUserQuery);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+
+  readonly teamId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   userList: User[] = [];
   teamUsers: TeamUser[] = [];
   otherTeamUsers: TeamUser[] = [];
@@ -41,16 +55,10 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
   private unsubscribe$ = new Subject();
   sort: Sort = { active: 'name', direction: 'asc' };
 
-  @ViewChild('userPaginator') userPaginator: MatPaginator;
-  @ViewChild('teamUserPaginator') teamUserPaginator: MatPaginator;
+  readonly userPaginator = viewChild<MatPaginator>('userPaginator');
+  readonly teamUserPaginator = viewChild<MatPaginator>('teamUserPaginator');
 
-  constructor(
-    private teamQuery: TeamQuery,
-    private teamUserDataService: TeamUserDataService,
-    private teamUserQuery: TeamUserQuery,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery
-  ) {
+  constructor() {
     this.userQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -63,8 +71,8 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((tUsers) => {
-        this.teamUsers = tUsers.filter((tu) => tu.teamId === this.teamId);
-        this.otherTeamUsers = tUsers.filter((tu) => tu.teamId !== this.teamId);
+        this.teamUsers = tUsers.filter((tu) => tu.teamId === this.teamId());
+        this.otherTeamUsers = tUsers.filter((tu) => tu.teamId !== this.teamId());
         this.setDataSources();
       });
     // observe the exhibit teams
@@ -89,16 +97,16 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
     this.filterControl.setValue('');
     this.teamUsers = this.teamUserQuery
       .getAll()
-      .filter((tu) => tu.teamId === this.teamId);
+      .filter((tu) => tu.teamId === this.teamId());
     this.otherTeamUsers = this.teamUserQuery
       .getAll()
-      .filter((tu) => tu.teamId !== this.teamId);
+      .filter((tu) => tu.teamId !== this.teamId());
     this.setDataSources();
   }
 
   ngAfterViewInit() {
-    this.userDataSource.paginator = this.userPaginator;
-    this.teamUserDataSource.paginator = this.teamUserPaginator;
+    this.userDataSource.paginator = this.userPaginator();
+    this.teamUserDataSource.paginator = this.teamUserPaginator();
 
     // Set up filter predicate for team users
     this.teamUserDataSource.filterPredicate = (data: TeamUser, filter: string) => {
@@ -219,7 +227,7 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
 
   addUserToTeam(user: User): void {
     const teamUser = {
-      teamId: this.teamId,
+      teamId: this.teamId(),
       userId: user.id,
     } as TeamUser;
     this.teamUserDataService.add(teamUser);
@@ -235,7 +243,7 @@ export class AdminTeamUsersComponent implements OnDestroy, OnInit, AfterViewInit
   }
 
   setObserverValue(teamUserId: string, value: boolean) {
-    const team = this.teamList.find((t) => t.id === this.teamId);
+    const team = this.teamList.find((t) => t.id === this.teamId());
     const exhibitId = team?.exhibitId || null;
     this.teamUserDataService.setObserverValue(teamUserId, value, exhibitId);
   }

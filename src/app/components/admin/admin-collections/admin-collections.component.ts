@@ -8,11 +8,11 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { Component, OnDestroy, AfterViewInit, ElementRef, inject, viewChild } from '@angular/core';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   Collection,
   SystemPermission,
@@ -25,21 +25,68 @@ import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminCollectionEditDialogComponent } from 'src/app/components/admin/admin-collection-edit-dialog/admin-collection-edit-dialog.component';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
+import { MatIcon } from '@angular/material/icon';
+import { DatePipe } from '@angular/common';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { AdminCardsComponent } from '../admin-cards/admin-cards.component';
+import { AdminArticlesComponent } from '../admin-articles/admin-articles.component';
+import { CollectionMembershipsComponent } from '../../collections/collection-memberships/collection-memberships/collection-memberships.component';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-admin-collections',
-  templateUrl: './admin-collections.component.html',
-  styleUrls: ['./admin-collections.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+    selector: 'app-admin-collections',
+    templateUrl: './admin-collections.component.html',
+    styleUrls: ['./admin-collections.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
+    imports: [
+    MatIcon,
+    MatFormField,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconButton,
+    MatSuffix,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatSortHeader,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    AdminCardsComponent,
+    AdminArticlesComponent,
+    CollectionMembershipsComponent,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatCard,
+    MatProgressSpinner,
+    DatePipe
+],
 })
 export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
+  private settingsService = inject(ComnSettingsService);
+  private dialog = inject(MatDialog);
+  private crucibleDialog = inject(CrucibleDialogService);
+  private collectionDataService = inject(CollectionDataService);
+  private collectionQuery = inject(CollectionQuery);
+  private permissionDataService = inject(PermissionDataService);
+
   collectionList: Collection[] = [];
   isLoading = false;
   editCollection: Collection = {};
@@ -51,18 +98,11 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   private unsubscribe$ = new Subject();
   isBusy = false;
   uploadProgress = 0;
-  @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
-  @ViewChild(MatSort) matSort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  readonly jsonInput = viewChild<ElementRef<HTMLInputElement>>('jsonInput');
+  readonly matSort = viewChild(MatSort);
+  readonly paginator = viewChild(MatPaginator);
 
-  constructor(
-    private settingsService: ComnSettingsService,
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery,
-    private permissionDataService: PermissionDataService
-  ) {
+  constructor() {
     this.dataSource.filterPredicate = (collection: Collection, filter: string) =>
       !filter ||
       collection.name?.toLowerCase().includes(filter) ||
@@ -100,8 +140,8 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.matSort;
-    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.matSort();
+    this.dataSource.paginator = this.paginator();
     this.dataSource.sortingDataAccessor = (collection: Collection, sortHeaderId: string) => {
       if (sortHeaderId === 'dateCreated') {
         const d = collection.dateCreated instanceof Date
@@ -223,7 +263,7 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
     this.uploadProgress = 0;
     this.isBusy = true;
     this.collectionDataService.uploadJson(file, 'events', true);
-    this.jsonInput.nativeElement.value = null;
+    this.jsonInput().nativeElement.value = null;
   }
 
   ngOnDestroy() {

@@ -5,7 +5,7 @@
 import { Order, Query, QueryConfig, QueryEntity } from '@datorama/akita';
 import { TeamUserState, TeamUserStore } from './team-user.store';
 import { TeamUser } from 'src/app/generated/api';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 
@@ -17,8 +17,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class TeamUserQuery extends QueryEntity<TeamUserState> {
-  constructor(protected store: TeamUserStore) {
+  protected store: TeamUserStore;
+
+  constructor() {
+    const store = inject(TeamUserStore);
+
     super(store);
+  
+    this.store = store;
   }
 
   selectById(id: string): Observable<TeamUser> {

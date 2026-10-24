@@ -1,7 +1,7 @@
 // Copyright 2024 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the collection root for license information.
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, tap, take } from 'rxjs/operators';
 import {
@@ -19,6 +19,10 @@ import {
   providedIn: 'root',
 })
 export class PermissionDataService {
+  private permissionsService = inject(SystemPermissionsService);
+  private exhibitPermissionsService = inject(ExhibitPermissionsService);
+  private collectionPermissionsService = inject(CollectionPermissionsService);
+
   private _permissions: SystemPermission[] = [];
   get permissions(): SystemPermission[] {
     return this._permissions;
@@ -33,12 +37,6 @@ export class PermissionDataService {
   get collectionPermissions(): CollectionPermissionClaim[] {
     return this._collectionPermissions;
   }
-
-  constructor(
-    private permissionsService: SystemPermissionsService,
-    private exhibitPermissionsService: ExhibitPermissionsService,
-    private collectionPermissionsService: CollectionPermissionsService
-  ) {}
 
   load(): Observable<SystemPermission[]> {
     return this.permissionsService.getMySystemPermissions().pipe(

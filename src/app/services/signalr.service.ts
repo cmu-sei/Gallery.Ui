@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { ComnAuthService, ComnSettingsService } from '@cmusei/crucible-common';
 import * as signalR from '@microsoft/signalr';
 import {
@@ -46,6 +46,26 @@ export enum ApplicationArea {
   providedIn: 'root',
 })
 export class SignalRService implements OnDestroy {
+  private authService = inject(ComnAuthService);
+  private settingsService = inject(ComnSettingsService);
+  private articleDataService = inject(ArticleDataService);
+  private cardDataService = inject(CardDataService);
+  private cardQuery = inject(CardQuery);
+  private collectionDataService = inject(CollectionDataService);
+  private collectionMembershipDataService = inject(CollectionMembershipDataService);
+  private exhibitDataService = inject(ExhibitDataService);
+  private exhibitMembershipDataService = inject(ExhibitMembershipDataService);
+  private exhibitQuery = inject(ExhibitQuery);
+  private groupMembershipDataService = inject(GroupMembershipDataService);
+  private teamDataService = inject(TeamDataService);
+  private teamQuery = inject(TeamQuery);
+  private teamCardDataService = inject(TeamCardDataService);
+  private teamCardQuery = inject(TeamCardQuery);
+  private teamUserDataService = inject(TeamUserDataService);
+  private userDataService = inject(UserDataService);
+  private userArticleDataService = inject(UserArticleDataService);
+  private userArticleQuery = inject(UserArticleQuery);
+
   private hubConnection: signalR.HubConnection;
   private applicationArea: ApplicationArea;
   private connectionPromise: Promise<void>;
@@ -54,27 +74,7 @@ export class SignalRService implements OnDestroy {
   private token = '';
   private unsubscribe$ = new Subject();
 
-  constructor(
-    private authService: ComnAuthService,
-    private settingsService: ComnSettingsService,
-    private articleDataService: ArticleDataService,
-    private cardDataService: CardDataService,
-    private cardQuery: CardQuery,
-    private collectionDataService: CollectionDataService,
-    private collectionMembershipDataService: CollectionMembershipDataService,
-    private exhibitDataService: ExhibitDataService,
-    private exhibitMembershipDataService: ExhibitMembershipDataService,
-    private exhibitQuery: ExhibitQuery,
-    private groupMembershipDataService: GroupMembershipDataService,
-    private teamDataService: TeamDataService,
-    private teamQuery: TeamQuery,
-    private teamCardDataService: TeamCardDataService,
-    private teamCardQuery: TeamCardQuery,
-    private teamUserDataService: TeamUserDataService,
-    private userDataService: UserDataService,
-    private userArticleDataService: UserArticleDataService,
-    private userArticleQuery: UserArticleQuery
-  ) {
+  constructor() {
     this.authService.user$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.reconnect();
     });

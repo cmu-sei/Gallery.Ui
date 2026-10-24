@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import {
@@ -24,32 +24,32 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { ExhibitMembershipsComponent } from './exhibit-memberships.component';
+import { ExhibitMembershipListComponent } from 'src/app/components/exhibits/exhibit-memberships/exhibit-membership-list/exhibit-membership-list.component';
+import { ExhibitMemberListComponent } from 'src/app/components/exhibits/exhibit-memberships/exhibit-member-list/exhibit-member-list.component';
 
 @Component({
   selector: 'app-exhibit-membership-list',
   template: '',
-  standalone: false,
 })
 class MembershipListStubComponent {
-  @Input() users?: User[];
-  @Input() groups?: Group[];
-  @Input() canEdit?: boolean | null;
-  @Output() createMembership = new EventEmitter<ExhibitMembership>();
+  readonly users = input<User[]>(undefined);
+  readonly groups = input<Group[]>(undefined);
+  readonly canEdit = input<boolean | null>(undefined);
+  readonly createMembership = output<ExhibitMembership>();
 }
 
 @Component({
   selector: 'app-exhibit-member-list',
   template: '',
-  standalone: false,
 })
 class MemberListStubComponent {
-  @Input() memberships?: ExhibitMembership[];
-  @Input() users?: User[];
-  @Input() groups?: Group[];
-  @Input() roles?: ExhibitRole[];
-  @Input() canEdit?: boolean | null;
-  @Output() deleteMembership = new EventEmitter<string>();
-  @Output() editMembership = new EventEmitter<ExhibitMembership>();
+  readonly memberships = input<ExhibitMembership[]>(undefined);
+  readonly users = input<User[]>(undefined);
+  readonly groups = input<Group[]>(undefined);
+  readonly roles = input<ExhibitRole[]>(undefined);
+  readonly canEdit = input<boolean | null>(undefined);
+  readonly deleteMembership = output<string>();
+  readonly editMembership = output<ExhibitMembership>();
 }
 
 const USERS: User[] = [
@@ -77,10 +77,12 @@ async function renderMemberships(grants: PermissionGrants) {
     deleteExhibitMembership: vi.fn(() => of(undefined)),
   } satisfies ApiStub<ExhibitMembershipsService>;
   const rendered = await renderComponent(ExhibitMembershipsComponent, {
-    declarations: [
-      ExhibitMembershipsComponent,
-      MembershipListStubComponent,
-      MemberListStubComponent,
+    childStubs: [
+      {
+        replace: ExhibitMembershipListComponent,
+        with: MembershipListStubComponent,
+      },
+      { replace: ExhibitMemberListComponent, with: MemberListStubComponent },
     ],
     providers: [
       ...permissionDataProviders(grants),
@@ -133,11 +135,11 @@ describe('ExhibitMembershipsComponent', () => {
       ],
     });
 
-    expect(members().users?.map((u) => u.name)).toEqual(['Alice']);
-    expect(members().groups?.map((g) => g.name)).toEqual(['Blue Cell']);
-    expect(members().roles?.map((r) => r.name)).toEqual(['Member']);
-    expect(available().users?.map((u) => u.name)).toEqual(['Bob']);
-    expect(available().groups?.map((g) => g.name)).toEqual(['Analysts']);
+    expect(members().users()?.map((u) => u.name)).toEqual(['Alice']);
+    expect(members().groups()?.map((g) => g.name)).toEqual(['Blue Cell']);
+    expect(members().roles()?.map((r) => r.name)).toEqual(['Member']);
+    expect(available().users()?.map((u) => u.name)).toEqual(['Bob']);
+    expect(available().groups()?.map((g) => g.name)).toEqual(['Analysts']);
   });
 
   /**
@@ -202,8 +204,8 @@ describe('ExhibitMembershipsComponent', () => {
   )('with $label passes canEdit $expected', async ({ grants, expected }) => {
     const { available, members } = await renderMemberships(grants);
 
-    expect(available().canEdit).toBe(expected);
-    expect(members().canEdit).toBe(expected);
+    expect(available().canEdit()).toBe(expected);
+    expect(members().canEdit()).toBe(expected);
   });
 
   /**
@@ -219,8 +221,8 @@ describe('ExhibitMembershipsComponent', () => {
       ],
     });
 
-    expect(available().canEdit).toBe(false);
-    expect(members().canEdit).toBe(false);
+    expect(available().canEdit()).toBe(false);
+    expect(members().canEdit()).toBe(false);
   });
 
   /**
@@ -240,7 +242,7 @@ describe('ExhibitMembershipsComponent', () => {
       userId: 'u2',
       exhibitId: 'e1',
     });
-    expect(members().users?.map((u) => u.name)).toEqual(['Alice', 'Bob']);
+    expect(members().users()?.map((u) => u.name)).toEqual(['Alice', 'Bob']);
 
     members().editMembership.emit({ id: 'm1', roleId: 'r2' });
     expect(membershipsApi.updateExhibitMembership).toHaveBeenCalledWith('m1', {
@@ -251,6 +253,6 @@ describe('ExhibitMembershipsComponent', () => {
     members().deleteMembership.emit('m1');
     fixture.detectChanges();
     expect(membershipsApi.deleteExhibitMembership).toHaveBeenCalledWith('m1');
-    expect(members().users?.map((u) => u.name)).toEqual(['Bob']);
+    expect(members().users()?.map((u) => u.name)).toEqual(['Bob']);
   });
 });

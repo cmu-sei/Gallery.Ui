@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Injector, runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, Subject, throwError } from 'rxjs';
@@ -103,7 +104,10 @@ describe('ArticleQuery', () => {
    */
   it('sorts by name and tracks an article by id', () => {
     const store = new ArticleStore();
-    const query = new ArticleQuery(store);
+    const injector = Injector.create({
+      providers: [{ provide: ArticleStore, useValue: store }],
+    });
+    const query = runInInjectionContext(injector, () => new ArticleQuery());
     store.set([
       makeArticle({ id: 'a2', name: 'Zebra' }),
       makeArticle({ id: 'a1', name: 'Apple' }),
@@ -386,7 +390,7 @@ describe('ArticleDataService error paths', () => {
 
       expect(query.getValue().loading).toBe(true);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in app.module.ts:270), which shows it to the user.
+      // provided in app.config.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );
@@ -413,7 +417,7 @@ describe('ArticleDataService error paths', () => {
       expect(query.getCount()).toBe(1);
       expect(query.getValue().loading).toBe(false);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in app.module.ts:270), which shows it to the user.
+      // provided in app.config.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );

@@ -2,15 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  Output,
-  OnDestroy,
-  DOCUMENT
-} from '@angular/core';
+import { Component, OnDestroy, DOCUMENT, inject as inject_1, input, output } from '@angular/core';
 import {
   Article,
   Card,
@@ -33,7 +25,7 @@ import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { Observable, Subject, take, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
-import { UntypedFormControl } from '@angular/forms';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Section } from 'src/app/utilities/enumerations';
 import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
@@ -43,17 +35,45 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/services/xapi/xapi.service';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { NgClass } from '@angular/common';
+import { TeamSelectorComponent } from '../team-selector/team-selector.component';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-archive',
-  templateUrl: './archive.component.html',
-  styleUrls: ['./archive.component.scss'],
-  standalone: false
+    selector: 'app-archive',
+    templateUrl: './archive.component.html',
+    styleUrls: ['./archive.component.scss'],
+    imports: [MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, ReactiveFormsModule, MatSuffix, MatSelect, MatOption, MatButton, NgClass, TeamSelectorComponent, MatCard, MatProgressSpinner]
 })
 export class ArchiveComponent implements OnDestroy {
-  @Input() showAdminButton: boolean;
-  @Output() changeTeam = new EventEmitter<string>();
-  @Output() sectionSelected = new EventEmitter<string>();
+  private _document = inject_1<HTMLDocument>(DOCUMENT);
+  private dialog = inject_1(MatDialog);
+  private crucibleDialog = inject_1(CrucibleDialogService);
+  private articleDataService = inject_1(ArticleDataService);
+  private userArticleQuery = inject_1(UserArticleQuery);
+  private userArticleDataService = inject_1(UserArticleDataService);
+  private cardQuery = inject_1(CardQuery);
+  private exhibitQuery = inject_1(ExhibitQuery);
+  private teamDataService = inject_1(TeamDataService);
+  private teamService = inject_1(TeamService);
+  private teamQuery = inject_1(TeamQuery);
+  private teamCardQuery = inject_1(TeamCardQuery);
+  private uiDataService = inject_1(UIDataService);
+  private router = inject_1(Router);
+  private settingsService = inject_1(ComnSettingsService);
+  private xApiService = inject_1(XApiService);
+  private snackBar = inject_1(MatSnackBar);
+
+  readonly showAdminButton = input<boolean>(undefined);
+  readonly changeTeam = output<string>();
+  readonly sectionSelected = output<string>();
   apiIsSick = false;
   apiMessage = 'The GALLERY API web service is not responding.';
   exhibitId = '';
@@ -93,25 +113,7 @@ export class ArchiveComponent implements OnDestroy {
     height: '200px',
   };
 
-  constructor(
-    @Inject(DOCUMENT) private _document: HTMLDocument,
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private articleDataService: ArticleDataService,
-    private userArticleQuery: UserArticleQuery,
-    private userArticleDataService: UserArticleDataService,
-    private cardQuery: CardQuery,
-    private exhibitQuery: ExhibitQuery,
-    private teamDataService: TeamDataService,
-    private teamService: TeamService,
-    private teamQuery: TeamQuery,
-    private teamCardQuery: TeamCardQuery,
-    private uiDataService: UIDataService,
-    private router: Router,
-    private settingsService: ComnSettingsService,
-    private xApiService: XApiService,
-    private snackBar: MatSnackBar
-  ) {
+  constructor() {
     this._document.getElementById('appTitle').innerHTML =
       this.settingsService.settings.AppTitle + ' Archive';
     // subscribe to userArticles

@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Injector, runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
@@ -109,7 +110,10 @@ describe('CardQuery', () => {
    */
   it('sorts by name and tracks a card by id', () => {
     const store = new CardStore();
-    const query = new CardQuery(store);
+    const injector = Injector.create({
+      providers: [{ provide: CardStore, useValue: store }],
+    });
+    const query = runInInjectionContext(injector, () => new CardQuery());
     store.set([
       makeCard({ id: 'k2', name: 'Water' }),
       makeCard({ id: 'k1', name: 'Power' }),
@@ -380,7 +384,7 @@ describe('CardDataService error paths', () => {
 
       expect(query.getValue().loading).toBe(true);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in app.module.ts:270), which shows it to the user.
+      // provided in app.config.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );
@@ -405,7 +409,7 @@ describe('CardDataService error paths', () => {
       expect(query.getCount()).toBe(1);
       expect(query.getValue().loading).toBe(false);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in app.module.ts:270), which shows it to the user.
+      // provided in app.config.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );

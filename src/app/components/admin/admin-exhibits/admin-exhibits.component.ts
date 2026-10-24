@@ -8,17 +8,11 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import {
-  Component,
-  Input,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef, inject, input, viewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   Collection,
   Exhibit,
@@ -39,22 +33,78 @@ import { AdminExhibitEditDialogComponent } from '../admin-exhibit-edit-dialog/ad
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
+import { MatIcon } from '@angular/material/icon';
+import { DatePipe } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatIconButton } from '@angular/material/button';
+import { MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { AdminTeamsComponent } from '../admin-teams/admin-teams.component';
+import { AdminTeamCardsComponent } from '../admin-team-cards/admin-team-cards.component';
+import { AdminExhibitArticlesComponent } from '../admin-exhibit-articles/admin-exhibit-articles.component';
+import { AdminObserversComponent } from '../admin-observers/admin-observers.component';
+import { ExhibitMembershipsComponent } from '../../exhibits/exhibit-memberships/exhibit-memberships/exhibit-memberships.component';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-admin-exhibits',
-  templateUrl: './admin-exhibits.component.html',
-  styleUrls: ['./admin-exhibits.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+    selector: 'app-admin-exhibits',
+    templateUrl: './admin-exhibits.component.html',
+    styleUrls: ['./admin-exhibits.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
+    imports: [
+    MatIcon,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatIconButton,
+    MatCellDef,
+    MatCell,
+    MatSortHeader,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    AdminTeamsComponent,
+    AdminTeamCardsComponent,
+    AdminExhibitArticlesComponent,
+    AdminObserversComponent,
+    ExhibitMembershipsComponent,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatCard,
+    MatProgressSpinner,
+    DatePipe
+],
 })
 export class AdminExhibitsComponent implements OnDestroy {
-  @Input() userList: User[];
+  private settingsService = inject(ComnSettingsService);
+  private dialog = inject(MatDialog);
+  private crucibleDialog = inject(CrucibleDialogService);
+  private cardDataService = inject(CardDataService);
+  private collectionDataService = inject(CollectionDataService);
+  private collectionQuery = inject(CollectionQuery);
+  private exhibitDataService = inject(ExhibitDataService);
+  private exhibitQuery = inject(ExhibitQuery);
+  private permissionDataService = inject(PermissionDataService);
+  private teamDataService = inject(TeamDataService);
+  private teamUserDataService = inject(TeamUserDataService);
+
+  readonly userList = input<User[]>(undefined);
   canCreate = false;
   teamList: Team[];
   collectionList: Collection[] = [];
@@ -70,7 +120,7 @@ export class AdminExhibitsComponent implements OnDestroy {
   isBusy = false;
   uploadProgress = 0;
   canManageExpandedExhibit = false;
-  @ViewChild('jsonInput') jsonInput: ElementRef<HTMLInputElement>;
+  readonly jsonInput = viewChild<ElementRef<HTMLInputElement>>('jsonInput');
   @ViewChild(MatSort) set matSortRef(ms: MatSort) {
     if (ms) {
       this.dataSource.sort = ms;
@@ -82,19 +132,7 @@ export class AdminExhibitsComponent implements OnDestroy {
     }
   }
 
-  constructor(
-    private settingsService: ComnSettingsService,
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private cardDataService: CardDataService,
-    private collectionDataService: CollectionDataService,
-    private collectionQuery: CollectionQuery,
-    private exhibitDataService: ExhibitDataService,
-    private exhibitQuery: ExhibitQuery,
-    private permissionDataService: PermissionDataService,
-    private teamDataService: TeamDataService,
-    private teamUserDataService: TeamUserDataService
-  ) {
+  constructor() {
     this.dataSource.filterPredicate = (exhibit: Exhibit, filter: string) =>
       !filter ||
       exhibit.createdBy?.toLowerCase().includes(filter) ||
@@ -190,7 +228,7 @@ export class AdminExhibitsComponent implements OnDestroy {
       data: {
         exhibit: exhibit,
         exhibitList: this.exhibitList,
-        userList: this.userList,
+        userList: this.userList(),
         canEdit: exhibit.id
           ? this.permissionDataService.canEditExhibit(exhibit.id)
           : true,
@@ -266,8 +304,9 @@ export class AdminExhibitsComponent implements OnDestroy {
   }
 
   getUserName(userId: string) {
-    if (this.userList && this.userList.length > 0) {
-      const user = this.userList?.find((item) => item.id === userId);
+    const userList = this.userList();
+    if (userList && userList.length > 0) {
+      const user = userList?.find((item) => item.id === userId);
       return user ? user.name : '';
     }
     return '';
@@ -321,7 +360,7 @@ export class AdminExhibitsComponent implements OnDestroy {
     this.collectionDataService.setActive('');
     this.exhibitList = [];
     this.exhibitDataService.uploadJson(file, 'events', true);
-    this.jsonInput.nativeElement.value = null;
+    this.jsonInput().nativeElement.value = null;
   }
 
   ngOnDestroy() {

@@ -4,28 +4,30 @@
  project root for license information.
 */
 
-import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, inject, output } from '@angular/core';
 import { Team } from 'src/app/generated/api/model/models';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { takeUntil, Subject } from 'rxjs';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
 
 @Component({
     selector: 'app-team-selector',
     templateUrl: './team-selector.component.html',
     styleUrls: ['./team-selector.component.scss'],
-    standalone: false
+    imports: [MatSelect, MatOption]
 })
 export class TeamSelectorComponent implements OnDestroy {
-  @Output() changeTeam = new EventEmitter<string>();
+  private teamDataService = inject(TeamDataService);
+  private teamQuery = inject(TeamQuery);
+
+  readonly changeTeam = output<string>();
   teamList: Team[];
   selectedTeamId = '';
   private unsubscribe$ = new Subject();
 
-  constructor (
-    private teamDataService: TeamDataService,
-    private teamQuery: TeamQuery
-  ) {
+  constructor () {
     this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
       this.teamList = teams;
     });

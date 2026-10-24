@@ -7,7 +7,7 @@ import {
   TeamStore,
 } from './team.store';
 import { Team } from 'src/app/generated/api';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @QueryConfig({
@@ -18,8 +18,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class TeamQuery extends QueryEntity<TeamState> {
-  constructor(protected store: TeamStore) {
+  protected store: TeamStore;
+
+  constructor() {
+    const store = inject(TeamStore);
+
     super(store);
+  
+    this.store = store;
   }
 
   selectById(id: string): Observable<Team> {

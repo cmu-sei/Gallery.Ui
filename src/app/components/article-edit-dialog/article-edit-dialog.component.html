@@ -49,7 +49,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </p>
       <div style="width: 21.5cm">
         <angular-editor [placeholder]="'Description'" [formControl]="descriptionFormControl"
-          [config]="editorConfig"></angular-editor>
+          [config]="editorConfig" />
         @if (descriptionFormControl.hasError('required')) {
         <mat-error>
           Description is <strong>required</strong>

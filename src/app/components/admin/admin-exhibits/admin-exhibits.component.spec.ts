@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { screen, within } from '@testing-library/angular';
@@ -40,50 +40,52 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { AdminExhibitsComponent } from './admin-exhibits.component';
+import { AdminTeamsComponent } from 'src/app/components/admin/admin-teams/admin-teams.component';
+import { AdminTeamCardsComponent } from 'src/app/components/admin/admin-team-cards/admin-team-cards.component';
+import { AdminExhibitArticlesComponent } from 'src/app/components/admin/admin-exhibit-articles/admin-exhibit-articles.component';
+import { AdminObserversComponent } from 'src/app/components/admin/admin-observers/admin-observers.component';
+import { ExhibitMembershipsComponent } from 'src/app/components/exhibits/exhibit-memberships/exhibit-memberships/exhibit-memberships.component';
 
-@Component({ selector: 'app-admin-teams', template: '', standalone: false })
+@Component({ selector: 'app-admin-teams', template: '' })
 class AdminTeamsStubComponent {
-  @Input() exhibitId?: string;
-  @Input() canEdit?: boolean;
+  readonly exhibitId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
 }
 
 @Component({
   selector: 'app-admin-team-cards',
   template: '',
-  standalone: false,
 })
 class AdminTeamCardsStubComponent {
-  @Input() teamList?: Team[];
-  @Input() collectionId?: string;
-  @Input() exhibitId?: string;
-  @Input() canEdit?: boolean;
+  readonly teamList = input<Team[]>(undefined);
+  readonly collectionId = input<string>(undefined);
+  readonly exhibitId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
 }
 
 @Component({
   selector: 'app-admin-exhibit-articles',
   template: '',
-  standalone: false,
 })
 class AdminExhibitArticlesStubComponent {
-  @Input() exhibit?: Exhibit;
-  @Input() teamList?: Team[];
-  @Input() canEdit?: boolean;
+  readonly exhibit = input<Exhibit>(undefined);
+  readonly teamList = input<Team[]>(undefined);
+  readonly canEdit = input<boolean>(undefined);
 }
 
-@Component({ selector: 'app-admin-observers', template: '', standalone: false })
+@Component({ selector: 'app-admin-observers', template: '' })
 class AdminObserversStubComponent {
-  @Input() exhibitId?: string;
-  @Input() canEdit?: boolean;
+  readonly exhibitId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
 }
 
 @Component({
   selector: 'app-exhibit-memberships',
   template: '',
-  standalone: false,
 })
 class ExhibitMembershipsStubComponent {
-  @Input() exhibitId?: string | null;
-  @Input() embedded?: boolean;
+  readonly exhibitId = input<string | null>(undefined);
+  readonly embedded = input<boolean>(undefined);
 }
 
 const EXHIBIT: Exhibit = {
@@ -120,13 +122,18 @@ async function renderExhibits(grants: PermissionGrants) {
       MatSortModule,
       MatTableModule,
     ],
-    declarations: [
-      AdminExhibitsComponent,
-      AdminTeamsStubComponent,
-      AdminTeamCardsStubComponent,
-      AdminExhibitArticlesStubComponent,
-      AdminObserversStubComponent,
-      ExhibitMembershipsStubComponent,
+    childStubs: [
+      { replace: AdminTeamsComponent, with: AdminTeamsStubComponent },
+      { replace: AdminTeamCardsComponent, with: AdminTeamCardsStubComponent },
+      {
+        replace: AdminExhibitArticlesComponent,
+        with: AdminExhibitArticlesStubComponent,
+      },
+      { replace: AdminObserversComponent, with: AdminObserversStubComponent },
+      {
+        replace: ExhibitMembershipsComponent,
+        with: ExhibitMembershipsStubComponent,
+      },
     ],
     providers: [
       ...permissionDataProviders(grants),
@@ -308,12 +315,12 @@ describe('AdminExhibitsComponent', () => {
       .setup()
       .click(within(screen.getByRole('table')).getByText('Drill'));
 
-    expect(stub(ExhibitMembershipsStubComponent)?.exhibitId).toBe('x1');
+    expect(stub(ExhibitMembershipsStubComponent)?.exhibitId()).toBe('x1');
     expect([
-      stub(AdminTeamsStubComponent)?.canEdit,
-      stub(AdminTeamCardsStubComponent)?.canEdit,
-      stub(AdminExhibitArticlesStubComponent)?.canEdit,
-      stub(AdminObserversStubComponent)?.canEdit,
+      stub(AdminTeamsStubComponent)?.canEdit(),
+      stub(AdminTeamCardsStubComponent)?.canEdit(),
+      stub(AdminExhibitArticlesStubComponent)?.canEdit(),
+      stub(AdminObserversStubComponent)?.canEdit(),
     ]).toEqual([true, true, true, true]);
   });
 
@@ -342,7 +349,7 @@ describe('AdminExhibitsComponent', () => {
       .setup()
       .click(within(screen.getByRole('table')).getByText('Drill'));
 
-    expect(stub(ExhibitMembershipsStubComponent)?.exhibitId).toBe('x1');
+    expect(stub(ExhibitMembershipsStubComponent)?.exhibitId()).toBe('x1');
   });
 
   /**
@@ -371,7 +378,7 @@ describe('AdminExhibitsComponent', () => {
       .setup()
       .click(within(screen.getByRole('table')).getByText('Drill'));
 
-    expect(stub(AdminTeamsStubComponent)?.exhibitId).toBe('x1');
+    expect(stub(AdminTeamsStubComponent)?.exhibitId()).toBe('x1');
     expect(stub(ExhibitMembershipsStubComponent)).toBeUndefined();
   });
 
@@ -394,10 +401,10 @@ describe('AdminExhibitsComponent', () => {
       .click(within(screen.getByRole('table')).getByText('Drill'));
 
     expect(stub(ExhibitMembershipsStubComponent)).toBeUndefined();
-    expect(stub(AdminTeamsStubComponent)?.canEdit).toBe(false);
-    expect(stub(AdminTeamCardsStubComponent)?.canEdit).toBe(false);
-    expect(stub(AdminExhibitArticlesStubComponent)?.canEdit).toBe(false);
-    expect(stub(AdminObserversStubComponent)?.canEdit).toBe(false);
+    expect(stub(AdminTeamsStubComponent)?.canEdit()).toBe(false);
+    expect(stub(AdminTeamCardsStubComponent)?.canEdit()).toBe(false);
+    expect(stub(AdminExhibitArticlesStubComponent)?.canEdit()).toBe(false);
+    expect(stub(AdminObserversStubComponent)?.canEdit()).toBe(false);
   });
 
   /**

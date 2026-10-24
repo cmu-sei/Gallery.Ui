@@ -1,32 +1,28 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  Input,
-  Output,
-  ViewChild,
-  EventEmitter,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
 import { Team } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-article-teams',
     templateUrl: './article-teams.component.html',
     styleUrls: ['./article-teams.component.scss'],
-    standalone: false
+    imports: [MatTable, MatSort, MatColumnDef, MatCellDef, MatCell, MatIconButton, MatIcon, MatRowDef, MatRow]
 })
 export class ArticleTeamsComponent implements OnDestroy, OnInit {
-  @Input() exhibitId: string;
-  @Output() articleTeamsChange = new EventEmitter<Team[]>();
+  private teamQuery = inject(TeamQuery);
+
+  readonly exhibitId = input<string>(undefined);
+  readonly articleTeamsChange = output<Team[]>();
   articleTeams: Team[] = [];
   exhibitTeams: Team[] = [];
   displayedTeamColumns: string[] = ['name', 'id'];
@@ -37,12 +33,10 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
   pageEvent: PageEvent;
   private unsubscribe$ = new Subject();
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-
-  constructor(private teamQuery: TeamQuery) {}
+  readonly sort = viewChild(MatSort);
 
   ngOnInit() {
-    this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
+    this.sort().sort(<MatSortable>{ id: 'name', start: 'asc' });
     this.teamQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -68,7 +62,7 @@ export class ArticleTeamsComponent implements OnDestroy, OnInit {
       newAllTeams.splice(index, 1);
     });
     this.exhibitTeamDataSource = new MatTableDataSource(newAllTeams);
-    this.exhibitTeamDataSource.sort = this.sort;
+    this.exhibitTeamDataSource.sort = this.sort();
   }
 
   addTeamToArticle(team: Team): void {

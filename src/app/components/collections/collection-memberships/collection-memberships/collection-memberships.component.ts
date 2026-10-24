@@ -3,15 +3,7 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject, input, output } from '@angular/core';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
@@ -26,17 +18,29 @@ import {
 import { GroupDataService } from 'src/app/data/group/group-data.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { ActivatedRoute } from '@angular/router';
+import { CollectionMembershipListComponent } from '../collection-membership-list/collection-membership-list.component';
+import { CollectionMemberListComponent } from '../collection-member-list/collection-member-list.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-collection-memberships',
     templateUrl: './collection-memberships.component.html',
     styleUrls: ['./collection-memberships.component.scss'],
-    standalone: false
+    imports: [CollectionMembershipListComponent, CollectionMemberListComponent, AsyncPipe]
 })
 export class CollectionMembershipsComponent implements OnInit, OnChanges {
-  @Input() embedded: boolean;
-  @Input() collectionId: string;
-  @Output() goBack = new EventEmitter();
+  private collectionQuery = inject(CollectionQuery);
+  private collectionMembershipDataService = inject(CollectionMembershipDataService);
+  private collectionRolesDataService = inject(CollectionRoleDataService);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+  private groupDataService = inject(GroupDataService);
+  private permissionDataService = inject(PermissionDataService);
+  private activatedRoute = inject(ActivatedRoute);
+
+  readonly embedded = input<boolean>(undefined);
+  readonly collectionId = input<string>(undefined);
+  readonly goBack = output();
 
   collection$: Observable<Collection>;
 
@@ -53,21 +57,10 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
 
   canEdit$: Observable<boolean>;
 
-  constructor(
-    private collectionQuery: CollectionQuery,
-    private collectionMembershipDataService: CollectionMembershipDataService,
-    private collectionRolesDataService: CollectionRoleDataService,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery,
-    private groupDataService: GroupDataService,
-    private permissionDataService: PermissionDataService,
-    private activatedRoute: ActivatedRoute
-  ) {}
-
   ngOnInit(): void {
     forkJoin([
       this.collectionMembershipDataService.loadMemberships(
-        this.collectionId
+        this.collectionId()
       ),
       this.userDataService.load(),
       this.collectionRolesDataService.loadRoles(),
@@ -76,17 +69,17 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
     this.permissionDataService
       .loadCollectionPermissions()
       .subscribe((x) =>
-        this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId)));
+        this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId())));
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.collection$ = this.collectionQuery
-      .selectEntity(this.collectionId)
+      .selectEntity(this.collectionId())
       .pipe(
         filter((x) => x != null),
         tap(
           (x) => {
-            this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId));
+            this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId()));
           })
       );
   }
@@ -135,9 +128,9 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
   }
 
   createMembership(collectionMembership: CollectionMembership) {
-    collectionMembership.collectionId = this.collectionId;
+    collectionMembership.collectionId = this.collectionId();
     this.collectionMembershipDataService
-      .createMembership(this.collectionId, collectionMembership)
+      .createMembership(this.collectionId(), collectionMembership)
       .subscribe();
   }
 

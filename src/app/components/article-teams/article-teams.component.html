@@ -28,13 +28,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <div class="push-right">
               <button mat-icon-button (click)="addTeamToArticle(element)" style="outline: none;"
                 title="Add {{ element.shortName }}" [disabled]="!canEdit">
-                <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
+                <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline" />
               </button>
             </div>
           </mat-cell>
         </ng-container>
 
-        <mat-row *matRowDef="let row; columns: displayedTeamColumns"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedTeamColumns" />
       </mat-table>
     </div>
   </div>
@@ -61,13 +61,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <div class="push-right">
             <button mat-icon-button (click)="removeTeamFromArticle(element)" style="outline: none;"
               title="Remove {{ element.shortName }}" [disabled]="!canEdit">
-              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline" />
             </button>
           </div>
         </mat-cell>
       </ng-container>
 
-      <mat-row *matRowDef="let row; columns: displayedTeamColumns"></mat-row>
+      <mat-row *matRowDef="let row; columns: displayedTeamColumns" />
     </mat-table>
 
   </div>

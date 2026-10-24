@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { screen, within } from '@testing-library/angular';
@@ -28,15 +28,15 @@ import { renderComponent } from 'src/app/test-utils/render-component';
 import { ApiStub } from 'src/app/test-utils/api-stub';
 import { dialogRefStub } from 'src/app/test-utils/dialog-refs';
 import { AdminTeamsComponent } from './admin-teams.component';
+import { AdminTeamUsersComponent } from 'src/app/components/admin/admin-team-users/admin-team-users.component';
 
 @Component({
   selector: 'app-admin-team-users',
   template: '',
-  standalone: false,
 })
 class TeamUsersStubComponent {
-  @Input() teamId?: string;
-  @Input() canEdit?: boolean;
+  readonly teamId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
 }
 
 const TEAMS: Team[] = [
@@ -71,11 +71,10 @@ async function renderTeams(canEdit: boolean) {
       MatProgressSpinnerModule,
       MatSortModule,
     ],
-    declarations: [
-      AdminTeamsComponent,
-      TeamUsersStubComponent,
-      AdminTeamEditDialogComponent,
+    childStubs: [
+      { replace: AdminTeamUsersComponent, with: TeamUsersStubComponent },
     ],
+    declarations: [AdminTeamEditDialogComponent],
     providers: [
       { provide: TeamService, useValue: teamApi },
       {
@@ -132,8 +131,8 @@ describe('AdminTeamsComponent', () => {
 
     teamButtons().forEach((b) => expect(b).toBeEnabled());
     await userEvent.setup().click(screen.getByText('Blue Team'));
-    expect(teamUsers()?.teamId).toBe('t1');
-    expect(teamUsers()?.canEdit).toBe(true);
+    expect(teamUsers()?.teamId()).toBe('t1');
+    expect(teamUsers()?.canEdit()).toBe(true);
   });
 
   /**
@@ -146,7 +145,7 @@ describe('AdminTeamsComponent', () => {
 
     teamButtons().forEach((b) => expect(b).toBeDisabled());
     await userEvent.setup().click(screen.getByText('Blue Team'));
-    expect(teamUsers()?.canEdit).toBe(false);
+    expect(teamUsers()?.canEdit()).toBe(false);
   });
 
   /**

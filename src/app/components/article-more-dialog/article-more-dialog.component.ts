@@ -1,19 +1,24 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
+import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-article-more-dialog',
     templateUrl: './article-more-dialog.component.html',
     styleUrls: ['./article-more-dialog.component.scss'],
-    standalone: false
+    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, AngularEditorModule, FormsModule]
 })
 export class ArticleMoreDialogComponent {
-  @Output() editComplete = new EventEmitter<any>();
+  private sanitizer = inject(DomSanitizer);
+  data = inject(MAT_DIALOG_DATA);
+
+  readonly editComplete = output<any>();
   safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
     this.data.article.url
   );
@@ -34,10 +39,7 @@ export class ArticleMoreDialogComponent {
     sanitize: true,
   };
 
-  constructor(
-    private sanitizer: DomSanitizer,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
+  constructor() {
     if (this.data.useUrl) {
       this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
         this.data.article.url

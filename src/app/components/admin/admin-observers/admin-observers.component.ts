@@ -2,10 +2,10 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-import { Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { Team, TeamUser, User } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
@@ -14,15 +14,29 @@ import { UserDataService } from 'src/app/data/user/user-data.service';
 import { UserQuery } from 'src/app/data/user/user.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 @Component({
     selector: 'app-admin-observers',
     templateUrl: './admin-observers.component.html',
     styleUrls: ['./admin-observers.component.scss'],
-    standalone: false
+    imports: [MatToolbar, MatToolbarRow, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatPaginator, MatCard, MatProgressSpinner, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class AdminObserversComponent implements OnDestroy, OnInit {
-  @Input() exhibitId: string;
-  @Input() canEdit: boolean;
+  private teamQuery = inject(TeamQuery);
+  private teamUserDataService = inject(TeamUserDataService);
+  private teamUserQuery = inject(TeamUserQuery);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+
+  readonly exhibitId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   userList: User[] = [];
   teamUsers: TeamUser[] = [];
   displayedObserverColumns: string[] = ['team', 'name', 'id'];
@@ -33,17 +47,11 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   teamUserFilterString = '';
   observerFilterString = '';
   private unsubscribe$ = new Subject();
-  @ViewChild('teamUserPaginator', { static: true }) teamUserPaginator: MatPaginator;
-  @ViewChild('observerPaginator', { static: true }) observerPaginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  readonly teamUserPaginator = viewChild<MatPaginator>('teamUserPaginator');
+  readonly observerPaginator = viewChild<MatPaginator>('observerPaginator');
+  readonly sort = viewChild(MatSort);
 
-  constructor(
-    private teamQuery: TeamQuery,
-    private teamUserDataService: TeamUserDataService,
-    private teamUserQuery: TeamUserQuery,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery
-  ) {
+  constructor() {
     this.userQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -84,10 +92,10 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
-    this.observerDataSource.sort = this.sort;
-    this.observerDataSource.paginator = this.observerPaginator;
-    this.teamUserDataSource.paginator = this.teamUserPaginator;
+    this.sort().sort(<MatSortable>{ id: 'name', start: 'asc' });
+    this.observerDataSource.sort = this.sort();
+    this.observerDataSource.paginator = this.observerPaginator();
+    this.teamUserDataSource.paginator = this.teamUserPaginator();
 
     // Set up filter predicates
     this.teamUserDataSource.filterPredicate = (data: TeamUser, filter: string) => {
@@ -133,15 +141,15 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   }
 
   addObserver(id: string): void {
-    this.teamUserDataService.setObserverValue(id, true, this.exhibitId);
+    this.teamUserDataService.setObserverValue(id, true, this.exhibitId());
   }
 
   removeObserver(id: string): void {
-    this.teamUserDataService.setObserverValue(id, false, this.exhibitId);
+    this.teamUserDataService.setObserverValue(id, false, this.exhibitId());
   }
 
   setObserverValue(teamUserId: string, value: boolean) {
-    this.teamUserDataService.setObserverValue(teamUserId, value, this.exhibitId);
+    this.teamUserDataService.setObserverValue(teamUserId, value, this.exhibitId());
   }
 
   compare(a: string, b: string, isAsc: boolean) {

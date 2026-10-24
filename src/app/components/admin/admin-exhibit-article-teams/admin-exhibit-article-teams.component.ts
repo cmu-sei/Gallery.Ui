@@ -1,27 +1,36 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, AfterViewInit, Input, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, inject, input, viewChild } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
 import { Team } from 'src/app/generated/api';
 import { ArticleTeamDataService } from 'src/app/data/team/article-team-data.service';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-admin-exhibit-article-teams',
     templateUrl: './admin-exhibit-article-teams.component.html',
     styleUrls: ['./admin-exhibit-article-teams.component.scss'],
-    standalone: false
+    imports: [MatToolbar, MatToolbarRow, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatPaginator, MatTable, MatSort, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow]
 })
 export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, AfterViewInit {
-  @Input() exhibitId: string;
-  @Input() articleId: string;
-  @Input() canEdit: boolean;
+  private teamQuery = inject(TeamQuery);
+  private articleTeamDataService = inject(ArticleTeamDataService);
+
+  readonly exhibitId = input<string>(undefined);
+  readonly articleId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   articleTeams: Team[] = [];
   exhibitTeams: Team[] = [];
 
@@ -34,17 +43,12 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
   pageEvent: PageEvent;
   private unsubscribe$ = new Subject();
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild('exhibitTeamPaginator', { static: false }) exhibitTeamPaginator: MatPaginator;
-  @ViewChild('articleTeamPaginator', { static: false }) articleTeamPaginator: MatPaginator;
-
-  constructor(
-    private teamQuery: TeamQuery,
-    private articleTeamDataService: ArticleTeamDataService
-  ) {}
+  readonly sort = viewChild(MatSort);
+  readonly exhibitTeamPaginator = viewChild<MatPaginator>('exhibitTeamPaginator');
+  readonly articleTeamPaginator = viewChild<MatPaginator>('articleTeamPaginator');
 
   ngOnInit() {
-    this.sort.sort(<MatSortable>{ id: 'name', start: 'asc' });
+    this.sort().sort(<MatSortable>{ id: 'name', start: 'asc' });
     this.articleTeamDataService.teamArticles
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((teamArticles) => {
@@ -53,8 +57,8 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
           teamArticles
             .filter(
               (ta) =>
-                ta.exhibitId === this.exhibitId &&
-                ta.articleId === this.articleId
+                ta.exhibitId === this.exhibitId() &&
+                ta.articleId === this.articleId()
             )
             .forEach((ta) => {
               const team = this.exhibitTeams.find((t) => t.id === ta.teamId);
@@ -76,8 +80,8 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
   }
 
   ngAfterViewInit(): void {
-    this.exhibitTeamDataSource.paginator = this.exhibitTeamPaginator;
-    this.articleTeamDataSource.paginator = this.articleTeamPaginator;
+    this.exhibitTeamDataSource.paginator = this.exhibitTeamPaginator();
+    this.articleTeamDataSource.paginator = this.articleTeamPaginator();
   }
 
   setDataSources() {
@@ -97,7 +101,7 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
       newAllTeams.splice(index, 1);
     });
     this.exhibitTeamDataSource = new MatTableDataSource(newAllTeams);
-    this.exhibitTeamDataSource.sort = this.sort;
+    this.exhibitTeamDataSource.sort = this.sort();
     this.exhibitTeamDataSource.filterPredicate = (data: Team, filter: string) => {
       return data.name?.toLowerCase().includes(filter) || data.shortName?.toLowerCase().includes(filter);
     };
@@ -130,9 +134,9 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
     );
     if (index === -1) {
       this.articleTeamDataService.addTeamToArticle(
-        this.exhibitId,
+        this.exhibitId(),
         teamId,
-        this.articleId
+        this.articleId()
       );
     }
   }
@@ -146,7 +150,7 @@ export class AdminExhibitArticleTeamsComponent implements OnDestroy, OnInit, Aft
       (et) => et.id === teamId
     );
     if (index !== -1) {
-      this.articleTeamDataService.removeTeamArticle(teamId, this.articleId);
+      this.articleTeamDataService.removeTeamArticle(teamId, this.articleId());
     }
   }
 

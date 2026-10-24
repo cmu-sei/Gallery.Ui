@@ -3,7 +3,7 @@
 
 import { ExhibitStore } from './exhibit.store';
 import { ExhibitQuery } from './exhibit.query';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -17,6 +17,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   providedIn: 'root',
 })
 export class ExhibitDataService {
+  private exhibitStore = inject(ExhibitStore);
+  private exhibitQuery = inject(ExhibitQuery);
+  private exhibitService = inject(ExhibitService);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
   private _requestedExhibitId: string;
   private _requestedExhibitId$ = this.activatedRoute.queryParamMap.pipe(
     map((params) => params.get('exhibitId') || '')
@@ -32,14 +39,9 @@ export class ExhibitDataService {
   private pageIndex: Observable<number>;
   public uploadProgress = new Subject<number>();
 
-  constructor(
-    private exhibitStore: ExhibitStore,
-    private exhibitQuery: ExhibitQuery,
-    private exhibitService: ExhibitService,
-    private snackBar: MatSnackBar,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {
+  constructor() {
+    const activatedRoute = this.activatedRoute;
+
     this.filterTerm = activatedRoute.queryParamMap.pipe(
       map((params) => params.get('exhibitmask') || '')
     );

@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import { Component, EventEmitter, Inject, Input, Output, OnDestroy, DOCUMENT } from '@angular/core';
+import { Component, Input, OnDestroy, DOCUMENT, inject, input, output } from '@angular/core';
 import { TeamCard, UserArticle, ItemStatus, Exhibit } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
@@ -15,19 +15,33 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { itemStatusClass } from 'src/app/utilities/item-status';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { TeamSelectorComponent } from '../team-selector/team-selector.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatCard } from '@angular/material/card';
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-wall',
-  templateUrl: './wall.component.html',
-  styleUrls: ['./wall.component.scss'],
-  standalone: false
+    selector: 'app-wall',
+    templateUrl: './wall.component.html',
+    styleUrls: ['./wall.component.scss'],
+    imports: [MatButton, TeamSelectorComponent, MatIconButton, MatIcon, MatCard, NgClass]
 })
 export class WallComponent implements OnDestroy {
-  @Input() showAdminButton: boolean;
-  @Input() showAdvanceButton: boolean;
+  private _document = inject<HTMLDocument>(DOCUMENT);
+  private cardQuery = inject(CardQuery);
+  private teamCardQuery = inject(TeamCardQuery);
+  private userArticleQuery = inject(UserArticleQuery);
+  private exhibitDataService = inject(ExhibitDataService);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+  private settingsService = inject(ComnSettingsService);
+
+  readonly showAdminButton = input<boolean>(undefined);
+  readonly showAdvanceButton = input<boolean>(undefined);
   @Input() exhibit: Exhibit;
-  @Output() changeTeam = new EventEmitter<string>();
-  @Output() sectionSelected = new EventEmitter<string>();
+  readonly changeTeam = output<string>();
+  readonly sectionSelected = output<string>();
   isLoading = false;
   isAdvancing = false;
   cardList: Card[] = [];
@@ -36,16 +50,7 @@ export class WallComponent implements OnDestroy {
   userArticleList: UserArticle[] = [];
   private unsubscribe$ = new Subject();
 
-  constructor(
-    @Inject(DOCUMENT) private _document: HTMLDocument,
-    private cardQuery: CardQuery,
-    private teamCardQuery: TeamCardQuery,
-    private userArticleQuery: UserArticleQuery,
-    private exhibitDataService: ExhibitDataService,
-    private snackBar: MatSnackBar,
-    private router: Router,
-    private settingsService: ComnSettingsService
-  ) {
+  constructor() {
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Wall';
     this.cardQuery.selectAll()
       .pipe(takeUntil(this.unsubscribe$))

@@ -1,10 +1,10 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
-import { Sort } from '@angular/material/sort';
+import { Component, OnDestroy, OnInit, inject as inject_1, input } from '@angular/core';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import {
   Article,
   Collection,
@@ -23,15 +23,34 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminArticleEditDialogComponent } from 'src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-admin-articles',
-  templateUrl: './admin-articles.component.html',
-  styleUrls: ['./admin-articles.component.scss'],
-  standalone: false
+    selector: 'app-admin-articles',
+    templateUrl: './admin-articles.component.html',
+    styleUrls: ['./admin-articles.component.scss'],
+    imports: [MatFormField, MatLabel, MatSelect, MatOption, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatPaginator, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, MatCard, MatProgressSpinner]
 })
 export class AdminArticlesComponent implements OnDestroy, OnInit {
-  @Input() selectedCollectionId: string;
+  private dialog = inject_1(MatDialog);
+  private crucibleDialog = inject_1(CrucibleDialogService);
+  private settingsService = inject_1(ComnSettingsService);
+  private articleDataService = inject_1(ArticleDataService);
+  private articleQuery = inject_1(ArticleQuery);
+  private cardDataService = inject_1(CardDataService);
+  private cardQuery = inject_1(CardQuery);
+  private collectionDataService = inject_1(CollectionDataService);
+  private permissionDataService = inject_1(PermissionDataService);
+
+  readonly selectedCollectionId = input<string>(undefined);
   canEdit = false;
   pageSize = 10;
   pageIndex = 0;
@@ -56,17 +75,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
   sort: Sort = { active: 'datePosted', direction: 'desc' };
   private unsubscribe$ = new Subject();
 
-  constructor(
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private settingsService: ComnSettingsService,
-    private articleDataService: ArticleDataService,
-    private articleQuery: ArticleQuery,
-    private cardDataService: CardDataService,
-    private cardQuery: CardQuery,
-    private collectionDataService: CollectionDataService,
-    private permissionDataService: PermissionDataService
-  ) {
+  constructor() {
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
       ? this.settingsService.settings.AppTopBarHexColor
       : this.topbarColor;
@@ -110,12 +119,13 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.loadCollectionData();
-    this.canEdit = this.permissionDataService.canEditCollection(this.selectedCollectionId);
+    this.canEdit = this.permissionDataService.canEditCollection(this.selectedCollectionId());
   }
 
   loadCollectionData() {
-    this.cardDataService.loadByCollection(this.selectedCollectionId);
-    this.articleDataService.loadByCollection(this.selectedCollectionId);
+    const selectedCollectionId = this.selectedCollectionId();
+    this.cardDataService.loadByCollection(selectedCollectionId);
+    this.articleDataService.loadByCollection(selectedCollectionId);
   }
 
   addOrEditArticle(article: Article) {
@@ -125,7 +135,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
         name: '',
         summary: '',
         description: '',
-        collectionId: this.selectedCollectionId,
+        collectionId: this.selectedCollectionId(),
         cardId: '',
         move: 0,
         inject: 0,

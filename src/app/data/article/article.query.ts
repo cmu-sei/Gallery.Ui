@@ -7,7 +7,7 @@ import {
   ArticleStore,
 } from './article.store';
 import { Article } from 'src/app/generated/api';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @QueryConfig({
@@ -18,8 +18,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ArticleQuery extends QueryEntity<ArticleState> {
-  constructor(protected store: ArticleStore) {
+  protected store: ArticleStore;
+
+  constructor() {
+    const store = inject(ArticleStore);
+
     super(store);
+  
+    this.store = store;
   }
 
   selectById(id: string): Observable<Article> {

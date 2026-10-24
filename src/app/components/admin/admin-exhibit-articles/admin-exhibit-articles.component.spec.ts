@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { By } from '@angular/platform-browser';
@@ -27,16 +27,16 @@ import { CardStore } from 'src/app/data/card/card.store';
 import { renderComponent } from 'src/app/test-utils/render-component';
 import { ApiStub } from 'src/app/test-utils/api-stub';
 import { AdminExhibitArticlesComponent } from './admin-exhibit-articles.component';
+import { AdminExhibitArticleTeamsComponent } from 'src/app/components/admin/admin-exhibit-article-teams/admin-exhibit-article-teams.component';
 
 @Component({
   selector: 'app-admin-exhibit-article-teams',
   template: '',
-  standalone: false,
 })
 class ArticleTeamsStubComponent {
-  @Input() exhibitId?: string;
-  @Input() articleId?: string;
-  @Input() canEdit?: boolean;
+  readonly exhibitId = input<string>(undefined);
+  readonly articleId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
 }
 
 const EXHIBIT: Exhibit = { id: 'e1', collectionId: 'c1' };
@@ -80,7 +80,12 @@ async function renderExhibitArticles({ canEdit }: { canEdit: boolean }) {
       MatSelectModule,
       MatSortModule,
     ],
-    declarations: [AdminExhibitArticlesComponent, ArticleTeamsStubComponent],
+    childStubs: [
+      {
+        replace: AdminExhibitArticleTeamsComponent,
+        with: ArticleTeamsStubComponent,
+      },
+    ],
     providers: [
       { provide: ArticleService, useValue: articleApi },
       { provide: TeamArticleService, useValue: teamArticleApi },
@@ -115,7 +120,7 @@ describe('AdminExhibitArticlesComponent', () => {
     expect(articleApi.getCollectionArticles).toHaveBeenCalledWith('c1');
     expect(teamArticleApi.getExhibitTeamArticles).toHaveBeenCalledWith('e1');
     expect(titles(container)).toEqual(['First', 'Later']);
-    expect(teamStubs().map((s) => [s.exhibitId, s.articleId])).toEqual([
+    expect(teamStubs().map((s) => [s.exhibitId(), s.articleId()])).toEqual([
       ['e1', 'a1'],
       ['e1', 'a2'],
     ]);
@@ -147,7 +152,7 @@ describe('AdminExhibitArticlesComponent', () => {
   it('passes canEdit true to the article teams', async () => {
     const { teamStubs } = await renderExhibitArticles({ canEdit: true });
 
-    expect(teamStubs().map((s) => s.canEdit)).toEqual([true, true]);
+    expect(teamStubs().map((s) => s.canEdit())).toEqual([true, true]);
   });
 
   /**
@@ -159,6 +164,6 @@ describe('AdminExhibitArticlesComponent', () => {
     const { teamStubs } = await renderExhibitArticles({ canEdit: false });
 
     expect(teamStubs()).toHaveLength(2);
-    teamStubs().forEach((s) => expect(s.canEdit).toBe(false));
+    teamStubs().forEach((s) => expect(s.canEdit()).toBe(false));
   });
 });

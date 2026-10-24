@@ -10,7 +10,7 @@ import {
   beforeEach,
   onTestFinished,
 } from 'vitest';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, output } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -53,7 +53,7 @@ import { ArchiveComponent } from './archive.component';
 
 @Component({ selector: 'app-team-selector', template: '', standalone: false })
 class TeamSelectorStubComponent {
-  @Output() changeTeam = new EventEmitter<string>();
+  readonly changeTeam = output<string>();
 }
 
 const EXHIBIT: Exhibit = {
@@ -142,10 +142,10 @@ async function renderArchive(
     article: Article | null;
   }>();
   const editRef = dialogRefStub<ArticleEditDialogComponent>();
-  editRef.dialogRef.componentInstance = { editComplete } as Pick<
-    ArticleEditDialogComponent,
-    'editComplete'
-  > as ArticleEditDialogComponent;
+  // editComplete is an output(); an EventEmitter gives the same subscribe().
+  editRef.dialogRef.componentInstance = {
+    editComplete,
+  } as unknown as ArticleEditDialogComponent;
   const open = vi.fn().mockReturnValue(editRef.dialogRef);
   const confirm = vi.fn(
     () =>

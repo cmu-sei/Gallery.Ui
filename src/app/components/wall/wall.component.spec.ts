@@ -10,7 +10,7 @@ import {
   beforeEach,
   onTestFinished,
 } from 'vitest';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { screen, within } from '@testing-library/angular';
@@ -37,7 +37,7 @@ import { WallComponent } from './wall.component';
 
 @Component({ selector: 'app-team-selector', template: '', standalone: false })
 class TeamSelectorStubComponent {
-  @Output() changeTeam = new EventEmitter<string>();
+  readonly changeTeam = output<string>();
 }
 
 const EXHIBIT: Exhibit = {

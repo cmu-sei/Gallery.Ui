@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { screen, within } from '@testing-library/angular';
@@ -39,25 +39,27 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { AdminCollectionsComponent } from './admin-collections.component';
+import { AdminCardsComponent } from 'src/app/components/admin/admin-cards/admin-cards.component';
+import { AdminArticlesComponent } from 'src/app/components/admin/admin-articles/admin-articles.component';
+import { CollectionMembershipsComponent } from 'src/app/components/collections/collection-memberships/collection-memberships/collection-memberships.component';
 
-@Component({ selector: 'app-admin-cards', template: '', standalone: false })
+@Component({ selector: 'app-admin-cards', template: '' })
 class AdminCardsStubComponent {
-  @Input() selectedCollectionId?: string;
+  readonly selectedCollectionId = input<string>(undefined);
 }
 
-@Component({ selector: 'app-admin-articles', template: '', standalone: false })
+@Component({ selector: 'app-admin-articles', template: '' })
 class AdminArticlesStubComponent {
-  @Input() selectedCollectionId?: string;
+  readonly selectedCollectionId = input<string>(undefined);
 }
 
 @Component({
   selector: 'app-collection-memberships',
   template: '',
-  standalone: false,
 })
 class CollectionMembershipsStubComponent {
-  @Input() collectionId?: string;
-  @Input() embedded?: boolean;
+  readonly collectionId = input<string>(undefined);
+  readonly embedded = input<boolean>(undefined);
 }
 
 const COLLECTIONS: Collection[] = [
@@ -97,13 +99,15 @@ async function renderCollections(grants: PermissionGrants) {
       MatSortModule,
       MatTableModule,
     ],
-    declarations: [
-      AdminCollectionsComponent,
-      AdminCollectionEditDialogComponent,
-      AdminCardsStubComponent,
-      AdminArticlesStubComponent,
-      CollectionMembershipsStubComponent,
+    childStubs: [
+      { replace: AdminCardsComponent, with: AdminCardsStubComponent },
+      { replace: AdminArticlesComponent, with: AdminArticlesStubComponent },
+      {
+        replace: CollectionMembershipsComponent,
+        with: CollectionMembershipsStubComponent,
+      },
     ],
+    declarations: [AdminCollectionEditDialogComponent],
     providers: [
       ...permissionDataProviders(grants),
       { provide: CollectionService, useValue: collectionApi },
@@ -269,11 +273,11 @@ describe('AdminCollectionsComponent', () => {
     const cards = fixture.debugElement.query(
       By.directive(AdminCardsStubComponent),
     ).componentInstance as AdminCardsStubComponent;
-    expect(cards.selectedCollectionId).toBe('c1');
+    expect(cards.selectedCollectionId()).toBe('c1');
     const memberships = fixture.debugElement.query(
       By.directive(CollectionMembershipsStubComponent),
     ).componentInstance as CollectionMembershipsStubComponent;
-    expect(memberships.collectionId).toBe('c1');
+    expect(memberships.collectionId()).toBe('c1');
   });
 
   /**

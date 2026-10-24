@@ -7,7 +7,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="user-list-container mat-elevation-z8">
     <mat-toolbar class="background">
       <mat-toolbar-row>
-        <mat-icon class="mdi-24px" fontIcon="mdi-account-multiple"></mat-icon>
+        <mat-icon class="mdi-24px" fontIcon="mdi-account-multiple" />
         <p>All Users</p>
       </mat-toolbar-row>
       <mat-toolbar-row>
@@ -16,11 +16,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <input matInput [formControl]="filterControl" placeholder="Search" autocomplete="off" />
           @if (filterControl.value) {
           <button mat-icon-button matSuffix (click)="clearFilter()" title="Clear Search">
-            <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
+            <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline" />
           </button>
           }
         </mat-form-field>
-        <mat-paginator #userPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+        <mat-paginator #userPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons />
       </mat-toolbar-row>
     </mat-toolbar>
 
@@ -44,8 +44,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <div>
             @if (!onAnotherTeam(element.id)) {
             <button mat-icon-button (click)="addUserToTeam(element)" style="outline: none;"
-              title="Add {{ element.name }} to Team" [disabled]="!canEdit">
-              <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline"></mat-icon>
+              title="Add {{ element.name }} to Team" [disabled]="!canEdit()">
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline" />
             </button>
             }
             @if (onAnotherTeam(element.id)) {
@@ -55,8 +55,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         </mat-cell>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedUserColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedUserColumns"></mat-row>
+      <mat-header-row *matHeaderRowDef="displayedUserColumns" />
+      <mat-row *matRowDef="let row; columns: displayedUserColumns" />
     </mat-table>
 
     @if (userDataSource.data.length === 0) {
@@ -69,7 +69,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="team-list-container mat-elevation-z8">
     <mat-toolbar class="background">
       <mat-toolbar-row>
-        <mat-icon class="mdi-24px" fontIcon="mdi-account-group"></mat-icon>
+        <mat-icon class="mdi-24px" fontIcon="mdi-account-group" />
         <p>Team Users</p>
       </mat-toolbar-row>
       <mat-toolbar-row>
@@ -78,18 +78,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           <input matInput [(ngModel)]="teamUserFilterString" (keyup)="applyTeamUserFilter($event)" #teamUserInput autocomplete="off" />
           @if (teamUserFilterString) {
           <button matSuffix mat-icon-button aria-label="Clear" (click)="clearTeamUserFilter()">
-            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline"></mat-icon>
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
           </button>
           }
         </mat-form-field>
-        <mat-paginator #teamUserPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+        <mat-paginator #teamUserPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons />
       </mat-toolbar-row>
     </mat-toolbar>
 
     @if (false) {
     <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
-      <mat-progress-spinner color="primary" mode="indeterminate">
-      </mat-progress-spinner>
+      <mat-progress-spinner color="primary" mode="indeterminate" />
     </mat-card>
     }
 
@@ -106,7 +105,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-header-cell *matHeaderCellDef mat-sort-header>Observer</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <mat-checkbox [checked]="element.isObserver" (change)="setObserverValue(element.id, $event.checked)"
-            [disabled]="!canEdit"></mat-checkbox>
+            [disabled]="!canEdit()" />
         </mat-cell>
       </ng-container>
 
@@ -115,15 +114,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-cell *matCellDef="let element">
           <div>
             <button mat-icon-button (click)="removeUserFromTeam(element)" style="outline: none;"
-              title="Remove {{ element.name }} from Team" [disabled]="!canEdit">
-              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline"></mat-icon>
+              title="Remove {{ element.name }} from Team" [disabled]="!canEdit()">
+              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline" />
             </button>
           </div>
         </mat-cell>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedTeamUserColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedTeamUserColumns"></mat-row>
+      <mat-header-row *matHeaderRowDef="displayedTeamUserColumns" />
+      <mat-row *matRowDef="let row; columns: displayedTeamUserColumns" />
     </mat-table>
 
     @if (teamUserDataSource.filteredData.length === 0) {

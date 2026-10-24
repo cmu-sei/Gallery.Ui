@@ -9,36 +9,38 @@ import userEvent from '@testing-library/user-event';
 import { MatTabsModule } from '@angular/material/tabs';
 import { renderComponent } from 'src/app/test-utils/render-component';
 import { AdminRolesComponent } from './admin-roles.component';
+import { AdminSystemRolesComponent } from 'src/app/components/admin/admin-roles/admin-system-roles/admin-system-roles.component';
+import { AdminCollectionRolesComponent } from 'src/app/components/admin/admin-roles/admin-collection-roles/admin-collection-roles.component';
+import { AdminExhibitRolesComponent } from 'src/app/components/admin/admin-roles/admin-exhibit-roles/admin-exhibit-roles.component';
 
 @Component({
   selector: 'app-admin-system-roles',
   template: '',
-  standalone: false,
 })
 class SystemRolesStubComponent {}
 
 @Component({
   selector: 'app-admin-collection-roles',
   template: '',
-  standalone: false,
 })
 class CollectionRolesStubComponent {}
 
 @Component({
   selector: 'app-admin-exhibit-roles',
   template: '',
-  standalone: false,
 })
 class ExhibitRolesStubComponent {}
 
 async function renderAdminRoles() {
   return renderComponent(AdminRolesComponent, {
     imports: [MatTabsModule],
-    declarations: [
-      AdminRolesComponent,
-      SystemRolesStubComponent,
-      CollectionRolesStubComponent,
-      ExhibitRolesStubComponent,
+    childStubs: [
+      { replace: AdminSystemRolesComponent, with: SystemRolesStubComponent },
+      {
+        replace: AdminCollectionRolesComponent,
+        with: CollectionRolesStubComponent,
+      },
+      { replace: AdminExhibitRolesComponent, with: ExhibitRolesStubComponent },
     ],
   });
 }
