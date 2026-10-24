@@ -35,7 +35,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <div>
       <h4>Email Message</h4>
       <angular-editor [placeholder]="'Description'" [formControl]="messageFormControl"
-        [config]="editorConfig"></angular-editor>
+        [config]="editorConfig" />
       @if (messageFormControl.hasError('required')) {
       <mat-error>
         Message is <strong>required</strong>

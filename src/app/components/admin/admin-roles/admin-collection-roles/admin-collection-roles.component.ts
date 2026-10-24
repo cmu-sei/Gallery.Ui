@@ -4,7 +4,7 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 */
 
 import { Component, inject, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   CollectionPermission,
   CollectionRole,
@@ -12,12 +12,17 @@ import {
 import { CollectionRolesModel } from './admin-collection-roles.models';
 import { map } from 'rxjs/operators';
 import { CollectionRoleDataService } from 'src/app/data/collection/collection-role-data.service';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-admin-collection-roles',
-  templateUrl: './admin-collection-roles.component.html',
-  styleUrls: ['./admin-collection-roles.component.scss'],
-  standalone: false
+    selector: 'app-admin-collection-roles',
+    templateUrl: './admin-collection-roles.component.html',
+    styleUrls: ['./admin-collection-roles.component.scss'],
+    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatTooltip, MatIcon, MatCheckbox, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe]
 })
 export class AdminCollectionRolesComponent implements OnInit {
   private collectionRoleService = inject(CollectionRoleDataService);

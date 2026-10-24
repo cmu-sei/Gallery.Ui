@@ -1,9 +1,9 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { Sort } from '@angular/material/sort';
+import { Component, OnDestroy, OnInit, inject as inject_1, input } from '@angular/core';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Article, Exhibit, ItemStatus, SourceType, Team} from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
@@ -13,17 +13,33 @@ import { CardQuery } from 'src/app/data/card/card.query';
 import { CrucibleDialogService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { AdminExhibitArticleTeamsComponent } from '../admin-exhibit-article-teams/admin-exhibit-article-teams.component';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-admin-exhibit-articles',
     templateUrl: './admin-exhibit-articles.component.html',
     styleUrls: ['./admin-exhibit-articles.component.scss'],
-    standalone: false
+    imports: [MatFormField, MatLabel, MatSelect, MatOption, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, AdminExhibitArticleTeamsComponent, MatCard, MatProgressSpinner]
 })
 export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
-  @Input() exhibit: Exhibit;
-  @Input() teamList: Team[];
-  @Input() canEdit: boolean;
+  private crucibleDialog = inject_1(CrucibleDialogService);
+  private articleDataService = inject_1(ArticleDataService);
+  private articleQuery = inject_1(ArticleQuery);
+  private articleTeamDataService = inject_1(ArticleTeamDataService);
+  private cardQuery = inject_1(CardQuery);
+
+  readonly exhibit = input<Exhibit>(undefined);
+  readonly teamList = input<Team[]>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   filterControl: UntypedFormControl = new UntypedFormControl();
   filterString = '';
   isLoading = false;
@@ -45,13 +61,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   ];
   private unsubscribe$ = new Subject();
 
-  constructor(
-    private crucibleDialog: CrucibleDialogService,
-    private articleDataService: ArticleDataService,
-    private articleQuery: ArticleQuery,
-    private articleTeamDataService: ArticleTeamDataService,
-    private cardQuery: CardQuery
-  ) {
+  constructor() {
     this.articleDataService.unload();
     this.sortChanged(this.sort);
     this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
@@ -70,9 +80,10 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    if (this.exhibit && this.exhibit.collectionId) {
-      this.articleDataService.loadByCollection(this.exhibit.collectionId);
-      this.articleTeamDataService.getTeamArticlesFromApi(this.exhibit.id);
+    const exhibit = this.exhibit();
+    if (exhibit && exhibit.collectionId) {
+      this.articleDataService.loadByCollection(exhibit.collectionId);
+      this.articleTeamDataService.getTeamArticlesFromApi(exhibit.id);
     }
     this.filterControl.setValue(this.filterString);
     this.loadInitialData();

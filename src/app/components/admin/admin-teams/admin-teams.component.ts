@@ -2,9 +2,9 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { Sort } from '@angular/material/sort';
+import { Component, OnInit, OnDestroy, inject, input } from '@angular/core';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Team, User } from 'src/app/generated/api';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
@@ -15,16 +15,32 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminTeamEditDialogComponent } from 'src/app/components/admin/admin-team-edit-dialog/admin-team-edit-dialog.component';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { AdminTeamUsersComponent } from '../admin-team-users/admin-team-users.component';
+import { MatCard } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-admin-teams',
     templateUrl: './admin-teams.component.html',
     styleUrls: ['./admin-teams.component.scss'],
-    standalone: false
+    imports: [MatAccordion, MatSort, MatIconButton, MatIcon, MatSortHeader, MatFormField, MatInput, FormsModule, ReactiveFormsModule, MatSuffix, MatExpansionPanel, MatExpansionPanelHeader, AdminTeamUsersComponent, MatCard, MatProgressSpinner]
 })
 export class AdminTeamsComponent implements OnInit, OnDestroy {
-  @Input() exhibitId: string;
-  @Input() canEdit: boolean;
+  private settingsService = inject(ComnSettingsService);
+  private dialog = inject(MatDialog);
+  private crucibleDialog = inject(CrucibleDialogService);
+  private teamDataService = inject(TeamDataService);
+  private teamQuery = inject(TeamQuery);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+
+  readonly exhibitId = input<string>(undefined);
+  readonly canEdit = input<boolean>(undefined);
   filterControl: UntypedFormControl = new UntypedFormControl();
   filterString = '';
   newTeam: Team = { id: '', name: '' };
@@ -43,15 +59,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
   sortedTeams: Team[] = [];
   private unsubscribe$ = new Subject();
 
-  constructor(
-    private settingsService: ComnSettingsService,
-    private dialog: MatDialog,
-    private crucibleDialog: CrucibleDialogService,
-    private teamDataService: TeamDataService,
-    private teamQuery: TeamQuery,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery
-  ) {
+  constructor() {
     this.teamQuery
       .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
@@ -89,7 +97,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
       team = {
         name: '',
         shortName: '',
-        exhibitId: this.exhibitId,
+        exhibitId: this.exhibitId(),
       };
     } else {
       team = { ...team };
@@ -168,7 +176,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
     let filteredTeams: Team[] = [];
     if (teams) {
       teams.forEach((t) => {
-        if (t.exhibitId === this.exhibitId) {
+        if (t.exhibitId === this.exhibitId()) {
           filteredTeams.push({ ...t });
         } else {
         }

@@ -3,7 +3,7 @@
 
 import { ArticleStore } from './article.store';
 import { ArticleQuery } from './article.query';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -16,6 +16,13 @@ import { ArticleTeamDataService } from '../team/article-team-data.service';
   providedIn: 'root',
 })
 export class ArticleDataService {
+  private articleStore = inject(ArticleStore);
+  private articleQuery = inject(ArticleQuery);
+  private articleService = inject(ArticleService);
+  private articleTeamDataService = inject(ArticleTeamDataService);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
   private _requestedArticleId: string;
   private _requestedArticleId$ = this.activatedRoute.queryParamMap.pipe(
     map((params) => params.get('articleId') || '')
@@ -30,14 +37,9 @@ export class ArticleDataService {
   private pageSize: Observable<number>;
   private pageIndex: Observable<number>;
 
-  constructor(
-    private articleStore: ArticleStore,
-    private articleQuery: ArticleQuery,
-    private articleService: ArticleService,
-    private articleTeamDataService: ArticleTeamDataService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {
+  constructor() {
+    const activatedRoute = this.activatedRoute;
+
     this.filterTerm = activatedRoute.queryParamMap.pipe(
       map((params) => params.get('articlemask') || '')
     );

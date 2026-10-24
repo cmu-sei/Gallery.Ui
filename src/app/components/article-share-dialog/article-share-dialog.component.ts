@@ -1,19 +1,26 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Component, inject, output } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
+import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
 
 @Component({
     selector: 'app-article-share-dialog',
     templateUrl: './article-share-dialog.component.html',
     styleUrls: ['./article-share-dialog.component.scss'],
-    standalone: false
+    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatSelect, FormsModule, ReactiveFormsModule, MatOption, MatInput, AngularEditorModule, MatError]
 })
 export class ArticleShareDialogComponent {
-  @Output() editComplete = new EventEmitter<any>();
+  data = inject(MAT_DIALOG_DATA);
+
+  readonly editComplete = output<any>();
   shareTeamsControl = new UntypedFormControl();
   subjectFormControl = new UntypedFormControl(
     this.data.article.sourceName + ': ' + this.data.article.name
@@ -67,9 +74,7 @@ export class ArticleShareDialogComponent {
     toolbarHiddenButtons: [['backgroundColor']],
   };
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
+  constructor() {
     if (this.data.article.url) {
       this.messageFormControl.setValue(
         this.messageFormControl.value +

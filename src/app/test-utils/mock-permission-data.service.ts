@@ -7,7 +7,7 @@
 // endpoints, so gate tests exercise the production system > exhibit /
 // collection precedence rather than a re-implementation of it.
 
-import { inject, Provider } from '@angular/core';
+import { Provider } from '@angular/core';
 import { vi } from 'vitest';
 import { of } from 'rxjs';
 import {
@@ -54,14 +54,10 @@ export function permissionDataProviders(
     },
     {
       provide: PermissionDataService,
-      // inject() resolves the stubs above (or a test's own override) with the
-      // real types, so the partial stubs need no casts.
+      // The service's inject() calls resolve the stubs above (or a test's own
+      // override), so the partial stubs need no casts.
       useFactory: () => {
-        const service = new PermissionDataService(
-          inject(SystemPermissionsService),
-          inject(ExhibitPermissionsService),
-          inject(CollectionPermissionsService),
-        );
+        const service = new PermissionDataService();
         // All three claim sets are loaded up front, as they are after the
         // home page or the admin container has called load*().
         service.load().subscribe();

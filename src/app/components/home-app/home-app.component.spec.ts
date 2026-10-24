@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach, onTestFinished } from 'vitest';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -47,30 +47,33 @@ import {
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
 import { HomeAppComponent } from './home-app.component';
+import { TopbarComponent } from 'src/app/components/shared/top-bar/topbar.component';
+import { WallComponent } from 'src/app/components/wall/wall.component';
+import { ArchiveComponent } from 'src/app/components/archive/archive.component';
 import { captureUnhandledRejections, flush } from 'src/app/test-utils/unhandled-rx-errors';
 
-@Component({ selector: 'app-topbar', template: '', standalone: false })
+@Component({ selector: 'app-topbar', template: '' })
 class TopbarStubComponent {
-  @Input() title?: string;
-  @Input() topbarView?: TopbarView;
-  @Input() imageFilePath?: string;
-  @Output() urlNavigate = new EventEmitter<string>();
+  readonly title = input<string>(undefined);
+  readonly topbarView = input<TopbarView>(undefined);
+  readonly imageFilePath = input<string>(undefined);
+  readonly urlNavigate = output<string>();
 }
 
-@Component({ selector: 'app-wall', template: '', standalone: false })
+@Component({ selector: 'app-wall', template: '' })
 class WallStubComponent {
-  @Input() showAdminButton?: boolean;
-  @Input() showAdvanceButton?: boolean;
-  @Input() exhibit?: Exhibit;
-  @Output() changeTeam = new EventEmitter<string>();
-  @Output() sectionSelected = new EventEmitter<string>();
+  readonly showAdminButton = input<boolean>(undefined);
+  readonly showAdvanceButton = input<boolean>(undefined);
+  readonly exhibit = input<Exhibit>(undefined);
+  readonly changeTeam = output<string>();
+  readonly sectionSelected = output<string>();
 }
 
-@Component({ selector: 'app-archive', template: '', standalone: false })
+@Component({ selector: 'app-archive', template: '' })
 class ArchiveStubComponent {
-  @Input() showAdminButton?: boolean;
-  @Output() changeTeam = new EventEmitter<string>();
-  @Output() sectionSelected = new EventEmitter<string>();
+  readonly showAdminButton = input<boolean>(undefined);
+  readonly changeTeam = output<string>();
+  readonly sectionSelected = output<string>();
 }
 
 const EXHIBIT: Exhibit = {
@@ -138,11 +141,10 @@ async function renderHome(
       MatSortModule,
       MatTableModule,
     ],
-    declarations: [
-      HomeAppComponent,
-      TopbarStubComponent,
-      WallStubComponent,
-      ArchiveStubComponent,
+    childStubs: [
+      { replace: TopbarComponent, with: TopbarStubComponent },
+      { replace: WallComponent, with: WallStubComponent },
+      { replace: ArchiveComponent, with: ArchiveStubComponent },
     ],
     providers: [
       ...permissionDataProviders(grants),
@@ -303,9 +305,9 @@ describe('HomeAppComponent', () => {
       { exhibit: 'x1', section: 'wall' },
     );
 
-    expect(stub(WallStubComponent)?.showAdminButton).toBe(true);
-    expect(stub(WallStubComponent)?.showAdvanceButton).toBe(true);
-    expect(stub(WallStubComponent)?.exhibit?.id).toBe('x1');
+    expect(stub(WallStubComponent)?.showAdminButton()).toBe(true);
+    expect(stub(WallStubComponent)?.showAdvanceButton()).toBe(true);
+    expect(stub(WallStubComponent)?.exhibit()?.id).toBe('x1');
   });
 
   /**
@@ -341,7 +343,7 @@ describe('HomeAppComponent', () => {
         section: 'wall',
       });
 
-      expect(stub(WallStubComponent)?.showAdvanceButton).toBe(true);
+      expect(stub(WallStubComponent)?.showAdvanceButton()).toBe(true);
     },
   );
 
@@ -356,8 +358,8 @@ describe('HomeAppComponent', () => {
       { exhibit: 'x1', section: 'wall' },
     );
 
-    expect(stub(WallStubComponent)?.showAdvanceButton).toBe(false);
-    expect(stub(WallStubComponent)?.exhibit?.id).toBe('x1');
+    expect(stub(WallStubComponent)?.showAdvanceButton()).toBe(false);
+    expect(stub(WallStubComponent)?.exhibit()?.id).toBe('x1');
   });
 
   /**
@@ -376,8 +378,8 @@ describe('HomeAppComponent', () => {
       { exhibit: 'x1', section: 'wall' },
     );
 
-    expect(stub(WallStubComponent)?.showAdvanceButton).toBe(false);
-    expect(stub(WallStubComponent)?.showAdminButton).toBe(false);
+    expect(stub(WallStubComponent)?.showAdvanceButton()).toBe(false);
+    expect(stub(WallStubComponent)?.showAdminButton()).toBe(false);
   });
 
   /**
@@ -392,7 +394,7 @@ describe('HomeAppComponent', () => {
         { exhibit: 'x1', section: 'archive' },
       );
 
-    expect(stub(ArchiveStubComponent)?.showAdminButton).toBe(true);
+    expect(stub(ArchiveStubComponent)?.showAdminButton()).toBe(true);
     expect(stub(WallStubComponent)).toBeUndefined();
     expect(TestBed.inject(TeamQuery).getActiveId()).toBe('t1');
     expect(signalR.switchTeam).toHaveBeenCalledWith('t1', 't1');
@@ -419,7 +421,7 @@ describe('HomeAppComponent', () => {
       { exhibit: 'x1', section: 'archive' },
     );
 
-    expect(stub(ArchiveStubComponent)?.showAdminButton).toBe(false);
+    expect(stub(ArchiveStubComponent)?.showAdminButton()).toBe(false);
   });
 
   /**

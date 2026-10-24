@@ -5,26 +5,30 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { CrucibleDialogService } from '@cmusei/crucible-common';
 import { SystemPermission, SystemRole } from 'src/app/generated/api';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { RoleDataService } from 'src/app/data/role/role-data.service';
 import { SystemRolesModel } from './admin-system-roles.models';
 import { map, take } from 'rxjs/operators';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NameDialogComponent } from 'src/app/components/shared/name-dialog/name-dialog.component';
 import { SignalRService } from 'src/app/services/signalr.service';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
 
 const NAME_VALUE = 'nameValue';
 
 @Component({
-  selector: 'app-admin-system-roles',
-  templateUrl: './admin-system-roles.component.html',
-  styleUrls: ['./admin-system-roles.component.scss'],
-  standalone: false
+    selector: 'app-admin-system-roles',
+    templateUrl: './admin-system-roles.component.html',
+    styleUrls: ['./admin-system-roles.component.scss'],
+    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatIconButton, MatTooltip, MatIcon, MatCellDef, MatCell, MatCheckbox, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe]
 })
 export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   private roleService = inject(RoleDataService);

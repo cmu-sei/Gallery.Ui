@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Injector, runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
@@ -71,7 +72,10 @@ describe('CollectionQuery', () => {
    */
   it('selects all collections sorted by name', () => {
     const store = new CollectionStore();
-    const query = new CollectionQuery(store);
+    const injector = Injector.create({
+      providers: [{ provide: CollectionStore, useValue: store }],
+    });
+    const query = runInInjectionContext(injector, () => new CollectionQuery());
     store.set([
       makeCollection({ id: 'c2', name: 'Charlie' }),
       makeCollection({ id: 'c1', name: 'Alpha' }),
@@ -88,7 +92,10 @@ describe('CollectionQuery', () => {
    */
   it('selectById emits the entity and its later updates', () => {
     const store = new CollectionStore();
-    const query = new CollectionQuery(store);
+    const injector = Injector.create({
+      providers: [{ provide: CollectionStore, useValue: store }],
+    });
+    const query = runInInjectionContext(injector, () => new CollectionQuery());
     store.set([makeCollection()]);
     const seen = recordEmissions(query.selectById('c1'));
     store.update('c1', { name: 'Renamed' });
@@ -526,7 +533,7 @@ describe('CollectionDataService error paths', () => {
 
       expect(query.getValue().loading).toBe(true);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in app.module.ts:270), which shows it to the user.
+      // provided in app.config.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );
@@ -561,7 +568,7 @@ describe('CollectionDataService error paths', () => {
       expect(query.getCount()).toBe(1);
       expect(query.getValue().loading).toBe(false);
       // The error itself reaches the app's global ErrorHandler (ErrorService,
-      // provided in app.module.ts:270), which shows it to the user.
+      // provided in app.config.ts), which shows it to the user.
       expect(errors).toEqual([failure]);
     },
   );

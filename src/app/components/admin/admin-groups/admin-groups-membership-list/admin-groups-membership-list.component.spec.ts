@@ -2,7 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
+import { Directive, input, output } from '@angular/core';
 import { screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,12 +19,15 @@ import { User } from 'src/app/generated/api';
 import { renderComponent } from 'src/app/test-utils/render-component';
 import { AdminGroupsMembershipListComponent } from './admin-groups-membership-list.component';
 
-// Stands in for ngx-clipboard's directive on the copy button; AppModule does
-// not import ClipboardModule (see the NG0303 test below).
-@Directive({ selector: '[ngxClipboard]', standalone: false })
+// Stands in for ngx-clipboard's directive on the copy button. A click reports
+// a successful copy, as the real directive does, without the real clipboard.
+@Directive({
+  selector: '[ngxClipboard]',
+  host: { '(click)': 'cbOnSuccess.emit({ isSuccess: true })' },
+})
 class ClipboardStubDirective {
-  @Input() cbContent?: string;
-  @Output() cbOnSuccess = new EventEmitter<unknown>();
+  readonly cbContent = input<string>(undefined);
+  readonly cbOnSuccess = output<unknown>();
 }
 
 const USERS: User[] = [
@@ -31,7 +35,10 @@ const USERS: User[] = [
   { id: 'u2', name: 'Bob' },
 ];
 
-async function renderList(canEdit: boolean, clipboard = true) {
+async function renderList(
+  canEdit: boolean,
+  clipboard?: Partial<ClipboardService>,
+) {
   const rendered = await renderComponent(AdminGroupsMembershipListComponent, {
     imports: [
       MatButtonModule,
@@ -44,15 +51,16 @@ async function renderList(canEdit: boolean, clipboard = true) {
       MatTableModule,
       MatToolbarModule,
     ],
-    declarations: [
-      AdminGroupsMembershipListComponent,
-      ...(clipboard ? [ClipboardStubDirective] : []),
-    ],
     componentInputs: { users: USERS, canEdit },
-    configureTestBed: (testBed) =>
-      // Report unknown bindings the way the app does in dev mode (console.error)
-      // instead of throwing, so the NG0303 test can read them.
-      testBed.configureTestingModule({ errorOnUnknownProperties: clipboard }),
+    // With a ClipboardService stub, the component's real ClipboardModule runs;
+    // otherwise a stub directive stands in for it.
+    ...(clipboard
+      ? { providers: [{ provide: ClipboardService, useValue: clipboard }] }
+      : {
+          childStubs: [
+            { replace: ClipboardModule, with: ClipboardStubDirective },
+          ],
+        }),
   });
   const created: string[] = [];
   rendered.fixture.componentInstance.createMembership.subscribe((id) =>
@@ -91,21 +99,23 @@ describe('AdminGroupsMembershipListComponent', () => {
   });
 
   /**
-   * Verifies: with the module set AppModule declares this component in (no ClipboardModule), the copy button's ngx-clipboard bindings are unknown properties, logged as NG0303 (current behavior).
-   * Interacts with: Angular's dev-mode unknown-property check, console.error.
-   * Data: Alice and Bob (two rows); no clipboard directive declared.
+   * Verifies: the copy button copies the user id through the component's own ngx-clipboard import and confirms with a "Copied to clipboard" snackbar. Fails if the component stops importing ClipboardModule.
+   * Interacts with: the real ClipboardDirective; a ClipboardService stub (jsdom has no clipboard); MatSnackBar via cbOnSuccess.
+   * Data: Alice and Bob (two rows); the stub reports a successful copy.
    */
-  it('logs NG0303 for the copy button clipboard binding', async () => {
-    const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+  it('copy button copies the id and confirms with a snackbar', async () => {
+    const copyFromContent = vi.fn(() => true);
+    await renderList(true, {
+      isSupported: true,
+      isTargetValid: () => false,
+      copyFromContent,
+      destroy: vi.fn(),
+      pushCopyResponse: vi.fn(),
+    });
 
-    await renderList(true, false);
+    await userEvent.setup().click(screen.getByTitle('Copy: u1'));
 
-    // Current behavior; see agent-docs/ui-test-bugs/gallery.ui.md.
-    // One message per rendered row.
-    expect(errors.mock.calls.map((c) => String(c[0]))).toEqual(
-      USERS.map(() =>
-        expect.stringContaining("NG0303: Can't bind to 'cbContent'"),
-      ),
-    );
+    expect(copyFromContent).toHaveBeenCalledWith('u1', undefined);
+    expect(await screen.findByText('Copied to clipboard')).toBeInTheDocument();
   });
 });

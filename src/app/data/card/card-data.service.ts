@@ -3,7 +3,7 @@
 
 import { Card, CardStore } from './card.store';
 import { CardQuery } from './card.query';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -15,6 +15,12 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
   providedIn: 'root',
 })
 export class CardDataService {
+  private cardStore = inject(CardStore);
+  private cardQuery = inject(CardQuery);
+  private cardService = inject(CardService);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
   private _requestedCardId: string;
   private _requestedCardId$ = this.activatedRoute.queryParamMap.pipe(
     map((params) => params.get('cardId') || '')
@@ -29,13 +35,9 @@ export class CardDataService {
   private pageSize: Observable<number>;
   private pageIndex: Observable<number>;
 
-  constructor(
-    private cardStore: CardStore,
-    private cardQuery: CardQuery,
-    private cardService: CardService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {
+  constructor() {
+    const activatedRoute = this.activatedRoute;
+
     this.filterTerm = activatedRoute.queryParamMap.pipe(
       map((params) => params.get('cardmask') || '')
     );

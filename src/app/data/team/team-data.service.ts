@@ -3,7 +3,7 @@
 
 import { TeamStore } from './team.store';
 import { TeamQuery } from './team.query';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -15,6 +15,12 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
   providedIn: 'root',
 })
 export class TeamDataService {
+  private teamStore = inject(TeamStore);
+  private teamQuery = inject(TeamQuery);
+  private teamService = inject(TeamService);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
   // private _requestedTeamId: string;
   // private _requestedTeamId$ = this.activatedRoute.queryParamMap.pipe(
   //   map((params) => params.get('teamId') || '')
@@ -44,13 +50,9 @@ export class TeamDataService {
     return this._loadedExhibitId;
   }
 
-  constructor(
-    private teamStore: TeamStore,
-    private teamQuery: TeamQuery,
-    private teamService: TeamService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {
+  constructor() {
+    const activatedRoute = this.activatedRoute;
+
     this.filterTerm = activatedRoute.queryParamMap.pipe(
       map((params) => params.get('teammask') || '')
     );

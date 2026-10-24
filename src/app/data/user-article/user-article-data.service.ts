@@ -4,7 +4,7 @@
 import { UserArticleStore } from './user-article.store';
 import { UserArticleQuery } from './user-article.query';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -21,6 +21,13 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
   providedIn: 'root',
 })
 export class UserArticleDataService {
+  private userArticleStore = inject(UserArticleStore);
+  private userArticleQuery = inject(UserArticleQuery);
+  private userArticleService = inject(UserArticleService);
+  private exhibitQuery = inject(ExhibitQuery);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
   private _requestedUserArticleId: string;
   private _requestedUserArticleId$ = this.activatedRoute.queryParamMap.pipe(
     map((params) => params.get('userArticleId') || '')
@@ -35,14 +42,9 @@ export class UserArticleDataService {
   private pageSize: Observable<number>;
   private pageIndex: Observable<number>;
 
-  constructor(
-    private userArticleStore: UserArticleStore,
-    private userArticleQuery: UserArticleQuery,
-    private userArticleService: UserArticleService,
-    private exhibitQuery: ExhibitQuery,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {
+  constructor() {
+    const activatedRoute = this.activatedRoute;
+
     this.filterTerm = activatedRoute.queryParamMap.pipe(
       map((params) => params.get('userArticlemask') || '')
     );

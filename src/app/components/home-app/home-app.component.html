@@ -7,7 +7,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   [style.--landing-background]="backgroundImage">
   @if (!hideTopbar) {
   <app-topbar [title]="titleText" [topbarView]="TopbarView.GALLERY_HOME" [imageFilePath]="topbarImage"
-    (urlNavigate)="topBarNavigate($event)"></app-topbar>
+    (urlNavigate)="topBarNavigate($event)" />
   }
 
   @if (!permissions) {
@@ -17,8 +17,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-card-title>Initializing Data</mat-card-title>
         <mat-card-subtitle>Please wait ...</mat-card-subtitle>
       </mat-card-header>
-      <mat-progress-spinner color="primary" mode="indeterminate">
-      </mat-progress-spinner>
+      <mat-progress-spinner color="primary" mode="indeterminate" />
     </mat-card>
   </span>
   }
@@ -30,7 +29,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <div class="one-cell last-cell">
         @if (canViewAdministration) {
         <button mat-icon-button (click)="gotoAdmin()" style="outline: none;" title="Administration">
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog"></mat-icon>
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-cog" />
         </button>
         }
       </div>
@@ -38,7 +37,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
     <div class="elevate list-container">
       <div class="icon-text-container">
-        <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
+        <mat-icon class="crucible-icon-gallery" svgIcon="crucible-icon-gallery" />
         <span class="exhibit-title text">My Exhibits</span>
         <div class="searchBox">
           <!-- Search Bar -->
@@ -47,7 +46,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
               (input)="onFilterChange()" placeholder="Search">
             @if (filterString !== '') {
             <button mat-icon-button matSuffix (click)="clearFilter()" title="Clear Search">
-              <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline"></mat-icon>
+              <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline" />
             </button>
             }
           </mat-form-field>
@@ -79,9 +78,8 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
             <mat-header-cell *matHeaderCellDef mat-sort-header>Created</mat-header-cell>
             <mat-cell *matCellDef="let exhibit">{{ exhibit.dateCreated | date:"yyyy-MM-dd HH:mm" }}</mat-cell>
           </ng-container>
-          <mat-header-row
-            *matHeaderRowDef="['name', 'description', 'collection', 'dateCreated']; sticky: true"></mat-header-row>
-          <mat-row *matRowDef="let exhibit; columns: ['name', 'description', 'collection', 'dateCreated']"></mat-row>
+          <mat-header-row *matHeaderRowDef="['name', 'description', 'collection', 'dateCreated']; sticky: true" />
+          <mat-row *matRowDef="let exhibit; columns: ['name', 'description', 'collection', 'dateCreated']" />
         </mat-table>
         <!-- Filter No Results Found -->
         @if (exhibitList.data.length === 0) {
@@ -89,18 +87,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
           No results found
         </div>
         }
-        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons aria-label="Select page of exhibits">
-        </mat-paginator>
+        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons aria-label="Select page of exhibits" />
       </div>
     </div>
     }
     @if (exhibitId && selectedSection === 'wall') {
     <app-wall [showAdminButton]="canViewAdministration" [showAdvanceButton]="canManageCurrentExhibit"
-      [exhibit]="exhibit" (changeTeam)="changeTeam($event)" (sectionSelected)="gotoSection($event)"></app-wall>
+      [exhibit]="exhibit" (changeTeam)="changeTeam($event)" (sectionSelected)="gotoSection($event)" />
     }
     @if (exhibitId && selectedSection === 'archive') {
     <app-archive [showAdminButton]="canViewAdministration" (changeTeam)="changeTeam($event)"
-      (sectionSelected)="gotoSection($event)"></app-archive>
+      (sectionSelected)="gotoSection($event)" />
     }
   </div>
   }

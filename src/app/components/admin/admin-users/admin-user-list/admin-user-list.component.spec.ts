@@ -2,7 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { describe, it, expect, vi } from 'vitest';
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { ClipboardModule } from 'ngx-clipboard';
+import { Directive, input, output } from '@angular/core';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -31,13 +32,12 @@ import { ApiStub } from 'src/app/test-utils/api-stub';
 import { dialogRefStub } from 'src/app/test-utils/dialog-refs';
 import { AdminUserListComponent } from './admin-user-list.component';
 
-// Stands in for ngx-clipboard's directive on the copy button. AppModule does
-// not import ClipboardModule; same case as 'logs NG0303 for the copy button
-// clipboard binding' in admin-groups-membership-list.component.spec.ts.
-@Directive({ selector: '[ngxClipboard]', standalone: false })
+// Stands in for ngx-clipboard's directive on the copy button, so the tests
+// do not touch the real clipboard.
+@Directive({ selector: '[ngxClipboard]' })
 class ClipboardStubDirective {
-  @Input() cbContent?: string;
-  @Output() cbOnSuccess = new EventEmitter<unknown>();
+  readonly cbContent = input<string>(undefined);
+  readonly cbOnSuccess = output<unknown>();
 }
 
 const USERS: User[] = [
@@ -66,7 +66,7 @@ async function renderList(canEdit: boolean, confirmed = true) {
       MatTableModule,
       MatTooltipModule,
     ],
-    declarations: [AdminUserListComponent, ClipboardStubDirective],
+    childStubs: [{ replace: ClipboardModule, with: ClipboardStubDirective }],
     providers: [
       { provide: UserService, useValue: userApi },
       {

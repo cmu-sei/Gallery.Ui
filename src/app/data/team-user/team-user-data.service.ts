@@ -4,7 +4,7 @@
 
 import { TeamUserStore } from './team-user.store';
 import { TeamUserQuery } from './team-user.query';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { TeamUser, TeamUserService } from 'src/app/generated/api';
 import { take, tap } from 'rxjs/operators';
@@ -14,13 +14,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class TeamUserDataService {
-  readonly TeamUserList: Observable<TeamUser[]>;
+  private teamUserStore = inject(TeamUserStore);
+  private teamUserQuery = inject(TeamUserQuery);
+  private teamUserService = inject(TeamUserService);
 
-  constructor(
-    private teamUserStore: TeamUserStore,
-    private teamUserQuery: TeamUserQuery,
-    private teamUserService: TeamUserService
-  ) {}
+  readonly TeamUserList: Observable<TeamUser[]>;
 
   loadByExhibit(exhibitId: string) {
     this.teamUserStore.setLoading(true);

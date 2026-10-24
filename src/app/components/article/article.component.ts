@@ -1,7 +1,7 @@
 // Copyright 2023 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Inject, OnDestroy, DOCUMENT } from '@angular/core';
+import { Component, OnDestroy, DOCUMENT, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
@@ -11,15 +11,24 @@ import { ArticleQuery } from 'src/app/data/article/article.query';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { XApiService } from 'src/app/services/xapi/xapi.service';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-article-app',
     templateUrl: './article.component.html',
     styleUrls: ['./article.component.scss'],
-    standalone: false
+    imports: [AngularEditorModule, FormsModule]
 })
 export class ArticleComponent implements OnDestroy {
+  private activatedRoute = inject(ActivatedRoute);
+  private articleDataService = inject(ArticleDataService);
+  private articleQuery = inject(ArticleQuery);
+  private sanitizer = inject(DomSanitizer);
+  private settingsService = inject(ComnSettingsService);
+  private xApiService = inject(XApiService);
+  private _document = inject<HTMLDocument>(DOCUMENT);
+
   safeContent: SafeHtml = '';
   article: Article = {} as Article;
   private unsubscribe$ = new Subject();
@@ -39,15 +48,7 @@ export class ArticleComponent implements OnDestroy {
     sanitize: true,
   };
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private articleDataService: ArticleDataService,
-    private articleQuery: ArticleQuery,
-    private sanitizer: DomSanitizer,
-    private settingsService: ComnSettingsService,
-    private xApiService: XApiService,
-    @Inject(DOCUMENT) private _document: HTMLDocument
-  ) {
+  constructor() {
     this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Article';
     // subscribe to route changes
     this.activatedRoute.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {

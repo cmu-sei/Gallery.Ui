@@ -3,7 +3,7 @@
 
 import { CollectionStore } from './collection.store';
 import { CollectionQuery } from './collection.query';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -23,6 +23,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   providedIn: 'root',
 })
 export class CollectionDataService {
+  private collectionStore = inject(CollectionStore);
+  private collectionQuery = inject(CollectionQuery);
+  private collectionService = inject(CollectionService);
+  private permissionDataService = inject(PermissionDataService);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
   private _requestedCollectionId: string;
   private _requestedCollectionId$ = this.activatedRoute.queryParamMap.pipe(
     map((params) => params.get('collectionId') || '')
@@ -42,15 +50,9 @@ export class CollectionDataService {
   // win and cancels the superseded one instead of discarding its response.
   private collectionsLoad$ = new Subject<'all' | 'mine'>();
 
-  constructor(
-    private collectionStore: CollectionStore,
-    private collectionQuery: CollectionQuery,
-    private collectionService: CollectionService,
-    private permissionDataService: PermissionDataService,
-    private snackBar: MatSnackBar,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {
+  constructor() {
+    const activatedRoute = this.activatedRoute;
+
     this.filterTerm = activatedRoute.queryParamMap.pipe(
       map((params) => params.get('collectionmask') || '')
     );

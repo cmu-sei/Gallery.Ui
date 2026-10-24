@@ -9,7 +9,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <mat-toolbar class="sidenav-header" title="Exit Administration" (click)="exitAdmin()">
       <a class="nolink">
         <div class="cssLayoutRowStartCenter">
-          <mat-icon class="icon-35px crucible-icon-gallery" svgIcon="crucible-icon-gallery"></mat-icon>
+          <mat-icon class="icon-35px crucible-icon-gallery" svgIcon="crucible-icon-gallery" />
           <h2 class="icon-text">Administration</h2>
         </div>
       </a>
@@ -18,50 +18,50 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       @if (canViewCollections || canCreateCollections) {
       <mat-list-item id="wrapper showhand" (click)="gotoSection(section.collections)"
         [ngClass]="getSelectedClass(section.collections)">
-        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-focus-field"></mat-icon>
+        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-focus-field" />
         Collections
         <button aria-labelledby="'Collections" mat-icon-button class="pull-right">
-          <mat-icon fontIcon="mdi-menu-right"></mat-icon>
+          <mat-icon fontIcon="mdi-menu-right" />
         </button>
       </mat-list-item>
       }
       @if (canViewExhibits || canCreateExhibits) {
       <mat-list-item id="wrapper showhand" (click)="gotoSection(section.exhibits)"
         [ngClass]="getSelectedClass(section.exhibits)">
-        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-monitor-dashboard"></mat-icon>
+        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-monitor-dashboard" />
         Exhibits
         <button aria-labelledby="'Exhibits'" mat-icon-button class="pull-right">
-          <mat-icon fontIcon="mdi-menu-right"></mat-icon>
+          <mat-icon fontIcon="mdi-menu-right" />
         </button>
       </mat-list-item>
       }
       @if (canViewUsers) {
       <mat-list-item [ngClass]="getSelectedClass(section.users)" id="wrapper showhand"
         (click)="gotoSection(section.users)">
-        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-account"></mat-icon>
+        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-account" />
         Users
         <button aria-labelledby="usersText" mat-icon-button class="pull-right">
-          <mat-icon fontIcon="mdi-menu-right"></mat-icon>
+          <mat-icon fontIcon="mdi-menu-right" />
         </button>
       </mat-list-item>
       }
       @if (canViewRoles) {
       <mat-list-item [ngClass]="getSelectedClass(section.roles)" id="wrapper showhand"
         (click)="gotoSection(section.roles)">
-        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-lock"></mat-icon>
+        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-lock" />
         Roles
         <button aria-labelledby="rolesText" mat-icon-button class="pull-right">
-          <mat-icon fontIcon="mdi-menu-right"></mat-icon>
+          <mat-icon fontIcon="mdi-menu-right" />
         </button>
       </mat-list-item>
       }
       @if (canViewGroups) {
       <mat-list-item [ngClass]="getSelectedClass(section.groups)" id="wrapper showhand"
         (click)="gotoSection(section.groups)">
-        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-account-group"></mat-icon>
+        <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-account-group" />
         Groups
         <button aria-labelledby="groupsText" mat-icon-button class="pull-right">
-          <mat-icon fontIcon="mdi-menu-right"></mat-icon>
+          <mat-icon fontIcon="mdi-menu-right" />
         </button>
       </mat-list-item>
       }
@@ -87,30 +87,29 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   </mat-sidenav>
   <mat-sidenav-content>
     @if (!hideTopbar) {
-    <app-topbar [title]="displayedSection" [topbarView]="TopbarView.GALLERY_ADMIN"></app-topbar>
+    <app-topbar [title]="displayedSection" [topbarView]="TopbarView.GALLERY_ADMIN" />
     }
     @if ((canViewCollections || canCreateCollections) && displayedSection === section.collections) {
     <span>
-      <app-admin-collections></app-admin-collections>
+      <app-admin-collections />
     </span>
     }
     @if ((canViewExhibits || canCreateExhibits) && displayedSection === section.exhibits) {
     <span>
-      <app-admin-exhibits [userList]="userList | async">
-      </app-admin-exhibits>
+      <app-admin-exhibits [userList]="userList | async" />
     </span>
     }
     @if (canViewUsers && displayedSection === section.users) {
-      <app-admin-users></app-admin-users>
+      <app-admin-users />
     }
     @if (canViewRoles && displayedSection === section.roles) {
     <span>
-      <app-admin-roles></app-admin-roles>
+      <app-admin-roles />
     </span>
     }
     @if (canViewGroups && displayedSection === section.groups) {
     <span>
-      <app-admin-groups></app-admin-groups>
+      <app-admin-groups />
     </span>
     }
   </mat-sidenav-content>

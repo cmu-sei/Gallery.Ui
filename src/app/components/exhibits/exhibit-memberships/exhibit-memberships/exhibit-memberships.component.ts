@@ -3,15 +3,7 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject, input, output } from '@angular/core';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
@@ -26,17 +18,28 @@ import {
 } from 'src/app/generated/api';
 import { GroupDataService } from 'src/app/data/group/group-data.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
+import { ExhibitMembershipListComponent } from '../exhibit-membership-list/exhibit-membership-list.component';
+import { ExhibitMemberListComponent } from '../exhibit-member-list/exhibit-member-list.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-exhibit-memberships',
-  templateUrl: './exhibit-memberships.component.html',
-  styleUrls: ['./exhibit-memberships.component.scss'],
-  standalone: false
+    selector: 'app-exhibit-memberships',
+    templateUrl: './exhibit-memberships.component.html',
+    styleUrls: ['./exhibit-memberships.component.scss'],
+    imports: [ExhibitMembershipListComponent, ExhibitMemberListComponent, AsyncPipe]
 })
 export class ExhibitMembershipsComponent implements OnInit {
-  @Input() embedded: boolean;
-  @Input() exhibitId: string;
-  @Output() goBack = new EventEmitter();
+  private exhibitQuery = inject(ExhibitQuery);
+  private exhibitMembershipDataService = inject(ExhibitMembershipDataService);
+  private exhibitRolesDataService = inject(ExhibitRoleDataService);
+  private userDataService = inject(UserDataService);
+  private userQuery = inject(UserQuery);
+  private groupDataService = inject(GroupDataService);
+  private permissionDataService = inject(PermissionDataService);
+
+  readonly embedded = input<boolean>(undefined);
+  readonly exhibitId = input<string>(undefined);
+  readonly goBack = output();
 
   exhibit$: Observable<Exhibit>;
 
@@ -52,24 +55,14 @@ export class ExhibitMembershipsComponent implements OnInit {
 
   canEdit$: Observable<boolean>;
 
-  constructor(
-    private exhibitQuery: ExhibitQuery,
-    private exhibitMembershipDataService: ExhibitMembershipDataService,
-    private exhibitRolesDataService: ExhibitRoleDataService,
-    private userDataService: UserDataService,
-    private userQuery: UserQuery,
-    private groupDataService: GroupDataService,
-    private permissionDataService: PermissionDataService
-  ) { }
-
   ngOnInit(): void {
     forkJoin([
-      this.exhibitMembershipDataService.loadMemberships(this.exhibitId),
+      this.exhibitMembershipDataService.loadMemberships(this.exhibitId()),
       this.userDataService.load(),
       this.exhibitRolesDataService.loadRoles(),
       this.groupDataService.load(),
     ]).subscribe();
-    this.canEdit$ = of(this.permissionDataService.canEditExhibit(this.exhibitId));
+    this.canEdit$ = of(this.permissionDataService.canEditExhibit(this.exhibitId()));
   }
 
   selectUsers(members: boolean) {
@@ -116,9 +109,9 @@ export class ExhibitMembershipsComponent implements OnInit {
   }
 
   createMembership(exhibitMembership: ExhibitMembership) {
-    exhibitMembership.exhibitId = this.exhibitId;
+    exhibitMembership.exhibitId = this.exhibitId();
     this.exhibitMembershipDataService
-      .createMembership(this.exhibitId, exhibitMembership)
+      .createMembership(this.exhibitId(), exhibitMembership)
       .subscribe();
   }
 
