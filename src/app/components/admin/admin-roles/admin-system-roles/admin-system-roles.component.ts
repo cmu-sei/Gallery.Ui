@@ -116,7 +116,7 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   }
 
   addRole() {
-    this.nameDialog('Create New Role?', '', { nameValue: '' })
+    this.nameDialog('Add Role', '', { nameValue: '' })
       .pipe(take(1))
       .subscribe((result) => {
         if (result) {
@@ -126,7 +126,7 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   }
 
   renameRole(role: SystemRole) {
-    this.nameDialog('Rename Role?', '', { nameValue: role.name })
+    this.nameDialog('Rename Role', '', { nameValue: role.name })
       .pipe(take(1))
       .subscribe((result) => {
         if (result) {
@@ -139,8 +139,8 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   deleteRole(role: SystemRole) {
     this.crucibleDialog
       .confirm({
-        title: 'Delete Role?',
-        message: `Are you sure you want to delete ${role.name}?`,
+        title: 'Delete Role',
+        message: `Are you sure that you want to delete ${role.name}?`,
         confirmText: 'Delete',
         cancelText: 'Cancel',
       })

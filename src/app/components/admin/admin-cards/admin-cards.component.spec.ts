@@ -166,7 +166,7 @@ describe('AdminCardsComponent', () => {
     await renderCards(grants);
 
     expect(
-      (screen.getByTitle('Add a Card') as HTMLButtonElement).disabled,
+      (screen.getByTitle('Add Card') as HTMLButtonElement).disabled,
     ).toBe(!enabled);
     expect(rowButtonsDisabled()).toEqual([
       !enabled,
@@ -195,7 +195,7 @@ describe('AdminCardsComponent', () => {
       ],
     });
 
-    expect(screen.getByTitle('Add a Card')).toBeDisabled();
+    expect(screen.getByTitle('Add Card')).toBeDisabled();
     expect(rowButtonsDisabled()).toEqual([true, true, true, true]);
   });
 
@@ -208,7 +208,7 @@ describe('AdminCardsComponent', () => {
     const { fixture, cardApi } = await renderCards(EDIT_C1);
     const user = userEvent.setup();
 
-    await user.click(screen.getByTitle('Add a Card'));
+    await user.click(screen.getByTitle('Add Card'));
     const dialog = await screen.findByRole('dialog');
     await user.type(
       within(dialog).getByRole('textbox', { name: 'Name' }),

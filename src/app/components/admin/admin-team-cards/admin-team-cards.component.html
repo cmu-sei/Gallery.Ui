@@ -65,10 +65,10 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       @if (!isLoading) {
       <mat-expansion-panel-header class="row">
         <div class="cell two-cell button-div">
-          <button mat-icon-button (click)="addOrEditTeamCard(teamCard)" title="Edit TeamCard" [disabled]="!canEdit()">
+          <button mat-icon-button (click)="addOrEditTeamCard(teamCard)" title="Edit Team Card" [disabled]="!canEdit()">
             <mat-icon class="mdi-24px" fontIcon="mdi-square-edit-outline" />
           </button>
-          <button mat-icon-button (click)="deleteTeamCard(teamCard)" title="Delete TeamCard" [disabled]="!canEdit()">
+          <button mat-icon-button (click)="deleteTeamCard(teamCard)" title="Delete Team Card" [disabled]="!canEdit()">
             <mat-icon class="mdi-24px" fontIcon="mdi-trash-can-outline" />
           </button>
         </div>

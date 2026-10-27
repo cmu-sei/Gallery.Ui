@@ -4,7 +4,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <crucible-dialog
-  dialogTitle="Edit Team"
+  [dialogTitle]="data.team?.id ? 'Edit Team' : 'Add Team'"
   [form]="form"
   submitLabel="Save"
   [submitDisabled]="!errorFree() || !form.dirty"
