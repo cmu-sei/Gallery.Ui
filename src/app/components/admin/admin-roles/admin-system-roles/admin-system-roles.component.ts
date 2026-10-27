@@ -116,7 +116,7 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   }
 
   addRole() {
-    this.nameDialog('Create New Role?', '', { nameValue: '' })
+    this.nameDialog('Add Role', '', { nameValue: '' })
       .pipe(take(1))
       .subscribe((result) => {
         if (result) {
@@ -126,7 +126,7 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   }
 
   renameRole(role: SystemRole) {
-    this.nameDialog('Rename Role?', '', { nameValue: role.name })
+    this.nameDialog('Rename Role', '', { nameValue: role.name })
       .pipe(take(1))
       .subscribe((result) => {
         if (result) {

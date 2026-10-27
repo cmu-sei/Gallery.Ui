@@ -184,6 +184,9 @@ describe('AdminSystemRolesComponent', () => {
 
     await user.click(addRoleButton());
     const dialog = await screen.findByRole('dialog');
+    expect(
+      within(dialog).getByRole('heading', { name: 'Add Role' }),
+    ).toBeVisible();
     await user.type(
       within(dialog).getByRole('textbox', { name: 'Name' }),
       'Planner',

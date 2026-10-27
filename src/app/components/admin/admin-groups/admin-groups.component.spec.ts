@@ -184,6 +184,9 @@ describe('AdminGroupsComponent', () => {
 
     await user.click(addButton());
     const dialog = await screen.findByRole('dialog');
+    expect(
+      within(dialog).getByRole('heading', { name: 'Add Group' }),
+    ).toBeVisible();
     await user.type(
       within(dialog).getByRole('textbox', { name: 'Name' }),
       'Red Cell',

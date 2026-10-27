@@ -24,7 +24,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <section matSort (matSortChange)="sortChanged($event)" class="header-row">
     <div class="header-cell button-cell">
       <button mat-icon-button (click)="addOrEditCard(null); $event.stopPropagation()"
-        style="outline: none; margin-left: 20px;" title="Add a Card" [disabled]="!canEdit">
+        style="outline: none; margin-left: 20px;" title="Add Card" [disabled]="!canEdit">
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle" />
       </button>
     </div>
