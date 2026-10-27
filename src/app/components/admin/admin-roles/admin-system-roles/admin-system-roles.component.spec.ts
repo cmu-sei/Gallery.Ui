@@ -212,6 +212,12 @@ describe('AdminSystemRolesComponent', () => {
     await userEvent.setup().click(screen.getByTitle('Delete Role'));
 
     expect(confirm).toHaveBeenCalledOnce();
+    expect(confirm).toHaveBeenCalledWith({
+      title: 'Delete Role',
+      message: 'Are you sure that you want to delete Observer?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
     expect(rolesApi.deleteSystemRole).toHaveBeenCalledWith('r2');
     expect(headers()).toEqual(['Administrator']);
   });

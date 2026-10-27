@@ -427,6 +427,12 @@ describe('AdminExhibitsComponent', () => {
 
     await user.click(screen.getByTitle('Delete Drill'));
     expect(confirm).toHaveBeenCalledOnce();
+    expect(confirm).toHaveBeenCalledWith({
+      title: 'Delete Exhibit',
+      message: 'Are you sure that you want to delete Drill?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
     expect(exhibitApi.deleteExhibit).toHaveBeenCalledWith('x1');
     expect(exhibitNames()).toEqual(['Drill copy']);
   });

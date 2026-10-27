@@ -121,8 +121,8 @@ export class AdminGroupsComponent implements OnInit, AfterViewInit {
   deleteGroup(group: Group) {
     this.crucibleDialog
       .confirm({
-        title: 'Delete Group?',
-        message: 'Delete Group ' + group.name + '?',
+        title: 'Delete Group',
+        message: 'Are you sure that you want to delete ' + group.name + '?',
         confirmText: 'Delete',
         cancelText: 'Cancel',
       })

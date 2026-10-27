@@ -218,6 +218,12 @@ describe('AdminGroupsComponent', () => {
     await userEvent.setup().click(rowButtons('Analysts')[0]);
 
     expect(confirm).toHaveBeenCalledOnce();
+    expect(confirm).toHaveBeenCalledWith({
+      title: 'Delete Group',
+      message: 'Are you sure that you want to delete Analysts?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
     expect(groupApi.deleteGroup).toHaveBeenCalledTimes(calls);
   });
 });
