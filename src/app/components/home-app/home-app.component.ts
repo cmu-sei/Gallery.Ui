@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 
-import { Component, OnDestroy, OnInit, ViewChild, DOCUMENT, inject, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, DOCUMENT, inject, signal, viewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -127,10 +127,9 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   hideTopbar = false;
   topbarImage = this.settingsService.settings.AppTopBarImage;
   // An optional image URL from settings, so a site can brand the exhibit list
-  // without shipping the image in this repo.
-  backgroundImage = this.settingsService.settings.AppLandingBackgroundImage
-    ? `url("${this.settingsService.settings.AppLandingBackgroundImage}")`
-    : null;
+  // without shipping the image in this repo. Applied only once the image
+  // loads, so a missing image leaves the normal page background.
+  readonly backgroundImage = signal<string | null>(null);
   TopbarView = TopbarView;
   theme$: Observable<Theme>;
   public filterString: string;
@@ -153,6 +152,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
+    const url = this.settingsService.settings.AppLandingBackgroundImage;
+    if (url) {
+      const image = new Image();
+      image.onload = () => this.backgroundImage.set(`url("${url}")`);
+      image.src = url;
+    }
     this.currentUserQuery
       .select()
       .pipe(takeUntil(this.unsubscribe$))
