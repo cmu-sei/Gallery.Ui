@@ -4,7 +4,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <crucible-dialog
-  [dialogTitle]="data && data.collection && data.collection.id ? 'Edit Collection' : 'New Collection'"
+  [dialogTitle]="data && data.collection && data.collection.id ? 'Edit Collection' : 'Add Collection'"
   [form]="form"
   submitLabel="Save"
   [submitDisabled]="!errorFree() || !form.dirty"

@@ -287,7 +287,7 @@ export class AdminExhibitsComponent implements OnDestroy {
     this.crucibleDialog
       .confirm({
         title: 'Delete Exhibit',
-        message: 'Are you sure that you want to delete this exhibit?',
+        message: 'Are you sure that you want to delete ' + exhibit.name + '?',
         confirmText: 'Delete',
         cancelText: 'Cancel',
       })

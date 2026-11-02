@@ -184,6 +184,9 @@ describe('AdminSystemRolesComponent', () => {
 
     await user.click(addRoleButton());
     const dialog = await screen.findByRole('dialog');
+    expect(
+      within(dialog).getByRole('heading', { name: 'Add Role' }),
+    ).toBeVisible();
     await user.type(
       within(dialog).getByRole('textbox', { name: 'Name' }),
       'Planner',
@@ -209,6 +212,12 @@ describe('AdminSystemRolesComponent', () => {
     await userEvent.setup().click(screen.getByTitle('Delete Role'));
 
     expect(confirm).toHaveBeenCalledOnce();
+    expect(confirm).toHaveBeenCalledWith({
+      title: 'Delete Role',
+      message: 'Are you sure that you want to delete Observer?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
     expect(rolesApi.deleteSystemRole).toHaveBeenCalledWith('r2');
     expect(headers()).toEqual(['Administrator']);
   });

@@ -32,7 +32,7 @@ async function renderCollectionDialog(collection: Collection) {
 
 describe('AdminCollectionEditDialogComponent', () => {
   /**
-   * Verifies: a new collection's dialog is titled "New Collection", keeps Save disabled until a name is typed, and reports the trimmed name and description.
+   * Verifies: a new collection's dialog is titled "Add Collection", keeps Save disabled until a name is typed, and reports the trimmed name and description.
    * Interacts with: crucible-dialog (real), editComplete output; user-event.
    * Data: a new collection with empty name and description
    */
@@ -44,7 +44,7 @@ describe('AdminCollectionEditDialogComponent', () => {
     const user = userEvent.setup();
 
     expect(
-      screen.getByRole('heading', { name: 'New Collection' }),
+      screen.getByRole('heading', { name: 'Add Collection' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
     await user.type(screen.getByRole('textbox', { name: 'Name' }), ' Power ');

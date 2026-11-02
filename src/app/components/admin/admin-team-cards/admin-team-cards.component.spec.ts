@@ -146,9 +146,9 @@ describe('AdminTeamCardsComponent', () => {
     const [first, second] = rows(container);
 
     expect(screen.getByTitle('Add Team')).toBeEnabled();
-    expect(disabled('Edit TeamCard')).toEqual([false, false]);
-    expect(disabled('Delete TeamCard')).toEqual([false, false]);
-    await userEvent.setup().click(screen.getAllByTitle('Delete TeamCard')[0]);
+    expect(disabled('Edit Team Card')).toEqual([false, false]);
+    expect(disabled('Delete Team Card')).toEqual([false, false]);
+    await userEvent.setup().click(screen.getAllByTitle('Delete Team Card')[0]);
 
     expect(teamCardApi.deleteTeamCard).toHaveBeenCalledOnce();
     expect(rows(container)).toEqual([second]);
@@ -164,8 +164,8 @@ describe('AdminTeamCardsComponent', () => {
     await renderTeamCards(false);
 
     expect(screen.getByTitle('Add Team')).toBeDisabled();
-    expect(disabled('Edit TeamCard')).toEqual([true, true]);
-    expect(disabled('Delete TeamCard')).toEqual([true, true]);
+    expect(disabled('Edit Team Card')).toEqual([true, true]);
+    expect(disabled('Delete Team Card')).toEqual([true, true]);
   });
 
   /**
@@ -180,7 +180,7 @@ describe('AdminTeamCardsComponent', () => {
       container.querySelectorAll('mat-expansion-panel-header'),
     ).find((h) => h.textContent?.includes('Blue Team')) as HTMLElement;
 
-    await user.click(within(blueRow).getByTitle('Edit TeamCard'));
+    await user.click(within(blueRow).getByTitle('Edit Team Card'));
     const dialog = await screen.findByRole('dialog');
     await user.click(
       within(dialog).getByRole('checkbox', { name: 'Is Shown On Wall' }),

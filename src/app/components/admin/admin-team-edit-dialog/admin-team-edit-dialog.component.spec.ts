@@ -32,6 +32,20 @@ async function renderTeamDialog(team: Team) {
 
 describe('AdminTeamEditDialogComponent', () => {
   /**
+   * Verifies: the dialog is titled "Add Team" for a new team and "Edit Team" for an existing one.
+   * Interacts with: crucible-dialog (real) heading.
+   * Data: per row, a team with or without an id.
+   */
+  it.each([
+    ['Add Team', { name: '', shortName: '' }],
+    ['Edit Team', { id: 't1', name: 'Blue Team', shortName: 'Blue' }],
+  ])('is titled %s', async (title, team) => {
+    await renderTeamDialog(team);
+
+    expect(screen.getByRole('heading', { name: title })).toBeVisible();
+  });
+
+  /**
    * Verifies: editing the short name enables Save, which reports the team with the trimmed names.
    * Interacts with: crucible-dialog (real), editComplete output; user-event.
    * Data: team t1 Blue Team / Blue.
