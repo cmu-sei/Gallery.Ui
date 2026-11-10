@@ -13,6 +13,7 @@ import { take, takeUntil } from 'rxjs/operators';
 import {
   ComnAuthService,
   ComnSettingsService,
+  CrucibleLandingBackgroundDirective,
   Theme,
   ComnAuthQuery,
 } from '@cmusei/crucible-common';
@@ -60,7 +61,7 @@ import { DatePipe } from '@angular/common';
     selector: 'app-home-app',
     templateUrl: './home-app.component.html',
     styleUrls: ['./home-app.component.scss'],
-    imports: [TopbarComponent, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatProgressSpinner, MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, MatSuffix, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, RouterLink, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, WallComponent, ArchiveComponent, DatePipe]
+    imports: [TopbarComponent, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatProgressSpinner, MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, MatSuffix, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, RouterLink, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, WallComponent, ArchiveComponent, DatePipe, CrucibleLandingBackgroundDirective]
 })
 export class HomeAppComponent implements OnDestroy, OnInit {
   private _document = inject<HTMLDocument>(DOCUMENT);

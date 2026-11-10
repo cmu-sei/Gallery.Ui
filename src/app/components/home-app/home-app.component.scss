@@ -25,6 +25,12 @@
   overflow: hidden;
 }
 
+// While the landing background (crucibleLandingBackground) shows, keep the
+// exhibit list on a solid surface over the image.
+.app-home-container.crucible-landing-background .list-container {
+  background-color: var(--mat-sys-surface);
+}
+
 .main-area {
   display: flex;
   flex-direction: column;
