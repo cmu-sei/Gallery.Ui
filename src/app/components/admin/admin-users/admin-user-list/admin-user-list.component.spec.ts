@@ -171,6 +171,12 @@ describe('AdminUserListComponent', () => {
       .click(within(screen.getByRole('table')).getAllByTitle('Delete User')[0]);
 
     expect(confirm).toHaveBeenCalledOnce();
+    expect(confirm).toHaveBeenCalledWith({
+      title: 'Delete User',
+      message: 'Are you sure that you want to delete Alice?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
     expect(deleted).toEqual(expected);
   });
 });

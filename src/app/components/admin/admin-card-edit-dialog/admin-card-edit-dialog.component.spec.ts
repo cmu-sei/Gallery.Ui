@@ -32,7 +32,7 @@ async function renderCardDialog(card: Card) {
 
 describe('AdminCardEditDialogComponent', () => {
   /**
-   * Verifies: a new card's dialog is titled "Add a Card", keeps Save disabled until a name is typed, and reports the trimmed name and description.
+   * Verifies: a new card's dialog is titled "Add Card", keeps Save disabled until a name is typed, and reports the trimmed name and description.
    * Interacts with: crucible-dialog (real), editComplete output; user-event.
    * Data: a new card with empty name and description in collection c1.
    */
@@ -45,7 +45,7 @@ describe('AdminCardEditDialogComponent', () => {
     const user = userEvent.setup();
 
     expect(
-      screen.getByRole('heading', { name: 'Add a Card' }),
+      screen.getByRole('heading', { name: 'Add Card' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
     await user.type(screen.getByRole('textbox', { name: 'Name' }), ' Power ');
