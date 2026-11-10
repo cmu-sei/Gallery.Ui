@@ -145,7 +145,7 @@ describe('AdminTeamCardsComponent', () => {
     const { teamCardApi, container } = await renderTeamCards(true);
     const [first, second] = rows(container);
 
-    expect(screen.getByTitle('Add Team')).toBeEnabled();
+    expect(screen.getByTitle('Add Team Card')).toBeEnabled();
     expect(disabled('Edit Team Card')).toEqual([false, false]);
     expect(disabled('Delete Team Card')).toEqual([false, false]);
     await userEvent.setup().click(screen.getAllByTitle('Delete Team Card')[0]);
@@ -163,7 +163,7 @@ describe('AdminTeamCardsComponent', () => {
   it('disables team card changes when canEdit is false', async () => {
     await renderTeamCards(false);
 
-    expect(screen.getByTitle('Add Team')).toBeDisabled();
+    expect(screen.getByTitle('Add Team Card')).toBeDisabled();
     expect(disabled('Edit Team Card')).toEqual([true, true]);
     expect(disabled('Delete Team Card')).toEqual([true, true]);
   });
