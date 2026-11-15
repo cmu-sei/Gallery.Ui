@@ -17,7 +17,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <mat-list class="appitems-container">
       @if (canViewCollections || canCreateCollections) {
       <mat-list-item id="wrapper showhand" (click)="gotoSection(section.collections)"
-        [ngClass]="getSelectedClass(section.collections)">
+        [class]="getSelectedClass(section.collections)">
         <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-focus-field" />
         Collections
         <button aria-labelledby="'Collections" mat-icon-button class="pull-right">
@@ -27,7 +27,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       }
       @if (canViewExhibits || canCreateExhibits) {
       <mat-list-item id="wrapper showhand" (click)="gotoSection(section.exhibits)"
-        [ngClass]="getSelectedClass(section.exhibits)">
+        [class]="getSelectedClass(section.exhibits)">
         <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-monitor-dashboard" />
         Exhibits
         <button aria-labelledby="'Exhibits'" mat-icon-button class="pull-right">
@@ -36,7 +36,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-list-item>
       }
       @if (canViewUsers) {
-      <mat-list-item [ngClass]="getSelectedClass(section.users)" id="wrapper showhand"
+      <mat-list-item [class]="getSelectedClass(section.users)" id="wrapper showhand"
         (click)="gotoSection(section.users)">
         <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-account" />
         Users
@@ -46,7 +46,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-list-item>
       }
       @if (canViewRoles) {
-      <mat-list-item [ngClass]="getSelectedClass(section.roles)" id="wrapper showhand"
+      <mat-list-item [class]="getSelectedClass(section.roles)" id="wrapper showhand"
         (click)="gotoSection(section.roles)">
         <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-lock" />
         Roles
@@ -56,7 +56,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </mat-list-item>
       }
       @if (canViewGroups) {
-      <mat-list-item [ngClass]="getSelectedClass(section.groups)" id="wrapper showhand"
+      <mat-list-item [class]="getSelectedClass(section.groups)" id="wrapper showhand"
         (click)="gotoSection(section.groups)">
         <mat-icon matListItemIcon class="mat-list-item-icon" fontIcon="mdi-account-group" />
         Groups

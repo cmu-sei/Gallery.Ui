@@ -16,7 +16,6 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
 import { MatTooltip } from '@angular/material/tooltip';
-import { NgClass } from '@angular/common';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class UserErrorStateMatcher implements ErrorStateMatcher {
@@ -33,7 +32,7 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
     selector: 'app-article-edit-dialog',
     templateUrl: './article-edit-dialog.component.html',
     styleUrls: ['./article-edit-dialog.component.scss'],
-    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError, AngularEditorModule, MatCheckbox, MatSelect, MatOption, MatTooltip, NgClass]
+    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError, AngularEditorModule, MatCheckbox, MatSelect, MatOption, MatTooltip]
 })
 export class ArticleEditDialogComponent {
   data = inject_1(MAT_DIALOG_DATA);

@@ -29,7 +29,7 @@ import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/mat
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
 import { MatList, MatListItem, MatListItemIcon } from '@angular/material/list';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { TopbarComponent } from '../../shared/top-bar/topbar.component';
 import { AdminCollectionsComponent } from '../admin-collections/admin-collections.component';
@@ -42,7 +42,7 @@ import { AdminGroupsComponent } from '../admin-groups/admin-groups.component';
     selector: 'app-admin-container',
     templateUrl: './admin-container.component.html',
     styleUrls: ['./admin-container.component.scss'],
-    imports: [MatSidenavContainer, MatSidenav, MatToolbar, MatIcon, MatList, MatListItem, NgClass, MatListItemIcon, MatIconButton, MatSidenavContent, TopbarComponent, AdminCollectionsComponent, AdminExhibitsComponent, AdminUsersComponent, AdminRolesComponent, AdminGroupsComponent, AsyncPipe]
+    imports: [MatSidenavContainer, MatSidenav, MatToolbar, MatIcon, MatList, MatListItem, MatListItemIcon, MatIconButton, MatSidenavContent, TopbarComponent, AdminCollectionsComponent, AdminExhibitsComponent, AdminUsersComponent, AdminRolesComponent, AdminGroupsComponent, AsyncPipe]
 })
 export class AdminContainerComponent implements OnDestroy, OnInit {
   private _document = inject<HTMLDocument>(DOCUMENT);

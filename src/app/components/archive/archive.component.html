@@ -54,7 +54,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 </div>
 <section class="cards">
   @for (userArticle of filteredUserArticleList; track userArticle.id) {
-  <mat-card appearance="outlined" class="card" [ngClass]="getIsReadClass(userArticle)">
+  <mat-card appearance="outlined" class="card" [class]="getIsReadClass(userArticle)">
     <div class="card-meta">
       <mat-icon class="mdi-18px source-icon" [fontIcon]="sourceIcon[userArticle.article.sourceType]"
         [title]="userArticle.article.sourceType" />

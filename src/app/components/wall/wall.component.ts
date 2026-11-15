@@ -19,13 +19,12 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { TeamSelectorComponent } from '../team-selector/team-selector.component';
 import { MatIcon } from '@angular/material/icon';
 import { MatCard } from '@angular/material/card';
-import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-wall',
     templateUrl: './wall.component.html',
     styleUrls: ['./wall.component.scss'],
-    imports: [MatButton, TeamSelectorComponent, MatIconButton, MatIcon, MatCard, NgClass]
+    imports: [MatButton, TeamSelectorComponent, MatIconButton, MatIcon, MatCard]
 })
 export class WallComponent implements OnDestroy {
   private _document = inject<HTMLDocument>(DOCUMENT);
