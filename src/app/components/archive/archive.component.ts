@@ -41,7 +41,6 @@ import { MatFormField, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
-import { NgClass } from '@angular/common';
 import { TeamSelectorComponent } from '../team-selector/team-selector.component';
 import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -50,7 +49,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     selector: 'app-archive',
     templateUrl: './archive.component.html',
     styleUrls: ['./archive.component.scss'],
-    imports: [MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, ReactiveFormsModule, MatSuffix, MatSelect, MatOption, MatButton, NgClass, TeamSelectorComponent, MatCard, MatProgressSpinner]
+    imports: [MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, ReactiveFormsModule, MatSuffix, MatSelect, MatOption, MatButton, TeamSelectorComponent, MatCard, MatProgressSpinner]
 })
 export class ArchiveComponent implements OnDestroy {
   private _document = inject_1<HTMLDocument>(DOCUMENT);
