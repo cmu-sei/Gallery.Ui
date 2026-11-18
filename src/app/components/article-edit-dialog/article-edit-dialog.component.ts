@@ -3,13 +3,30 @@
 // project root for license information.
 
 import { Component, inject as inject_1, output } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SourceType } from 'src/app/generated/api';
-import { ITEM_STATUS_ORDER, itemStatusClass } from 'src/app/utilities/item-status';
-import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
-import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import {
+  ITEM_STATUS_ORDER,
+  itemStatusClass,
+} from 'src/app/utilities/item-status';
+import {
+  AngularEditorConfig,
+  AngularEditorModule,
+} from '@kolkov/angular-editor';
+import {
+  CrucibleDialogComponent,
+  CrucibleDialogContentDirective,
+} from '@cmusei/crucible-common';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -21,7 +38,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 export class UserErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
+    form: FormGroupDirective | NgForm | null,
   ): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || isSubmitted));
@@ -29,10 +46,24 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'app-article-edit-dialog',
-    templateUrl: './article-edit-dialog.component.html',
-    styleUrls: ['./article-edit-dialog.component.scss'],
-    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError, AngularEditorModule, MatCheckbox, MatSelect, MatOption, MatTooltip]
+  selector: 'app-article-edit-dialog',
+  templateUrl: './article-edit-dialog.component.html',
+  styleUrls: ['./article-edit-dialog.component.scss'],
+  imports: [
+    CrucibleDialogComponent,
+    CrucibleDialogContentDirective,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatError,
+    AngularEditorModule,
+    MatCheckbox,
+    MatSelect,
+    MatOption,
+    MatTooltip,
+  ],
 })
 export class ArticleEditDialogComponent {
   data = inject_1(MAT_DIALOG_DATA);
@@ -67,44 +98,44 @@ export class ArticleEditDialogComponent {
   };
   public articleNameFormControl = new UntypedFormControl(
     this.data.article.name,
-    [Validators.required]
+    [Validators.required],
   );
   public summaryFormControl = new UntypedFormControl(
     this.data.article.summary,
-    [Validators.required]
+    [Validators.required],
   );
   public descriptionFormControl = new UntypedFormControl(
     this.data.article.description,
-    [Validators.required]
+    [Validators.required],
   );
   public cardIdFormControl = new UntypedFormControl(
     this.data.article.cardId,
-    []
+    [],
   );
   public moveFormControl = new UntypedFormControl(this.data.article.move, []);
   public injectFormControl = new UntypedFormControl(
     this.data.article.inject,
-    []
+    [],
   );
   public statusFormControl = new UntypedFormControl(
     this.data.article.status,
-    []
+    [],
   );
   public sourceTypeFormControl = new UntypedFormControl(
     this.data.article.sourceType,
-    []
+    [],
   );
   public sourceNameFormControl = new UntypedFormControl(
     this.data.article.sourceName,
-    []
+    [],
   );
   public urlFormControl = new UntypedFormControl(this.data.article.url, []);
   public datePostedFormControl = new UntypedFormControl(
     this.data.article.datePosted,
-    []
+    [],
   );
   public openInNewTabFormControl = new UntypedFormControl(
-    this.data.article.openInNewTab ?? false
+    this.data.article.openInNewTab ?? false,
   );
   public form = new UntypedFormGroup({
     name: this.articleNameFormControl,
@@ -156,7 +187,7 @@ export class ArticleEditDialogComponent {
       this.descriptionFormControl.value.toString()[0] === ' '
     ) {
       this.descriptionFormControl.setValue(
-        this.descriptionFormControl.value.toString().trim()
+        this.descriptionFormControl.value.toString().trim(),
       );
     }
   }

@@ -10,10 +10,17 @@ import { AdminCollectionRolesComponent } from './admin-collection-roles/admin-co
 import { AdminExhibitRolesComponent } from './admin-exhibit-roles/admin-exhibit-roles.component';
 
 @Component({
-    selector: 'app-admin-roles',
-    templateUrl: './admin-roles.component.html',
-    styleUrls: ['./admin-roles.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatTabGroup, MatTab, MatTabContent, AdminSystemRolesComponent, AdminCollectionRolesComponent, AdminExhibitRolesComponent]
+  selector: 'app-admin-roles',
+  templateUrl: './admin-roles.component.html',
+  styleUrls: ['./admin-roles.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatTabGroup,
+    MatTab,
+    MatTabContent,
+    AdminSystemRolesComponent,
+    AdminCollectionRolesComponent,
+    AdminExhibitRolesComponent,
+  ],
 })
 export class AdminRolesComponent {}

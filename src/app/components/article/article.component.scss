@@ -38,7 +38,9 @@
   margin: 0 auto;
   background: white;
   color: rgba(0, 0, 0, 0.87);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 
   ::ng-deep .angular-editor-textarea {
@@ -75,22 +77,21 @@
 
 @media print {
   .article-container {
-      position: static;
-      overflow: visible;
-      padding: 0;
-      background: initial;
+    position: static;
+    overflow: visible;
+    padding: 0;
+    background: initial;
   }
   .page {
-      margin: 0;
-      border: initial;
-      border-radius: initial;
-      width: initial;
-      min-height: initial;
-      box-shadow: initial;
-      background: initial;
-      page-break-after: always;
-      -webkit-print-color-adjust:exact !important;
-      print-color-adjust:exact !important;
+    margin: 0;
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: initial;
+    background: initial;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }
-

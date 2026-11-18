@@ -41,7 +41,7 @@ export class PermissionDataService {
   load(): Observable<SystemPermission[]> {
     return this.permissionsService.getMySystemPermissions().pipe(
       take(1),
-      tap((x) => (this._permissions = x))
+      tap((x) => (this._permissions = x)),
     );
   }
 
@@ -58,7 +58,7 @@ export class PermissionDataService {
       SystemPermission.EditExhibits,
       SystemPermission.ManageExhibits,
     ];
-    return this._permissions.some(p => allCollectionPermissions.includes(p));
+    return this._permissions.some((p) => allCollectionPermissions.includes(p));
   }
 
   canViewAdministration() {
@@ -76,43 +76,47 @@ export class PermissionDataService {
       SystemPermission.ViewRoles,
       SystemPermission.ManageRoles,
       SystemPermission.ViewGroups,
-      SystemPermission.ManageGroups
+      SystemPermission.ManageGroups,
     ];
 
     return this._permissions.some((perm) => adminPermissions.includes(perm));
   }
 
   loadExhibitPermissions(): Observable<ExhibitPermissionClaim[]> {
-    return this.exhibitPermissionsService
-      .getMyExhibitPermissions()
-      .pipe(
-        take(1),
-        tap((x) => (this._ExhibitPermissions = x))
-      );
+    return this.exhibitPermissionsService.getMyExhibitPermissions().pipe(
+      take(1),
+      tap((x) => (this._ExhibitPermissions = x)),
+    );
   }
 
   loadCollectionPermissions(): Observable<CollectionPermissionClaim[]> {
-    return this.collectionPermissionsService
-      .getMyCollectionPermissions()
-      .pipe(
-        take(1),
-        tap((x) => (this._collectionPermissions = x))
-      );
+    return this.collectionPermissionsService.getMyCollectionPermissions().pipe(
+      take(1),
+      tap((x) => (this._collectionPermissions = x)),
+    );
   }
 
   canEditExhibit(ExhibitId: string): boolean {
-    return this.canExhibit(SystemPermission.EditExhibits, ExhibitId, ExhibitPermission.EditExhibit);
+    return this.canExhibit(
+      SystemPermission.EditExhibits,
+      ExhibitId,
+      ExhibitPermission.EditExhibit,
+    );
   }
 
   canEditCollection(collectionId: string): boolean {
-    return this.canCollection(SystemPermission.EditCollections, collectionId, CollectionPermission.EditCollection);
+    return this.canCollection(
+      SystemPermission.EditCollections,
+      collectionId,
+      CollectionPermission.EditCollection,
+    );
   }
 
   canManageExhibit(ExhibitId: string): boolean {
     return this.canExhibit(
       SystemPermission.ManageExhibits,
       ExhibitId,
-      ExhibitPermission.ManageExhibit
+      ExhibitPermission.ManageExhibit,
     );
   }
 
@@ -120,14 +124,14 @@ export class PermissionDataService {
     return this.canCollection(
       SystemPermission.ManageCollections,
       collectionId,
-      CollectionPermission.ManageCollection
+      CollectionPermission.ManageCollection,
     );
   }
 
   private canExhibit(
     permission: SystemPermission,
     exhibitId?: string,
-    exhibitPermission?: ExhibitPermission
+    exhibitPermission?: ExhibitPermission,
   ) {
     const permissions = this._permissions;
     const exhibitPermissionClaims = this._ExhibitPermissions;
@@ -135,7 +139,7 @@ export class PermissionDataService {
       return true;
     } else if (exhibitId !== null && exhibitPermission !== null) {
       const exhibitPermissionClaim = exhibitPermissionClaims.find(
-        (x) => x.exhibitId === exhibitId
+        (x) => x.exhibitId === exhibitId,
       );
 
       if (
@@ -152,26 +156,20 @@ export class PermissionDataService {
   private canCollection(
     permission: SystemPermission,
     collectionId?: string,
-    collectionPermission?: CollectionPermission
+    collectionPermission?: CollectionPermission,
   ) {
     const permissions = this._permissions;
     const collectionPermissionClaims = this._collectionPermissions;
     if (permissions.includes(permission)) {
       return true;
-    } else if (
-      collectionId !== null &&
-      collectionPermission !== null
-    ) {
-      const collectionPermissionClaim =
-        collectionPermissionClaims.find(
-          (x) => x.collectionId === collectionId
-        );
+    } else if (collectionId !== null && collectionPermission !== null) {
+      const collectionPermissionClaim = collectionPermissionClaims.find(
+        (x) => x.collectionId === collectionId,
+      );
 
       if (
         collectionPermissionClaim &&
-        collectionPermissionClaim.permissions.includes(
-          collectionPermission
-        )
+        collectionPermissionClaim.permissions.includes(collectionPermission)
       ) {
         return true;
       }

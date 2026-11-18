@@ -3,7 +3,15 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import { Component, OnChanges, OnInit, SimpleChanges, inject, input, output } from '@angular/core';
+import {
+  Component,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
@@ -12,10 +20,7 @@ import { ExhibitMembershipDataService } from 'src/app/data/exhibit/exhibit-membe
 import { ExhibitRoleDataService } from 'src/app/data/exhibit/exhibit-role-data.service';
 import { UserQuery } from 'src/app/data/user/user.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
-import {
-  ExhibitMembership,
-  Exhibit,
-} from 'src/app/generated/api';
+import { ExhibitMembership, Exhibit } from 'src/app/generated/api';
 import { GroupDataService } from 'src/app/data/group/group-data.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { ExhibitMembershipListComponent } from '../exhibit-membership-list/exhibit-membership-list.component';
@@ -23,10 +28,14 @@ import { ExhibitMemberListComponent } from '../exhibit-member-list/exhibit-membe
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-exhibit-memberships',
-    templateUrl: './exhibit-memberships.component.html',
-    styleUrls: ['./exhibit-memberships.component.scss'],
-    imports: [ExhibitMembershipListComponent, ExhibitMemberListComponent, AsyncPipe]
+  selector: 'app-exhibit-memberships',
+  templateUrl: './exhibit-memberships.component.html',
+  styleUrls: ['./exhibit-memberships.component.scss'],
+  imports: [
+    ExhibitMembershipListComponent,
+    ExhibitMemberListComponent,
+    AsyncPipe,
+  ],
 })
 export class ExhibitMembershipsComponent implements OnInit {
   private exhibitQuery = inject(ExhibitQuery);
@@ -62,7 +71,9 @@ export class ExhibitMembershipsComponent implements OnInit {
       this.exhibitRolesDataService.loadRoles(),
       this.groupDataService.load(),
     ]).subscribe();
-    this.canEdit$ = of(this.permissionDataService.canEditExhibit(this.exhibitId()));
+    this.canEdit$ = of(
+      this.permissionDataService.canEditExhibit(this.exhibitId()),
+    );
   }
 
   selectUsers(members: boolean) {
@@ -81,7 +92,7 @@ export class ExhibitMembershipsComponent implements OnInit {
             );
           }
         });
-      })
+      }),
     );
   }
 
@@ -104,7 +115,7 @@ export class ExhibitMembershipsComponent implements OnInit {
             );
           }
         });
-      })
+      }),
     );
   }
 

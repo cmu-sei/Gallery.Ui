@@ -11,7 +11,6 @@ import { SystemMessageService } from '../system-message/system-message.service';
 export class ErrorService implements ErrorHandler {
   private injector = inject(Injector);
 
-
   handleError(err: any) {
     const messageService = this.injector.get(SystemMessageService);
     // Http failure response for (unknown url): 0 Unknown Error
@@ -22,9 +21,12 @@ export class ErrorService implements ErrorHandler {
       ) {
         messageService.displayMessage(
           'Gallery API Error',
-          'The Gallery API could not be reached.'
+          'The Gallery API could not be reached.',
         );
-        console.log('Gallery API Error', 'The Gallery API could not be reached.');
+        console.log(
+          'Gallery API Error',
+          'The Gallery API could not be reached.',
+        );
       } else if (err.error && err.error.title) {
         messageService.displayMessage(err.statusText, err.error.title);
         console.log(err.statusText + ' ==> ' + err.error.title);
@@ -36,11 +38,11 @@ export class ErrorService implements ErrorHandler {
       if (err.rejection.message === 'Network Error') {
         messageService.displayMessage(
           'Identity Server Error',
-          'The Identity Server could not be reached for user authentication.'
+          'The Identity Server could not be reached for user authentication.',
         );
         console.log(
           'Identity Server Error',
-          'The Identity Server could not be reached for user authentication.'
+          'The Identity Server could not be reached for user authentication.',
         );
       } else {
         messageService.displayMessage('Error', err.rejection.message);

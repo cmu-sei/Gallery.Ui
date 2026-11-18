@@ -37,7 +37,10 @@ import { AdminExhibitsComponent } from 'src/app/components/admin/admin-exhibits/
 import { AdminUsersComponent } from 'src/app/components/admin/admin-users/admin-users.component';
 import { AdminRolesComponent } from 'src/app/components/admin/admin-roles/admin-roles.component';
 import { AdminGroupsComponent } from 'src/app/components/admin/admin-groups/admin-groups.component';
-import { captureUnhandledRejections, flush } from 'src/app/test-utils/unhandled-rx-errors';
+import {
+  captureUnhandledRejections,
+  flush,
+} from 'src/app/test-utils/unhandled-rx-errors';
 
 @Component({
   selector: 'app-topbar',
@@ -141,13 +144,17 @@ async function renderAdmin(
       { provide: ActivatedRoute, useValue: route.route },
       { provide: Router, useValue: router },
       { provide: SignalRService, useValue: signalR },
-      ...(overrides.logoutCall ? [{
-        provide: ComnAuthService,
-        useValue: {
-          logout: overrides.logoutCall,
-          user$: of(null),
-        } satisfies Pick<ComnAuthService, 'logout' | 'user$'>,
-      }] : []),
+      ...(overrides.logoutCall
+        ? [
+            {
+              provide: ComnAuthService,
+              useValue: {
+                logout: overrides.logoutCall,
+                user$: of(null),
+              } satisfies Pick<ComnAuthService, 'logout' | 'user$'>,
+            },
+          ]
+        : []),
       {
         provide: CollectionService,
         useValue: {
@@ -368,7 +375,10 @@ describe('AdminContainerComponent', () => {
     const errors = captureUnhandledRejections();
     let calls = 0;
     const { fixture } = await renderAdmin({
-      logoutCall: () => { calls++; return Promise.reject(failure); },
+      logoutCall: () => {
+        calls++;
+        return Promise.reject(failure);
+      },
     });
 
     fixture.componentInstance.logout();

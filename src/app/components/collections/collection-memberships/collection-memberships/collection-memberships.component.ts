@@ -3,7 +3,15 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import { Component, OnChanges, OnInit, SimpleChanges, inject, input, output } from '@angular/core';
+import {
+  Component,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
@@ -11,10 +19,7 @@ import { CollectionMembershipDataService } from 'src/app/data/collection/collect
 import { CollectionRoleDataService } from 'src/app/data/collection/collection-role-data.service';
 import { UserQuery } from 'src/app/data/user/user.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
-import {
-  CollectionMembership,
-  Collection,
-} from 'src/app/generated/api';
+import { CollectionMembership, Collection } from 'src/app/generated/api';
 import { GroupDataService } from 'src/app/data/group/group-data.service';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
 import { ActivatedRoute } from '@angular/router';
@@ -23,14 +28,20 @@ import { CollectionMemberListComponent } from '../collection-member-list/collect
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-collection-memberships',
-    templateUrl: './collection-memberships.component.html',
-    styleUrls: ['./collection-memberships.component.scss'],
-    imports: [CollectionMembershipListComponent, CollectionMemberListComponent, AsyncPipe]
+  selector: 'app-collection-memberships',
+  templateUrl: './collection-memberships.component.html',
+  styleUrls: ['./collection-memberships.component.scss'],
+  imports: [
+    CollectionMembershipListComponent,
+    CollectionMemberListComponent,
+    AsyncPipe,
+  ],
 })
 export class CollectionMembershipsComponent implements OnInit, OnChanges {
   private collectionQuery = inject(CollectionQuery);
-  private collectionMembershipDataService = inject(CollectionMembershipDataService);
+  private collectionMembershipDataService = inject(
+    CollectionMembershipDataService,
+  );
   private collectionRolesDataService = inject(CollectionRoleDataService);
   private userDataService = inject(UserDataService);
   private userQuery = inject(UserQuery);
@@ -44,8 +55,7 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
 
   collection$: Observable<Collection>;
 
-  memberships$ =
-    this.collectionMembershipDataService.collectionMemberships$;
+  memberships$ = this.collectionMembershipDataService.collectionMemberships$;
   roles$ = this.collectionRolesDataService.collectionRoles$;
 
   // All users that are not already members of the collection
@@ -59,17 +69,19 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     forkJoin([
-      this.collectionMembershipDataService.loadMemberships(
-        this.collectionId()
-      ),
+      this.collectionMembershipDataService.loadMemberships(this.collectionId()),
       this.userDataService.load(),
       this.collectionRolesDataService.loadRoles(),
       this.groupDataService.load(),
     ]).subscribe();
     this.permissionDataService
       .loadCollectionPermissions()
-      .subscribe((x) =>
-        this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId())));
+      .subscribe(
+        (x) =>
+          (this.canEdit$ = of(
+            this.permissionDataService.canEditCollection(this.collectionId()),
+          )),
+      );
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -77,10 +89,11 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
       .selectEntity(this.collectionId())
       .pipe(
         filter((x) => x != null),
-        tap(
-          (x) => {
-            this.canEdit$ = of(this.permissionDataService.canEditCollection(this.collectionId()));
-          })
+        tap((x) => {
+          this.canEdit$ = of(
+            this.permissionDataService.canEditCollection(this.collectionId()),
+          );
+        }),
       );
   }
 
@@ -100,7 +113,7 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
             );
           }
         });
-      })
+      }),
     );
   }
 
@@ -123,7 +136,7 @@ export class CollectionMembershipsComponent implements OnInit, OnChanges {
             );
           }
         });
-      })
+      }),
     );
   }
 

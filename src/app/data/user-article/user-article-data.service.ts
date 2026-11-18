@@ -30,7 +30,7 @@ export class UserArticleDataService {
 
   private _requestedUserArticleId: string;
   private _requestedUserArticleId$ = this.activatedRoute.queryParamMap.pipe(
-    map((params) => params.get('userArticleId') || '')
+    map((params) => params.get('userArticleId') || ''),
   );
   readonly UserArticleList: Observable<UserArticle[]>;
   readonly filterControl = new UntypedFormControl();
@@ -46,7 +46,7 @@ export class UserArticleDataService {
     const activatedRoute = this.activatedRoute;
 
     this.filterTerm = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('userArticlemask') || '')
+      map((params) => params.get('userArticlemask') || ''),
     );
     this.filterControl.valueChanges.subscribe((term) => {
       this.router.navigate([], {
@@ -55,16 +55,16 @@ export class UserArticleDataService {
       });
     });
     this.sortColumn = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('sorton') || 'name')
+      map((params) => params.get('sorton') || 'name'),
     );
     this.sortIsAscending = activatedRoute.queryParamMap.pipe(
-      map((params) => (params.get('sortdir') || 'asc') === 'asc')
+      map((params) => (params.get('sortdir') || 'asc') === 'asc'),
     );
     this.pageSize = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pagesize') || '20', 10))
+      map((params) => parseInt(params.get('pagesize') || '20', 10)),
     );
     this.pageIndex = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pageindex') || '0', 10))
+      map((params) => parseInt(params.get('pageindex') || '0', 10)),
     );
     this.UserArticleList = combineLatest([
       this.userArticleQuery.selectAll(),
@@ -80,8 +80,8 @@ export class UserArticleDataService {
                   a.article,
                   b.article,
                   sortColumn,
-                  sortIsAscending
-                )
+                  sortIsAscending,
+                ),
               )
               .filter(
                 (userArticle) =>
@@ -90,10 +90,10 @@ export class UserArticleDataService {
                     .includes(filterTerm.toLowerCase()) ||
                   userArticle.id
                     .toLowerCase()
-                    .includes(filterTerm.toLowerCase())
+                    .includes(filterTerm.toLowerCase()),
               )
-          : []
-      )
+          : [],
+      ),
     );
   }
 
@@ -122,7 +122,7 @@ export class UserArticleDataService {
         tap(() => {
           this.userArticleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (userArticles) => {
@@ -133,7 +133,7 @@ export class UserArticleDataService {
         },
         (error) => {
           this.userArticleStore.set([]);
-        }
+        },
       );
   }
 
@@ -145,7 +145,7 @@ export class UserArticleDataService {
         tap(() => {
           this.userArticleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (userArticles) => {
@@ -156,7 +156,7 @@ export class UserArticleDataService {
         },
         (error) => {
           this.userArticleStore.set([]);
-        }
+        },
       );
   }
 
@@ -172,7 +172,7 @@ export class UserArticleDataService {
         tap(() => {
           this.userArticleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.setAsDates(s);
@@ -189,7 +189,7 @@ export class UserArticleDataService {
           next: () => this.userArticleStore.setLoading(false),
           error: () => this.userArticleStore.setLoading(false),
         }),
-        take(1)
+        take(1),
       );
   }
 
@@ -201,7 +201,7 @@ export class UserArticleDataService {
         tap(() => {
           this.userArticleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((n) => {
         this.setAsDates(n);
@@ -240,7 +240,7 @@ export class UserArticleDataService {
     userArticle.dateModified = new Date(userArticle.dateModified);
     userArticle.article.dateCreated = new Date(userArticle.article.dateCreated);
     userArticle.article.dateModified = new Date(
-      userArticle.article.dateModified
+      userArticle.article.dateModified,
     );
     userArticle.actualDatePosted = new Date(userArticle.actualDatePosted);
     userArticle.article.datePosted = new Date(userArticle.article.datePosted);

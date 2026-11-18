@@ -25,7 +25,7 @@ export class ArticleDataService {
 
   private _requestedArticleId: string;
   private _requestedArticleId$ = this.activatedRoute.queryParamMap.pipe(
-    map((params) => params.get('articleId') || '')
+    map((params) => params.get('articleId') || ''),
   );
   readonly ArticleList: Observable<Article[]>;
   readonly filterControl = new UntypedFormControl();
@@ -41,7 +41,7 @@ export class ArticleDataService {
     const activatedRoute = this.activatedRoute;
 
     this.filterTerm = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('articlemask') || '')
+      map((params) => params.get('articlemask') || ''),
     );
     this.filterControl.valueChanges.subscribe((term) => {
       this.router.navigate([], {
@@ -50,16 +50,16 @@ export class ArticleDataService {
       });
     });
     this.sortColumn = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('sorton') || 'name')
+      map((params) => params.get('sorton') || 'name'),
     );
     this.sortIsAscending = activatedRoute.queryParamMap.pipe(
-      map((params) => (params.get('sortdir') || 'asc') === 'asc')
+      map((params) => (params.get('sortdir') || 'asc') === 'asc'),
     );
     this.pageSize = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pagesize') || '20', 10))
+      map((params) => parseInt(params.get('pagesize') || '20', 10)),
     );
     this.pageIndex = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pageindex') || '0', 10))
+      map((params) => parseInt(params.get('pageindex') || '0', 10)),
     );
     this.ArticleList = combineLatest([
       this.articleQuery.selectAll(),
@@ -81,17 +81,17 @@ export class ArticleDataService {
           items
             ? (items as Article[])
                 .sort((a: Article, b: Article) =>
-                  this.sortArticles(a, b, sortColumn, sortIsAscending)
+                  this.sortArticles(a, b, sortColumn, sortIsAscending),
                 )
                 .filter(
                   (article) =>
                     ('' + article.description)
                       .toLowerCase()
                       .includes(filterTerm.toLowerCase()) ||
-                    article.id.toLowerCase().includes(filterTerm.toLowerCase())
+                    article.id.toLowerCase().includes(filterTerm.toLowerCase()),
                 )
-            : []
-      )
+            : [],
+      ),
     );
   }
 
@@ -120,7 +120,7 @@ export class ArticleDataService {
         tap(() => {
           this.articleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (articles) => {
@@ -131,7 +131,7 @@ export class ArticleDataService {
         },
         (error) => {
           this.articleStore.set([]);
-        }
+        },
       );
   }
 
@@ -143,7 +143,7 @@ export class ArticleDataService {
         tap(() => {
           this.articleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (articles) => {
@@ -154,7 +154,7 @@ export class ArticleDataService {
         },
         (error) => {
           this.articleStore.set([]);
-        }
+        },
       );
   }
 
@@ -166,7 +166,7 @@ export class ArticleDataService {
         tap(() => {
           this.articleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.setAsDates(s);
@@ -186,7 +186,7 @@ export class ArticleDataService {
         tap(() => {
           this.articleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.setAsDates(s);
@@ -202,7 +202,7 @@ export class ArticleDataService {
         tap(() => {
           this.articleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.setAsDates(s);
@@ -218,7 +218,7 @@ export class ArticleDataService {
         tap(() => {
           this.articleStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((n) => {
         this.setAsDates(n);

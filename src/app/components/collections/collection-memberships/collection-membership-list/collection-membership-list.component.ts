@@ -3,28 +3,82 @@ Copyright 2025 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnChanges, OnInit, inject, input, output, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnChanges,
+  OnInit,
+  inject,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatNoDataRow,
+} from '@angular/material/table';
 import { CollectionMembership, Group, User } from 'src/app/generated/api';
 import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { ClipboardModule } from 'ngx-clipboard';
 
 @Component({
-    selector: 'app-collection-membership-list',
-    templateUrl: './collection-membership-list.component.html',
-    styleUrls: ['./collection-membership-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatToolbar, MatToolbarRow, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatPaginator, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, ClipboardModule]
+  selector: 'app-collection-membership-list',
+  templateUrl: './collection-membership-list.component.html',
+  styleUrls: ['./collection-membership-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatToolbar,
+    MatToolbarRow,
+    MatIcon,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatIconButton,
+    MatSuffix,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatNoDataRow,
+    ClipboardModule,
+  ],
 })
-export class CollectionMembershipListComponent implements OnInit, OnChanges, AfterViewInit {
+export class CollectionMembershipListComponent
+  implements OnInit, OnChanges, AfterViewInit
+{
   snackBar = inject(MatSnackBar);
 
   readonly users = input<User[]>(undefined);
@@ -46,8 +100,7 @@ export class CollectionMembershipListComponent implements OnInit, OnChanges, Aft
   readonly sort = viewChild(MatSort);
   readonly paginator = viewChild(MatPaginator);
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator();
@@ -58,7 +111,7 @@ export class CollectionMembershipListComponent implements OnInit, OnChanges, Aft
     this.dataSource.data = this.buildModel();
 
     this.displayedColumns = this.viewColumns.concat(
-      this.canEdit() ? this.editColumns : []
+      this.canEdit() ? this.editColumns : [],
     );
   }
 

@@ -2,10 +2,21 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, inject, output } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import {
+  CrucibleDialogComponent,
+  CrucibleDialogContentDirective,
+} from '@cmusei/crucible-common';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
@@ -13,7 +24,7 @@ import { MatInput } from '@angular/material/input';
 export class UserErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
+    form: FormGroupDirective | NgForm | null,
   ): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || isSubmitted));
@@ -21,10 +32,19 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'app-admin-card-edit-dialog',
-    templateUrl: './admin-card-edit-dialog.component.html',
-    styleUrls: ['./admin-card-edit-dialog.component.scss'],
-    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError]
+  selector: 'app-admin-card-edit-dialog',
+  templateUrl: './admin-card-edit-dialog.component.html',
+  styleUrls: ['./admin-card-edit-dialog.component.scss'],
+  imports: [
+    CrucibleDialogComponent,
+    CrucibleDialogContentDirective,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatError,
+  ],
 })
 export class AdminCardEditDialogComponent {
   data = inject(MAT_DIALOG_DATA);
@@ -36,7 +56,7 @@ export class AdminCardEditDialogComponent {
   ]);
   public cardDescriptionFormControl = new UntypedFormControl(
     this.data.card.description,
-    []
+    [],
   );
   public form = new UntypedFormGroup({
     name: this.cardNameFormControl,

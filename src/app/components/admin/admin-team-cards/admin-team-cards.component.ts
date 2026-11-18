@@ -1,8 +1,19 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, OnDestroy, inject as inject_1, input } from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  inject as inject_1,
+  input,
+} from '@angular/core';
+import {
+  UntypedFormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Team, TeamCard } from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
@@ -16,21 +27,47 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminTeamCardEditDialogComponent } from 'src/app/components/admin/admin-team-card-edit-dialog/admin-team-card-edit-dialog.component';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
 import { MatInput } from '@angular/material/input';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
 import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-    selector: 'app-admin-team-cards',
-    templateUrl: './admin-team-cards.component.html',
-    styleUrls: ['./admin-team-cards.component.scss'],
-    imports: [MatFormField, MatLabel, MatSelect, FormsModule, MatOption, MatInput, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, MatCard, MatProgressSpinner]
+  selector: 'app-admin-team-cards',
+  templateUrl: './admin-team-cards.component.html',
+  styleUrls: ['./admin-team-cards.component.scss'],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    FormsModule,
+    MatOption,
+    MatInput,
+    ReactiveFormsModule,
+    MatIconButton,
+    MatSuffix,
+    MatIcon,
+    MatAccordion,
+    MatSort,
+    MatSortHeader,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatCard,
+    MatProgressSpinner,
+  ],
 })
 export class AdminTeamCardsComponent implements OnInit, OnDestroy {
   private settingsService = inject_1(ComnSettingsService);
@@ -153,7 +190,8 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     } else {
       if (
         !this.teamCardList.some(
-          (tc) => tc.teamId === teamCard.teamId && tc.cardId === teamCard.cardId
+          (tc) =>
+            tc.teamId === teamCard.teamId && tc.cardId === teamCard.cardId,
         )
       ) {
         this.teamCardDataService.add(teamCard);
@@ -183,7 +221,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
         );
       })
       .sort((a: TeamCard, b: TeamCard) =>
-        this.sortTeamCards(a, b, this.sort.active, this.sort.direction)
+        this.sortTeamCards(a, b, this.sort.active, this.sort.direction),
       );
   }
 
@@ -196,7 +234,7 @@ export class AdminTeamCardsComponent implements OnInit, OnDestroy {
     a: TeamCard,
     b: TeamCard,
     column: string,
-    direction: string
+    direction: string,
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {

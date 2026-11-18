@@ -2,10 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Order, Query, QueryConfig, QueryEntity } from '@datorama/akita';
-import {
-  ArticleState,
-  ArticleStore,
-} from './article.store';
+import { ArticleState, ArticleStore } from './article.store';
 import { Article } from 'src/app/generated/api';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -24,7 +21,7 @@ export class ArticleQuery extends QueryEntity<ArticleState> {
     const store = inject(ArticleStore);
 
     super(store);
-  
+
     this.store = store;
   }
 

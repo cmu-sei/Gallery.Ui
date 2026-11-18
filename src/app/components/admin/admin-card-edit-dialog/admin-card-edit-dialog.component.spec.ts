@@ -143,12 +143,18 @@ describe('AdminCardEditDialogComponent', () => {
    * Data: card k1 with an empty name and a non-null description; Save is disabled.
    */
   it('emits an invalid card when the save handler is called directly', async () => {
-    const { fixture, completions } = await renderCardDialog({ id: 'k1', name: '', description: 'Grid' });
+    const { fixture, completions } = await renderCardDialog({
+      id: 'k1',
+      name: '',
+      description: 'Grid',
+    });
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
     expect(fixture.componentInstance.errorFree()).toBe(false);
 
     fixture.componentInstance.handleEditComplete(true);
 
-    expect(completions).toEqual([{ saveChanges: true, card: { id: 'k1', name: '', description: 'Grid' } }]);
+    expect(completions).toEqual([
+      { saveChanges: true, card: { id: 'k1', name: '', description: 'Grid' } },
+    ]);
   });
 });

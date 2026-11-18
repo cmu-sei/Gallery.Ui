@@ -142,12 +142,21 @@ describe('AdminCollectionEditDialogComponent', () => {
    * Data: collection c1 with an empty name and a non-null description; Save is disabled.
    */
   it('emits an invalid collection when the save handler is called directly', async () => {
-    const { fixture, completions } = await renderCollectionDialog({ id: 'c1', name: '', description: 'Grid' });
+    const { fixture, completions } = await renderCollectionDialog({
+      id: 'c1',
+      name: '',
+      description: 'Grid',
+    });
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
     expect(fixture.componentInstance.errorFree()).toBe(false);
 
     fixture.componentInstance.handleEditComplete(true);
 
-    expect(completions).toEqual([{ saveChanges: true, collection: { id: 'c1', name: '', description: 'Grid' } }]);
+    expect(completions).toEqual([
+      {
+        saveChanges: true,
+        collection: { id: 'c1', name: '', description: 'Grid' },
+      },
+    ]);
   });
 });

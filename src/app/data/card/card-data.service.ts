@@ -23,7 +23,7 @@ export class CardDataService {
 
   private _requestedCardId: string;
   private _requestedCardId$ = this.activatedRoute.queryParamMap.pipe(
-    map((params) => params.get('cardId') || '')
+    map((params) => params.get('cardId') || ''),
   );
   readonly CardList: Observable<Card[]>;
   readonly filterControl = new UntypedFormControl();
@@ -39,7 +39,7 @@ export class CardDataService {
     const activatedRoute = this.activatedRoute;
 
     this.filterTerm = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('cardmask') || '')
+      map((params) => params.get('cardmask') || ''),
     );
     this.filterControl.valueChanges.subscribe((term) => {
       this.router.navigate([], {
@@ -48,16 +48,16 @@ export class CardDataService {
       });
     });
     this.sortColumn = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('sorton') || 'name')
+      map((params) => params.get('sorton') || 'name'),
     );
     this.sortIsAscending = activatedRoute.queryParamMap.pipe(
-      map((params) => (params.get('sortdir') || 'asc') === 'asc')
+      map((params) => (params.get('sortdir') || 'asc') === 'asc'),
     );
     this.pageSize = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pagesize') || '20', 10))
+      map((params) => parseInt(params.get('pagesize') || '20', 10)),
     );
     this.pageIndex = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pageindex') || '0', 10))
+      map((params) => parseInt(params.get('pageindex') || '0', 10)),
     );
     this.CardList = combineLatest([
       this.cardQuery.selectAll(),
@@ -79,17 +79,17 @@ export class CardDataService {
           items
             ? (items as Card[])
                 .sort((a: Card, b: Card) =>
-                  this.sortCards(a, b, sortColumn, sortIsAscending)
+                  this.sortCards(a, b, sortColumn, sortIsAscending),
                 )
                 .filter(
                   (card) =>
                     ('' + card.description)
                       .toLowerCase()
                       .includes(filterTerm.toLowerCase()) ||
-                    card.id.toLowerCase().includes(filterTerm.toLowerCase())
+                    card.id.toLowerCase().includes(filterTerm.toLowerCase()),
                 )
-            : []
-      )
+            : [],
+      ),
     );
   }
 
@@ -118,7 +118,7 @@ export class CardDataService {
         tap(() => {
           this.cardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (cards) => {
@@ -129,7 +129,7 @@ export class CardDataService {
         },
         (error) => {
           this.cardStore.set([]);
-        }
+        },
       );
   }
 
@@ -141,7 +141,7 @@ export class CardDataService {
         tap(() => {
           this.cardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (cards) => {
@@ -152,7 +152,7 @@ export class CardDataService {
         },
         (error) => {
           this.cardStore.set([]);
-        }
+        },
       );
   }
 
@@ -164,7 +164,7 @@ export class CardDataService {
         tap(() => {
           this.cardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (cards) => {
@@ -175,7 +175,7 @@ export class CardDataService {
         },
         (error) => {
           this.cardStore.set([]);
-        }
+        },
       );
   }
 
@@ -187,7 +187,7 @@ export class CardDataService {
         tap(() => {
           this.cardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (cards) => {
@@ -198,7 +198,7 @@ export class CardDataService {
         },
         (error) => {
           this.cardStore.set([]);
-        }
+        },
       );
   }
 
@@ -210,7 +210,7 @@ export class CardDataService {
         tap(() => {
           this.cardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.setAsDates(s);
@@ -230,7 +230,7 @@ export class CardDataService {
         tap(() => {
           this.cardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.setAsDates(s);
@@ -246,7 +246,7 @@ export class CardDataService {
         tap(() => {
           this.cardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((n) => {
         this.updateStore(n);

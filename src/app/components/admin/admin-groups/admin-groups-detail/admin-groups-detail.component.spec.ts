@@ -87,8 +87,16 @@ describe('AdminGroupsDetailComponent', () => {
     const { groupApi, nonMembers, members } = await renderDetail(true);
 
     expect(groupApi.getGroupMemberships).toHaveBeenCalledWith('g1');
-    expect(members().users()?.map((u) => u.name)).toEqual(['Alice']);
-    expect(nonMembers().users()?.map((u) => u.name)).toEqual(['Bob']);
+    expect(
+      members()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Alice']);
+    expect(
+      nonMembers()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Bob']);
     expect(members().canEdit()).toBe(true);
     expect(nonMembers().canEdit()).toBe(true);
   });
@@ -119,11 +127,19 @@ describe('AdminGroupsDetailComponent', () => {
       groupId: 'g1',
       userId: 'u2',
     });
-    expect(members().users()?.map((u) => u.name)).toEqual(['Alice', 'Bob']);
+    expect(
+      members()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Alice', 'Bob']);
 
     members().deleteMembership.emit('m1');
     fixture.detectChanges();
     expect(groupApi.deleteGroupMembership).toHaveBeenCalledWith('m1');
-    expect(members().users()?.map((u) => u.name)).toEqual(['Bob']);
+    expect(
+      members()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Bob']);
   });
 });

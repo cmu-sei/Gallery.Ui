@@ -7,10 +7,7 @@ import { CollectionPermission } from 'src/app/generated/api';
 
 export class CollectionRolesModel {
   public static CollectionPermissions = new Map<string, string>([
-    [
-      'All',
-      'Gives permission to perform any action within the Collection',
-    ],
+    ['All', 'Gives permission to perform any action within the Collection'],
     [
       CollectionPermission.EditCollection,
       'Allows performing most actions in the Collection. Can make changes to the contents of the Collection, including creating and editing Files, Directories, and Workspaces. Can Plan and Apply Workspace Runs.',

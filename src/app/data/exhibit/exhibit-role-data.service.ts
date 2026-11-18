@@ -4,10 +4,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import {
-  ExhibitRole,
-  ExhibitRolesService,
-} from 'src/app/generated/api';
+import { ExhibitRole, ExhibitRolesService } from 'src/app/generated/api';
 
 @Injectable({
   providedIn: 'root',

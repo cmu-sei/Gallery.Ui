@@ -4,15 +4,26 @@
 import { Component, inject, output } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
-import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import {
+  AngularEditorConfig,
+  AngularEditorModule,
+} from '@kolkov/angular-editor';
+import {
+  CrucibleDialogComponent,
+  CrucibleDialogContentDirective,
+} from '@cmusei/crucible-common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'app-article-more-dialog',
-    templateUrl: './article-more-dialog.component.html',
-    styleUrls: ['./article-more-dialog.component.scss'],
-    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, AngularEditorModule, FormsModule]
+  selector: 'app-article-more-dialog',
+  templateUrl: './article-more-dialog.component.html',
+  styleUrls: ['./article-more-dialog.component.scss'],
+  imports: [
+    CrucibleDialogComponent,
+    CrucibleDialogContentDirective,
+    AngularEditorModule,
+    FormsModule,
+  ],
 })
 export class ArticleMoreDialogComponent {
   private sanitizer = inject(DomSanitizer);
@@ -20,7 +31,7 @@ export class ArticleMoreDialogComponent {
 
   readonly editComplete = output<any>();
   safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-    this.data.article.url
+    this.data.article.url,
   );
   safeContent: SafeHtml = '';
   editorConfig: AngularEditorConfig = {
@@ -42,16 +53,16 @@ export class ArticleMoreDialogComponent {
   constructor() {
     if (this.data.useUrl) {
       this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-        this.data.article.url
+        this.data.article.url,
       );
     } else {
       const parser = new DOMParser();
       const document = parser.parseFromString(
         this.data.article.description,
-        'text/html'
+        'text/html',
       );
       this.safeContent = this.sanitizer.bypassSecurityTrustHtml(
-        document.body.outerHTML
+        document.body.outerHTML,
       );
     }
   }

@@ -15,7 +15,7 @@ import {
   TeamCard,
   TeamUser,
   User,
-  UserArticle
+  UserArticle,
 } from 'src/app/generated/api';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { UserArticleDataService } from '../data/user-article/user-article-data.service';
@@ -40,7 +40,7 @@ import { takeUntil } from 'rxjs/operators';
 
 export enum ApplicationArea {
   home = '',
-  admin = 'Admin'
+  admin = 'Admin',
 }
 @Injectable({
   providedIn: 'root',
@@ -52,7 +52,9 @@ export class SignalRService implements OnDestroy {
   private cardDataService = inject(CardDataService);
   private cardQuery = inject(CardQuery);
   private collectionDataService = inject(CollectionDataService);
-  private collectionMembershipDataService = inject(CollectionMembershipDataService);
+  private collectionMembershipDataService = inject(
+    CollectionMembershipDataService,
+  );
   private exhibitDataService = inject(ExhibitDataService);
   private exhibitMembershipDataService = inject(ExhibitMembershipDataService);
   private exhibitQuery = inject(ExhibitQuery);
@@ -122,7 +124,9 @@ export class SignalRService implements OnDestroy {
         this.hubConnection.baseUrl = this.getHubUrlWithAuth();
         this.connectionPromise = this.hubConnection.start();
         this.connectionPromise.then(() => {
-          if (this.hubConnection.state !== signalR.HubConnectionState.Connected) {
+          if (
+            this.hubConnection.state !== signalR.HubConnectionState.Connected
+          ) {
             setTimeout(() => this.reconnect(), 500);
           } else {
             this.join();
@@ -417,14 +421,14 @@ export class SignalRService implements OnDestroy {
       'CollectionMembershipCreated',
       (collectionMembership: CollectionMembership) => {
         this.collectionMembershipDataService.updateStore(collectionMembership);
-      }
+      },
     );
 
     this.hubConnection.on(
       'CollectionMembershipUpdated',
       (collectionMembership: CollectionMembership) => {
         this.collectionMembershipDataService.updateStore(collectionMembership);
-      }
+      },
     );
 
     this.hubConnection.on('CollectionMembershipDeleted', (id: string) => {
@@ -437,14 +441,14 @@ export class SignalRService implements OnDestroy {
       'ExhibitMembershipCreated',
       (exhibitMembership: ExhibitMembership) => {
         this.exhibitMembershipDataService.updateStore(exhibitMembership);
-      }
+      },
     );
 
     this.hubConnection.on(
       'ExhibitMembershipUpdated',
       (exhibitMembership: ExhibitMembership) => {
         this.exhibitMembershipDataService.updateStore(exhibitMembership);
-      }
+      },
     );
 
     this.hubConnection.on('ExhibitMembershipDeleted', (id: string) => {
@@ -457,14 +461,14 @@ export class SignalRService implements OnDestroy {
       'GroupMembershipCreated',
       (groupMembership: GroupMembership) => {
         this.groupMembershipDataService.updateStore(groupMembership);
-      }
+      },
     );
 
     this.hubConnection.on(
       'GroupMembershipUpdated',
       (groupMembership: GroupMembership) => {
         this.groupMembershipDataService.updateStore(groupMembership);
-      }
+      },
     );
 
     this.hubConnection.on('GroupMembershipDeleted', (id: string) => {
@@ -476,18 +480,17 @@ export class SignalRService implements OnDestroy {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }
 
 class RetryPolicy {
   constructor(
     private maxSeconds: number,
     private minJitterSeconds: number,
-    private maxJitterSeconds: number
+    private maxJitterSeconds: number,
   ) {}
 
   nextRetryDelayInMilliseconds(
-    retryContext: signalR.RetryContext
+    retryContext: signalR.RetryContext,
   ): number | null {
     let nextRetrySeconds = Math.pow(2, retryContext.previousRetryCount + 1);
 
@@ -497,7 +500,7 @@ class RetryPolicy {
 
     nextRetrySeconds +=
       Math.floor(
-        Math.random() * (this.maxJitterSeconds - this.minJitterSeconds + 1)
+        Math.random() * (this.maxJitterSeconds - this.minJitterSeconds + 1),
       ) + this.minJitterSeconds; // Add Jitter
 
     return nextRetrySeconds * 1000;

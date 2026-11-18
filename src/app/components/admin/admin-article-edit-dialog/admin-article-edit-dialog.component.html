@@ -12,173 +12,260 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   (submit)="handleEditComplete(true)"
   (cancel)="handleEditComplete(false)"
 >
-@if (!!data && data.article !== undefined && data.article !== null && articleNameFormControl) {
-<div crucibleDialogContent>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Name</mat-label>
-        <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)"
-          (blur)="saveArticle('name')" value="{{ data.article.name }}" [errorStateMatcher]="matcher" />
-        @if (articleNameFormControl.hasError('required')) {
-        <mat-error>
-          Name is <strong>required</strong>
-        </mat-error>
-        }
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Summary</mat-label>
-        <input matInput placeholder="Summary (required)" [formControl]="summaryFormControl"
-          (blur)="saveArticle('summary')" value="{{ data.article.summary }}" [errorStateMatcher]="matcher" />
-        @if (summaryFormControl.hasError('required')) {
-        <mat-error>
-          Summary is <strong>required</strong>
-        </mat-error>
-        }
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin left">
-    <div>
-      <p style="
-          font-size: 13px;
-          font-weight: 400;
-          line-height: 1.125;
-          letter-spacing: normal;
-        ">
-        Description (required)*
-      </p>
-      <div>
-        <angular-editor [placeholder]="'Description'" [formControl]="descriptionFormControl" [config]="editorConfig"
-          (focus)="showDescriptionError = true" (blur)="saveArticle('description')" />
-        @if (descriptionFormControl.hasError('required')) {
-        <mat-error>
-          Description is <strong>required</strong>
-        </mat-error>
-        }
+  @if (
+    !!data &&
+    data.article !== undefined &&
+    data.article !== null &&
+    articleNameFormControl
+  ) {
+    <div crucibleDialogContent>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Name</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="articleNameFormControl"
+              placeholder="Name (required)"
+              (blur)="saveArticle('name')"
+              value="{{ data.article.name }}"
+              [errorStateMatcher]="matcher"
+            />
+            @if (articleNameFormControl.hasError('required')) {
+              <mat-error> Name is <strong>required</strong> </mat-error>
+            }
+          </mat-form-field>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field>
-        <mat-label>Card</mat-label>
-        <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
-          <mat-option />
-          @if (data.cardList) {
-            @for (card of data.cardList; track card.id) {
-            <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
-              {{ card.name }}
-            </mat-option>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Summary</mat-label>
+            <input
+              matInput
+              placeholder="Summary (required)"
+              [formControl]="summaryFormControl"
+              (blur)="saveArticle('summary')"
+              value="{{ data.article.summary }}"
+              [errorStateMatcher]="matcher"
+            />
+            @if (summaryFormControl.hasError('required')) {
+              <mat-error> Summary is <strong>required</strong> </mat-error>
             }
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field>
-        <mat-label>Status</mat-label>
-        <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
-          @if (itemStatusList) {
-            @for (itemStatusOption of itemStatusList; track itemStatusOption) {
-            <mat-option [value]="itemStatusOption">
-              <span class="item-status-swatch" [class]="statusClass(itemStatusOption)" aria-hidden="true"></span>
-              {{ itemStatusOption }}
-            </mat-option>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin left">
+        <div>
+          <p
+            style="
+              font-size: 13px;
+              font-weight: 400;
+              line-height: 1.125;
+              letter-spacing: normal;
+            "
+          >
+            Description (required)*
+          </p>
+          <div>
+            <angular-editor
+              [placeholder]="'Description'"
+              [formControl]="descriptionFormControl"
+              [config]="editorConfig"
+              (focus)="showDescriptionError = true"
+              (blur)="saveArticle('description')"
+            />
+            @if (descriptionFormControl.hasError('required')) {
+              <mat-error> Description is <strong>required</strong> </mat-error>
             }
-          }
-        </mat-select>
-      </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field>
+            <mat-label>Card</mat-label>
+            <mat-select
+              placeholder="Card"
+              [formControl]="cardIdFormControl"
+              (selectionChange)="saveArticle('cardId')"
+            >
+              <mat-option />
+              @if (data.cardList) {
+                @for (card of data.cardList; track card.id) {
+                  <mat-option
+                    [value]="card.id"
+                    [matTooltip]="card.id"
+                    matTooltipPosition="right"
+                  >
+                    {{ card.name }}
+                  </mat-option>
+                }
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field>
+            <mat-label>Status</mat-label>
+            <mat-select
+              placeholder="Status"
+              [formControl]="statusFormControl"
+              (selectionChange)="saveArticle('status')"
+            >
+              @if (itemStatusList) {
+                @for (
+                  itemStatusOption of itemStatusList;
+                  track itemStatusOption
+                ) {
+                  <mat-option [value]="itemStatusOption">
+                    <span
+                      class="item-status-swatch"
+                      [class]="statusClass(itemStatusOption)"
+                      aria-hidden="true"
+                    ></span>
+                    {{ itemStatusOption }}
+                  </mat-option>
+                }
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field>
+            <mat-label>Source Type</mat-label>
+            <mat-select
+              placeholder="Source Type"
+              [formControl]="sourceTypeFormControl"
+              (selectionChange)="saveArticle('sourceType')"
+            >
+              @if (sourceTypeList) {
+                @for (
+                  sourceTypeOption of sourceTypeList;
+                  track sourceTypeOption
+                ) {
+                  <mat-option [value]="sourceTypeOption">
+                    {{ sourceTypeOption }}
+                  </mat-option>
+                }
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Source Name</mat-label>
+            <input
+              matInput
+              placeholder="Source Name"
+              [formControl]="sourceNameFormControl"
+              (blur)="saveArticle('sourceName')"
+              value="{{ data.article.sourceName }}"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>URL</mat-label>
+            <input
+              matInput
+              placeholder="URL for more info"
+              [formControl]="urlFormControl"
+              (blur)="saveArticle('url')"
+              value="{{ data.article.url }}"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div class="full-width">
+          <mat-checkbox [formControl]="openInNewTabFormControl">
+            Open URL in new tab
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Move</mat-label>
+            <input
+              matInput
+              placeholder="Move"
+              [formControl]="moveFormControl"
+              (blur)="saveArticle('move')"
+              value="{{ data.article.move }}"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Inject</mat-label>
+            <input
+              matInput
+              placeholder="Inject"
+              [formControl]="injectFormControl"
+              (blur)="saveArticle('inject')"
+              value="{{ data.article.inject }}"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      @if (datePostedFormControl) {
+        <div class="add-margin">
+          <div>
+            <mat-form-field class="datetime-field">
+              <mat-label>Posted Date / Time</mat-label>
+              <input
+                matInput
+                [ngxMatDatetimePicker]="picker"
+                [formControl]="datePostedFormControl"
+                (dateChange)="saveArticle('datePosted')"
+                style="display: none"
+              />
+              <span (click)="picker.open()" style="cursor: pointer">
+                {{ datePostedFormControl.value | date: 'dd MMM yyyy HH:mm' }}
+                {{ getTimezoneAbbr(datePostedFormControl.value) }}
+              </span>
+              <mat-datepicker-toggle
+                matSuffix
+                title="Choose Date/Time"
+                [for]="$any(picker)"
+              />
+              <ngx-mat-datetime-picker
+                #picker
+                [showSpinners]="true"
+                [showSeconds]="false"
+                [stepHour]="1"
+                [stepMinute]="5"
+                [stepSecond]="1"
+                [touchUi]="false"
+                [enableMeridian]="true"
+                [disableMinute]="false"
+                [hideTime]="false"
+                [color]="'warn'"
+              >
+                <ngx-mat-datepicker-actions>
+                  <button mat-stroked-button ngxMatDatepickerApply>Save</button>
+                  <button mat-stroked-button ngxMatDatepickerCancel>
+                    Cancel
+                  </button>
+                </ngx-mat-datepicker-actions>
+              </ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+        </div>
+      }
     </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field>
-        <mat-label>Source Type</mat-label>
-        <mat-select placeholder="Source Type" [formControl]="sourceTypeFormControl"
-          (selectionChange)="saveArticle('sourceType')">
-          @if (sourceTypeList) {
-            @for (sourceTypeOption of sourceTypeList; track sourceTypeOption) {
-            <mat-option [value]="sourceTypeOption">
-              {{ sourceTypeOption }}
-            </mat-option>
-            }
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Source Name</mat-label>
-        <input matInput placeholder="Source Name" [formControl]="sourceNameFormControl"
-          (blur)="saveArticle('sourceName')" value="{{ data.article.sourceName }}" />
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>URL</mat-label>
-        <input matInput placeholder="URL for more info" [formControl]="urlFormControl" (blur)="saveArticle('url')"
-          value="{{ data.article.url }}" />
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div class="full-width">
-      <mat-checkbox [formControl]="openInNewTabFormControl">
-        Open URL in new tab
-      </mat-checkbox>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Move</mat-label>
-        <input matInput placeholder="Move" [formControl]="moveFormControl" (blur)="saveArticle('move')"
-          value="{{ data.article.move }}" />
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Inject</mat-label>
-        <input matInput placeholder="Inject" [formControl]="injectFormControl" (blur)="saveArticle('inject')"
-          value="{{ data.article.inject }}" />
-      </mat-form-field>
-    </div>
-  </div>
-  @if (datePostedFormControl) {
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="datetime-field">
-        <mat-label>Posted Date / Time</mat-label>
-        <input matInput [ngxMatDatetimePicker]="picker" [formControl]="datePostedFormControl"
-          (dateChange)="saveArticle('datePosted')" style="display: none;">
-        <span (click)="picker.open()" style="cursor: pointer;">
-          {{datePostedFormControl.value | date: 'dd MMM yyyy HH:mm'}} {{ getTimezoneAbbr(datePostedFormControl.value) }}
-        </span>
-        <mat-datepicker-toggle matSuffix title="Choose Date/Time" [for]="$any(picker)" />
-        <ngx-mat-datetime-picker #picker [showSpinners]=true [showSeconds]=false [stepHour]=1 [stepMinute]=5
-          [stepSecond]=1 [touchUi]=false [enableMeridian]=true [disableMinute]=false [hideTime]=false [color]="'warn'">
-          <ngx-mat-datepicker-actions>
-            <button mat-stroked-button ngxMatDatepickerApply>Save</button>
-            <button mat-stroked-button ngxMatDatepickerCancel>Cancel</button>
-          </ngx-mat-datepicker-actions>
-        </ngx-mat-datetime-picker>
-      </mat-form-field>
-    </div>
-  </div>
   }
-</div>
-}
 </crucible-dialog>

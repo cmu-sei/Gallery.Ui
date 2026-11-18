@@ -14,7 +14,9 @@ export class ArticleTeamDataService implements OnDestroy {
   private teamArticleService = inject(TeamArticleService);
 
   private _teamArticles: TeamArticle[] = [];
-  readonly teamArticles = new BehaviorSubject<TeamArticle[]>(this._teamArticles);
+  readonly teamArticles = new BehaviorSubject<TeamArticle[]>(
+    this._teamArticles,
+  );
   unsubscribe$: Subject<null> = new Subject<null>();
 
   private updateTeamArticles(teamArticles: TeamArticle[]) {
@@ -32,42 +34,52 @@ export class ArticleTeamDataService implements OnDestroy {
         },
         (error) => {
           this.updateTeamArticles([]);
-        }
+        },
       );
   }
 
   addTeamToArticle(exhibitId: string, teamId: string, articleId: string) {
-    this.teamArticleService.createTeamArticle({exhibitId: exhibitId, articleId: articleId, teamId: teamId}).subscribe(
-      (et) => {
-        this._teamArticles.unshift(et);
-        this.updateTeamArticles(this._teamArticles);
-      },
-      (error) => {
-        this.updateTeamArticles(this._teamArticles);
-      }
-    );
+    this.teamArticleService
+      .createTeamArticle({
+        exhibitId: exhibitId,
+        articleId: articleId,
+        teamId: teamId,
+      })
+      .subscribe(
+        (et) => {
+          this._teamArticles.unshift(et);
+          this.updateTeamArticles(this._teamArticles);
+        },
+        (error) => {
+          this.updateTeamArticles(this._teamArticles);
+        },
+      );
   }
 
   removeTeamArticle(teamId: string, articleId: string) {
     this.teamArticleService.deleteTeamArticleByIds(teamId, articleId).subscribe(
       (response) => {
-        this._teamArticles = this._teamArticles.filter((u) => u.teamId !== teamId);
+        this._teamArticles = this._teamArticles.filter(
+          (u) => u.teamId !== teamId,
+        );
         this.updateTeamArticles(this._teamArticles);
       },
       (error) => {
         this.updateTeamArticles(this._teamArticles);
-      }
+      },
     );
   }
 
   updateStore(teamArticle: TeamArticle) {
-    const updatedTeamArticles = this._teamArticles.filter(tu => tu.id !== teamArticle.id);
+    const updatedTeamArticles = this._teamArticles.filter(
+      (tu) => tu.id !== teamArticle.id,
+    );
     updatedTeamArticles.unshift(teamArticle);
     this.updateTeamArticles(updatedTeamArticles);
   }
 
   deleteFromStore(id: string) {
-    const updatedTeamArticles = this._teamArticles.filter(tu => tu.id !== id);
+    const updatedTeamArticles = this._teamArticles.filter((tu) => tu.id !== id);
     this.updateTeamArticles(updatedTeamArticles);
   }
 

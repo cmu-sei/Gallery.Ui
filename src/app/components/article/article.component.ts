@@ -11,14 +11,17 @@ import { ArticleQuery } from 'src/app/data/article/article.query';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ComnSettingsService } from '@cmusei/crucible-common';
 import { XApiService } from 'src/app/services/xapi/xapi.service';
-import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
+import {
+  AngularEditorConfig,
+  AngularEditorModule,
+} from '@kolkov/angular-editor';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'app-article-app',
-    templateUrl: './article.component.html',
-    styleUrls: ['./article.component.scss'],
-    imports: [AngularEditorModule, FormsModule]
+  selector: 'app-article-app',
+  templateUrl: './article.component.html',
+  styleUrls: ['./article.component.scss'],
+  imports: [AngularEditorModule, FormsModule],
 })
 export class ArticleComponent implements OnDestroy {
   private activatedRoute = inject(ActivatedRoute);
@@ -49,28 +52,35 @@ export class ArticleComponent implements OnDestroy {
   };
 
   constructor() {
-    this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Article';
+    this._document.getElementById('appTitle').innerHTML =
+      this.settingsService.settings.AppTitle + ' Article';
     // subscribe to route changes
-    this.activatedRoute.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      const articleId = params.get('articleId');
-      const exhibitId = params.get('exhibitId');
+    this.activatedRoute.paramMap
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((params) => {
+        const articleId = params.get('articleId');
+        const exhibitId = params.get('exhibitId');
 
-      if (articleId) {
-        this.articleDataService.loadById(articleId);
-        this.articleDataService.setActive(articleId);
-        this.xApiService.viewedArticle(exhibitId, articleId).pipe(take(1)).subscribe();
-      } else {
-        this.articleDataService.setActive('');
-      }
-    });
+        if (articleId) {
+          this.articleDataService.loadById(articleId);
+          this.articleDataService.setActive(articleId);
+          this.xApiService
+            .viewedArticle(exhibitId, articleId)
+            .pipe(take(1))
+            .subscribe();
+        } else {
+          this.articleDataService.setActive('');
+        }
+      });
     // subscribe to the article
-    (this.articleQuery.selectActive() as Observable<Article>).pipe(takeUntil(this.unsubscribe$)).subscribe(article => {
-      if (article) {
-        this.article = article;
-      }
-    });
+    (this.articleQuery.selectActive() as Observable<Article>)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((article) => {
+        if (article) {
+          this.article = article;
+        }
+      });
   }
-
 
   ngOnDestroy() {
     this.unsubscribe$.next(null);

@@ -55,7 +55,11 @@ describe('AdminUsersComponent', () => {
   it('passes the users and canEdit true with ManageUsers', async () => {
     const { list } = await renderUsers([SystemPermission.ManageUsers]);
 
-    expect(list().users()?.map((u) => u.name)).toEqual(['Alice']);
+    expect(
+      list()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Alice']);
     expect(list().canEdit()).toBe(true);
   });
 

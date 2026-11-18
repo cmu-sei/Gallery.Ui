@@ -2,10 +2,29 @@
 // Released under a MIT (SEI)-style license, please see LICENSE.md in the
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
-import { Component, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+} from '@angular/material/table';
 import { Team, TeamUser, User } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { TeamUserDataService } from 'src/app/data/team-user/team-user-data.service';
@@ -16,17 +35,45 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 @Component({
-    selector: 'app-admin-observers',
-    templateUrl: './admin-observers.component.html',
-    styleUrls: ['./admin-observers.component.scss'],
-    imports: [MatToolbar, MatToolbarRow, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatPaginator, MatCard, MatProgressSpinner, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
+  selector: 'app-admin-observers',
+  templateUrl: './admin-observers.component.html',
+  styleUrls: ['./admin-observers.component.scss'],
+  imports: [
+    MatToolbar,
+    MatToolbarRow,
+    MatIcon,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatIconButton,
+    MatSuffix,
+    MatPaginator,
+    MatCard,
+    MatProgressSpinner,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+  ],
 })
 export class AdminObserversComponent implements OnDestroy, OnInit {
   private teamQuery = inject(TeamQuery);
@@ -98,13 +145,19 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
     this.teamUserDataSource.paginator = this.teamUserPaginator();
 
     // Set up filter predicates
-    this.teamUserDataSource.filterPredicate = (data: TeamUser, filter: string) => {
+    this.teamUserDataSource.filterPredicate = (
+      data: TeamUser,
+      filter: string,
+    ) => {
       const teamName = this.getTeamName(data.teamId).toLowerCase();
       const userName = this.getUserName(data.userId).toLowerCase();
       return teamName.includes(filter) || userName.includes(filter);
     };
 
-    this.observerDataSource.filterPredicate = (data: TeamUser, filter: string) => {
+    this.observerDataSource.filterPredicate = (
+      data: TeamUser,
+      filter: string,
+    ) => {
       const teamName = this.getTeamName(data.teamId).toLowerCase();
       const userName = this.getUserName(data.userId).toLowerCase();
       return teamName.includes(filter) || userName.includes(filter);
@@ -135,7 +188,7 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   setDataSources() {
     // filter the list for each data source
     this.teamUserDataSource.data = this.teamUsers.filter(
-      (tu) => !tu.isObserver
+      (tu) => !tu.isObserver,
     );
     this.observerDataSource.data = this.teamUsers.filter((tu) => tu.isObserver);
   }
@@ -149,7 +202,11 @@ export class AdminObserversComponent implements OnDestroy, OnInit {
   }
 
   setObserverValue(teamUserId: string, value: boolean) {
-    this.teamUserDataService.setObserverValue(teamUserId, value, this.exhibitId());
+    this.teamUserDataService.setObserverValue(
+      teamUserId,
+      value,
+      this.exhibitId(),
+    );
   }
 
   compare(a: string, b: string, isAsc: boolean) {

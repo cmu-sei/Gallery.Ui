@@ -18,5 +18,5 @@ export enum Section {
   // home sections
   wall = 'wall',
   archive = 'archive',
-  none = ''
+  none = '',
 }

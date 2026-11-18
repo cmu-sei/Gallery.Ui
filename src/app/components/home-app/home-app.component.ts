@@ -1,12 +1,31 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-
-import { Component, OnDestroy, OnInit, ViewChild, DOCUMENT, inject, viewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  DOCUMENT,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+} from '@angular/material/table';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
@@ -46,7 +65,12 @@ import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { Section } from 'src/app/utilities/enumerations';
 import { XApiService } from 'src/app/services/xapi/xapi.service';
 import { TopbarComponent } from '../shared/top-bar/topbar.component';
-import { MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardSubtitle,
+} from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -58,10 +82,41 @@ import { ArchiveComponent } from '../archive/archive.component';
 import { DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-home-app',
-    templateUrl: './home-app.component.html',
-    styleUrls: ['./home-app.component.scss'],
-    imports: [TopbarComponent, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatProgressSpinner, MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, MatSuffix, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, RouterLink, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, WallComponent, ArchiveComponent, DatePipe, CrucibleLandingBackgroundDirective]
+  selector: 'app-home-app',
+  templateUrl: './home-app.component.html',
+  styleUrls: ['./home-app.component.scss'],
+  imports: [
+    TopbarComponent,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatProgressSpinner,
+    MatIconButton,
+    MatIcon,
+    MatFormField,
+    MatInput,
+    FormsModule,
+    MatSuffix,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    RouterLink,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatPaginator,
+    WallComponent,
+    ArchiveComponent,
+    DatePipe,
+    CrucibleLandingBackgroundDirective,
+  ],
 })
 export class HomeAppComponent implements OnDestroy, OnInit {
   private _document = inject<HTMLDocument>(DOCUMENT);
@@ -92,9 +147,14 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     if (sort) {
       this.exhibitList.sortingDataAccessor = (exhibit, column) => {
         switch (column) {
-          case 'collection': return this.getCollectionName(exhibit.collectionId) || '';
-          case 'dateCreated': return exhibit.dateCreated ? new Date(exhibit.dateCreated).toISOString() : '';
-          default: return exhibit[column as keyof Exhibit] as string;
+          case 'collection':
+            return this.getCollectionName(exhibit.collectionId) || '';
+          case 'dateCreated':
+            return exhibit.dateCreated
+              ? new Date(exhibit.dateCreated).toISOString()
+              : '';
+          default:
+            return exhibit[column as keyof Exhibit] as string;
         }
       };
       this.exhibitList.sort = sort;
@@ -161,14 +221,11 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         }
       });
     this.userDataService.setCurrentUser();
-    this.permissionDataService
-      .load()
-      .subscribe(
-        (x) => {
-          this.permissions = this.permissionDataService.permissions;
-          this.canViewAdministration = this.permissionDataService.canViewAdministration();
-        }
-      );
+    this.permissionDataService.load().subscribe((x) => {
+      this.permissions = this.permissionDataService.permissions;
+      this.canViewAdministration =
+        this.permissionDataService.canViewAdministration();
+    });
     this.permissionDataService.loadExhibitPermissions().subscribe();
   }
 
@@ -285,7 +342,8 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         }
       });
     // subscribe to the user list
-    this.userQuery.selectAll()
+    this.userQuery
+      .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((users) => {
         this.userList = users;
@@ -341,7 +399,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     this.cardDataService.setActive('');
     this.loadTeamData();
     const myTeamId = this.teamDataService.getMyTeamId();
-    if (myTeamId && this.selectedTeamId && this.exhibitId && this.selectedTeamId !== myTeamId) {
+    if (
+      myTeamId &&
+      this.selectedTeamId &&
+      this.exhibitId &&
+      this.selectedTeamId !== myTeamId
+    ) {
       if (this.selectedSection === Section.archive) {
         this.xApiService
           .observedExhibitArchive(this.exhibitId, this.selectedTeamId)
@@ -377,32 +440,35 @@ export class HomeAppComponent implements OnDestroy, OnInit {
   loadTeamData() {
     // process the change
     if (this.exhibitId && this.selectedTeamId) {
-      this.cardDataService.loadByExhibitTeam(this.exhibitId, this.selectedTeamId);
+      this.cardDataService.loadByExhibitTeam(
+        this.exhibitId,
+        this.selectedTeamId,
+      );
       this.cardDataService.setActive('all');
       this.teamCardDataService.loadByExhibitTeam(
         this.exhibitId,
-        this.selectedTeamId
+        this.selectedTeamId,
       );
       this.userArticleDataService.loadByExhibitTeam(
         this.exhibitId,
-        this.selectedTeamId
+        this.selectedTeamId,
       );
     }
   }
 
   getCollectionName(collectionId: string) {
-    return this.collectionList.find(c => c.id === collectionId)?.name;
+    return this.collectionList.find((c) => c.id === collectionId)?.name;
   }
 
   handleExhibitMoveOrInjectChange() {
     if (!this.exhibitId) return;
     this.teamCardDataService.loadByExhibitTeam(
       this.exhibitId,
-      this.selectedTeamId
+      this.selectedTeamId,
     );
     this.userArticleDataService.loadByExhibitTeam(
       this.exhibitId,
-      this.selectedTeamId
+      this.selectedTeamId,
     );
   }
 
@@ -427,7 +493,7 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.router.navigate([], {
           relativeTo: this.activatedRoute,
           queryParams: { exhibit: this.exhibitId, section: sectionOrCardId },
-          queryParamsHandling: 'merge'
+          queryParamsHandling: 'merge',
         });
         break;
       case 'admin':
@@ -439,8 +505,12 @@ export class HomeAppComponent implements OnDestroy, OnInit {
         this.uiDataService.setSection(this.exhibitId, this.selectedSection);
         this.router.navigate([], {
           relativeTo: this.activatedRoute,
-          queryParams: { exhibit: this.exhibitId, section: this.selectedSection, card: sectionOrCardId },
-          queryParamsHandling: 'merge'
+          queryParams: {
+            exhibit: this.exhibitId,
+            section: this.selectedSection,
+            card: sectionOrCardId,
+          },
+          queryParamsHandling: 'merge',
         });
         break;
     }
@@ -452,9 +522,15 @@ export class HomeAppComponent implements OnDestroy, OnInit {
     const filter = this.filterString?.toLowerCase() ?? '';
     this.exhibitList.data = this.allExhibits.filter((exhibit) => {
       const name = exhibit.name?.toLowerCase() ?? '';
-      const collection = this.getCollectionName(exhibit.collectionId)?.toLowerCase() ?? '';
-      const createdBy = this.getUserName(exhibit.createdBy)?.toLowerCase() ?? '';
-      return name.includes(filter) || collection.includes(filter) || createdBy.includes(filter);
+      const collection =
+        this.getCollectionName(exhibit.collectionId)?.toLowerCase() ?? '';
+      const createdBy =
+        this.getUserName(exhibit.createdBy)?.toLowerCase() ?? '';
+      return (
+        name.includes(filter) ||
+        collection.includes(filter) ||
+        createdBy.includes(filter)
+      );
     });
   }
 

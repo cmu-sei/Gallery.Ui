@@ -25,7 +25,10 @@ import {
   PermissionGrants,
   permissionDataProviders,
 } from 'src/app/test-utils/mock-permission-data.service';
-import { captureUnhandledRxErrors, flush } from 'src/app/test-utils/unhandled-rx-errors';
+import {
+  captureUnhandledRxErrors,
+  flush,
+} from 'src/app/test-utils/unhandled-rx-errors';
 
 async function renderTopbar(
   overrides: {
@@ -176,7 +179,10 @@ describe('TopbarComponent', () => {
     const failure = new Error('sign-out redirect failed');
     const errors = captureUnhandledRxErrors();
     let calls = 0;
-    await renderTopbar({}, () => { calls++; return Promise.reject(failure); });
+    await renderTopbar({}, () => {
+      calls++;
+      return Promise.reject(failure);
+    });
 
     const user = await openUserMenu();
     await user.click(screen.getByRole('menuitem', { name: 'Logout' }));

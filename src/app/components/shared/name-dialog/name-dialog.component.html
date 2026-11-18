@@ -18,7 +18,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
     <mat-form-field class="form-full-width">
       <mat-label>Name</mat-label>
-      <input formControlName="name" matInput placeholder="Name" autocomplete="off" />
+      <input
+        formControlName="name"
+        matInput
+        placeholder="Name"
+        autocomplete="off"
+      />
 
       @if (name.invalid && (name.dirty || name.touched)) {
         <mat-error>

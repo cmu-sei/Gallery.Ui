@@ -23,7 +23,7 @@ export class TeamCardDataService {
 
   private _requestedTeamCardId: string;
   private _requestedTeamCardId$ = this.activatedRoute.queryParamMap.pipe(
-    map((params) => params.get('teamCardId') || '')
+    map((params) => params.get('teamCardId') || ''),
   );
   readonly TeamCardList: Observable<TeamCard[]>;
   readonly filterControl = new UntypedFormControl();
@@ -39,7 +39,7 @@ export class TeamCardDataService {
     const activatedRoute = this.activatedRoute;
 
     this.filterTerm = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('teamCardmask') || '')
+      map((params) => params.get('teamCardmask') || ''),
     );
     this.filterControl.valueChanges.subscribe((term) => {
       this.router.navigate([], {
@@ -48,16 +48,16 @@ export class TeamCardDataService {
       });
     });
     this.sortColumn = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('sorton') || 'name')
+      map((params) => params.get('sorton') || 'name'),
     );
     this.sortIsAscending = activatedRoute.queryParamMap.pipe(
-      map((params) => (params.get('sortdir') || 'asc') === 'asc')
+      map((params) => (params.get('sortdir') || 'asc') === 'asc'),
     );
     this.pageSize = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pagesize') || '20', 10))
+      map((params) => parseInt(params.get('pagesize') || '20', 10)),
     );
     this.pageIndex = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pageindex') || '0', 10))
+      map((params) => parseInt(params.get('pageindex') || '0', 10)),
     );
     this.TeamCardList = combineLatest([
       this.teamCardQuery.selectAll(),
@@ -79,13 +79,13 @@ export class TeamCardDataService {
           items
             ? (items as TeamCard[])
                 .sort((a: TeamCard, b: TeamCard) =>
-                  this.sortTeamCards(a, b, sortColumn, sortIsAscending)
+                  this.sortTeamCards(a, b, sortColumn, sortIsAscending),
                 )
                 .filter((teamCard) =>
-                  teamCard.id.toLowerCase().includes(filterTerm.toLowerCase())
+                  teamCard.id.toLowerCase().includes(filterTerm.toLowerCase()),
                 )
-            : []
-      )
+            : [],
+      ),
     );
   }
 
@@ -93,7 +93,7 @@ export class TeamCardDataService {
     a: TeamCard,
     b: TeamCard,
     column: string,
-    isAsc: boolean
+    isAsc: boolean,
   ) {
     switch (column) {
       case 'dateCreated':
@@ -114,7 +114,7 @@ export class TeamCardDataService {
         tap(() => {
           this.teamCardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (teamCards) => {
@@ -125,7 +125,7 @@ export class TeamCardDataService {
         },
         (error) => {
           this.teamCardStore.set([]);
-        }
+        },
       );
   }
 
@@ -137,7 +137,7 @@ export class TeamCardDataService {
         tap(() => {
           this.teamCardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (teamCards) => {
@@ -148,7 +148,7 @@ export class TeamCardDataService {
         },
         (error) => {
           this.teamCardStore.set([]);
-        }
+        },
       );
   }
 
@@ -160,7 +160,7 @@ export class TeamCardDataService {
         tap(() => {
           this.teamCardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (teamCards) => {
@@ -171,7 +171,7 @@ export class TeamCardDataService {
         },
         (error) => {
           this.teamCardStore.set([]);
-        }
+        },
       );
   }
 
@@ -183,7 +183,7 @@ export class TeamCardDataService {
         tap(() => {
           this.teamCardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.setAsDates(s);
@@ -203,7 +203,7 @@ export class TeamCardDataService {
         tap(() => {
           this.teamCardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.setAsDates(s);
@@ -219,7 +219,7 @@ export class TeamCardDataService {
         tap(() => {
           this.teamCardStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((n) => {
         this.setAsDates(n);

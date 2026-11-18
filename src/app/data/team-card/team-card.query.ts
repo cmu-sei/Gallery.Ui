@@ -22,7 +22,7 @@ export class TeamCardQuery extends QueryEntity<TeamCardState> {
     const store = inject(TeamCardStore);
 
     super(store);
-  
+
     this.store = store;
   }
 

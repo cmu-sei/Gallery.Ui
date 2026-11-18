@@ -31,7 +31,7 @@ export class XApiService {
       catchError((error) => {
         console.error('xAPI tracking error:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -42,12 +42,14 @@ export class XApiService {
     if (!this.enabled) {
       return of(null);
     }
-    return this.generatedXApiService.previewedArticle(exhibitId, articleId).pipe(
-      catchError((error) => {
-        console.error('xAPI tracking error:', error);
-        return of(null);
-      })
-    );
+    return this.generatedXApiService
+      .previewedArticle(exhibitId, articleId)
+      .pipe(
+        catchError((error) => {
+          console.error('xAPI tracking error:', error);
+          return of(null);
+        }),
+      );
   }
 
   /**
@@ -61,7 +63,7 @@ export class XApiService {
       catchError((error) => {
         console.error('xAPI tracking error:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -76,7 +78,7 @@ export class XApiService {
       catchError((error) => {
         console.error('xAPI tracking error:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -91,7 +93,7 @@ export class XApiService {
       catchError((error) => {
         console.error('xAPI tracking error:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -102,12 +104,14 @@ export class XApiService {
     if (!this.enabled) {
       return of(null);
     }
-    return this.generatedXApiService.observedExhibitArchive(exhibitId, teamId).pipe(
-      catchError((error) => {
-        console.error('xAPI tracking error:', error);
-        return of(null);
-      })
-    );
+    return this.generatedXApiService
+      .observedExhibitArchive(exhibitId, teamId)
+      .pipe(
+        catchError((error) => {
+          console.error('xAPI tracking error:', error);
+          return of(null);
+        }),
+      );
   }
 
   /**
@@ -117,11 +121,13 @@ export class XApiService {
     if (!this.enabled) {
       return of(null);
     }
-    return this.generatedXApiService.observedExhibitWall(exhibitId, teamId).pipe(
-      catchError((error) => {
-        console.error('xAPI tracking error:', error);
-        return of(null);
-      })
-    );
+    return this.generatedXApiService
+      .observedExhibitWall(exhibitId, teamId)
+      .pipe(
+        catchError((error) => {
+          console.error('xAPI tracking error:', error);
+          return of(null);
+        }),
+      );
   }
 }

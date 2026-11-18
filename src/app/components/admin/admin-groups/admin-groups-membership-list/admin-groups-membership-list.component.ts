@@ -3,14 +3,39 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import { AfterViewInit, Component, OnChanges, OnInit, inject, input, output, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnChanges,
+  OnInit,
+  inject,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+} from '@angular/material/table';
 import { User } from 'src/app/generated/api';
 import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
@@ -18,10 +43,34 @@ import { MatIcon } from '@angular/material/icon';
 import { ClipboardModule } from 'ngx-clipboard';
 
 @Component({
-    selector: 'app-admin-groups-membership-list',
-    templateUrl: './admin-groups-membership-list.component.html',
-    styleUrls: ['./admin-groups-membership-list.component.scss'],
-    imports: [MatToolbar, MatToolbarRow, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatIcon, MatPaginator, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, ClipboardModule]
+  selector: 'app-admin-groups-membership-list',
+  templateUrl: './admin-groups-membership-list.component.html',
+  styleUrls: ['./admin-groups-membership-list.component.scss'],
+  imports: [
+    MatToolbar,
+    MatToolbarRow,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatIconButton,
+    MatSuffix,
+    MatIcon,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    ClipboardModule,
+  ],
 })
 export class AdminGroupsMembershipListComponent
   implements OnInit, OnChanges, AfterViewInit
@@ -55,7 +104,7 @@ export class AdminGroupsMembershipListComponent
     this.dataSource.data = this.users();
 
     this.displayedColumns = this.viewColumns.concat(
-      this.canEdit() ? this.editColumns : []
+      this.canEdit() ? this.editColumns : [],
     );
   }
 

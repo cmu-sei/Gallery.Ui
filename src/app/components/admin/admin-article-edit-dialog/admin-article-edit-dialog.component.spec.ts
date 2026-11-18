@@ -217,7 +217,10 @@ describe('AdminArticleEditDialogComponent', () => {
     fixture.componentInstance.handleEditComplete(true);
 
     expect(completions).toEqual([
-      { saveChanges: true, article: expect.objectContaining({ id: 'a1', name: '' }) },
+      {
+        saveChanges: true,
+        article: expect.objectContaining({ id: 'a1', name: '' }),
+      },
     ]);
   });
 });

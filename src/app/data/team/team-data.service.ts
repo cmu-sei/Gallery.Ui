@@ -54,7 +54,7 @@ export class TeamDataService {
     const activatedRoute = this.activatedRoute;
 
     this.filterTerm = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('teammask') || '')
+      map((params) => params.get('teammask') || ''),
     );
     this.filterControl.valueChanges.subscribe((term) => {
       this.router.navigate([], {
@@ -63,16 +63,16 @@ export class TeamDataService {
       });
     });
     this.sortColumn = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('sorton') || 'name')
+      map((params) => params.get('sorton') || 'name'),
     );
     this.sortIsAscending = activatedRoute.queryParamMap.pipe(
-      map((params) => (params.get('sortdir') || 'asc') === 'asc')
+      map((params) => (params.get('sortdir') || 'asc') === 'asc'),
     );
     this.pageSize = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pagesize') || '20', 10))
+      map((params) => parseInt(params.get('pagesize') || '20', 10)),
     );
     this.pageIndex = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pageindex') || '0', 10))
+      map((params) => parseInt(params.get('pageindex') || '0', 10)),
     );
     this.teamList = combineLatest([
       this.teamQuery.selectAll(),
@@ -94,17 +94,17 @@ export class TeamDataService {
           items
             ? (items as Team[])
                 .sort((a: Team, b: Team) =>
-                  this.sortTeams(a, b, sortColumn, sortIsAscending)
+                  this.sortTeams(a, b, sortColumn, sortIsAscending),
                 )
                 .filter(
                   (team) =>
                     ('' + team.name)
                       .toLowerCase()
                       .includes(filterTerm.toLowerCase()) ||
-                    team.id.toLowerCase().includes(filterTerm.toLowerCase())
+                    team.id.toLowerCase().includes(filterTerm.toLowerCase()),
                 )
-            : []
-      )
+            : [],
+      ),
     );
   }
 
@@ -133,7 +133,7 @@ export class TeamDataService {
         tap(() => {
           this.teamStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.teamStore.upsert(s.id, { ...s });
@@ -149,7 +149,7 @@ export class TeamDataService {
         tap(() => {
           this.teamStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (teams) => {
@@ -162,7 +162,7 @@ export class TeamDataService {
           // marker so callers treat the store as unable to answer.
           this.teamStore.set([]);
           this._loadedExhibitId = null;
-        }
+        },
       );
   }
 
@@ -174,7 +174,7 @@ export class TeamDataService {
         tap(() => {
           this.teamStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (teams) => {
@@ -187,7 +187,7 @@ export class TeamDataService {
           // marker so callers treat the store as unable to answer.
           this.teamStore.set([]);
           this._loadedExhibitId = null;
-        }
+        },
       );
   }
 
@@ -205,7 +205,7 @@ export class TeamDataService {
         tap(() => {
           this.teamStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.teamStore.add(s);
@@ -221,7 +221,7 @@ export class TeamDataService {
         tap(() => {
           this.teamStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((n) => {
         this.updateStore(n);

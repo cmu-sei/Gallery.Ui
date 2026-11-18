@@ -1,8 +1,18 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, inject as inject_1, input } from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  inject as inject_1,
+  input,
+} from '@angular/core';
+import {
+  UntypedFormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import {
@@ -17,27 +27,57 @@ import { Card } from 'src/app/data/card/card.store';
 import { CardDataService } from 'src/app/data/card/card-data.service';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
-import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
+import {
+  ComnSettingsService,
+  CrucibleDialogService,
+} from '@cmusei/crucible-common';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminArticleEditDialogComponent } from 'src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
 import { MatInput } from '@angular/material/input';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
 import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-    selector: 'app-admin-articles',
-    templateUrl: './admin-articles.component.html',
-    styleUrls: ['./admin-articles.component.scss'],
-    imports: [MatFormField, MatLabel, MatSelect, MatOption, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatPaginator, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, MatCard, MatProgressSpinner]
+  selector: 'app-admin-articles',
+  templateUrl: './admin-articles.component.html',
+  styleUrls: ['./admin-articles.component.scss'],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconButton,
+    MatSuffix,
+    MatIcon,
+    MatPaginator,
+    MatAccordion,
+    MatSort,
+    MatSortHeader,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatCard,
+    MatProgressSpinner,
+  ],
 })
 export class AdminArticlesComponent implements OnDestroy, OnInit {
   private dialog = inject_1(MatDialog);
@@ -119,7 +159,9 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.loadCollectionData();
-    this.canEdit = this.permissionDataService.canEditCollection(this.selectedCollectionId());
+    this.canEdit = this.permissionDataService.canEditCollection(
+      this.selectedCollectionId(),
+    );
   }
 
   loadCollectionData() {
@@ -229,7 +271,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
           article.description.toLowerCase().includes(this.filterString) ||
           article.sourceName.toLowerCase().includes(this.filterString)) &&
         (!this.selectedCardId || article.cardId === this.selectedCardId) &&
-        (+this.selectedMove === -1 || +article.move === +this.selectedMove)
+        (+this.selectedMove === -1 || +article.move === +this.selectedMove),
     );
     this.sortChanged(this.sort);
   }
@@ -241,7 +283,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
   sortChanged(sort: Sort) {
     this.sort = sort;
     this.filteredArticleList.sort((a, b) =>
-      this.sortArticles(a, b, sort.active, sort.direction)
+      this.sortArticles(a, b, sort.active, sort.direction),
     );
     this.applyPagination();
   }
@@ -250,7 +292,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
     a: Article,
     b: Article,
     column: string,
-    direction: string
+    direction: string,
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
@@ -262,7 +304,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
       case 'cardId':
         return (
           (this.getCardName(a.cardId).toLowerCase() <
-            this.getCardName(b.cardId).toLowerCase()
+          this.getCardName(b.cardId).toLowerCase()
             ? -1
             : 1) * (isAsc ? 1 : -1)
         );
@@ -311,7 +353,7 @@ export class AdminArticlesComponent implements OnDestroy, OnInit {
     const startIndex = this.pageIndex * this.pageSize;
     this.displayedArticles = this.filteredArticleList.slice(
       startIndex,
-      startIndex + this.pageSize
+      startIndex + this.pageSize,
     );
   }
 

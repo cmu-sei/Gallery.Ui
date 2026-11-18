@@ -22,7 +22,7 @@ export class ExhibitQuery extends QueryEntity<ExhibitState> {
     const store = inject(ExhibitStore);
 
     super(store);
-  
+
     this.store = store;
   }
 

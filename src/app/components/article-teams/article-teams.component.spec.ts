@@ -62,11 +62,15 @@ describe('ArticleTeamsComponent', () => {
    */
   it('selects and unselects teams when canEdit is true', async () => {
     const { container, changes } = await renderTeams(true);
-    const available = within(container.querySelector('.exhibit-teams-list-container') as HTMLElement);
+    const available = within(
+      container.querySelector('.exhibit-teams-list-container') as HTMLElement,
+    );
     const user = userEvent.setup();
 
     await user.click(available.getByRole('button', { name: 'Add Red' }));
-    expect(available.queryByRole('button', { name: 'Add Red' })).not.toBeInTheDocument();
+    expect(
+      available.queryByRole('button', { name: 'Add Red' }),
+    ).not.toBeInTheDocument();
     await user.click(screen.getByTitle('Remove Red'));
 
     expect(changes).toEqual([['t2'], []]);
@@ -91,16 +95,26 @@ describe('ArticleTeamsComponent', () => {
    */
   it('hides the last available team when a selected team disappears', async () => {
     const { fixture, container, changes } = await renderTeams(true);
-    const available = within(container.querySelector('.exhibit-teams-list-container') as HTMLElement);
-    await userEvent.setup().click(available.getByRole('button', { name: 'Add Blue' }));
-    expect(available.getByRole('button', { name: 'Add Red' })).toBeInTheDocument();
+    const available = within(
+      container.querySelector('.exhibit-teams-list-container') as HTMLElement,
+    );
+    await userEvent
+      .setup()
+      .click(available.getByRole('button', { name: 'Add Blue' }));
+    expect(
+      available.getByRole('button', { name: 'Add Red' }),
+    ).toBeInTheDocument();
     expect(changes).toEqual([['t1']]);
 
     TestBed.inject(TeamStore).remove('t1');
     fixture.detectChanges();
 
-    expect(available.queryByRole('button', { name: 'Add Red' })).not.toBeInTheDocument();
+    expect(
+      available.queryByRole('button', { name: 'Add Red' }),
+    ).not.toBeInTheDocument();
     expect(screen.getByTitle('Remove Blue')).toBeInTheDocument();
-    expect(TestBed.inject(TeamStore).getValue().entities['t2'].name).toBe('Red Team');
+    expect(TestBed.inject(TeamStore).getValue().entities['t2'].name).toBe(
+      'Red Team',
+    );
   });
 });

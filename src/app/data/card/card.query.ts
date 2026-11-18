@@ -2,11 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Order, QueryConfig, QueryEntity } from '@datorama/akita';
-import {
-  Card,
-  CardState,
-  CardStore,
-} from './card.store';
+import { Card, CardState, CardStore } from './card.store';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -24,7 +20,7 @@ export class CardQuery extends QueryEntity<CardState> {
     const store = inject(CardStore);
 
     super(store);
-  
+
     this.store = store;
   }
 

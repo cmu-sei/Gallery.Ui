@@ -1,8 +1,14 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-
-import { Component, OnDestroy, DOCUMENT, inject as inject_1, input, output } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  DOCUMENT,
+  inject as inject_1,
+  input,
+  output,
+} from '@angular/core';
 import {
   Article,
   Card,
@@ -25,14 +31,21 @@ import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
 import { Observable, Subject, take, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Section } from 'src/app/utilities/enumerations';
 import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
 import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dialog/article-edit-dialog.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
+import {
+  ComnSettingsService,
+  CrucibleDialogService,
+} from '@cmusei/crucible-common';
 import { UIDataService } from 'src/app/data/ui/ui-data.service';
 import { XApiService } from 'src/app/services/xapi/xapi.service';
 import { MatIconButton, MatButton } from '@angular/material/button';
@@ -46,10 +59,24 @@ import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-    selector: 'app-archive',
-    templateUrl: './archive.component.html',
-    styleUrls: ['./archive.component.scss'],
-    imports: [MatIconButton, MatIcon, MatFormField, MatInput, FormsModule, ReactiveFormsModule, MatSuffix, MatSelect, MatOption, MatButton, TeamSelectorComponent, MatCard, MatProgressSpinner]
+  selector: 'app-archive',
+  templateUrl: './archive.component.html',
+  styleUrls: ['./archive.component.scss'],
+  imports: [
+    MatIconButton,
+    MatIcon,
+    MatFormField,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSuffix,
+    MatSelect,
+    MatOption,
+    MatButton,
+    TeamSelectorComponent,
+    MatCard,
+    MatProgressSpinner,
+  ],
 })
 export class ArchiveComponent implements OnDestroy {
   private _document = inject_1<HTMLDocument>(DOCUMENT);
@@ -96,7 +123,15 @@ export class ArchiveComponent implements OnDestroy {
   sort: Sort = { active: 'datePosted', direction: 'desc' };
   pageSize = 25;
   pageIndex = 0;
-  sourceTypeFilters = ['Intel', 'Reporting', 'Orders', 'News', 'Social', 'Phone', 'Email'];
+  sourceTypeFilters = [
+    'Intel',
+    'Reporting',
+    'Orders',
+    'News',
+    'Social',
+    'Phone',
+    'Email',
+  ];
   sourceIcon: { [key: string]: string } = {
     Intel: 'mdi-shield-lock',
     Reporting: 'mdi-file-chart',
@@ -130,7 +165,7 @@ export class ArchiveComponent implements OnDestroy {
         this.moveList = [];
         if (userArticles.length > 0) {
           const maxMove = userArticles.sort(
-            (a: UserArticle, b: UserArticle) => b.article.move - a.article.move
+            (a: UserArticle, b: UserArticle) => b.article.move - a.article.move,
           )[0].article.move;
           for (let move = maxMove; move >= 0; move--) {
             this.moveList.push(move);
@@ -232,7 +267,7 @@ export class ArchiveComponent implements OnDestroy {
     if (this.userArticleList && this.userArticleList.length > 0) {
       this.filteredUserArticleList = this.userArticleList
         .sort((a: UserArticle, b: UserArticle) =>
-          this.sortArticles(a.article, b.article, sort.active, sort.direction)
+          this.sortArticles(a.article, b.article, sort.active, sort.direction),
         )
         .filter(
           (a) =>
@@ -251,7 +286,7 @@ export class ArchiveComponent implements OnDestroy {
                 .includes(this.filterString.toLowerCase()) ||
               a.article.sourceName
                 .toLowerCase()
-                .includes(this.filterString.toLowerCase()))
+                .includes(this.filterString.toLowerCase())),
         );
     }
   }
@@ -260,7 +295,7 @@ export class ArchiveComponent implements OnDestroy {
     a: Article,
     b: Article,
     column: string,
-    direction: string
+    direction: string,
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
@@ -282,7 +317,7 @@ export class ArchiveComponent implements OnDestroy {
       case 'cardId':
         return (
           (this.getCardName(a.cardId).toLowerCase() <
-            this.getCardName(b.cardId).toLowerCase()
+          this.getCardName(b.cardId).toLowerCase()
             ? -1
             : 1) * (isAsc ? 1 : -1)
         );
@@ -330,7 +365,7 @@ export class ArchiveComponent implements OnDestroy {
           article: userArticle.article,
           useUrl: useUrl,
           exhibitId: this.exhibitId,
-        }
+        },
       });
       dialogRef.componentInstance.editComplete.subscribe((result) => {
         dialogRef.close();
@@ -375,7 +410,10 @@ export class ArchiveComponent implements OnDestroy {
               this.snackBar.open('Article shared.', 'OK', { duration: 5000 });
             },
             error: (err) => {
-              const message = err?.error?.detail || err?.error?.title || 'The article could not be shared.';
+              const message =
+                err?.error?.detail ||
+                err?.error?.title ||
+                'The article could not be shared.';
               this.snackBar.open(message, 'OK', { duration: 5000 });
             },
           });
@@ -412,7 +450,10 @@ export class ArchiveComponent implements OnDestroy {
         if (!this.showCardList.some((c) => c.id === card.id)) {
           this.showCardList.push(card);
         }
-        if (tc.canPostArticles && !this.postCardList.some((c) => c.id === card.id)) {
+        if (
+          tc.canPostArticles &&
+          !this.postCardList.some((c) => c.id === card.id)
+        ) {
           this.postCardList.push(card);
         }
       });

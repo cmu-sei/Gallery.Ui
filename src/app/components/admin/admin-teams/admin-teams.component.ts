@@ -3,19 +3,30 @@
 // project root for license information or contact permission@sei.cmu.edu for full terms.
 
 import { Component, OnInit, OnDestroy, inject, input } from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Team, User } from 'src/app/generated/api';
 import { TeamDataService } from 'src/app/data/team/team-data.service';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { UserQuery } from 'src/app/data/user/user.query';
-import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
+import {
+  ComnSettingsService,
+  CrucibleDialogService,
+} from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminTeamEditDialogComponent } from 'src/app/components/admin/admin-team-edit-dialog/admin-team-edit-dialog.component';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatSuffix } from '@angular/material/form-field';
@@ -25,10 +36,26 @@ import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-    selector: 'app-admin-teams',
-    templateUrl: './admin-teams.component.html',
-    styleUrls: ['./admin-teams.component.scss'],
-    imports: [MatAccordion, MatSort, MatIconButton, MatIcon, MatSortHeader, MatFormField, MatInput, FormsModule, ReactiveFormsModule, MatSuffix, MatExpansionPanel, MatExpansionPanelHeader, AdminTeamUsersComponent, MatCard, MatProgressSpinner]
+  selector: 'app-admin-teams',
+  templateUrl: './admin-teams.component.html',
+  styleUrls: ['./admin-teams.component.scss'],
+  imports: [
+    MatAccordion,
+    MatSort,
+    MatIconButton,
+    MatIcon,
+    MatSortHeader,
+    MatFormField,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSuffix,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    AdminTeamUsersComponent,
+    MatCard,
+    MatProgressSpinner,
+  ],
 })
 export class AdminTeamsComponent implements OnInit, OnDestroy {
   private settingsService = inject(ComnSettingsService);
@@ -66,7 +93,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
       .subscribe((teams) => {
         this.teamList = teams ? teams : [];
         this.sortedTeams = this.getSortedTeams(
-          this.getFilteredTeams(this.teamList)
+          this.getFilteredTeams(this.teamList),
         );
       });
     this.topbarColor = this.settingsService.settings.AppTopBarHexColor
@@ -83,7 +110,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
       .subscribe((term) => {
         this.filterString = term;
         this.sortedTeams = this.getSortedTeams(
-          this.getFilteredTeams(this.teamList)
+          this.getFilteredTeams(this.teamList),
         );
       });
   }
@@ -168,7 +195,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
     this.sort =
       sort && sort.direction ? sort : { active: 'shortName', direction: 'asc' };
     this.sortedTeams = this.getSortedTeams(
-      this.getFilteredTeams(this.teamList)
+      this.getFilteredTeams(this.teamList),
     );
   }
 
@@ -187,8 +214,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
           const aShortName = a.shortName ? a.shortName.toLowerCase() : '';
           const aName = a.name ? a.name.toLowerCase() : '';
           return (
-            aShortName.includes(filterString) ||
-            aName.includes(filterString)
+            aShortName.includes(filterString) || aName.includes(filterString)
           );
         });
       }
@@ -199,7 +225,7 @@ export class AdminTeamsComponent implements OnInit, OnDestroy {
   getSortedTeams(teams: Team[]) {
     if (teams) {
       teams.sort((a, b) =>
-        this.sortTeams(a, b, this.sort.active, this.sort.direction)
+        this.sortTeams(a, b, this.sort.active, this.sort.direction),
       );
     }
     return teams;

@@ -18,12 +18,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div>
           <mat-form-field class="full-width">
             <mat-label>Name</mat-label>
-            <input type="text" matInput [formControl]="teamNameFormControl" placeholder="Name (required)"
-              (blur)="saveTeam('name')" value="{{data.team.name}}">
+            <input
+              type="text"
+              matInput
+              [formControl]="teamNameFormControl"
+              placeholder="Name (required)"
+              (blur)="saveTeam('name')"
+              value="{{ data.team.name }}"
+            />
             @if (teamNameFormControl.hasError('required')) {
-            <mat-error>
-              Name is <strong>required</strong>!
-            </mat-error>
+              <mat-error> Name is <strong>required</strong>! </mat-error>
             }
           </mat-form-field>
         </div>
@@ -32,12 +36,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div>
           <mat-form-field class="full-width">
             <mat-label>Short Name</mat-label>
-            <input type="text" matInput [formControl]="teamShortNameFormControl" placeholder="Short Name (required)"
-              (blur)="saveTeam('shortName')" value="{{data.team.shortName}}">
+            <input
+              type="text"
+              matInput
+              [formControl]="teamShortNameFormControl"
+              placeholder="Short Name (required)"
+              (blur)="saveTeam('shortName')"
+              value="{{ data.team.shortName }}"
+            />
             @if (teamShortNameFormControl.hasError('required')) {
-            <mat-error>
-              Short Name is <strong>required</strong>
-            </mat-error>
+              <mat-error> Short Name is <strong>required</strong> </mat-error>
             }
           </mat-form-field>
         </div>
@@ -46,8 +54,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div>
           <mat-form-field class="full-width">
             <mat-label>Email</mat-label>
-            <input matInput placeholder="Email" [formControl]="emailFormControl" (blur)="saveTeam('email')"
-              value="{{data.team.email}}">
+            <input
+              matInput
+              placeholder="Email"
+              [formControl]="emailFormControl"
+              (blur)="saveTeam('email')"
+              value="{{ data.team.email }}"
+            />
           </mat-form-field>
         </div>
       </div>
