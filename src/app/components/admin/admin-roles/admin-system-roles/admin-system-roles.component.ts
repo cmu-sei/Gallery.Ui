@@ -3,9 +3,27 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
  Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 */
 
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+} from '@angular/material/table';
 import { CrucibleDialogService } from '@cmusei/crucible-common';
 import { SystemPermission, SystemRole } from 'src/app/generated/api';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
@@ -25,10 +43,26 @@ import { AsyncPipe } from '@angular/common';
 const NAME_VALUE = 'nameValue';
 
 @Component({
-    selector: 'app-admin-system-roles',
-    templateUrl: './admin-system-roles.component.html',
-    styleUrls: ['./admin-system-roles.component.scss'],
-    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatIconButton, MatTooltip, MatIcon, MatCellDef, MatCell, MatCheckbox, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe]
+  selector: 'app-admin-system-roles',
+  templateUrl: './admin-system-roles.component.html',
+  styleUrls: ['./admin-system-roles.component.scss'],
+  imports: [
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MatCellDef,
+    MatCell,
+    MatCheckbox,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    AsyncPipe,
+  ],
 })
 export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   private roleService = inject(RoleDataService);
@@ -52,30 +86,37 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
 
   public roles$ = this.roleService.roles$.pipe(
     map((roles) =>
-      roles.filter(r => r.name).sort((a, b) => {
-        // Sort by 'immutable' property first (false comes after true)
-        if (a.immutable !== b.immutable) {
-          return a.immutable ? -1 : 1; // Put `true` before `false`
-        }
-        // If 'immutable' values are the same, sort by 'name' (case-insensitive)
-        return a.name?.localeCompare(b.name);
-      })
-    )
+      roles
+        .filter((r) => r.name)
+        .sort((a, b) => {
+          // Sort by 'immutable' property first (false comes after true)
+          if (a.immutable !== b.immutable) {
+            return a.immutable ? -1 : 1; // Put `true` before `false`
+          }
+          // If 'immutable' values are the same, sort by 'name' (case-insensitive)
+          return a.name?.localeCompare(b.name);
+        }),
+    ),
   );
 
   public displayedColumns$ = this.roles$.pipe(
     map((x) => {
       const columnNames = x.map((y) => y.name);
       return ['permissions', ...columnNames];
-    })
+    }),
   );
 
   ngOnInit(): void {
     this.roleService.getRoles().subscribe();
-    this.permissionDataService.load().pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      this.canEdit = this.permissionDataService.hasPermission(SystemPermission.ManageRoles);
-      this.changeDetectorRef.detectChanges();
-    });
+    this.permissionDataService
+      .load()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.canEdit = this.permissionDataService.hasPermission(
+          SystemPermission.ManageRoles,
+        );
+        this.changeDetectorRef.detectChanges();
+      });
   }
 
   ngOnDestroy(): void {
@@ -98,7 +139,7 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
   setPermission(
     permission: string,
     role: SystemRole,
-    event: MatCheckboxChange
+    event: MatCheckboxChange,
   ) {
     if (permission === this.allPermission) {
       role.allPermissions = event.checked;
@@ -107,7 +148,7 @@ export class AdminSystemRolesComponent implements OnInit, OnDestroy {
         role.permissions.push(permission as SystemPermission);
       } else if (!event.checked) {
         role.permissions = role.permissions.filter(
-          (x) => x !== (permission as SystemPermission)
+          (x) => x !== (permission as SystemPermission),
         );
       }
     }

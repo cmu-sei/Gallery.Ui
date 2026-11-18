@@ -16,6 +16,8 @@ export const ITEM_STATUS_ORDER: ItemStatus[] = [
 
 // the global class that sets --item-status-color; a missing or unknown status shows as gray rather than colorless
 export function itemStatusClass(itemStatus: ItemStatus): string {
-  const known = ITEM_STATUS_ORDER.includes(itemStatus) ? itemStatus : ItemStatus.Gray;
+  const known = ITEM_STATUS_ORDER.includes(itemStatus)
+    ? itemStatus
+    : ItemStatus.Gray;
   return known.toLowerCase() + '-status';
 }

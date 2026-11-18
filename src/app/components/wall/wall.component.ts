@@ -1,9 +1,21 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-
-import { Component, Input, OnDestroy, DOCUMENT, inject, input, output } from '@angular/core';
-import { TeamCard, UserArticle, ItemStatus, Exhibit } from 'src/app/generated/api/model/models';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  DOCUMENT,
+  inject,
+  input,
+  output,
+} from '@angular/core';
+import {
+  TeamCard,
+  UserArticle,
+  ItemStatus,
+  Exhibit,
+} from 'src/app/generated/api/model/models';
 import { Card } from 'src/app/data/card/card.store';
 import { CardQuery } from 'src/app/data/card/card.query';
 import { TeamCardQuery } from 'src/app/data/team-card/team-card.query';
@@ -21,10 +33,10 @@ import { MatIcon } from '@angular/material/icon';
 import { MatCard } from '@angular/material/card';
 
 @Component({
-    selector: 'app-wall',
-    templateUrl: './wall.component.html',
-    styleUrls: ['./wall.component.scss'],
-    imports: [MatButton, TeamSelectorComponent, MatIconButton, MatIcon, MatCard]
+  selector: 'app-wall',
+  templateUrl: './wall.component.html',
+  styleUrls: ['./wall.component.scss'],
+  imports: [MatButton, TeamSelectorComponent, MatIconButton, MatIcon, MatCard],
 })
 export class WallComponent implements OnDestroy {
   private _document = inject<HTMLDocument>(DOCUMENT);
@@ -50,22 +62,26 @@ export class WallComponent implements OnDestroy {
   private unsubscribe$ = new Subject();
 
   constructor() {
-    this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Wall';
-    this.cardQuery.selectAll()
+    this._document.getElementById('appTitle').innerHTML =
+      this.settingsService.settings.AppTitle + ' Wall';
+    this.cardQuery
+      .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(cards => {
+      .subscribe((cards) => {
         this.cardList = cards;
         this.setShownCardList();
       });
-    this.teamCardQuery.selectAll()
+    this.teamCardQuery
+      .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(teamCards => {
+      .subscribe((teamCards) => {
         this.teamCardList = teamCards;
         this.setShownCardList();
       });
-    this.userArticleQuery.selectAll()
+    this.userArticleQuery
+      .selectAll()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(userArticles => {
+      .subscribe((userArticles) => {
         this.userArticleList = userArticles;
         this.setShownCardList();
       });
@@ -98,16 +114,22 @@ export class WallComponent implements OnDestroy {
 
   setShownCardList() {
     const shownCardList: Card[] = [];
-    this.cardList.forEach(card => {
-      const teamCard = this.teamCardList.find(tc => tc.cardId === card.id);
+    this.cardList.forEach((card) => {
+      const teamCard = this.teamCardList.find((tc) => tc.cardId === card.id);
       if (teamCard && teamCard.isShownOnWall) {
         const cardToAdd = { ...card };
         const userArticles = this.userArticleList
-          .filter(ua => ua.article.cardId === card.id)
-          .sort((a: UserArticle, b: UserArticle) => a.actualDatePosted.getTime() > b.actualDatePosted.getTime() ? -1 : 1);
+          .filter((ua) => ua.article.cardId === card.id)
+          .sort((a: UserArticle, b: UserArticle) =>
+            a.actualDatePosted.getTime() > b.actualDatePosted.getTime()
+              ? -1
+              : 1,
+          );
         if (userArticles.length > 0) {
           cardToAdd.datePosted = userArticles[0].article?.datePosted;
-          cardToAdd.unreadCount = userArticles.filter(ua => !ua.isRead).length;
+          cardToAdd.unreadCount = userArticles.filter(
+            (ua) => !ua.isRead,
+          ).length;
           cardToAdd.status = userArticles[0].article?.status;
         } else {
           cardToAdd.datePosted = new Date('1/1/1900');
@@ -123,18 +145,20 @@ export class WallComponent implements OnDestroy {
   advanceExhibit() {
     if (!this.exhibit?.id || this.isAdvancing) return;
     this.isAdvancing = true;
-    this.exhibitDataService.advance(this.exhibit.id)
-      .subscribe({
-        next: (updatedExhibit) => {
-          this.isAdvancing = false;
-          this.exhibitDataService.updateStore(updatedExhibit);
-        },
-        error: (err) => {
-          this.isAdvancing = false;
-          const message = err?.error?.detail || err?.error?.title || 'Already at the last move/inject.';
-          this.snackBar.open(message, 'OK', { duration: 5000 });
-        }
-      });
+    this.exhibitDataService.advance(this.exhibit.id).subscribe({
+      next: (updatedExhibit) => {
+        this.isAdvancing = false;
+        this.exhibitDataService.updateStore(updatedExhibit);
+      },
+      error: (err) => {
+        this.isAdvancing = false;
+        const message =
+          err?.error?.detail ||
+          err?.error?.title ||
+          'Already at the last move/inject.';
+        this.snackBar.open(message, 'OK', { duration: 5000 });
+      },
+    });
   }
 
   changeTeamRequest(teamId: string) {
@@ -145,5 +169,4 @@ export class WallComponent implements OnDestroy {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

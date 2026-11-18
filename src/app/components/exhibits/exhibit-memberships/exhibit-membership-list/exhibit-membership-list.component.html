@@ -7,26 +7,52 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <mat-toolbar class="background">
     <mat-toolbar-row>
       <mat-icon class="mdi-24px" fontIcon="mdi-account-group" />
-      <p>Users/Groups</p>
-    </mat-toolbar-row><mat-toolbar-row>
+      <p>Users/Groups</p> </mat-toolbar-row
+    ><mat-toolbar-row>
       <mat-form-field class="w-50">
         <mat-label>Search</mat-label>
-        <input matInput [(ngModel)]="filterString" (keyup)="applyFilter($event)" #input autocomplete="off" />
+        <input
+          matInput
+          [(ngModel)]="filterString"
+          (keyup)="applyFilter($event)"
+          #input
+          autocomplete="off"
+        />
         @if (filterString) {
-        <button matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter()">
-          <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
-        </button>
+          <button
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="clearFilter()"
+          >
+            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
+          </button>
         }
       </mat-form-field>
-      <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page of members" />
-    </mat-toolbar-row></mat-toolbar>
-  <table mat-table matSort matSortActive="name" matSortDirection="asc" [dataSource]="dataSource" class="w-100">
+      <mat-paginator
+        [pageSizeOptions]="[10, 25, 50, 100]"
+        aria-label="Select page of members"
+      /> </mat-toolbar-row
+  ></mat-toolbar>
+  <table
+    mat-table
+    matSort
+    matSortActive="name"
+    matSortDirection="asc"
+    [dataSource]="dataSource"
+    class="w-100"
+  >
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
       <td mat-cell *matCellDef="let model">
-        <button mat-icon-button ngxClipboard [cbContent]="model.id"
-          (cbOnSuccess)="snackBar.open('Copied to clipboard', 'Dismiss')" (click)="$event.stopPropagation()"
-          title="Copy:  {{ model.id }}">
+        <button
+          mat-icon-button
+          ngxClipboard
+          [cbContent]="model.id"
+          (cbOnSuccess)="snackBar.open('Copied to clipboard', 'Dismiss')"
+          (click)="$event.stopPropagation()"
+          title="Copy:  {{ model.id }}"
+        >
           <mat-icon class="mdi-24px" fontIcon="mdi-content-copy" />
         </button>
         {{ model.name }}
@@ -43,9 +69,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let model">
-        <button mat-icon-button (click)="add(model.id, model.type)" style="outline: none;" title="Add {{ model.name }}"
-          [disabled]="!canEdit()">
-          <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline" />
+        <button
+          mat-icon-button
+          (click)="add(model.id, model.type)"
+          style="outline: none"
+          title="Add {{ model.name }}"
+          [disabled]="!canEdit()"
+        >
+          <mat-icon
+            class="mdi-24px center-self"
+            fontIcon="mdi-plus-circle-outline"
+          />
         </button>
       </td>
     </ng-container>

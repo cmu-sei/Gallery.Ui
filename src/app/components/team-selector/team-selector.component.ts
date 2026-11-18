@@ -13,10 +13,10 @@ import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
 
 @Component({
-    selector: 'app-team-selector',
-    templateUrl: './team-selector.component.html',
-    styleUrls: ['./team-selector.component.scss'],
-    imports: [MatSelect, MatOption]
+  selector: 'app-team-selector',
+  templateUrl: './team-selector.component.html',
+  styleUrls: ['./team-selector.component.scss'],
+  imports: [MatSelect, MatOption],
 })
 export class TeamSelectorComponent implements OnDestroy {
   private teamDataService = inject(TeamDataService);
@@ -27,13 +27,19 @@ export class TeamSelectorComponent implements OnDestroy {
   selectedTeamId = '';
   private unsubscribe$ = new Subject();
 
-  constructor () {
-    this.teamQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(teams => {
-      this.teamList = teams;
-    });
-    this.teamQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(id => {
-      this.selectedTeamId = id ? id : this.selectedTeamId;
-    });
+  constructor() {
+    this.teamQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((teams) => {
+        this.teamList = teams;
+      });
+    this.teamQuery
+      .selectActiveId()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((id) => {
+        this.selectedTeamId = id ? id : this.selectedTeamId;
+      });
     this.selectedTeamId = this.teamQuery.getActiveId();
   }
 
@@ -54,5 +60,4 @@ export class TeamSelectorComponent implements OnDestroy {
     this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
-
 }

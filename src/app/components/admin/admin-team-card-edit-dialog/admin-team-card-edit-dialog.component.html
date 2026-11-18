@@ -12,70 +12,96 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   (submit)="handleEditComplete(true)"
   (cancel)="handleEditComplete(false)"
 >
-@if (!!data && data.teamCard !== undefined && data.teamCard !== null) {
-<div crucibleDialogContent>
-  <div>
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Team</mat-label>
-        <mat-select placeholder="Team" [formControl]="teamIdFormControl" multiple
-          (selectionChange)="saveTeamCard('teamId')">
-          <mat-option [value]="ALL_TEAMS">All Teams</mat-option>
-          @for (team of data.teamList; track team) {
-          <mat-option [value]="team.id" [matTooltip]="team.id" matTooltipPosition="right">
-            {{ team.name }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+  @if (!!data && data.teamCard !== undefined && data.teamCard !== null) {
+    <div crucibleDialogContent>
+      <div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Team</mat-label>
+            <mat-select
+              placeholder="Team"
+              [formControl]="teamIdFormControl"
+              multiple
+              (selectionChange)="saveTeamCard('teamId')"
+            >
+              <mat-option [value]="ALL_TEAMS">All Teams</mat-option>
+              @for (team of data.teamList; track team) {
+                <mat-option
+                  [value]="team.id"
+                  [matTooltip]="team.id"
+                  matTooltipPosition="right"
+                >
+                  {{ team.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div fx>
+          <mat-form-field class="full-width">
+            <mat-label>Card</mat-label>
+            <mat-select
+              placeholder="Card"
+              [formControl]="cardIdFormControl"
+              (selectionChange)="saveTeamCard('cardId')"
+            >
+              @for (card of data.cardList; track card) {
+                <mat-option
+                  [value]="card.id"
+                  [matTooltip]="card.id"
+                  matTooltipPosition="right"
+                >
+                  {{ card.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="short-width">
+            <mat-label>Move</mat-label>
+            <input
+              matInput
+              placeholder="Move"
+              [formControl]="moveFormControl"
+              (blur)="saveTeamCard('move')"
+              value="{{ data.teamCard.move }}"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="short-width">
+            <mat-label>Inject</mat-label>
+            <input
+              matInput
+              placeholder="Inject"
+              [formControl]="injectFormControl"
+              (blur)="saveTeamCard('inject')"
+              value="{{ data.teamCard.inject }}"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div class="full-width">
+          <mat-checkbox [formControl]="isShownOnWallFormControl">
+            Is Shown On Wall
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div class="full-width">
+          <mat-checkbox [formControl]="canPostArticlesFormControl">
+            Can Post New Articles
+          </mat-checkbox>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="add-margin">
-    <div fx>
-      <mat-form-field class="full-width">
-        <mat-label>Card</mat-label>
-        <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveTeamCard('cardId')">
-          @for (card of data.cardList; track card) {
-          <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
-            {{card.name}}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="short-width">
-        <mat-label>Move</mat-label>
-        <input matInput placeholder="Move" [formControl]="moveFormControl" (blur)="saveTeamCard('move')"
-          value="{{data.teamCard.move}}" />
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="short-width">
-        <mat-label>Inject</mat-label>
-        <input matInput placeholder="Inject" [formControl]="injectFormControl" (blur)="saveTeamCard('inject')"
-          value="{{data.teamCard.inject}}" />
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div class="full-width">
-      <mat-checkbox [formControl]="isShownOnWallFormControl">
-        Is Shown On Wall
-      </mat-checkbox>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div class="full-width">
-      <mat-checkbox [formControl]="canPostArticlesFormControl">
-        Can Post New Articles
-      </mat-checkbox>
-    </div>
-  </div>
-</div>
-}
+  }
 </crucible-dialog>

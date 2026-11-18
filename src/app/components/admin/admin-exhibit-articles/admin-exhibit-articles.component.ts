@@ -1,10 +1,26 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, inject as inject_1, input } from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  inject as inject_1,
+  input,
+} from '@angular/core';
+import {
+  UntypedFormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
-import { Article, Exhibit, ItemStatus, SourceType, Team} from 'src/app/generated/api/model/models';
+import {
+  Article,
+  Exhibit,
+  ItemStatus,
+  SourceType,
+  Team,
+} from 'src/app/generated/api/model/models';
 import { ArticleDataService } from 'src/app/data/article/article-data.service';
 import { ArticleQuery } from 'src/app/data/article/article.query';
 import { ArticleTeamDataService } from 'src/app/data/team/article-team-data.service';
@@ -13,22 +29,49 @@ import { CardQuery } from 'src/app/data/card/card.query';
 import { CrucibleDialogService } from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
 import { MatInput } from '@angular/material/input';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
 import { AdminExhibitArticleTeamsComponent } from '../admin-exhibit-article-teams/admin-exhibit-article-teams.component';
 import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-    selector: 'app-admin-exhibit-articles',
-    templateUrl: './admin-exhibit-articles.component.html',
-    styleUrls: ['./admin-exhibit-articles.component.scss'],
-    imports: [MatFormField, MatLabel, MatSelect, MatOption, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatAccordion, MatSort, MatSortHeader, MatExpansionPanel, MatExpansionPanelHeader, AdminExhibitArticleTeamsComponent, MatCard, MatProgressSpinner]
+  selector: 'app-admin-exhibit-articles',
+  templateUrl: './admin-exhibit-articles.component.html',
+  styleUrls: ['./admin-exhibit-articles.component.scss'],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconButton,
+    MatSuffix,
+    MatIcon,
+    MatAccordion,
+    MatSort,
+    MatSortHeader,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    AdminExhibitArticleTeamsComponent,
+    MatCard,
+    MatProgressSpinner,
+  ],
 })
 export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   private crucibleDialog = inject_1(CrucibleDialogService);
@@ -49,7 +92,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   selectedMove = -1;
   moveList: number[] = [];
   selectedCardId = '';
-  sort: Sort = {active: 'move', direction: 'asc'};
+  sort: Sort = { active: 'move', direction: 'asc' };
   sourceTypeList: SourceType[] = [
     SourceType.Intel,
     SourceType.News,
@@ -57,20 +100,26 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     SourceType.Social,
     SourceType.Phone,
     SourceType.Email,
-    SourceType.Orders
+    SourceType.Orders,
   ];
   private unsubscribe$ = new Subject();
 
   constructor() {
     this.articleDataService.unload();
     this.sortChanged(this.sort);
-    this.cardQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(cards => {
-      this.cardList = cards;
-    });
-    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
-      this.articleList = articles;
-      this.sortChanged(this.sort);
-    });
+    this.cardQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((cards) => {
+        this.cardList = cards;
+      });
+    this.articleQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((articles) => {
+        this.articleList = articles;
+        this.sortChanged(this.sort);
+      });
     this.filterControl.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((term) => {
@@ -90,17 +139,20 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   }
 
   loadInitialData() {
-    this.articleQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(articles => {
-      this.articleList = Array.from(articles);
-      const moves: number[] = [];
-      articles.forEach((a) => {
-        if (!moves.includes(+a.move)) {
-          moves.push(+a.move);
-        }
+    this.articleQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((articles) => {
+        this.articleList = Array.from(articles);
+        const moves: number[] = [];
+        articles.forEach((a) => {
+          if (!moves.includes(+a.move)) {
+            moves.push(+a.move);
+          }
+        });
+        this.moveList = moves.sort((a, b) => a - b);
+        this.applyFilter();
       });
-      this.moveList = moves.sort((a, b) => a - b);
-      this.applyFilter();
-    });
   }
 
   addArticleTeam(articleId: string, teamId: string) {
@@ -113,7 +165,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
       status: ItemStatus.Gray,
       sourceType: SourceType.Intel,
       sourceName: '',
-      datePosted: datePosted
+      datePosted: datePosted,
     };
     this.saveArticleTeam(articleTeam);
   }
@@ -143,13 +195,16 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   }
 
   applyFilter() {
-    this.sortedArticles = this.articleList.filter(article =>
-      (!this.filterString ||
-        article.name.toLowerCase().includes(this.filterString) ||
-        this.getCardName(article.cardId).toLowerCase().includes(this.filterString) ||
-        article.sourceName.toLowerCase().includes(this.filterString)) &&
-      (!this.selectedCardId || article.cardId === this.selectedCardId) &&
-      (+this.selectedMove === -1 || +article.move === +this.selectedMove)
+    this.sortedArticles = this.articleList.filter(
+      (article) =>
+        (!this.filterString ||
+          article.name.toLowerCase().includes(this.filterString) ||
+          this.getCardName(article.cardId)
+            .toLowerCase()
+            .includes(this.filterString) ||
+          article.sourceName.toLowerCase().includes(this.filterString)) &&
+        (!this.selectedCardId || article.cardId === this.selectedCardId) &&
+        (+this.selectedMove === -1 || +article.move === +this.selectedMove),
     );
     this.sortChanged(this.sort);
   }
@@ -170,26 +225,33 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
 
   sortChanged(sort: Sort) {
     this.sort = sort;
-    this.sortedArticles.sort((a, b) => this.sortArticles(a, b, sort.active, sort.direction));
+    this.sortedArticles.sort((a, b) =>
+      this.sortArticles(a, b, sort.active, sort.direction),
+    );
   }
 
   getFilteredArticles(articles: Article[]): Article[] {
     let filteredArticles = articles;
     if (articles && articles.length > 0 && this.filterString) {
       const filterString = this.filterString.toLowerCase();
-      filteredArticles = articles
-        .filter((a) => (!this.filterString ||
+      filteredArticles = articles.filter(
+        (a) =>
+          !this.filterString ||
           a.name.toLowerCase().includes(this.filterString.toLowerCase()) ||
-          this.getCardName(a.cardId).toLowerCase().includes(this.filterString.toLowerCase()) ||
-          a.sourceName.toLowerCase().includes(this.filterString.toLowerCase())
-        ));
+          this.getCardName(a.cardId)
+            .toLowerCase()
+            .includes(this.filterString.toLowerCase()) ||
+          a.sourceName.toLowerCase().includes(this.filterString.toLowerCase()),
+      );
     }
     return filteredArticles;
   }
 
   getSortedArticles(articles: Article[]) {
     if (articles) {
-      articles.sort((a, b) => this.sortArticles(a, b, this.sort.active, this.sort.direction));
+      articles.sort((a, b) =>
+        this.sortArticles(a, b, this.sort.active, this.sort.direction),
+      );
     }
     return articles;
   }
@@ -198,7 +260,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
     a: Article,
     b: Article,
     column: string,
-    direction: string
+    direction: string,
   ) {
     const isAsc = direction !== 'desc';
     switch (column) {
@@ -212,60 +274,40 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
         const bVal = this.getCardName(b.cardId).toLowerCase();
         if (aVal === bVal) {
           if (+a.move === +b.move) {
-            return (
-              (+a.inject < +b.inject ? -1 : 1) *
-              (isAsc ? 1 : -1)
-            );
+            return (+a.inject < +b.inject ? -1 : 1) * (isAsc ? 1 : -1);
           }
-          return (
-            (+a.move < +b.move ? -1 : 1) *
-            (isAsc ? 1 : -1)
-          );
+          return (+a.move < +b.move ? -1 : 1) * (isAsc ? 1 : -1);
         }
-        return (
-          (aVal < bVal ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (aVal < bVal ? -1 : 1) * (isAsc ? 1 : -1);
       case 'move':
         if (+a.move === +b.move) {
           if (+a.inject === +b.inject) {
             return (
-              (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
-              (isAsc ? 1 : -1)
+              (this.getCardName(a.cardId).toLowerCase() <
+              this.getCardName(b.cardId).toLowerCase()
+                ? -1
+                : 1) * (isAsc ? 1 : -1)
             );
           }
-          return (
-            (+a.inject < +b.inject ? -1 : 1) *
-            (isAsc ? 1 : -1)
-          );
+          return (+a.inject < +b.inject ? -1 : 1) * (isAsc ? 1 : -1);
         }
-        return (
-          (+a.move < +b.move ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (+a.move < +b.move ? -1 : 1) * (isAsc ? 1 : -1);
       case 'inject':
-        return (
-          (+a.inject < +b.inject ? -1 : 1) *
-          (isAsc ? 1 : -1)
-        );
+        return (+a.inject < +b.inject ? -1 : 1) * (isAsc ? 1 : -1);
       case 'sourceName':
         if (a.sourceName === b.sourceName) {
           if (+a.move === +b.move) {
             if (+a.inject === +b.inject) {
               return (
-                (this.getCardName(a.cardId).toLowerCase() < this.getCardName(b.cardId).toLowerCase() ? -1 : 1) *
-                (isAsc ? 1 : -1)
+                (this.getCardName(a.cardId).toLowerCase() <
+                this.getCardName(b.cardId).toLowerCase()
+                  ? -1
+                  : 1) * (isAsc ? 1 : -1)
               );
             }
-            return (
-              (+a.inject < +b.inject ? -1 : 1) *
-              (isAsc ? 1 : -1)
-            );
+            return (+a.inject < +b.inject ? -1 : 1) * (isAsc ? 1 : -1);
           }
-          return (
-            (+a.move < +b.move ? -1 : 1) *
-            (isAsc ? 1 : -1)
-          );
+          return (+a.move < +b.move ? -1 : 1) * (isAsc ? 1 : -1);
         }
         return (
           (a.sourceName.toLowerCase() < b.sourceName.toLowerCase() ? -1 : 1) *
@@ -277,7 +319,7 @@ export class AdminExhibitArticlesComponent implements OnDestroy, OnInit {
   }
 
   getCardName(id: string) {
-    const card = id ? this.cardList.find(c => c.id === id) : null;
+    const card = id ? this.cardList.find((c) => c.id === id) : null;
     const name = card ? card.name : '';
     return name;
   }

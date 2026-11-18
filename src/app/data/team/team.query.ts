@@ -2,10 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Order, Query, QueryConfig, QueryEntity } from '@datorama/akita';
-import {
-  TeamState,
-  TeamStore,
-} from './team.store';
+import { TeamState, TeamStore } from './team.store';
 import { Team } from 'src/app/generated/api';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -24,7 +21,7 @@ export class TeamQuery extends QueryEntity<TeamState> {
     const store = inject(TeamStore);
 
     super(store);
-  
+
     this.store = store;
   }
 

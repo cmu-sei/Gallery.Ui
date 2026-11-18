@@ -22,7 +22,7 @@ export class CollectionQuery extends QueryEntity<CollectionState> {
     const store = inject(CollectionStore);
 
     super(store);
-  
+
     this.store = store;
   }
 

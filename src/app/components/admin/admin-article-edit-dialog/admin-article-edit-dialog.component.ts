@@ -3,21 +3,49 @@
 // project root for license information.
 
 import { Component, OnInit, inject as inject_1, output } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SourceType } from 'src/app/generated/api';
-import { ITEM_STATUS_ORDER, itemStatusClass } from 'src/app/utilities/item-status';
-import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
-import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
-import { MatFormField, MatLabel, MatError, MatSuffix } from '@angular/material/form-field';
+import {
+  ITEM_STATUS_ORDER,
+  itemStatusClass,
+} from 'src/app/utilities/item-status';
+import {
+  AngularEditorConfig,
+  AngularEditorModule,
+} from '@kolkov/angular-editor';
+import {
+  CrucibleDialogComponent,
+  CrucibleDialogContentDirective,
+} from '@cmusei/crucible-common';
+import {
+  MatFormField,
+  MatLabel,
+  MatError,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { NgxMatDatepickerInput, NgxMatDatetimepicker, NgxMatDatepickerActions, NgxMatDatepickerApply, NgxMatDatepickerCancel } from '@ngxmc/datetime-picker';
+import {
+  NgxMatDatepickerInput,
+  NgxMatDatetimepicker,
+  NgxMatDatepickerActions,
+  NgxMatDatepickerApply,
+  NgxMatDatepickerCancel,
+} from '@ngxmc/datetime-picker';
 import { MatDatepickerToggle } from '@angular/material/datepicker';
 import { MatButton } from '@angular/material/button';
 
@@ -25,7 +53,7 @@ import { MatButton } from '@angular/material/button';
 export class UserErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
+    form: FormGroupDirective | NgForm | null,
   ): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || isSubmitted));
@@ -33,10 +61,33 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'app-admin-article-edit-dialog',
-    templateUrl: './admin-article-edit-dialog.component.html',
-    styleUrls: ['./admin-article-edit-dialog.component.scss'],
-    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError, AngularEditorModule, MatSelect, MatOption, MatTooltip, MatCheckbox, NgxMatDatepickerInput, MatDatepickerToggle, MatSuffix, NgxMatDatetimepicker, NgxMatDatepickerActions, MatButton, NgxMatDatepickerApply, NgxMatDatepickerCancel, DatePipe]
+  selector: 'app-admin-article-edit-dialog',
+  templateUrl: './admin-article-edit-dialog.component.html',
+  styleUrls: ['./admin-article-edit-dialog.component.scss'],
+  imports: [
+    CrucibleDialogComponent,
+    CrucibleDialogContentDirective,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatError,
+    AngularEditorModule,
+    MatSelect,
+    MatOption,
+    MatTooltip,
+    MatCheckbox,
+    NgxMatDatepickerInput,
+    MatDatepickerToggle,
+    MatSuffix,
+    NgxMatDatetimepicker,
+    NgxMatDatepickerActions,
+    MatButton,
+    NgxMatDatepickerApply,
+    NgxMatDatepickerCancel,
+    DatePipe,
+  ],
 })
 export class AdminArticleEditDialogComponent implements OnInit {
   data = inject_1(MAT_DIALOG_DATA);
@@ -112,44 +163,50 @@ export class AdminArticleEditDialogComponent implements OnInit {
     // Initialize form controls after data is injected
     this.articleNameFormControl = new UntypedFormControl(
       this.data.article.name || '',
-      [Validators.required]
+      [Validators.required],
     );
     this.summaryFormControl = new UntypedFormControl(
       this.data.article.summary || '',
-      [Validators.required]
+      [Validators.required],
     );
     this.descriptionFormControl = new UntypedFormControl(
       this.data.article.description || '',
-      [Validators.required]
+      [Validators.required],
     );
     this.cardIdFormControl = new UntypedFormControl(
       this.data.article.cardId || '',
-      []
+      [],
     );
-    this.moveFormControl = new UntypedFormControl(this.data.article.move || 0, []);
+    this.moveFormControl = new UntypedFormControl(
+      this.data.article.move || 0,
+      [],
+    );
     this.injectFormControl = new UntypedFormControl(
       this.data.article.inject || 0,
-      []
+      [],
     );
     this.statusFormControl = new UntypedFormControl(
       this.data.article.status || '',
-      []
+      [],
     );
     this.sourceTypeFormControl = new UntypedFormControl(
       this.data.article.sourceType || '',
-      []
+      [],
     );
     this.sourceNameFormControl = new UntypedFormControl(
       this.data.article.sourceName || '',
-      []
+      [],
     );
-    this.urlFormControl = new UntypedFormControl(this.data.article.url || '', []);
+    this.urlFormControl = new UntypedFormControl(
+      this.data.article.url || '',
+      [],
+    );
     this.datePostedFormControl = new UntypedFormControl(
       this.data.article.datePosted || new Date(),
-      []
+      [],
     );
     this.openInNewTabFormControl = new UntypedFormControl(
-      this.data.article.openInNewTab
+      this.data.article.openInNewTab,
     );
     this.form = new UntypedFormGroup({
       name: this.articleNameFormControl,
@@ -185,7 +242,7 @@ export class AdminArticleEditDialogComponent implements OnInit {
       this.descriptionFormControl.value.toString()[0] === ' '
     ) {
       this.descriptionFormControl.setValue(
-        this.descriptionFormControl.value.toString().trim()
+        this.descriptionFormControl.value.toString().trim(),
       );
     }
   }
@@ -263,7 +320,9 @@ export class AdminArticleEditDialogComponent implements OnInit {
         break;
       case 'datePosted': {
         if (this.datePostedFormControl.value) {
-          this.data.article.datePosted = new Date(this.datePostedFormControl.value);
+          this.data.article.datePosted = new Date(
+            this.datePostedFormControl.value,
+          );
         }
         break;
       }
@@ -286,7 +345,7 @@ export class AdminArticleEditDialogComponent implements OnInit {
       const timeZone = this.getUserTimezone();
       const formatted = date.toLocaleTimeString('en-US', {
         timeZoneName: 'short',
-        timeZone
+        timeZone,
       });
       const parts = formatted.split(' ');
       return parts[parts.length - 1] || 'UTC';

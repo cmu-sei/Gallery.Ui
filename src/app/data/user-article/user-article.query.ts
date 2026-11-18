@@ -22,7 +22,7 @@ export class UserArticleQuery extends QueryEntity<UserArticleState> {
     const store = inject(UserArticleStore);
 
     super(store);
-  
+
     this.store = store;
   }
 

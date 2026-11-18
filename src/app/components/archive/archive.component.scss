@@ -1,7 +1,7 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
 
 $inset: 16px;
 $card-width-min: 300px;
@@ -163,8 +163,6 @@ $filters-own-row: 1280px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-
 
 .card-body {
   flex: 1;

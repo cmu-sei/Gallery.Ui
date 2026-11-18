@@ -2,10 +2,21 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, inject, output } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import {
+  CrucibleDialogComponent,
+  CrucibleDialogContentDirective,
+} from '@cmusei/crucible-common';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
@@ -13,7 +24,7 @@ import { MatInput } from '@angular/material/input';
 export class UserErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
+    form: FormGroupDirective | NgForm | null,
   ): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || isSubmitted));
@@ -21,10 +32,19 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'app-admin-team-edit-dialog',
-    templateUrl: './admin-team-edit-dialog.component.html',
-    styleUrls: ['./admin-team-edit-dialog.component.scss'],
-    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError]
+  selector: 'app-admin-team-edit-dialog',
+  templateUrl: './admin-team-edit-dialog.component.html',
+  styleUrls: ['./admin-team-edit-dialog.component.scss'],
+  imports: [
+    CrucibleDialogComponent,
+    CrucibleDialogContentDirective,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatError,
+  ],
 })
 export class AdminTeamEditDialogComponent {
   data = inject(MAT_DIALOG_DATA);
@@ -36,7 +56,7 @@ export class AdminTeamEditDialogComponent {
   ]);
   public teamShortNameFormControl = new UntypedFormControl(
     this.data.team.shortName,
-    [Validators.required]
+    [Validators.required],
   );
   public emailFormControl = new UntypedFormControl(this.data.team.email, []);
   public form = new UntypedFormGroup({
@@ -61,10 +81,10 @@ export class AdminTeamEditDialogComponent {
     if (!saveChanges) {
       this.editComplete.emit({ saveChanges: false, team: null });
     } else {
-      this.data.team.name = this.teamNameFormControl.value?.toString().trim() || '';
-      this.data.team.shortName = this.teamShortNameFormControl.value
-        ?.toString()
-        .trim() || '';
+      this.data.team.name =
+        this.teamNameFormControl.value?.toString().trim() || '';
+      this.data.team.shortName =
+        this.teamShortNameFormControl.value?.toString().trim() || '';
       if (this.errorFree) {
         this.editComplete.emit({
           saveChanges: saveChanges,

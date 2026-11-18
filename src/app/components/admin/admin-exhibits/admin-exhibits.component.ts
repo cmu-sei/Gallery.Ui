@@ -8,11 +8,31 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, OnDestroy, ViewChild, ElementRef, inject, input, viewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+} from '@angular/material/table';
 import {
   Collection,
   Exhibit,
@@ -25,7 +45,10 @@ import { CollectionDataService } from 'src/app/data/collection/collection-data.s
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
-import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
+import {
+  ComnSettingsService,
+  CrucibleDialogService,
+} from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,7 +62,10 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
 import { MatIconButton } from '@angular/material/button';
-import { MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
 import { AdminTeamsComponent } from '../admin-teams/admin-teams.component';
 import { AdminTeamCardsComponent } from '../admin-team-cards/admin-team-cards.component';
 import { AdminExhibitArticlesComponent } from '../admin-exhibit-articles/admin-exhibit-articles.component';
@@ -49,17 +75,20 @@ import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-    selector: 'app-admin-exhibits',
-    templateUrl: './admin-exhibits.component.html',
-    styleUrls: ['./admin-exhibits.component.scss'],
-    animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({ height: '0px', minHeight: '0' })),
-            state('expanded', style({ height: '*' })),
-            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-    ],
-    imports: [
+  selector: 'app-admin-exhibits',
+  templateUrl: './admin-exhibits.component.html',
+  styleUrls: ['./admin-exhibits.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'),
+      ),
+    ]),
+  ],
+  imports: [
     MatIcon,
     MatFormField,
     MatLabel,
@@ -88,8 +117,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatRow,
     MatCard,
     MatProgressSpinner,
-    DatePipe
-],
+    DatePipe,
+  ],
 })
 export class AdminExhibitsComponent implements OnDestroy {
   private settingsService = inject(ComnSettingsService);
@@ -112,7 +141,14 @@ export class AdminExhibitsComponent implements OnDestroy {
   exhibitList: Exhibit[] = [];
   isLoading = false;
   expandedExhibitId: string | null = null;
-  displayedColumns: string[] = ['actions', 'name', 'dateCreated', 'createdBy', 'currentMove', 'currentInject'];
+  displayedColumns: string[] = [
+    'actions',
+    'name',
+    'dateCreated',
+    'createdBy',
+    'currentMove',
+    'currentInject',
+  ];
   dataSource = new MatTableDataSource<Exhibit>();
   filterControl = new UntypedFormControl();
   filterString = '';
@@ -139,11 +175,15 @@ export class AdminExhibitsComponent implements OnDestroy {
       exhibit.currentMove?.toString().includes(filter) ||
       exhibit.currentInject?.toString().includes(filter);
 
-    this.dataSource.sortingDataAccessor = (exhibit: Exhibit, sortHeaderId: string) => {
+    this.dataSource.sortingDataAccessor = (
+      exhibit: Exhibit,
+      sortHeaderId: string,
+    ) => {
       if (sortHeaderId === 'dateCreated') {
-        const d = exhibit.dateCreated instanceof Date
-          ? exhibit.dateCreated
-          : new Date(exhibit.dateCreated as any);
+        const d =
+          exhibit.dateCreated instanceof Date
+            ? exhibit.dateCreated
+            : new Date(exhibit.dateCreated as any);
         return d.getTime();
       }
       return (exhibit as any)[sortHeaderId];
@@ -170,9 +210,13 @@ export class AdminExhibitsComponent implements OnDestroy {
       .subscribe((activeId) => {
         if (activeId && this.selectedCollectionId !== activeId) {
           this.selectedCollectionId = activeId;
-          this.canCreate = this.permissionDataService.canManageCollection(
-            this.selectedCollectionId
-          ) || this.permissionDataService.hasPermission(SystemPermission.CreateExhibits);
+          this.canCreate =
+            this.permissionDataService.canManageCollection(
+              this.selectedCollectionId,
+            ) ||
+            this.permissionDataService.hasPermission(
+              SystemPermission.CreateExhibits,
+            );
           this.exhibitDataService.loadByCollection(activeId);
         }
       });
@@ -206,7 +250,7 @@ export class AdminExhibitsComponent implements OnDestroy {
 
   applyFilter() {
     this.dataSource.data = this.exhibitList.filter(
-      (e) => e.collectionId === this.selectedCollectionId
+      (e) => e.collectionId === this.selectedCollectionId,
     );
     this.dataSource.filter = this.filterString.trim().toLowerCase();
   }
@@ -252,9 +296,8 @@ export class AdminExhibitsComponent implements OnDestroy {
     this.expandedExhibitId = isExpanded ? null : exhibit.id;
     this.exhibitDataService.setActive(this.expandedExhibitId);
     if (this.expandedExhibitId) {
-      this.canManageExpandedExhibit = this.permissionDataService.canManageExhibit(
-        this.expandedExhibitId
-      );
+      this.canManageExpandedExhibit =
+        this.permissionDataService.canManageExhibit(this.expandedExhibitId);
       this.exhibitDataService.loadById(this.expandedExhibitId);
       this.teamUserDataService.loadByExhibit(this.expandedExhibitId);
       this.teamDataService.loadByExhibitId(this.expandedExhibitId);
@@ -345,7 +388,7 @@ export class AdminExhibitsComponent implements OnDestroy {
       },
       () => {
         this.isBusy = false;
-      }
+      },
     );
   }
 

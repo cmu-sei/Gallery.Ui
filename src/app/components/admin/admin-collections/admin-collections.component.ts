@@ -8,18 +8,44 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, OnDestroy, AfterViewInit, ElementRef, inject, viewChild } from '@angular/core';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  OnDestroy,
+  AfterViewInit,
+  ElementRef,
+  inject,
+  viewChild,
+} from '@angular/core';
+import {
+  UntypedFormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+} from '@angular/material/table';
 import {
   Collection,
   SystemPermission,
 } from 'src/app/generated/api/model/models';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
-import { ComnSettingsService, CrucibleDialogService } from '@cmusei/crucible-common';
+import {
+  ComnSettingsService,
+  CrucibleDialogService,
+} from '@cmusei/crucible-common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -30,7 +56,10 @@ import { DatePipe } from '@angular/common';
 import { MatFormField, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatIconButton } from '@angular/material/button';
-import { MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
 import { AdminCardsComponent } from '../admin-cards/admin-cards.component';
 import { AdminArticlesComponent } from '../admin-articles/admin-articles.component';
 import { CollectionMembershipsComponent } from '../../collections/collection-memberships/collection-memberships/collection-memberships.component';
@@ -38,17 +67,20 @@ import { MatCard } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-    selector: 'app-admin-collections',
-    templateUrl: './admin-collections.component.html',
-    styleUrls: ['./admin-collections.component.scss'],
-    animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({ height: '0px', minHeight: '0' })),
-            state('expanded', style({ height: '*' })),
-            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-    ],
-    imports: [
+  selector: 'app-admin-collections',
+  templateUrl: './admin-collections.component.html',
+  styleUrls: ['./admin-collections.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'),
+      ),
+    ]),
+  ],
+  imports: [
     MatIcon,
     MatFormField,
     MatInput,
@@ -76,8 +108,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatRow,
     MatCard,
     MatProgressSpinner,
-    DatePipe
-],
+    DatePipe,
+  ],
 })
 export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   private settingsService = inject(ComnSettingsService);
@@ -91,7 +123,12 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   isLoading = false;
   editCollection: Collection = {};
   expandedCollectionId: string | null = null;
-  displayedColumns: string[] = ['actions', 'name', 'description', 'dateCreated'];
+  displayedColumns: string[] = [
+    'actions',
+    'name',
+    'description',
+    'dateCreated',
+  ];
   dataSource = new MatTableDataSource<Collection>();
   filterControl = new UntypedFormControl();
   filterString = '';
@@ -103,7 +140,10 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   readonly paginator = viewChild(MatPaginator);
 
   constructor() {
-    this.dataSource.filterPredicate = (collection: Collection, filter: string) =>
+    this.dataSource.filterPredicate = (
+      collection: Collection,
+      filter: string,
+    ) =>
       !filter ||
       collection.name?.toLowerCase().includes(filter) ||
       collection.description?.toLowerCase().includes(filter);
@@ -142,11 +182,15 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.matSort();
     this.dataSource.paginator = this.paginator();
-    this.dataSource.sortingDataAccessor = (collection: Collection, sortHeaderId: string) => {
+    this.dataSource.sortingDataAccessor = (
+      collection: Collection,
+      sortHeaderId: string,
+    ) => {
       if (sortHeaderId === 'dateCreated') {
-        const d = collection.dateCreated instanceof Date
-          ? collection.dateCreated
-          : new Date(collection.dateCreated as any);
+        const d =
+          collection.dateCreated instanceof Date
+            ? collection.dateCreated
+            : new Date(collection.dateCreated as any);
         return d.getTime();
       }
       return (collection as any)[sortHeaderId];
@@ -155,7 +199,7 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
 
   canCreateCollections(): boolean {
     return this.permissionDataService.hasPermission(
-      SystemPermission.CreateCollections
+      SystemPermission.CreateCollections,
     );
   }
 
@@ -212,7 +256,8 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
     this.crucibleDialog
       .confirm({
         title: 'Delete Collection',
-        message: 'Are you sure that you want to delete ' + collection.name + '?',
+        message:
+          'Are you sure that you want to delete ' + collection.name + '?',
         confirmText: 'Delete',
         cancelText: 'Cancel',
       })
@@ -250,7 +295,7 @@ export class AdminCollectionsComponent implements OnDestroy, AfterViewInit {
       },
       () => {
         this.isBusy = false;
-      }
+      },
     );
   }
 

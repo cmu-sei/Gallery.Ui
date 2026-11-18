@@ -18,12 +18,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div>
           <mat-form-field class="full-width">
             <mat-label>Name</mat-label>
-            <input type="text" matInput [formControl]="cardNameFormControl" placeholder="Name (required)"
-              (blur)="saveCard('name')" value="{{data.card.name}}">
+            <input
+              type="text"
+              matInput
+              [formControl]="cardNameFormControl"
+              placeholder="Name (required)"
+              (blur)="saveCard('name')"
+              value="{{ data.card.name }}"
+            />
             @if (cardNameFormControl.hasError('required')) {
-            <mat-error>
-              Name is <strong>required</strong>
-            </mat-error>
+              <mat-error> Name is <strong>required</strong> </mat-error>
             }
           </mat-form-field>
         </div>
@@ -32,8 +36,13 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div>
           <mat-form-field class="full-width">
             <mat-label>Description</mat-label>
-            <textarea matInput [formControl]="cardDescriptionFormControl" placeholder="Description"
-              (blur)="saveCard('description')" value="{{data.card.description}}"></textarea>
+            <textarea
+              matInput
+              [formControl]="cardDescriptionFormControl"
+              placeholder="Description"
+              (blur)="saveCard('description')"
+              value="{{ data.card.description }}"
+            ></textarea>
           </mat-form-field>
         </div>
       </div>

@@ -23,7 +23,7 @@ export class TeamUserQuery extends QueryEntity<TeamUserState> {
     const store = inject(TeamUserStore);
 
     super(store);
-  
+
     this.store = store;
   }
 

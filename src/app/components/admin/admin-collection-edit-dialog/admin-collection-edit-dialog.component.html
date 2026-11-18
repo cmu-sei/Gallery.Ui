@@ -4,7 +4,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <crucible-dialog
-  [dialogTitle]="data && data.collection && data.collection.id ? 'Edit Collection' : 'Add Collection'"
+  [dialogTitle]="
+    data && data.collection && data.collection.id
+      ? 'Edit Collection'
+      : 'Add Collection'
+  "
   [form]="form"
   submitLabel="Save"
   [submitDisabled]="!errorFree() || !form.dirty"
@@ -18,12 +22,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div>
           <mat-form-field class="full-width">
             <mat-label>Name</mat-label>
-            <input type="text" matInput [formControl]="collectionNameFormControl" placeholder="Name (required)"
-              (blur)="saveCollection('name')" value="{{data.collection.name}}">
+            <input
+              type="text"
+              matInput
+              [formControl]="collectionNameFormControl"
+              placeholder="Name (required)"
+              (blur)="saveCollection('name')"
+              value="{{ data.collection.name }}"
+            />
             @if (collectionNameFormControl.hasError('required')) {
-            <mat-error>
-              Name is <strong>required</strong>
-            </mat-error>
+              <mat-error> Name is <strong>required</strong> </mat-error>
             }
           </mat-form-field>
         </div>
@@ -32,12 +40,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <div>
           <mat-form-field class="full-width">
             <mat-label>Description</mat-label>
-            <textarea matInput placeholder="Description" [formControl]="descriptionFormControl"
-              (blur)="saveCollection('description')" value="{{data.collection.description}}"></textarea>
+            <textarea
+              matInput
+              placeholder="Description"
+              [formControl]="descriptionFormControl"
+              (blur)="saveCollection('description')"
+              value="{{ data.collection.description }}"
+            ></textarea>
             @if (descriptionFormControl.hasError('required')) {
-            <mat-error>
-              Description is <strong>required</strong>
-            </mat-error>
+              <mat-error> Description is <strong>required</strong> </mat-error>
             }
           </mat-form-field>
         </div>

@@ -4,10 +4,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import {
-  CollectionRole,
-  CollectionRolesService,
-} from 'src/app/generated/api';
+import { CollectionRole, CollectionRolesService } from 'src/app/generated/api';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +13,7 @@ export class CollectionRoleDataService {
   private collectionRolesService = inject(CollectionRolesService);
 
   private collectionRolesSubject = new BehaviorSubject<CollectionRole[]>([]);
-  public collectionRoles$ =
-    this.collectionRolesSubject.asObservable();
+  public collectionRoles$ = this.collectionRolesSubject.asObservable();
 
   loadRoles(): Observable<CollectionRole[]> {
     return this.collectionRolesService

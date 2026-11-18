@@ -8,12 +8,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="five-cell">
     <mat-form-field class="filter-selection">
       <mat-label>Team</mat-label>
-      <mat-select placeholder="Team" [(ngModel)]="selectedTeamId" (selectionChange)="sortChanged(sort)">
-        <mat-option value=''>All Teams</mat-option>
+      <mat-select
+        placeholder="Team"
+        [(ngModel)]="selectedTeamId"
+        (selectionChange)="sortChanged(sort)"
+      >
+        <mat-option value="">All Teams</mat-option>
         @for (team of teamList; track team) {
-        <mat-option [value]="team.id">
-          {{ team.name }}
-        </mat-option>
+          <mat-option [value]="team.id">
+            {{ team.name }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -21,12 +25,16 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="five-cell">
     <mat-form-field class="filter-selection">
       <mat-label>Card</mat-label>
-      <mat-select placeholder="Card" [(ngModel)]="selectedCardId" (selectionChange)="sortChanged(sort)">
-        <mat-option value=''>All Cards</mat-option>
+      <mat-select
+        placeholder="Card"
+        [(ngModel)]="selectedCardId"
+        (selectionChange)="sortChanged(sort)"
+      >
+        <mat-option value="">All Cards</mat-option>
         @for (card of cardList; track card.id) {
-        <mat-option [value]="card.id">
-          {{ card.name }}
-        </mat-option>
+          <mat-option [value]="card.id">
+            {{ card.name }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -35,9 +43,18 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <mat-form-field class="filter-selection">
       <input matInput [formControl]="filterControl" placeholder="Search" />
       @if (filterControl.value) {
-      <button mat-icon-button matSuffix (click)="clearFilter()" style="outline: none;" title="Clear Search">
-        <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline" />
-      </button>
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="clearFilter()"
+          style="outline: none"
+          title="Clear Search"
+        >
+          <mat-icon
+            style="transform: scale(0.85)"
+            fontIcon="mdi-close-circle-outline"
+          />
+        </button>
       }
     </mat-form-field>
   </div>
@@ -46,62 +63,80 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 <mat-accordion displayMode="flat">
   <section matSort (matSortChange)="sortChanged($event)" class="header-row">
     <div class="header-cell two-cell">
-      <button mat-icon-button (click)="addOrEditTeamCard(null)" style="outline: none;" title="Add Team Card"
-        [disabled]="!canEdit()">
+      <button
+        mat-icon-button
+        (click)="addOrEditTeamCard(null)"
+        style="outline: none"
+        title="Add Team Card"
+        [disabled]="!canEdit()"
+      >
         <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle" />
       </button>
     </div>
     <div class="header-cell five-cell" mat-sort-header="teamId">Team</div>
     <div class="header-cell five-cell" mat-sort-header="cardId">Card</div>
     <div class="header-cell one-cell" mat-sort-header="isShownOnWall">Show</div>
-    <div class="header-cell one-cell" mat-sort-header="canPostArticles">Post</div>
+    <div class="header-cell one-cell" mat-sort-header="canPostArticles">
+      Post
+    </div>
     <div class="header-cell one-cell" mat-sort-header="move">Move</div>
     <div class="header-cell one-cell" mat-sort-header="inject">Inject</div>
   </section>
 
   <section class="scrollable-region">
     @for (teamCard of filteredTeamCardList; track teamCard.id) {
-    <mat-expansion-panel disabled>
-      @if (!isLoading) {
-      <mat-expansion-panel-header class="row">
-        <div class="cell two-cell button-div">
-          <button mat-icon-button (click)="addOrEditTeamCard(teamCard)" title="Edit Team Card" [disabled]="!canEdit()">
-            <mat-icon class="mdi-24px" fontIcon="mdi-square-edit-outline" />
-          </button>
-          <button mat-icon-button (click)="deleteTeamCard(teamCard)" title="Delete Team Card" [disabled]="!canEdit()">
-            <mat-icon class="mdi-24px" fontIcon="mdi-trash-can-outline" />
-          </button>
-        </div>
-        <div class="cell five-cell center-self">
-          {{ getTeamName(teamCard.teamId) }}
-        </div>
-        <div class="cell five-cell center-self">
-          {{ getCardName(teamCard.cardId) }}
-        </div>
-        <div class="cell one-cell center-self">
-          {{ teamCard.isShownOnWall }}
-        </div>
-        <div class="cell one-cell center-self">
-          {{ teamCard.canPostArticles }}
-        </div>
-        <div class="cell one-cell center-self">
-          {{ teamCard.move }}
-        </div>
-        <div class="cell one-cell center-self">
-          {{ teamCard.inject }}
-        </div>
-      </mat-expansion-panel-header>
-      }
-      <div class="panel-container">
-        nothing to see here
-      </div>
-    </mat-expansion-panel>
+      <mat-expansion-panel disabled>
+        @if (!isLoading) {
+          <mat-expansion-panel-header class="row">
+            <div class="cell two-cell button-div">
+              <button
+                mat-icon-button
+                (click)="addOrEditTeamCard(teamCard)"
+                title="Edit Team Card"
+                [disabled]="!canEdit()"
+              >
+                <mat-icon class="mdi-24px" fontIcon="mdi-square-edit-outline" />
+              </button>
+              <button
+                mat-icon-button
+                (click)="deleteTeamCard(teamCard)"
+                title="Delete Team Card"
+                [disabled]="!canEdit()"
+              >
+                <mat-icon class="mdi-24px" fontIcon="mdi-trash-can-outline" />
+              </button>
+            </div>
+            <div class="cell five-cell center-self">
+              {{ getTeamName(teamCard.teamId) }}
+            </div>
+            <div class="cell five-cell center-self">
+              {{ getCardName(teamCard.cardId) }}
+            </div>
+            <div class="cell one-cell center-self">
+              {{ teamCard.isShownOnWall }}
+            </div>
+            <div class="cell one-cell center-self">
+              {{ teamCard.canPostArticles }}
+            </div>
+            <div class="cell one-cell center-self">
+              {{ teamCard.move }}
+            </div>
+            <div class="cell one-cell center-self">
+              {{ teamCard.inject }}
+            </div>
+          </mat-expansion-panel-header>
+        }
+        <div class="panel-container">nothing to see here</div>
+      </mat-expansion-panel>
     }
   </section>
 </mat-accordion>
 
 @if (isLoading) {
-<mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
-  <mat-progress-spinner color="primary" mode="indeterminate" />
-</mat-card>
+  <mat-card
+    appearance="outlined"
+    style="display: flex; justify-content: center; align-items: center"
+  >
+    <mat-progress-spinner color="primary" mode="indeterminate" />
+  </mat-card>
 }

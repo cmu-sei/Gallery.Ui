@@ -71,11 +71,17 @@ describe('AdminExhibitArticleTeamsComponent', () => {
    */
   it('splits the exhibit teams by whether they share the article', async () => {
     const { container } = await renderArticleTeams(true);
-    const available = within(container.querySelector('.exhibit-teams-list-container') as HTMLElement);
+    const available = within(
+      container.querySelector('.exhibit-teams-list-container') as HTMLElement,
+    );
 
-    expect(available.getByRole('button', { name: 'Add Red Team' })).toBeInTheDocument();
+    expect(
+      available.getByRole('button', { name: 'Add Red Team' }),
+    ).toBeInTheDocument();
     expect(screen.getByTitle('Remove Blue Team')).toBeInTheDocument();
-    expect(available.queryByRole('button', { name: 'Add Blue Team' })).not.toBeInTheDocument();
+    expect(
+      available.queryByRole('button', { name: 'Add Blue Team' }),
+    ).not.toBeInTheDocument();
   });
 
   /**
@@ -85,8 +91,14 @@ describe('AdminExhibitArticleTeamsComponent', () => {
    */
   it('adds and removes article teams when canEdit is true', async () => {
     const { container, teamArticleApi } = await renderArticleTeams(true);
-    const available = within(container.querySelector('.exhibit-teams-list-container') as HTMLElement);
-    const selected = within(container.querySelector('.exhibit-article-teams-list-container') as HTMLElement);
+    const available = within(
+      container.querySelector('.exhibit-teams-list-container') as HTMLElement,
+    );
+    const selected = within(
+      container.querySelector(
+        '.exhibit-article-teams-list-container',
+      ) as HTMLElement,
+    );
     const user = userEvent.setup();
 
     await user.click(available.getByRole('button', { name: 'Add Red Team' }));
@@ -96,7 +108,9 @@ describe('AdminExhibitArticleTeamsComponent', () => {
       teamId: 't2',
     });
     expect(screen.getByTitle('Remove Red Team')).toBeInTheDocument();
-    expect(available.queryByRole('button', { name: 'Add Red Team' })).not.toBeInTheDocument();
+    expect(
+      available.queryByRole('button', { name: 'Add Red Team' }),
+    ).not.toBeInTheDocument();
 
     await user.click(screen.getByTitle('Remove Blue Team'));
     expect(teamArticleApi.deleteTeamArticleByIds).toHaveBeenCalledWith(
@@ -104,7 +118,9 @@ describe('AdminExhibitArticleTeamsComponent', () => {
       'a1',
     );
     expect(screen.getByTitle('Add Blue Team')).toBeInTheDocument();
-    expect(selected.queryByRole('button', { name: 'Remove Blue Team' })).not.toBeInTheDocument();
+    expect(
+      selected.queryByRole('button', { name: 'Remove Blue Team' }),
+    ).not.toBeInTheDocument();
   });
 
   /**
@@ -126,10 +142,16 @@ describe('AdminExhibitArticleTeamsComponent', () => {
    */
   it('shows no article teams when the team articles were published before it mounted', async () => {
     const { container } = await renderArticleTeams(true, true);
-    const selected = within(container.querySelector('.exhibit-article-teams-list-container') as HTMLElement);
+    const selected = within(
+      container.querySelector(
+        '.exhibit-article-teams-list-container',
+      ) as HTMLElement,
+    );
 
     // Current behavior; see agent-docs/ui-test-bugs/gallery.ui.md.
-    expect(selected.queryByRole('button', { name: 'Remove Blue Team' })).not.toBeInTheDocument();
+    expect(
+      selected.queryByRole('button', { name: 'Remove Blue Team' }),
+    ).not.toBeInTheDocument();
     expect(screen.getByTitle('Add Blue Team')).toBeInTheDocument();
   });
 
@@ -140,15 +162,23 @@ describe('AdminExhibitArticleTeamsComponent', () => {
    */
   it('hides the last available team when a selected team disappears', async () => {
     const { fixture, container } = await renderArticleTeams(true);
-    const available = within(container.querySelector('.exhibit-teams-list-container') as HTMLElement);
-    expect(available.getByRole('button', { name: 'Add Red Team' })).toBeInTheDocument();
+    const available = within(
+      container.querySelector('.exhibit-teams-list-container') as HTMLElement,
+    );
+    expect(
+      available.getByRole('button', { name: 'Add Red Team' }),
+    ).toBeInTheDocument();
     expect(screen.getByTitle('Remove Blue Team')).toBeInTheDocument();
 
     TestBed.inject(TeamStore).remove('t1');
     fixture.detectChanges();
 
-    expect(available.queryByRole('button', { name: 'Add Red Team' })).not.toBeInTheDocument();
+    expect(
+      available.queryByRole('button', { name: 'Add Red Team' }),
+    ).not.toBeInTheDocument();
     expect(screen.getByTitle('Remove Blue Team')).toBeInTheDocument();
-    expect(TestBed.inject(TeamStore).getValue().entities['t2'].name).toBe('Red Team');
+    expect(TestBed.inject(TeamStore).getValue().entities['t2'].name).toBe(
+      'Red Team',
+    );
   });
 });

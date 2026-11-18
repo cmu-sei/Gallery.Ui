@@ -26,7 +26,7 @@ export class ExhibitDataService {
 
   private _requestedExhibitId: string;
   private _requestedExhibitId$ = this.activatedRoute.queryParamMap.pipe(
-    map((params) => params.get('exhibitId') || '')
+    map((params) => params.get('exhibitId') || ''),
   );
   readonly ExhibitList: Observable<Exhibit[]>;
   readonly filterControl = new UntypedFormControl();
@@ -43,7 +43,7 @@ export class ExhibitDataService {
     const activatedRoute = this.activatedRoute;
 
     this.filterTerm = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('exhibitmask') || '')
+      map((params) => params.get('exhibitmask') || ''),
     );
     this.filterControl.valueChanges.subscribe((term) => {
       this.router.navigate([], {
@@ -52,16 +52,16 @@ export class ExhibitDataService {
       });
     });
     this.sortColumn = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('sorton') || 'name')
+      map((params) => params.get('sorton') || 'name'),
     );
     this.sortIsAscending = activatedRoute.queryParamMap.pipe(
-      map((params) => (params.get('sortdir') || 'asc') === 'asc')
+      map((params) => (params.get('sortdir') || 'asc') === 'asc'),
     );
     this.pageSize = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pagesize') || '20', 10))
+      map((params) => parseInt(params.get('pagesize') || '20', 10)),
     );
     this.pageIndex = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pageindex') || '0', 10))
+      map((params) => parseInt(params.get('pageindex') || '0', 10)),
     );
     this.ExhibitList = combineLatest([
       this.exhibitQuery.selectAll(),
@@ -83,13 +83,13 @@ export class ExhibitDataService {
           items
             ? (items as Exhibit[])
                 .sort((a: Exhibit, b: Exhibit) =>
-                  this.sortExhibits(a, b, sortColumn, sortIsAscending)
+                  this.sortExhibits(a, b, sortColumn, sortIsAscending),
                 )
                 .filter((exhibit) =>
-                  exhibit.id.toLowerCase().includes(filterTerm.toLowerCase())
+                  exhibit.id.toLowerCase().includes(filterTerm.toLowerCase()),
                 )
-            : []
-      )
+            : [],
+      ),
     );
   }
 
@@ -115,7 +115,7 @@ export class ExhibitDataService {
         tap(() => {
           this.exhibitStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (exhibits) => {
@@ -123,14 +123,14 @@ export class ExhibitDataService {
             this.setAsDates(a);
           });
           const sortedExhibits = exhibits.sort((a: Exhibit, b: Exhibit) =>
-            this.sortExhibits(a, b, 'dateCreated', false)
+            this.sortExhibits(a, b, 'dateCreated', false),
           );
           this.exhibitStore.set(sortedExhibits);
         },
         (error) => {
           console.log(error);
           this.exhibitStore.set([]);
-        }
+        },
       );
   }
 
@@ -142,7 +142,7 @@ export class ExhibitDataService {
         tap(() => {
           this.exhibitStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (exhibits) => {
@@ -150,14 +150,14 @@ export class ExhibitDataService {
             this.setAsDates(a);
           });
           const sortedExhibits = exhibits.sort((a: Exhibit, b: Exhibit) =>
-            this.sortExhibits(a, b, 'dateCreated', false)
+            this.sortExhibits(a, b, 'dateCreated', false),
           );
           this.exhibitStore.set(sortedExhibits);
         },
         (error) => {
           console.log(error);
           this.exhibitStore.set([]);
-        }
+        },
       );
   }
 
@@ -170,7 +170,7 @@ export class ExhibitDataService {
           tap(() => {
             this.exhibitStore.setLoading(false);
           }),
-          take(1)
+          take(1),
         )
         .subscribe(
           (exhibits) => {
@@ -182,7 +182,7 @@ export class ExhibitDataService {
           (error) => {
             console.log(error);
             this.exhibitStore.set([]);
-          }
+          },
         );
     }
   }
@@ -195,7 +195,7 @@ export class ExhibitDataService {
         tap(() => {
           this.exhibitStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (exhibits) => {
@@ -207,7 +207,7 @@ export class ExhibitDataService {
         (error) => {
           console.log(error);
           this.exhibitStore.set([]);
-        }
+        },
       );
   }
 
@@ -219,7 +219,7 @@ export class ExhibitDataService {
         tap(() => {
           this.exhibitStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe({
         next: (s) => {
@@ -230,9 +230,9 @@ export class ExhibitDataService {
           console.log('Exhibit not found:', id);
           // Redirect to home page when exhibit doesn't exist
           this.router.navigate(['/'], {
-            queryParams: {}
+            queryParams: {},
           });
-        }
+        },
       });
   }
 
@@ -248,7 +248,7 @@ export class ExhibitDataService {
         tap(() => {
           this.exhibitStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.exhibitStore.add(s);
@@ -263,7 +263,7 @@ export class ExhibitDataService {
         tap(() => {
           this.exhibitStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe({
         next: (s) => {
@@ -271,7 +271,7 @@ export class ExhibitDataService {
         },
         error: () => {
           this.exhibitStore.setLoading(false);
-        }
+        },
       });
   }
 
@@ -283,7 +283,7 @@ export class ExhibitDataService {
         tap(() => {
           this.exhibitStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((n) => {
         this.updateStore(n);
@@ -314,22 +314,23 @@ export class ExhibitDataService {
         error: (err) => {
           this.exhibitStore.setLoading(false);
           this.uploadProgress.next(0);
-          const message = err?.error?.detail || err?.error?.title || 'The uploaded file could not be processed.';
+          const message =
+            err?.error?.detail ||
+            err?.error?.title ||
+            'The uploaded file could not be processed.';
           this.snackBar.open(message, 'OK', { duration: 5000 });
-        }
+        },
       });
   }
   advance(id: string) {
     this.exhibitStore.setLoading(true);
-    return this.exhibitService
-      .advanceExhibit(id)
-      .pipe(
-        tap({
-          next: () => this.exhibitStore.setLoading(false),
-          error: () => this.exhibitStore.setLoading(false),
-        }),
-        take(1)
-      );
+    return this.exhibitService.advanceExhibit(id).pipe(
+      tap({
+        next: () => this.exhibitStore.setLoading(false),
+        error: () => this.exhibitStore.setLoading(false),
+      }),
+      take(1),
+    );
   }
 
   setActive(id: string) {

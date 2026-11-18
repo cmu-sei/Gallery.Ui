@@ -2,11 +2,21 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, inject as inject_1, output } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  FormGroupDirective,
+  NgForm,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SystemMessageService } from 'src/app/services/system-message/system-message.service';
-import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import {
+  CrucibleDialogComponent,
+  CrucibleDialogContentDirective,
+} from '@cmusei/crucible-common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
@@ -18,7 +28,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 export class UserErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
+    form: FormGroupDirective | NgForm | null,
   ): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || isSubmitted));
@@ -26,10 +36,22 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'app-admin-team-card-edit-dialog',
-    templateUrl: './admin-team-card-edit-dialog.component.html',
-    styleUrls: ['./admin-team-card-edit-dialog.component.scss'],
-    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatSelect, FormsModule, ReactiveFormsModule, MatOption, MatTooltip, MatInput, MatCheckbox]
+  selector: 'app-admin-team-card-edit-dialog',
+  templateUrl: './admin-team-card-edit-dialog.component.html',
+  styleUrls: ['./admin-team-card-edit-dialog.component.scss'],
+  imports: [
+    CrucibleDialogComponent,
+    CrucibleDialogContentDirective,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    FormsModule,
+    ReactiveFormsModule,
+    MatOption,
+    MatTooltip,
+    MatInput,
+    MatCheckbox,
+  ],
 })
 export class AdminTeamCardEditDialogComponent {
   systemMessage = inject_1(SystemMessageService);
@@ -39,22 +61,22 @@ export class AdminTeamCardEditDialogComponent {
 
   public teamIdFormControl = new UntypedFormControl(
     [this.data.teamCard.teamId],
-    []
+    [],
   );
   public cardIdFormControl = new UntypedFormControl(
     this.data.teamCard.cardId,
-    []
+    [],
   );
   public moveFormControl = new UntypedFormControl(this.data.teamCard.move, []);
   public injectFormControl = new UntypedFormControl(
     this.data.teamCard.inject,
-    []
+    [],
   );
   public isShownOnWallFormControl = new UntypedFormControl(
-    this.data.teamCard.isShownOnWall
+    this.data.teamCard.isShownOnWall,
   );
   public canPostArticlesFormControl = new UntypedFormControl(
-    this.data.teamCard.canPostArticles ?? false
+    this.data.teamCard.canPostArticles ?? false,
   );
   public form = new UntypedFormGroup({
     teamId: this.teamIdFormControl,
@@ -85,7 +107,7 @@ export class AdminTeamCardEditDialogComponent {
     const existingTeamCard = this.data.teamCardList.find(
       (tc) =>
         tc.teamId === this.data.teamCard.teamId &&
-        tc.cardId === this.data.teamCard.cardId
+        tc.cardId === this.data.teamCard.cardId,
     );
     return existingTeamCard && existingTeamCard.id !== this.data.teamCard.id;
   }
@@ -98,12 +120,13 @@ export class AdminTeamCardEditDialogComponent {
       this.editComplete.emit({ saveChanges: false, teamCard: null });
     } else {
       this.data.teamCard.isShownOnWall = this.isShownOnWallFormControl.value;
-      this.data.teamCard.canPostArticles = this.canPostArticlesFormControl.value;
+      this.data.teamCard.canPostArticles =
+        this.canPostArticlesFormControl.value;
       if (this.errorFree) {
         if (this.isDuplicateTeamCard()) {
           this.systemMessage.displayMessage(
             'This Team Card already exists!',
-            'Please select a different combination of Team and Card.'
+            'Please select a different combination of Team and Card.',
           );
         } else {
           this.editComplete.emit({
@@ -123,7 +146,7 @@ export class AdminTeamCardEditDialogComponent {
       case 'teamId': {
         let addAllTeams = false;
         const allTeamsIsChecked = this.teamIdFormControl.value.includes(
-          this.ALL_TEAMS
+          this.ALL_TEAMS,
         );
         // remove "All Teams" from the selected values
         if (allTeamsIsChecked) {

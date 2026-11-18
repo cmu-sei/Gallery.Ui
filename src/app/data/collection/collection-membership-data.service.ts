@@ -15,13 +15,13 @@ import {
 export class CollectionMembershipDataService {
   private collectionMembershipsService = inject(CollectionMembershipsService);
 
-  private collectionMembershipsSubject = new BehaviorSubject<CollectionMembership[]>([]);
+  private collectionMembershipsSubject = new BehaviorSubject<
+    CollectionMembership[]
+  >([]);
   public collectionMemberships$ =
     this.collectionMembershipsSubject.asObservable();
 
-  loadMemberships(
-    collectionId: string
-  ): Observable<CollectionMembership[]> {
+  loadMemberships(collectionId: string): Observable<CollectionMembership[]> {
     return this.collectionMembershipsService
       .getAllCollectionMemberships(collectionId)
       .pipe(tap((x) => this.collectionMembershipsSubject.next(x)));
@@ -29,30 +29,24 @@ export class CollectionMembershipDataService {
 
   createMembership(
     collectionId: string,
-    collectionMembership: CollectionMembership
+    collectionMembership: CollectionMembership,
   ) {
     return this.collectionMembershipsService
-      .createCollectionMembership(
-        collectionId,
-        collectionMembership
-      )
+      .createCollectionMembership(collectionId, collectionMembership)
       .pipe(
         tap((x) => {
           this.upsert(x.id, x);
-        })
+        }),
       );
   }
 
   editMembership(collectionMembership: CollectionMembership) {
     return this.collectionMembershipsService
-      .updateCollectionMembership(
-        collectionMembership.id,
-        collectionMembership
-      )
+      .updateCollectionMembership(collectionMembership.id, collectionMembership)
       .pipe(
         tap((x) => {
           this.upsert(collectionMembership.id, x);
-        })
+        }),
       );
   }
 
@@ -62,14 +56,11 @@ export class CollectionMembershipDataService {
       .pipe(
         tap(() => {
           this.remove(id);
-        })
+        }),
       );
   }
 
-  upsert(
-    id: string,
-    collectionMembership: Partial<CollectionMembership>
-  ) {
+  upsert(id: string, collectionMembership: Partial<CollectionMembership>) {
     const memberships = this.collectionMembershipsSubject.getValue();
     const membershipToUpdate = memberships.find((x) => x.id === id);
 

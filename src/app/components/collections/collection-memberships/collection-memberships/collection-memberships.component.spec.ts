@@ -138,11 +138,31 @@ describe('CollectionMembershipsComponent', () => {
       ],
     });
 
-    expect(members().users()?.map((u) => u.name)).toEqual(['Alice']);
-    expect(members().groups()?.map((g) => g.name)).toEqual(['Blue Cell']);
-    expect(members().roles()?.map((r) => r.name)).toEqual(['Member']);
-    expect(available().users()?.map((u) => u.name)).toEqual(['Bob']);
-    expect(available().groups()?.map((g) => g.name)).toEqual(['Analysts']);
+    expect(
+      members()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Alice']);
+    expect(
+      members()
+        .groups()
+        ?.map((g) => g.name),
+    ).toEqual(['Blue Cell']);
+    expect(
+      members()
+        .roles()
+        ?.map((r) => r.name),
+    ).toEqual(['Member']);
+    expect(
+      available()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Bob']);
+    expect(
+      available()
+        .groups()
+        ?.map((g) => g.name),
+    ).toEqual(['Analysts']);
   });
 
   /**
@@ -263,7 +283,11 @@ describe('CollectionMembershipsComponent', () => {
         collectionId: 'c1',
       },
     );
-    expect(members().users()?.map((u) => u.name)).toEqual(['Alice', 'Bob']);
+    expect(
+      members()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Alice', 'Bob']);
 
     members().editMembership.emit({ id: 'm1', roleId: 'r2' });
     expect(membershipsApi.updateCollectionMembership).toHaveBeenCalledWith(
@@ -279,6 +303,10 @@ describe('CollectionMembershipsComponent', () => {
     expect(membershipsApi.deleteCollectionMembership).toHaveBeenCalledWith(
       'm1',
     );
-    expect(members().users()?.map((u) => u.name)).toEqual(['Bob']);
+    expect(
+      members()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Bob']);
   });
 });

@@ -9,13 +9,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Collection, CollectionService } from 'src/app/generated/api';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
-import {
-  BehaviorSubject,
-  Observable,
-  combineLatest,
-  of,
-  Subject,
-} from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, of, Subject } from 'rxjs';
 import { PermissionDataService } from '../permission/permission-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -33,7 +27,7 @@ export class CollectionDataService {
 
   private _requestedCollectionId: string;
   private _requestedCollectionId$ = this.activatedRoute.queryParamMap.pipe(
-    map((params) => params.get('collectionId') || '')
+    map((params) => params.get('collectionId') || ''),
   );
   readonly CollectionList: Observable<Collection[]>;
   readonly filterControl = new UntypedFormControl();
@@ -54,7 +48,7 @@ export class CollectionDataService {
     const activatedRoute = this.activatedRoute;
 
     this.filterTerm = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('collectionmask') || '')
+      map((params) => params.get('collectionmask') || ''),
     );
     this.filterControl.valueChanges.subscribe((term) => {
       this.router.navigate([], {
@@ -63,16 +57,16 @@ export class CollectionDataService {
       });
     });
     this.sortColumn = activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('sorton') || 'name')
+      map((params) => params.get('sorton') || 'name'),
     );
     this.sortIsAscending = activatedRoute.queryParamMap.pipe(
-      map((params) => (params.get('sortdir') || 'asc') === 'asc')
+      map((params) => (params.get('sortdir') || 'asc') === 'asc'),
     );
     this.pageSize = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pagesize') || '20', 10))
+      map((params) => parseInt(params.get('pagesize') || '20', 10)),
     );
     this.pageIndex = activatedRoute.queryParamMap.pipe(
-      map((params) => parseInt(params.get('pageindex') || '0', 10))
+      map((params) => parseInt(params.get('pageindex') || '0', 10)),
     );
     this.CollectionList = combineLatest([
       this.collectionQuery.selectAll(),
@@ -93,20 +87,20 @@ export class CollectionDataService {
         ]) =>
           items
             ? (items as Collection[])
-              .sort((a: Collection, b: Collection) =>
-                this.sortCollections(a, b, sortColumn, sortIsAscending)
-              )
-              .filter(
-                (collection) =>
-                  ('' + collection.description)
-                    .toLowerCase()
-                    .includes(filterTerm.toLowerCase()) ||
-                  collection.id
-                    .toLowerCase()
-                    .includes(filterTerm.toLowerCase())
-              )
-            : []
-      )
+                .sort((a: Collection, b: Collection) =>
+                  this.sortCollections(a, b, sortColumn, sortIsAscending),
+                )
+                .filter(
+                  (collection) =>
+                    ('' + collection.description)
+                      .toLowerCase()
+                      .includes(filterTerm.toLowerCase()) ||
+                    collection.id
+                      .toLowerCase()
+                      .includes(filterTerm.toLowerCase()),
+                )
+            : [],
+      ),
     );
     // The service is root-provided, so this subscription lives for the
     // application's lifetime. set() already clears the loading flag, on both
@@ -118,8 +112,8 @@ export class CollectionDataService {
           (scope === 'all'
             ? this.collectionService.getCollections()
             : this.collectionService.getMyCollections()
-          ).pipe(catchError(() => of([] as Collection[])))
-        )
+          ).pipe(catchError(() => of([] as Collection[]))),
+        ),
       )
       .subscribe((collections) => this.collectionStore.set(collections));
   }
@@ -128,7 +122,7 @@ export class CollectionDataService {
     a: Collection,
     b: Collection,
     column: string,
-    isAsc: boolean
+    isAsc: boolean,
   ) {
     switch (column) {
       case 'description':
@@ -162,7 +156,7 @@ export class CollectionDataService {
         tap(() => {
           this.collectionStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.collectionStore.upsert(s.id, { ...s });
@@ -181,7 +175,7 @@ export class CollectionDataService {
         tap(() => {
           this.collectionStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.collectionStore.add(s);
@@ -196,7 +190,7 @@ export class CollectionDataService {
         tap(() => {
           this.collectionStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (s) => {
@@ -204,7 +198,7 @@ export class CollectionDataService {
         },
         (error) => {
           this.collectionStore.setLoading(false);
-        }
+        },
       );
   }
 
@@ -216,7 +210,7 @@ export class CollectionDataService {
         tap(() => {
           this.collectionStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((n) => {
         this.updateStore(n);
@@ -247,9 +241,12 @@ export class CollectionDataService {
         (err) => {
           this.collectionStore.setLoading(false);
           this.uploadProgress.next(0);
-          const message = err?.error?.detail || err?.error?.title || 'The uploaded file could not be processed.';
+          const message =
+            err?.error?.detail ||
+            err?.error?.title ||
+            'The uploaded file could not be processed.';
           this.snackBar.open(message, 'OK', { duration: 5000 });
-        }
+        },
       );
   }
   setActive(id: string) {

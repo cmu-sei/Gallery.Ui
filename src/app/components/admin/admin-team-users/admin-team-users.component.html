@@ -13,27 +13,51 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-toolbar-row>
         <mat-form-field class="w-50">
           <mat-label>Search</mat-label>
-          <input matInput [formControl]="filterControl" placeholder="Search" autocomplete="off" />
+          <input
+            matInput
+            [formControl]="filterControl"
+            placeholder="Search"
+            autocomplete="off"
+          />
           @if (filterControl.value) {
-          <button mat-icon-button matSuffix (click)="clearFilter()" title="Clear Search">
-            <mat-icon style="transform: scale(0.85)" fontIcon="mdi-close-circle-outline" />
-          </button>
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="clearFilter()"
+              title="Clear Search"
+            >
+              <mat-icon
+                style="transform: scale(0.85)"
+                fontIcon="mdi-close-circle-outline"
+              />
+            </button>
           }
         </mat-form-field>
-        <mat-paginator #userPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons />
+        <mat-paginator
+          #userPaginator
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          showFirstLastButtons
+        />
       </mat-toolbar-row>
     </mat-toolbar>
 
-    <mat-table class="mat-table-all-users" #table [dataSource]="userDataSource" matSort
-      (matSortChange)="onSortChange($event)">
+    <mat-table
+      class="mat-table-all-users"
+      #table
+      [dataSource]="userDataSource"
+      matSort
+      (matSortChange)="onSortChange($event)"
+    >
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>User Name</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >User Name</mat-header-cell
+        >
         <mat-cell *matCellDef="let element">
           @if (element.name !== null) {
-          <div>{{ element.name }}</div>
+            <div>{{ element.name }}</div>
           }
           @if (element.name === null) {
-          <div>{{ element.id }}</div>
+            <div>{{ element.id }}</div>
           }
         </mat-cell>
       </ng-container>
@@ -43,13 +67,21 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-cell *matCellDef="let element">
           <div>
             @if (!onAnotherTeam(element.id)) {
-            <button mat-icon-button (click)="addUserToTeam(element)" style="outline: none;"
-              title="Add {{ element.name }} to Team" [disabled]="!canEdit()">
-              <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline" />
-            </button>
+              <button
+                mat-icon-button
+                (click)="addUserToTeam(element)"
+                style="outline: none"
+                title="Add {{ element.name }} to Team"
+                [disabled]="!canEdit()"
+              >
+                <mat-icon
+                  class="mdi-24px center-self"
+                  fontIcon="mdi-plus-circle-outline"
+                />
+              </button>
             }
             @if (onAnotherTeam(element.id)) {
-            <label>{{ getUserTeamName(element.id) }}</label>
+              <label>{{ getUserTeamName(element.id) }}</label>
             }
           </div>
         </mat-cell>
@@ -60,7 +92,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </mat-table>
 
     @if (userDataSource.data.length === 0) {
-    <div>No results found</div>
+      <div>No results found</div>
     }
   </div>
 
@@ -75,37 +107,67 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-toolbar-row>
         <mat-form-field class="w-50">
           <mat-label>Search</mat-label>
-          <input matInput [(ngModel)]="teamUserFilterString" (keyup)="applyTeamUserFilter($event)" #teamUserInput autocomplete="off" />
+          <input
+            matInput
+            [(ngModel)]="teamUserFilterString"
+            (keyup)="applyTeamUserFilter($event)"
+            #teamUserInput
+            autocomplete="off"
+          />
           @if (teamUserFilterString) {
-          <button matSuffix mat-icon-button aria-label="Clear" (click)="clearTeamUserFilter()">
-            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
-          </button>
+            <button
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="clearTeamUserFilter()"
+            >
+              <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
+            </button>
           }
         </mat-form-field>
-        <mat-paginator #teamUserPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons />
+        <mat-paginator
+          #teamUserPaginator
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          showFirstLastButtons
+        />
       </mat-toolbar-row>
     </mat-toolbar>
 
     @if (false) {
-    <mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
-      <mat-progress-spinner color="primary" mode="indeterminate" />
-    </mat-card>
+      <mat-card
+        appearance="outlined"
+        style="display: flex; justify-content: center; align-items: center"
+      >
+        <mat-progress-spinner color="primary" mode="indeterminate" />
+      </mat-card>
     }
 
-    <mat-table class="mat-table-all-users" #table [dataSource]="teamUserDataSource" matSort
-      (matSortChange)="onSortTeamChange($event)">
+    <mat-table
+      class="mat-table-all-users"
+      #table
+      [dataSource]="teamUserDataSource"
+      matSort
+      (matSortChange)="onSortTeamChange($event)"
+    >
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>User Name</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >User Name</mat-header-cell
+        >
         <mat-cell *matCellDef="let element">
           <div>{{ getUserName(element.userId) }}</div>
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="isObserver">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Observer</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Observer</mat-header-cell
+        >
         <mat-cell *matCellDef="let element">
-          <mat-checkbox [checked]="element.isObserver" (change)="setObserverValue(element.id, $event.checked)"
-            [disabled]="!canEdit()" />
+          <mat-checkbox
+            [checked]="element.isObserver"
+            (change)="setObserverValue(element.id, $event.checked)"
+            [disabled]="!canEdit()"
+          />
         </mat-cell>
       </ng-container>
 
@@ -113,9 +175,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
         <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <div>
-            <button mat-icon-button (click)="removeUserFromTeam(element)" style="outline: none;"
-              title="Remove {{ element.name }} from Team" [disabled]="!canEdit()">
-              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline" />
+            <button
+              mat-icon-button
+              (click)="removeUserFromTeam(element)"
+              style="outline: none"
+              title="Remove {{ element.name }} from Team"
+              [disabled]="!canEdit()"
+            >
+              <mat-icon
+                class="mdi-24px center-self"
+                fontIcon="mdi-minus-circle-outline"
+              />
             </button>
           </div>
         </mat-cell>
@@ -126,8 +196,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </mat-table>
 
     @if (teamUserDataSource.filteredData.length === 0) {
-    <div>No results found</div>
+      <div>No results found</div>
     }
   </div>
-
 </div>

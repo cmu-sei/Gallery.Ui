@@ -1,31 +1,46 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, DOCUMENT, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  DOCUMENT,
+  inject,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map, tap, take, takeUntil } from 'rxjs/operators';
-import {
-  Permission,
-  User,
-} from 'src/app/generated/api/model/models';
+import { Permission, User } from 'src/app/generated/api/model/models';
 import { UserDataService } from 'src/app/data/user/user-data.service';
 import { UserQuery } from 'src/app/data/user/user.query';
 import { TopbarView } from 'src/app/components/shared/top-bar/topbar.models';
-import { ComnSettingsService, ComnAuthQuery, Theme } from '@cmusei/crucible-common';
+import {
+  ComnSettingsService,
+  ComnAuthQuery,
+  Theme,
+} from '@cmusei/crucible-common';
 import { CollectionDataService } from 'src/app/data/collection/collection-data.service';
 import { CollectionQuery } from 'src/app/data/collection/collection.query';
 import { CurrentUserQuery } from 'src/app/data/user/user.query';
 import { ExhibitDataService } from 'src/app/data/exhibit/exhibit-data.service';
 import { ExhibitQuery } from 'src/app/data/exhibit/exhibit.query';
 import { PermissionDataService } from 'src/app/data/permission/permission-data.service';
-import { ApplicationArea, SignalRService } from 'src/app/services/signalr.service';
+import {
+  ApplicationArea,
+  SignalRService,
+} from 'src/app/services/signalr.service';
 import { Section } from 'src/app/utilities/enumerations';
 import { environment } from 'src/environments/environment';
 import { HealthCheckService } from 'src/app/generated/api';
 import { ComnAuthService } from '@cmusei/crucible-common';
 import { SystemPermission } from 'src/app/generated/api';
-import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+import {
+  MatSidenavContainer,
+  MatSidenav,
+  MatSidenavContent,
+} from '@angular/material/sidenav';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
 import { MatList, MatListItem, MatListItemIcon } from '@angular/material/list';
@@ -39,10 +54,27 @@ import { AdminRolesComponent } from '../admin-roles/admin-roles.component';
 import { AdminGroupsComponent } from '../admin-groups/admin-groups.component';
 
 @Component({
-    selector: 'app-admin-container',
-    templateUrl: './admin-container.component.html',
-    styleUrls: ['./admin-container.component.scss'],
-    imports: [MatSidenavContainer, MatSidenav, MatToolbar, MatIcon, MatList, MatListItem, MatListItemIcon, MatIconButton, MatSidenavContent, TopbarComponent, AdminCollectionsComponent, AdminExhibitsComponent, AdminUsersComponent, AdminRolesComponent, AdminGroupsComponent, AsyncPipe]
+  selector: 'app-admin-container',
+  templateUrl: './admin-container.component.html',
+  styleUrls: ['./admin-container.component.scss'],
+  imports: [
+    MatSidenavContainer,
+    MatSidenav,
+    MatToolbar,
+    MatIcon,
+    MatList,
+    MatListItem,
+    MatListItemIcon,
+    MatIconButton,
+    MatSidenavContent,
+    TopbarComponent,
+    AdminCollectionsComponent,
+    AdminExhibitsComponent,
+    AdminUsersComponent,
+    AdminRolesComponent,
+    AdminGroupsComponent,
+    AsyncPipe,
+  ],
 })
 export class AdminContainerComponent implements OnDestroy, OnInit {
   private _document = inject<HTMLDocument>(DOCUMENT);
@@ -94,29 +126,36 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
 
     this.theme$ = this.authQuery.userTheme$;
     this.hideTopbar = this.inIframe();
-    this._document.getElementById('appTitle').innerHTML = this.settingsService.settings.AppTitle + ' Admin';
+    this._document.getElementById('appTitle').innerHTML =
+      this.settingsService.settings.AppTitle + ' Admin';
     this.originalExhibitId = this.exhibitQuery.getActiveId() as string;
 
     // observe the collections
-    this.collectionQuery.selectAll().pipe(takeUntil(this.unsubscribe$)).subscribe(collections => {
-      this.permissionDataService.load().subscribe();
-      this.permissionDataService.loadCollectionPermissions().subscribe();
-      this.permissionDataService.loadExhibitPermissions().subscribe();
-    });
+    this.collectionQuery
+      .selectAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((collections) => {
+        this.permissionDataService.load().subscribe();
+        this.permissionDataService.loadCollectionPermissions().subscribe();
+        this.permissionDataService.loadExhibitPermissions().subscribe();
+      });
     // observe active collection id
-    this.collectionQuery.selectActiveId().pipe(takeUntil(this.unsubscribe$)).subscribe(activeId => {
-      this.exhibitDataService.loadByCollection(activeId);
-    });
+    this.collectionQuery
+      .selectActiveId()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((activeId) => {
+        this.exhibitDataService.loadByCollection(activeId);
+      });
     // Set the display settings from config file
     this.titleText = this.settingsService.settings.AppTopBarText;
     this.getApiVersion();
     this.showSection$ = activatedRoute.queryParamMap.pipe(
       tap(
         (params) =>
-        (this.displayedSection =
-          params.get('section') || Section.collections)
+          (this.displayedSection =
+            params.get('section') || Section.collections),
       ),
-      map((params) => params.get('section') || Section.collections)
+      map((params) => params.get('section') || Section.collections),
     );
     this.showSection$
       .pipe(takeUntil(this.unsubscribe$))
@@ -128,14 +167,17 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this.userList = this.userQuery.selectAll();
     this.userDataService.load().pipe(take(1)).subscribe();
-    this.permissionDataService.load().pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      this.updatePermissions();
-      if (this.permissionDataService.shouldLoadAllCollections()) {
-        this.collectionDataService.load();
-      } else {
-        this.collectionDataService.loadMine();
-      }
-    });
+    this.permissionDataService
+      .load()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.updatePermissions();
+        if (this.permissionDataService.shouldLoadAllCollections()) {
+          this.collectionDataService.load();
+        } else {
+          this.collectionDataService.loadMine();
+        }
+      });
     this.permissionDataService.loadCollectionPermissions().subscribe();
     this.permissionDataService.loadExhibitPermissions().subscribe();
     this.signalRService
@@ -156,17 +198,35 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
   }
 
   updatePermissions() {
-    this.canViewCollections = this.permissionDataService.hasPermission(SystemPermission.ViewCollections)
-      || this.permissionDataService.hasPermission(SystemPermission.EditCollections)
-      || this.permissionDataService.hasPermission(SystemPermission.ManageCollections);
-    this.canViewExhibits = this.permissionDataService.hasPermission(SystemPermission.ViewExhibits)
-      || this.permissionDataService.hasPermission(SystemPermission.EditExhibits)
-      || this.permissionDataService.hasPermission(SystemPermission.ManageExhibits);
-    this.canViewUsers = this.permissionDataService.hasPermission(SystemPermission.ViewUsers);
-    this.canViewRoles = this.permissionDataService.hasPermission(SystemPermission.ViewRoles);
-    this.canViewGroups = this.permissionDataService.hasPermission(SystemPermission.ViewGroups);
-    this.canCreateCollections = this.permissionDataService.hasPermission(SystemPermission.CreateCollections);
-    this.canCreateExhibits = this.permissionDataService.hasPermission(SystemPermission.CreateExhibits);
+    this.canViewCollections =
+      this.permissionDataService.hasPermission(
+        SystemPermission.ViewCollections,
+      ) ||
+      this.permissionDataService.hasPermission(
+        SystemPermission.EditCollections,
+      ) ||
+      this.permissionDataService.hasPermission(
+        SystemPermission.ManageCollections,
+      );
+    this.canViewExhibits =
+      this.permissionDataService.hasPermission(SystemPermission.ViewExhibits) ||
+      this.permissionDataService.hasPermission(SystemPermission.EditExhibits) ||
+      this.permissionDataService.hasPermission(SystemPermission.ManageExhibits);
+    this.canViewUsers = this.permissionDataService.hasPermission(
+      SystemPermission.ViewUsers,
+    );
+    this.canViewRoles = this.permissionDataService.hasPermission(
+      SystemPermission.ViewRoles,
+    );
+    this.canViewGroups = this.permissionDataService.hasPermission(
+      SystemPermission.ViewGroups,
+    );
+    this.canCreateCollections = this.permissionDataService.hasPermission(
+      SystemPermission.CreateCollections,
+    );
+    this.canCreateExhibits = this.permissionDataService.hasPermission(
+      SystemPermission.CreateExhibits,
+    );
     this.changeDetectorRef.detectChanges();
   }
 
@@ -180,7 +240,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
     this.displayedSection = section;
     this.router.navigate([], {
       queryParams: {
-        section: section
+        section: section,
       },
       queryParamsHandling: 'merge',
     });
@@ -216,7 +276,7 @@ export class AdminContainerComponent implements OnDestroy, OnInit {
         },
         (error) => {
           this.apiVersion = 'ERROR!';
-        }
+        },
       );
   }
 

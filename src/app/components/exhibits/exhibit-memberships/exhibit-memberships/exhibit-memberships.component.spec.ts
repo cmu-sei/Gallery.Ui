@@ -135,11 +135,31 @@ describe('ExhibitMembershipsComponent', () => {
       ],
     });
 
-    expect(members().users()?.map((u) => u.name)).toEqual(['Alice']);
-    expect(members().groups()?.map((g) => g.name)).toEqual(['Blue Cell']);
-    expect(members().roles()?.map((r) => r.name)).toEqual(['Member']);
-    expect(available().users()?.map((u) => u.name)).toEqual(['Bob']);
-    expect(available().groups()?.map((g) => g.name)).toEqual(['Analysts']);
+    expect(
+      members()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Alice']);
+    expect(
+      members()
+        .groups()
+        ?.map((g) => g.name),
+    ).toEqual(['Blue Cell']);
+    expect(
+      members()
+        .roles()
+        ?.map((r) => r.name),
+    ).toEqual(['Member']);
+    expect(
+      available()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Bob']);
+    expect(
+      available()
+        .groups()
+        ?.map((g) => g.name),
+    ).toEqual(['Analysts']);
   });
 
   /**
@@ -242,7 +262,11 @@ describe('ExhibitMembershipsComponent', () => {
       userId: 'u2',
       exhibitId: 'e1',
     });
-    expect(members().users()?.map((u) => u.name)).toEqual(['Alice', 'Bob']);
+    expect(
+      members()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Alice', 'Bob']);
 
     members().editMembership.emit({ id: 'm1', roleId: 'r2' });
     expect(membershipsApi.updateExhibitMembership).toHaveBeenCalledWith('m1', {
@@ -253,6 +277,10 @@ describe('ExhibitMembershipsComponent', () => {
     members().deleteMembership.emit('m1');
     fixture.detectChanges();
     expect(membershipsApi.deleteExhibitMembership).toHaveBeenCalledWith('m1');
-    expect(members().users()?.map((u) => u.name)).toEqual(['Bob']);
+    expect(
+      members()
+        .users()
+        ?.map((u) => u.name),
+    ).toEqual(['Bob']);
   });
 });

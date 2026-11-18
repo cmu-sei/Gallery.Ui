@@ -7,23 +7,31 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   <div class="panel-div">
     <mat-form-field class="move-box">
       <mat-label>Move</mat-label>
-      <mat-select placeholder="Move" [value]="selectedMove" (selectionChange)="selectMove($event.value)">
+      <mat-select
+        placeholder="Move"
+        [value]="selectedMove"
+        (selectionChange)="selectMove($event.value)"
+      >
         <mat-option [value]="-1">All Moves</mat-option>
         @for (move of moveList; track move) {
-        <mat-option [value]="move">
-          {{ move }}
-        </mat-option>
+          <mat-option [value]="move">
+            {{ move }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
     <mat-form-field class="card-box">
       <mat-label>Card</mat-label>
-      <mat-select placeholder="Card" [value]="selectedCardId" (selectionChange)="selectCard($event.value)">
+      <mat-select
+        placeholder="Card"
+        [value]="selectedCardId"
+        (selectionChange)="selectCard($event.value)"
+      >
         <mat-option [value]="''">All Cards</mat-option>
         @for (card of cardList; track card.id) {
-        <mat-option [value]="card.id">
-          {{ card.name }}
-        </mat-option>
+          <mat-option [value]="card.id">
+            {{ card.name }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -32,67 +40,104 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     <mat-label>Search</mat-label>
     <input matInput [formControl]="filterControl" placeholder="Search" />
     @if (filterControl.value) {
-    <button matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter()">
-      <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
-    </button>
+      <button
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="clearFilter()"
+      >
+        <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
+      </button>
     }
   </mat-form-field>
   <div class="paginator">
-    <mat-paginator #paginator [length]="filteredArticleList?.length" [pageIndex]="pageIndex" [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]" (page)="paginatorEvent($event)" />
+    <mat-paginator
+      #paginator
+      [length]="filteredArticleList?.length"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100, 200]"
+      (page)="paginatorEvent($event)"
+    />
   </div>
 </div>
 
 @if (!isLoading) {
-<mat-accordion displayMode="flat">
-  <section matSort (matSortChange)="sortChanged($event)" class="header-row">
-    <div class="header-cell button-cell">
-      <button mat-icon-button (click)="addOrEditArticle(null); $event.stopPropagation()"
-        style="outline: none; margin-left: 20px;" title="Add an Article" [disabled]="!canEdit">
-        <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle" />
-      </button>
-    </div>
-    <div class="header-cell three-cell" mat-sort-header="cardId">Card</div>
-    <div class="header-cell four-cell" mat-sort-header="name">Title</div>
-    <div class="header-cell two-cell" mat-sort-header="sourceName">Source</div>
-    <div class="header-cell move-cell" mat-sort-header="move">Move</div>
-    <div class="header-cell move-cell" mat-sort-header="inject">Inject</div>
-  </section>
+  <mat-accordion displayMode="flat">
+    <section matSort (matSortChange)="sortChanged($event)" class="header-row">
+      <div class="header-cell button-cell">
+        <button
+          mat-icon-button
+          (click)="addOrEditArticle(null); $event.stopPropagation()"
+          style="outline: none; margin-left: 20px"
+          title="Add an Article"
+          [disabled]="!canEdit"
+        >
+          <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle" />
+        </button>
+      </div>
+      <div class="header-cell three-cell" mat-sort-header="cardId">Card</div>
+      <div class="header-cell four-cell" mat-sort-header="name">Title</div>
+      <div class="header-cell two-cell" mat-sort-header="sourceName">
+        Source
+      </div>
+      <div class="header-cell move-cell" mat-sort-header="move">Move</div>
+      <div class="header-cell move-cell" mat-sort-header="inject">Inject</div>
+    </section>
 
-  @for (article of displayedArticles; track article.id) {
-  <mat-expansion-panel disabled>
-      <mat-expansion-panel-header class="row" disabled>
-        <div class="cell button-cell">
-          <button mat-icon-button (click)="addOrEditArticle(article)" style="outline: none;"
-            title="Edit {{ article.name }}" [disabled]="!canEdit">
-            <mat-icon class="mdi-24px center-self" fontIcon="mdi-square-edit-outline" />
-          </button>
-          <button mat-icon-button (click)="deleteArticle(article)" style="outline: none;"
-            title="Delete {{ article.name }}" [disabled]="!canEdit">
-            <mat-icon class="mdi-24px center-self" fontIcon="mdi-trash-can-outline" />
-          </button>
-        </div>
-        <div class="cell three-cell center-self pad-top-bottom">
-          {{ getCardName(article.cardId) }}
-        </div>
-        <div class="cell four-cell center-self">{{ article.name }}</div>
-        <div class="cell two-cell center-self">
-          {{ article.sourceName }}
-        </div>
-        <div class="cell move-cell center-self">
-          {{ article.move }}
-        </div>
-        <div class="cell move-cell center-self">
-          {{ article.inject }}
-        </div>
-      </mat-expansion-panel-header>
-    </mat-expansion-panel>
-  }
-</mat-accordion>
+    @for (article of displayedArticles; track article.id) {
+      <mat-expansion-panel disabled>
+        <mat-expansion-panel-header class="row" disabled>
+          <div class="cell button-cell">
+            <button
+              mat-icon-button
+              (click)="addOrEditArticle(article)"
+              style="outline: none"
+              title="Edit {{ article.name }}"
+              [disabled]="!canEdit"
+            >
+              <mat-icon
+                class="mdi-24px center-self"
+                fontIcon="mdi-square-edit-outline"
+              />
+            </button>
+            <button
+              mat-icon-button
+              (click)="deleteArticle(article)"
+              style="outline: none"
+              title="Delete {{ article.name }}"
+              [disabled]="!canEdit"
+            >
+              <mat-icon
+                class="mdi-24px center-self"
+                fontIcon="mdi-trash-can-outline"
+              />
+            </button>
+          </div>
+          <div class="cell three-cell center-self pad-top-bottom">
+            {{ getCardName(article.cardId) }}
+          </div>
+          <div class="cell four-cell center-self">{{ article.name }}</div>
+          <div class="cell two-cell center-self">
+            {{ article.sourceName }}
+          </div>
+          <div class="cell move-cell center-self">
+            {{ article.move }}
+          </div>
+          <div class="cell move-cell center-self">
+            {{ article.inject }}
+          </div>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
 }
 
 @if (isLoading) {
-<mat-card appearance="outlined" style="display: flex; justify-content: center; align-items: center;">
-  <mat-progress-spinner color="primary" mode="indeterminate" />
-</mat-card>
+  <mat-card
+    appearance="outlined"
+    style="display: flex; justify-content: center; align-items: center"
+  >
+    <mat-progress-spinner color="primary" mode="indeterminate" />
+  </mat-card>
 }

@@ -169,12 +169,17 @@ describe('AdminExhibitEditDialogComponent', () => {
    * Data: exhibit x1 with currentMove null and canEdit true; Save is disabled.
    */
   it('emits an invalid exhibit when the save handler is called directly', async () => {
-    const { fixture, completions } = await renderDialog(true, { ...structuredClone(EXHIBIT), currentMove: null });
+    const { fixture, completions } = await renderDialog(true, {
+      ...structuredClone(EXHIBIT),
+      currentMove: null,
+    });
     expect(actions().getByRole('button', { name: 'Save' })).toBeDisabled();
     expect(fixture.componentInstance.errorFree()).toBe(false);
 
     fixture.componentInstance.handleEditComplete(true);
 
-    expect(completions).toEqual([{ saveChanges: true, exhibit: { ...EXHIBIT, currentMove: null } }]);
+    expect(completions).toEqual([
+      { saveChanges: true, exhibit: { ...EXHIBIT, currentMove: null } },
+    ]);
   });
 });

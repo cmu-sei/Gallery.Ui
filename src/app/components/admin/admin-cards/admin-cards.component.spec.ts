@@ -165,9 +165,9 @@ describe('AdminCardsComponent', () => {
   )('with $label enables editing: $enabled', async ({ grants, enabled }) => {
     await renderCards(grants);
 
-    expect(
-      (screen.getByTitle('Add Card') as HTMLButtonElement).disabled,
-    ).toBe(!enabled);
+    expect((screen.getByTitle('Add Card') as HTMLButtonElement).disabled).toBe(
+      !enabled,
+    );
     expect(rowButtonsDisabled()).toEqual([
       !enabled,
       !enabled,

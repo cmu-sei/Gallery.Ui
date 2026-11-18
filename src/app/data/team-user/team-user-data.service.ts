@@ -28,7 +28,7 @@ export class TeamUserDataService {
         tap(() => {
           this.teamUserStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (teamUsers) => {
@@ -39,7 +39,7 @@ export class TeamUserDataService {
         },
         (error) => {
           this.teamUserStore.set([]);
-        }
+        },
       );
   }
 
@@ -51,7 +51,7 @@ export class TeamUserDataService {
         tap(() => {
           this.teamUserStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe(
         (teamUsers) => {
@@ -62,7 +62,7 @@ export class TeamUserDataService {
         },
         (error) => {
           this.teamUserStore.set([]);
-        }
+        },
       );
   }
 
@@ -74,7 +74,7 @@ export class TeamUserDataService {
         tap(() => {
           this.teamUserStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.teamUserStore.upsert(s.id, { ...s });
@@ -94,7 +94,7 @@ export class TeamUserDataService {
         tap(() => {
           this.teamUserStore.setLoading(false);
         }),
-        take(1)
+        take(1),
       )
       .subscribe((s) => {
         this.setAsDates(s);

@@ -1,18 +1,36 @@
 // Copyright 2025 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NameValidatorModel } from './name-dialog.models';
-import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import {
+  CrucibleDialogComponent,
+  CrucibleDialogContentDirective,
+} from '@cmusei/crucible-common';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-    selector: 'name-dialog',
-    templateUrl: './name-dialog.component.html',
-    styleUrls: ['./name-dialog.component.scss'],
-    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
+  selector: 'name-dialog',
+  templateUrl: './name-dialog.component.html',
+  styleUrls: ['./name-dialog.component.scss'],
+  imports: [
+    CrucibleDialogComponent,
+    CrucibleDialogContentDirective,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+  ],
 })
 export class NameDialogComponent {
   data = inject(MAT_DIALOG_DATA);
@@ -35,7 +53,7 @@ export class NameDialogComponent {
     if (data.validators) {
       this.validators = data.validators;
       const validators = (data.validators as Array<NameValidatorModel>).map(
-        (x) => x.validator
+        (x) => x.validator,
       );
       this.form.controls['name'].addValidators(validators);
     }

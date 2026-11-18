@@ -1,7 +1,15 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { describe, it, expect, vi, beforeEach, afterEach, onTestFinished } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  onTestFinished,
+} from 'vitest';
 import { Component, input, output, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -54,7 +62,10 @@ import { HomeAppComponent } from './home-app.component';
 import { TopbarComponent } from 'src/app/components/shared/top-bar/topbar.component';
 import { WallComponent } from 'src/app/components/wall/wall.component';
 import { ArchiveComponent } from 'src/app/components/archive/archive.component';
-import { captureUnhandledRejections, flush } from 'src/app/test-utils/unhandled-rx-errors';
+import {
+  captureUnhandledRejections,
+  flush,
+} from 'src/app/test-utils/unhandled-rx-errors';
 
 @Component({ selector: 'app-topbar', template: '' })
 class TopbarStubComponent {
@@ -470,7 +481,10 @@ describe('HomeAppComponent', () => {
     const failure = new Error('sign-out redirect failed');
     const errors = captureUnhandledRejections();
     let calls = 0;
-    const { fixture } = await renderHome({}, {}, () => { calls++; return Promise.reject(failure); });
+    const { fixture } = await renderHome({}, {}, () => {
+      calls++;
+      return Promise.reject(failure);
+    });
 
     fixture.componentInstance.logout();
     await flush();
@@ -492,14 +506,23 @@ describe('HomeAppComponent', () => {
      * Data: AppLandingBackgroundImage set to a relative asset URL; the image load event fires; no exhibit in the URL.
      */
     it('shows the landing background once the image loads', async () => {
-      const { fixture, container } = await renderHome({}, {}, undefined, '/assets/local/landing-background.jpg');
+      const { fixture, container } = await renderHome(
+        {},
+        {},
+        undefined,
+        '/assets/local/landing-background.jpg',
+      );
 
       expect(FakeImage.last?.src).toBe('/assets/local/landing-background.jpg');
       FakeImage.last!.onload!();
       fixture.detectChanges();
 
-      const page = container.querySelector('.app-home-container') as HTMLElement;
-      expect(page.style.getPropertyValue('--crucible-landing-background')).toBe('url("/assets/local/landing-background.jpg")');
+      const page = container.querySelector(
+        '.app-home-container',
+      ) as HTMLElement;
+      expect(page.style.getPropertyValue('--crucible-landing-background')).toBe(
+        'url("/assets/local/landing-background.jpg")',
+      );
       expect(page.classList.contains('crucible-landing-background')).toBe(true);
     });
 
@@ -520,9 +543,13 @@ describe('HomeAppComponent', () => {
       FakeImage.last!.onload!();
       fixture.detectChanges();
 
-      const page = container.querySelector('.app-home-container') as HTMLElement;
+      const page = container.querySelector(
+        '.app-home-container',
+      ) as HTMLElement;
       expect(page.style.backgroundImage).toContain('linear-gradient');
-      expect(page.style.backgroundImage).toContain('/assets/local/landing-background-dark.jpg');
+      expect(page.style.backgroundImage).toContain(
+        '/assets/local/landing-background-dark.jpg',
+      );
     });
 
     /**
@@ -531,14 +558,25 @@ describe('HomeAppComponent', () => {
      * Data: AppLandingBackgroundImage set to a missing image; the image error event fires.
      */
     it('keeps the normal background when the image fails to load', async () => {
-      const { fixture, container } = await renderHome({}, {}, undefined, '/assets/local/missing.jpg');
+      const { fixture, container } = await renderHome(
+        {},
+        {},
+        undefined,
+        '/assets/local/missing.jpg',
+      );
 
       FakeImage.last!.onerror?.();
       fixture.detectChanges();
 
-      const page = container.querySelector('.app-home-container') as HTMLElement;
-      expect(page.style.getPropertyValue('--crucible-landing-background')).toBe('');
-      expect(page.classList.contains('crucible-landing-background')).toBe(false);
+      const page = container.querySelector(
+        '.app-home-container',
+      ) as HTMLElement;
+      expect(page.style.getPropertyValue('--crucible-landing-background')).toBe(
+        '',
+      );
+      expect(page.classList.contains('crucible-landing-background')).toBe(
+        false,
+      );
     });
 
     /**
@@ -550,8 +588,12 @@ describe('HomeAppComponent', () => {
       const { container } = await renderHome({});
 
       expect(FakeImage.last).toBeUndefined();
-      const page = container.querySelector('.app-home-container') as HTMLElement;
-      expect(page.classList.contains('crucible-landing-background')).toBe(false);
+      const page = container.querySelector(
+        '.app-home-container',
+      ) as HTMLElement;
+      expect(page.classList.contains('crucible-landing-background')).toBe(
+        false,
+      );
     });
 
     /**
@@ -570,9 +612,15 @@ describe('HomeAppComponent', () => {
       FakeImage.last!.onload!();
       fixture.detectChanges();
 
-      const page = container.querySelector('.app-home-container') as HTMLElement;
-      expect(page.style.getPropertyValue('--crucible-landing-background')).toBe('');
-      expect(page.classList.contains('crucible-landing-background')).toBe(false);
+      const page = container.querySelector(
+        '.app-home-container',
+      ) as HTMLElement;
+      expect(page.style.getPropertyValue('--crucible-landing-background')).toBe(
+        '',
+      );
+      expect(page.classList.contains('crucible-landing-background')).toBe(
+        false,
+      );
     });
   });
 });

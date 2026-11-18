@@ -1,10 +1,26 @@
 // Copyright 2022 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
-import { MatTableDataSource, MatTable, MatColumnDef, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatCellDef,
+  MatCell,
+  MatRowDef,
+  MatRow,
+} from '@angular/material/table';
 import { Team } from 'src/app/generated/api';
 import { TeamQuery } from 'src/app/data/team/team.query';
 import { Subject } from 'rxjs';
@@ -13,10 +29,20 @@ import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-article-teams',
-    templateUrl: './article-teams.component.html',
-    styleUrls: ['./article-teams.component.scss'],
-    imports: [MatTable, MatSort, MatColumnDef, MatCellDef, MatCell, MatIconButton, MatIcon, MatRowDef, MatRow]
+  selector: 'app-article-teams',
+  templateUrl: './article-teams.component.html',
+  styleUrls: ['./article-teams.component.scss'],
+  imports: [
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatCellDef,
+    MatCell,
+    MatIconButton,
+    MatIcon,
+    MatRowDef,
+    MatRow,
+  ],
 })
 export class ArticleTeamsComponent implements OnDestroy, OnInit {
   private teamQuery = inject(TeamQuery);

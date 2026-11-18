@@ -11,8 +11,8 @@ export class UIState {
   selectedCollection = '';
   selectedExhibit = '';
   expandedItems: string[] = [];
-  exhibitSection: {[ key: string ]: string} = {};
-  exhibitTeam: {[ key: string ]: string} = {};
+  exhibitSection: { [key: string]: string } = {};
+  exhibitTeam: { [key: string]: string } = {};
 }
 
 @Injectable({
@@ -29,7 +29,7 @@ export class UIDataService {
   //
   // Item Expansion
   isItemExpanded(id: string): boolean {
-    return this.uiState.expandedItems.some(ei => ei === id);
+    return this.uiState.expandedItems.some((ei) => ei === id);
   }
 
   setItemExpanded(id: string) {

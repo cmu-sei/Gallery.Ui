@@ -5,15 +5,21 @@ import { Component, HostBinding, OnDestroy, inject } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { ComnAuthQuery, ComnAuthService, CrucibleThemeService, Theme, ComnHeaderBarModule } from '@cmusei/crucible-common';
+import {
+  ComnAuthQuery,
+  ComnAuthService,
+  CrucibleThemeService,
+  Theme,
+  ComnHeaderBarModule,
+} from '@cmusei/crucible-common';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    imports: [ComnHeaderBarModule, RouterOutlet]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [ComnHeaderBarModule, RouterOutlet],
 })
 export class AppComponent implements OnDestroy {
   private authQuery = inject(ComnAuthQuery);
@@ -41,13 +47,15 @@ export class AppComponent implements OnDestroy {
       }
       this.setTheme(theme);
     });
-    this.activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      const theme = params.get('theme');
-      if (theme) {
-        this.paramTheme = theme === Theme.DARK ? Theme.DARK : Theme.LIGHT;
-        this.authService.setUserTheme(this.paramTheme);
-      }
-    });
+    this.activatedRoute.queryParamMap
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((params) => {
+        const theme = params.get('theme');
+        if (theme) {
+          this.paramTheme = theme === Theme.DARK ? Theme.DARK : Theme.LIGHT;
+          this.authService.setUserTheme(this.paramTheme);
+        }
+      });
   }
 
   registerIcons(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
@@ -56,8 +64,8 @@ export class AppComponent implements OnDestroy {
     iconRegistry.addSvgIcon(
       'crucible-icon-gallery',
       sanitizer.bypassSecurityTrustResourceUrl(
-        'assets/svg-icons/crucible-icon-gallery.svg'
-      )
+        'assets/svg-icons/crucible-icon-gallery.svg',
+      ),
     );
   }
 

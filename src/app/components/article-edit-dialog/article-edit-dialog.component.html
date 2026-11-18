@@ -4,7 +4,11 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 -->
 
 <crucible-dialog
-  [dialogTitle]="data.article.id ? 'Edit Article for Selected Teams' : 'Add Article for Selected Teams'"
+  [dialogTitle]="
+    data.article.id
+      ? 'Edit Article for Selected Teams'
+      : 'Add Article for Selected Teams'
+  "
   [form]="form"
   submitLabel="Save"
   [submitDisabled]="!errorFree() || !form.dirty"
@@ -12,97 +16,138 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   (submit)="handleEditComplete(true)"
   (cancel)="handleEditComplete(false)"
 >
-@if (!!data && data.article !== undefined && data.article !== null) {
-<div crucibleDialogContent>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Name</mat-label>
-        <input type="text" matInput [formControl]="articleNameFormControl" placeholder="Name (required)"
-          (blur)="saveArticle('name')" [value]="data.article.name" [errorStateMatcher]="matcher">
-        @if (articleNameFormControl.hasError('required')) {
-        <mat-error>
-          Name is <strong>required</strong>
-        </mat-error>
-        }
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Summary</mat-label>
-        <input matInput placeholder="Summary (required)" [formControl]="summaryFormControl"
-          (blur)="saveArticle('summary')" value="{{data.article.summary}}" [errorStateMatcher]="matcher" />
-        @if (summaryFormControl.hasError('required')) {
-        <mat-error>
-          Summary is <strong>required</strong>
-        </mat-error>
-        }
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin left">
-    <div>
-      <p style="font-size: 13px; font-weight: 400; line-height: 1.125; letter-spacing: normal;">
-        Description (required) *
-      </p>
-      <div style="width: 21.5cm">
-        <angular-editor [placeholder]="'Description'" [formControl]="descriptionFormControl"
-          [config]="editorConfig" />
-        @if (descriptionFormControl.hasError('required')) {
-        <mat-error>
-          Description is <strong>required</strong>
-        </mat-error>
-        }
+  @if (!!data && data.article !== undefined && data.article !== null) {
+    <div crucibleDialogContent>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Name</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="articleNameFormControl"
+              placeholder="Name (required)"
+              (blur)="saveArticle('name')"
+              [value]="data.article.name"
+              [errorStateMatcher]="matcher"
+            />
+            @if (articleNameFormControl.hasError('required')) {
+              <mat-error> Name is <strong>required</strong> </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Summary</mat-label>
+            <input
+              matInput
+              placeholder="Summary (required)"
+              [formControl]="summaryFormControl"
+              (blur)="saveArticle('summary')"
+              value="{{ data.article.summary }}"
+              [errorStateMatcher]="matcher"
+            />
+            @if (summaryFormControl.hasError('required')) {
+              <mat-error> Summary is <strong>required</strong> </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin left">
+        <div>
+          <p
+            style="
+              font-size: 13px;
+              font-weight: 400;
+              line-height: 1.125;
+              letter-spacing: normal;
+            "
+          >
+            Description (required) *
+          </p>
+          <div style="width: 21.5cm">
+            <angular-editor
+              [placeholder]="'Description'"
+              [formControl]="descriptionFormControl"
+              [config]="editorConfig"
+            />
+            @if (descriptionFormControl.hasError('required')) {
+              <mat-error> Description is <strong>required</strong> </mat-error>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>URL</mat-label>
+            <input
+              matInput
+              placeholder="URL for more info"
+              [formControl]="urlFormControl"
+              (blur)="saveArticle('url')"
+              value="{{ data.article.url }}"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div class="full-width">
+          <mat-checkbox [formControl]="openInNewTabFormControl">
+            Open URL in new tab
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field>
+            <mat-label>Card</mat-label>
+            <mat-select
+              placeholder="Card"
+              [formControl]="cardIdFormControl"
+              (selectionChange)="saveArticle('cardId')"
+            >
+              @for (card of data.cardList; track card.id) {
+                <mat-option
+                  [value]="card.id"
+                  [matTooltip]="card.id"
+                  matTooltipPosition="right"
+                >
+                  {{ card.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="add-margin">
+        <div>
+          <mat-form-field>
+            <mat-label>Status</mat-label>
+            <mat-select
+              placeholder="Status"
+              [formControl]="statusFormControl"
+              (selectionChange)="saveArticle('status')"
+            >
+              @for (
+                itemStatusOption of itemStatusList;
+                track itemStatusOption
+              ) {
+                <mat-option [value]="itemStatusOption">
+                  <span
+                    class="item-status-swatch"
+                    [class]="statusClass(itemStatusOption)"
+                    aria-hidden="true"
+                  ></span>
+                  {{ itemStatusOption }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>URL</mat-label>
-        <input matInput placeholder="URL for more info" [formControl]="urlFormControl" (blur)="saveArticle('url')"
-          value="{{data.article.url}}" />
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div class="full-width">
-      <mat-checkbox [formControl]="openInNewTabFormControl">
-        Open URL in new tab
-      </mat-checkbox>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field>
-        <mat-label>Card</mat-label>
-        <mat-select placeholder="Card" [formControl]="cardIdFormControl" (selectionChange)="saveArticle('cardId')">
-          @for (card of data.cardList; track card.id) {
-          <mat-option [value]="card.id" [matTooltip]="card.id" matTooltipPosition="right">
-            {{card.name}}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="add-margin">
-    <div>
-      <mat-form-field>
-        <mat-label>Status</mat-label>
-        <mat-select placeholder="Status" [formControl]="statusFormControl" (selectionChange)="saveArticle('status')">
-          @for (itemStatusOption of itemStatusList; track itemStatusOption) {
-          <mat-option [value]="itemStatusOption">
-            <span class="item-status-swatch" [class]="statusClass(itemStatusOption)" aria-hidden="true"></span>
-            {{ itemStatusOption }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-</div>
-}
+  }
 </crucible-dialog>

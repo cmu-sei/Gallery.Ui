@@ -373,17 +373,31 @@ describe('SignalRService', () => {
      * Interacts with: rejectInvokes (FakeHubConnection.invoke rejects), captureUnhandledRejections.
      * Data: a connected, joined home hub; one row rejects each call, including the selected team's rejoin after Join succeeds.
      */
-    it.each<[
-      string,
-      string,
-      ((s: SignalRService) => void) | undefined,
-      (s: SignalRService) => void,
-      Array<[string, ...unknown[]]>,
-    ]>([
+    it.each<
+      [
+        string,
+        string,
+        ((s: SignalRService) => void) | undefined,
+        (s: SignalRService) => void,
+        Array<[string, ...unknown[]]>,
+      ]
+    >([
       ['join()', 'Join', undefined, (s) => s.join(), [['Join']]],
       ['leave()', 'Leave', undefined, (s) => s.leave(), [['Leave']]],
-      ['switchTeam()', 'switchTeam', undefined, (s) => s.switchTeam('t1', 't2'), [['switchTeam', ['t1', 't2']]]],
-      ['join() team restore', 'switchTeam', (s) => s.switchTeam('', 't2'), (s) => s.join(), [['Join'], ['switchTeam', ['t2', 't2']]]],
+      [
+        'switchTeam()',
+        'switchTeam',
+        undefined,
+        (s) => s.switchTeam('t1', 't2'),
+        [['switchTeam', ['t1', 't2']]],
+      ],
+      [
+        'join() team restore',
+        'switchTeam',
+        (s) => s.switchTeam('', 't2'),
+        (s) => s.join(),
+        [['Join'], ['switchTeam', ['t2', 't2']]],
+      ],
     ])(
       '%s lets a rejected %s invoke escape unhandled',
       async (_name, method, arrange, call, expectedCalls) => {

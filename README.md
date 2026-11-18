@@ -1,4 +1,5 @@
 # GalleryUi
+
 This project is intended to be a functioning UI that can be used within the Crucible Framework.
 
 ## Documentation
@@ -11,19 +12,22 @@ Gallery uses a monochrome gray Material 3 SCSS palette (`src/styles/_theme-color
 
 ### Changing the top bar and primary colors
 
-| File | Field / Value | Purpose |
-|------|---------------|---------|
-| `src/assets/config/settings.json` | `"AppTopBarHexColor": "#008740"` | Runtime config -- top bar background color |
-| `src/assets/config/settings.json` | `"AppTopBarHexTextColor": "#FFFFFF"` | Runtime config -- top bar text color |
-| `src/assets/config/settings.json` | `"AppLightModePrimaryHexColor": "#008740"` / `"AppLightModePrimaryHexTextColor": "#FFFFFF"` | Runtime config -- primary color and its text color in light mode |
-| `src/assets/config/settings.json` | `"AppDarkModePrimaryHexColor": "#00C75E"` / `"AppDarkModePrimaryHexTextColor": "#000000"` | Runtime config -- primary color and its text color in dark mode (falls back to the light-mode value) |
-| `src/app/app.config.ts` | `provideCrucibleTheme({ brand: { color: '#008740', text: '#FFFFFF' } })` | Fallbacks when a top bar or light-mode key is not set |
+| File                              | Field / Value                                                                               | Purpose                                                                                              |
+| --------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `src/assets/config/settings.json` | `"AppTopBarHexColor": "#008740"`                                                            | Runtime config -- top bar background color                                                           |
+| `src/assets/config/settings.json` | `"AppTopBarHexTextColor": "#FFFFFF"`                                                        | Runtime config -- top bar text color                                                                 |
+| `src/assets/config/settings.json` | `"AppLightModePrimaryHexColor": "#008740"` / `"AppLightModePrimaryHexTextColor": "#FFFFFF"` | Runtime config -- primary color and its text color in light mode                                     |
+| `src/assets/config/settings.json` | `"AppDarkModePrimaryHexColor": "#00C75E"` / `"AppDarkModePrimaryHexTextColor": "#000000"`   | Runtime config -- primary color and its text color in dark mode (falls back to the light-mode value) |
+| `src/app/app.config.ts`           | `provideCrucibleTheme({ brand: { color: '#008740', text: '#FFFFFF' } })`                    | Fallbacks when a top bar or light-mode key is not set                                                |
 
 The app loads `settings.json`, then `settings.shared.json` and `settings.env.json` from `src/assets/config/` when they exist, and merges them in that order, so later files override earlier ones. To change the colors for a deployment, set these keys in `settings.env.json`.
 
 # Generate code to get data from the API
+
 With the API running on port 4722, run `npm run swagger-gen`. It downloads `http://host.docker.internal:4722/swagger/v1/swagger.json` to `swagger.json` and regenerates the client in `src/app/generated/api`. `npm run swagger-gen-docker` does the same with the `openapitools/openapi-generator-cli:v7.2.0` Docker image.
+
 # Angular
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 21 (Angular 21.2). Node `^20.19.0 || ^22.12.0 || >=24.0.0` is required.
 
 ## Development server
@@ -55,6 +59,3 @@ Shared test helpers (default providers, API and SignalR stubs, permission provid
 ## Running end-to-end tests
 
 End-to-end tests for Gallery are in the Playwright suite in [crucible-tests](https://github.com/cmu-sei/crucible-tests), which runs against a running Crucible stack.
-
-
-

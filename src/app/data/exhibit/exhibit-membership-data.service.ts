@@ -15,9 +15,9 @@ import {
 export class ExhibitMembershipDataService {
   private exhibitMembershipsService = inject(ExhibitMembershipsService);
 
-  private exhibitMembershipsSubject = new BehaviorSubject<
-    ExhibitMembership[]
-  >([]);
+  private exhibitMembershipsSubject = new BehaviorSubject<ExhibitMembership[]>(
+    [],
+  );
   public exhibitMemberships$ = this.exhibitMembershipsSubject.asObservable();
 
   loadMemberships(exhibitId: string): Observable<ExhibitMembership[]> {
@@ -32,7 +32,7 @@ export class ExhibitMembershipDataService {
       .pipe(
         tap((x) => {
           this.upsert(x.id, x);
-        })
+        }),
       );
   }
 
@@ -42,7 +42,7 @@ export class ExhibitMembershipDataService {
       .pipe(
         tap((x) => {
           this.upsert(exhibitMembership.id, x);
-        })
+        }),
       );
   }
 
@@ -50,7 +50,7 @@ export class ExhibitMembershipDataService {
     return this.exhibitMembershipsService.deleteExhibitMembership(id).pipe(
       tap(() => {
         this.remove(id);
-      })
+      }),
     );
   }
 

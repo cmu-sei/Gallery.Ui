@@ -13,25 +13,45 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-toolbar-row>
         <mat-form-field class="w-50">
           <mat-label>Search</mat-label>
-          <input matInput [(ngModel)]="exhibitTeamFilterString" (keyup)="applyExhibitTeamFilter($event)" #exhibitTeamInput autocomplete="off" />
+          <input
+            matInput
+            [(ngModel)]="exhibitTeamFilterString"
+            (keyup)="applyExhibitTeamFilter($event)"
+            #exhibitTeamInput
+            autocomplete="off"
+          />
           @if (exhibitTeamFilterString) {
-          <button matSuffix mat-icon-button aria-label="Clear" (click)="clearExhibitTeamFilter()">
-            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
-          </button>
+            <button
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="clearExhibitTeamFilter()"
+            >
+              <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
+            </button>
           }
         </mat-form-field>
-        <mat-paginator #exhibitTeamPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons />
+        <mat-paginator
+          #exhibitTeamPaginator
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          showFirstLastButtons
+        />
       </mat-toolbar-row>
     </mat-toolbar>
 
-    <mat-table class="mat-table-exhibit-teams" #table [dataSource]="exhibitTeamDataSource" matSort>
+    <mat-table
+      class="mat-table-exhibit-teams"
+      #table
+      [dataSource]="exhibitTeamDataSource"
+      matSort
+    >
       <ng-container matColumnDef="name">
         <mat-cell *matCellDef="let element">
           @if (element.name !== null) {
-          <div>{{ element.shortName }}</div>
+            <div>{{ element.shortName }}</div>
           }
           @if (element.name === null) {
-          <div>{{ element.id }}</div>
+            <div>{{ element.id }}</div>
           }
         </mat-cell>
       </ng-container>
@@ -39,9 +59,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <ng-container matColumnDef="id">
         <mat-cell *matCellDef="let element">
           <div class="push-right">
-            <button mat-icon-button (click)="addTeamToArticle(element.id)" style="outline: none;"
-              title="Add {{ element.name }}" [disabled]="!canEdit()">
-              <mat-icon class="mdi-24px center-self" fontIcon="mdi-plus-circle-outline" />
+            <button
+              mat-icon-button
+              (click)="addTeamToArticle(element.id)"
+              style="outline: none"
+              title="Add {{ element.name }}"
+              [disabled]="!canEdit()"
+            >
+              <mat-icon
+                class="mdi-24px center-self"
+                fontIcon="mdi-plus-circle-outline"
+              />
             </button>
           </div>
         </mat-cell>
@@ -51,7 +79,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </mat-table>
 
     @if (exhibitTeamDataSource.filteredData.length === 0) {
-    <div>No results found</div>
+      <div>No results found</div>
     }
   </div>
 
@@ -64,25 +92,45 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <mat-toolbar-row>
         <mat-form-field class="w-50">
           <mat-label>Search</mat-label>
-          <input matInput [(ngModel)]="articleTeamFilterString" (keyup)="applyArticleTeamFilter($event)" #articleTeamInput autocomplete="off" />
+          <input
+            matInput
+            [(ngModel)]="articleTeamFilterString"
+            (keyup)="applyArticleTeamFilter($event)"
+            #articleTeamInput
+            autocomplete="off"
+          />
           @if (articleTeamFilterString) {
-          <button matSuffix mat-icon-button aria-label="Clear" (click)="clearArticleTeamFilter()">
-            <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
-          </button>
+            <button
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="clearArticleTeamFilter()"
+            >
+              <mat-icon class="mdi-24px" fontIcon="mdi-close-circle-outline" />
+            </button>
           }
         </mat-form-field>
-        <mat-paginator #articleTeamPaginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons />
+        <mat-paginator
+          #articleTeamPaginator
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          showFirstLastButtons
+        />
       </mat-toolbar-row>
     </mat-toolbar>
 
-    <mat-table class="mat-table-article-teams" #table [dataSource]="articleTeamDataSource" matSort>
+    <mat-table
+      class="mat-table-article-teams"
+      #table
+      [dataSource]="articleTeamDataSource"
+      matSort
+    >
       <ng-container matColumnDef="name">
         <mat-cell *matCellDef="let element">
           @if (element.name !== null) {
-          <div>{{ element.shortName }}</div>
+            <div>{{ element.shortName }}</div>
           }
           @if (element.name === null) {
-          <div>{{ element.id }}</div>
+            <div>{{ element.id }}</div>
           }
         </mat-cell>
       </ng-container>
@@ -90,9 +138,17 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <ng-container matColumnDef="id">
         <mat-cell *matCellDef="let element">
           <div class="push-right">
-            <button mat-icon-button (click)="removeTeamFromArticle(element.id)" style="outline: none;"
-              title="Remove {{ element.name }}" [disabled]="!canEdit()">
-              <mat-icon class="mdi-24px center-self" fontIcon="mdi-minus-circle-outline" />
+            <button
+              mat-icon-button
+              (click)="removeTeamFromArticle(element.id)"
+              style="outline: none"
+              title="Remove {{ element.name }}"
+              [disabled]="!canEdit()"
+            >
+              <mat-icon
+                class="mdi-24px center-self"
+                fontIcon="mdi-minus-circle-outline"
+              />
             </button>
           </div>
         </mat-cell>
@@ -102,7 +158,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
     </mat-table>
 
     @if (articleTeamDataSource.filteredData.length === 0) {
-    <div>No results found</div>
+      <div>No results found</div>
     }
   </div>
 </div>

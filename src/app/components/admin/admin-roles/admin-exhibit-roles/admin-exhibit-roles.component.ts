@@ -4,11 +4,20 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 */
 
 import { Component, inject, OnInit } from '@angular/core';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
-  ExhibitPermission,
-  ExhibitRole,
-} from 'src/app/generated/api';
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+} from '@angular/material/table';
+import { ExhibitPermission, ExhibitRole } from 'src/app/generated/api';
 import { ExhibitRolesModel } from './admin-exhibit-roles.models';
 import { map } from 'rxjs/operators';
 import { ExhibitRoleDataService } from 'src/app/data/exhibit/exhibit-role-data.service';
@@ -19,10 +28,26 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-admin-exhibit-roles',
-    templateUrl: './admin-exhibit-roles.component.html',
-    styleUrls: ['./admin-exhibit-roles.component.scss'],
-    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatTooltip, MatIcon, MatCheckbox, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe]
+  selector: 'app-admin-exhibit-roles',
+  templateUrl: './admin-exhibit-roles.component.html',
+  styleUrls: ['./admin-exhibit-roles.component.scss'],
+  imports: [
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MatCheckbox,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    AsyncPipe,
+  ],
 })
 export class AdminExhibitRolesComponent implements OnInit {
   private exhibitRoleService = inject(ExhibitRoleDataService);
@@ -38,17 +63,19 @@ export class AdminExhibitRolesComponent implements OnInit {
 
   public roles$ = this.exhibitRoleService.exhibitRoles$.pipe(
     map((roles) =>
-      roles.filter(r => r.name).sort((a, b) => {
-        return a.name?.localeCompare(b.name);
-      })
-    )
+      roles
+        .filter((r) => r.name)
+        .sort((a, b) => {
+          return a.name?.localeCompare(b.name);
+        }),
+    ),
   );
 
   public displayedColumns$ = this.roles$.pipe(
     map((x) => {
       const columnNames = x.map((y) => y.name);
       return ['permissions', ...columnNames];
-    })
+    }),
   );
 
   ngOnInit(): void {

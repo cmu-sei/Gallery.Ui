@@ -2,10 +2,21 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, inject, output } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CrucibleDialogComponent, CrucibleDialogContentDirective } from '@cmusei/crucible-common';
+import {
+  CrucibleDialogComponent,
+  CrucibleDialogContentDirective,
+} from '@cmusei/crucible-common';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -14,7 +25,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 export class UserErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
+    form: FormGroupDirective | NgForm | null,
   ): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || isSubmitted));
@@ -22,10 +33,20 @@ export class UserErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'app-admin-exhibit-edit-dialog',
-    templateUrl: './admin-exhibit-edit-dialog.component.html',
-    styleUrls: ['./admin-exhibit-edit-dialog.component.scss'],
-    imports: [CrucibleDialogComponent, CrucibleDialogContentDirective, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError, MatCheckbox]
+  selector: 'app-admin-exhibit-edit-dialog',
+  templateUrl: './admin-exhibit-edit-dialog.component.html',
+  styleUrls: ['./admin-exhibit-edit-dialog.component.scss'],
+  imports: [
+    CrucibleDialogComponent,
+    CrucibleDialogContentDirective,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatError,
+    MatCheckbox,
+  ],
 })
 export class AdminExhibitEditDialogComponent {
   data = inject(MAT_DIALOG_DATA);
@@ -35,22 +56,22 @@ export class AdminExhibitEditDialogComponent {
   public nameFormControl = new UntypedFormControl(this.data.exhibit.name, []);
   public descriptionFormControl = new UntypedFormControl(
     this.data.exhibit.description,
-    []
+    [],
   );
   public exhibitIdFormControl = new UntypedFormControl(
     this.data.exhibit.exhibitId,
-    []
+    [],
   );
   public currentMoveFormControl = new UntypedFormControl(
     this.data.exhibit.currentMove,
-    [Validators.required]
+    [Validators.required],
   );
   public currentInjectFormControl = new UntypedFormControl(
     this.data.exhibit.currentInject,
-    [Validators.required]
+    [Validators.required],
   );
   public showAdvanceButtonFormControl = new UntypedFormControl(
-    this.data.exhibit.showAdvanceButton ?? false
+    this.data.exhibit.showAdvanceButton ?? false,
   );
   public form = new UntypedFormGroup({
     name: this.nameFormControl,
