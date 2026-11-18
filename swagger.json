@@ -7,7 +7,9 @@
   "paths": {
     "/api/cards/{cardId}/articles": {
       "get": {
-        "tags": ["Article"],
+        "tags": [
+          "Article"
+        ],
         "summary": "Gets Articles for a Card",
         "description": "Returns a list of Articles based on the Card ID.",
         "operationId": "getCardArticles",
@@ -68,7 +70,9 @@
     },
     "/api/collections/{collectionId}/articles": {
       "get": {
-        "tags": ["Article"],
+        "tags": [
+          "Article"
+        ],
         "summary": "Gets Articles for a Collection",
         "description": "Returns a list of Articles based on the collection ID",
         "operationId": "getCollectionArticles",
@@ -129,7 +133,9 @@
     },
     "/api/exhibits/{exhibitId}/articles": {
       "get": {
-        "tags": ["Article"],
+        "tags": [
+          "Article"
+        ],
         "summary": "Gets Articles for an Exhibit",
         "description": "Returns a list of Articles based on the exhibit's current move and current inject.",
         "operationId": "getExhibitArticles",
@@ -190,7 +196,9 @@
     },
     "/api/articles/{id}": {
       "get": {
-        "tags": ["Article"],
+        "tags": [
+          "Article"
+        ],
         "summary": "Gets a specific Article by id",
         "description": "Returns the Article with the id specified",
         "operationId": "getArticle",
@@ -240,7 +248,9 @@
         }
       },
       "put": {
-        "tags": ["Article"],
+        "tags": [
+          "Article"
+        ],
         "summary": "Updates an Article",
         "description": "Updates a Article with the attributes specified.\r\nThe ID from the route MUST MATCH the ID contained in the article parameter\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "updateArticle",
@@ -310,7 +320,9 @@
         }
       },
       "delete": {
-        "tags": ["Article"],
+        "tags": [
+          "Article"
+        ],
         "summary": "Deletes an Article",
         "description": "Deletes an Article with the specified id\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "deleteArticle",
@@ -345,7 +357,9 @@
     },
     "/api/articles": {
       "post": {
-        "tags": ["Article"],
+        "tags": [
+          "Article"
+        ],
         "summary": "Creates a new Article",
         "description": "Creates a new Article with the attributes specified\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "createArticle",
@@ -405,7 +419,9 @@
     },
     "/api/cards": {
       "get": {
-        "tags": ["Card"],
+        "tags": [
+          "Card"
+        ],
         "summary": "Gets Cards",
         "description": "Returns a list of Cards.",
         "operationId": "getCards",
@@ -452,7 +468,9 @@
         }
       },
       "post": {
-        "tags": ["Card"],
+        "tags": [
+          "Card"
+        ],
         "summary": "Creates a new Card",
         "description": "Creates a new Card with the attributes specified\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "createCard",
@@ -512,7 +530,9 @@
     },
     "/api/collections/{collectionId}/cards": {
       "get": {
-        "tags": ["Card"],
+        "tags": [
+          "Card"
+        ],
         "summary": "Gets Cards for a Collection",
         "description": "Returns a list of Cards based on the collection ID.",
         "operationId": "getCollectionCards",
@@ -573,7 +593,9 @@
     },
     "/api/exhibits/{exhibitId}/cards": {
       "get": {
-        "tags": ["Card"],
+        "tags": [
+          "Card"
+        ],
         "summary": "Gets Cards for an Exhibit",
         "description": "Returns a list of Cards based on the exhibit's current move and current inject.",
         "operationId": "getExhibitCards",
@@ -634,7 +656,9 @@
     },
     "/api/exhibits/{exhibitId}/teams/{teamId}/cards": {
       "get": {
-        "tags": ["Card"],
+        "tags": [
+          "Card"
+        ],
         "summary": "Gets Cards for an exhibit for the user",
         "description": "Returns a list of Cards based on the exhibit's current move and current inject for the user.",
         "operationId": "getExhibitCardsByTeam",
@@ -705,7 +729,9 @@
     },
     "/api/cards/{id}": {
       "get": {
-        "tags": ["Card"],
+        "tags": [
+          "Card"
+        ],
         "summary": "Gets a specific Card by id",
         "description": "Returns the Card with the id specified",
         "operationId": "getCard",
@@ -755,7 +781,9 @@
         }
       },
       "put": {
-        "tags": ["Card"],
+        "tags": [
+          "Card"
+        ],
         "summary": "Updates a  Card",
         "description": "Updates a Card with the attributes specified.\r\nThe ID from the route MUST MATCH the ID contained in the card parameter\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "updateCard",
@@ -825,7 +853,9 @@
         }
       },
       "delete": {
-        "tags": ["Card"],
+        "tags": [
+          "Card"
+        ],
         "summary": "Deletes a  Card",
         "description": "Deletes a  Card with the specified id\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "deleteCard",
@@ -860,7 +890,9 @@
     },
     "/api/collections": {
       "get": {
-        "tags": ["Collection"],
+        "tags": [
+          "Collection"
+        ],
         "summary": "Gets Collections",
         "description": "Returns a list of Collections.",
         "operationId": "getCollections",
@@ -907,7 +939,9 @@
         }
       },
       "post": {
-        "tags": ["Collection"],
+        "tags": [
+          "Collection"
+        ],
         "summary": "Creates a new Collection",
         "description": "Creates a new Collection with the attributes specified\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "createCollection",
@@ -967,7 +1001,9 @@
     },
     "/api/my-collections": {
       "get": {
-        "tags": ["Collection"],
+        "tags": [
+          "Collection"
+        ],
         "summary": "Gets User's Collections",
         "description": "Returns a list of Collections.",
         "operationId": "getMyCollections",
@@ -1016,7 +1052,9 @@
     },
     "/api/collections/{id}": {
       "get": {
-        "tags": ["Collection"],
+        "tags": [
+          "Collection"
+        ],
         "summary": "Gets a specific Collection by id",
         "description": "Returns the Collection with the id specified",
         "operationId": "getCollection",
@@ -1066,7 +1104,9 @@
         }
       },
       "put": {
-        "tags": ["Collection"],
+        "tags": [
+          "Collection"
+        ],
         "summary": "Updates a  Collection",
         "description": "Updates a Collection with the attributes specified.\r\nThe ID from the route MUST MATCH the ID contained in the collection parameter\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "updateCollection",
@@ -1136,7 +1176,9 @@
         }
       },
       "delete": {
-        "tags": ["Collection"],
+        "tags": [
+          "Collection"
+        ],
         "summary": "Deletes a  Collection",
         "description": "Deletes a  Collection with the specified id\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "deleteCollection",
@@ -1171,7 +1213,9 @@
     },
     "/api/exhibits": {
       "get": {
-        "tags": ["Exhibit"],
+        "tags": [
+          "Exhibit"
+        ],
         "summary": "Gets Exhibits",
         "description": "Returns a list of Exhibits.",
         "operationId": "getExhibits",
@@ -1218,7 +1262,9 @@
         }
       },
       "post": {
-        "tags": ["Exhibit"],
+        "tags": [
+          "Exhibit"
+        ],
         "summary": "Creates a new Exhibit",
         "description": "Creates a new Exhibit with the attributes specified\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "createExhibit",
@@ -1278,7 +1324,9 @@
     },
     "/api/my-exhibits": {
       "get": {
-        "tags": ["Exhibit"],
+        "tags": [
+          "Exhibit"
+        ],
         "summary": "Get User's Exhibits",
         "description": "Returns a list of Exhibits.",
         "operationId": "getMyExhibits",
@@ -1327,7 +1375,9 @@
     },
     "/api/collections/{collectionId}/exhibits": {
       "get": {
-        "tags": ["Exhibit"],
+        "tags": [
+          "Exhibit"
+        ],
         "summary": "Gets Exhibits for a Collection",
         "description": "Returns a list of Exhibits based on the collection ID",
         "operationId": "getCollectionExhibits",
@@ -1388,7 +1438,9 @@
     },
     "/api/collections/{collectionId}/my-exhibits": {
       "get": {
-        "tags": ["Exhibit"],
+        "tags": [
+          "Exhibit"
+        ],
         "summary": "Gets User's Exhibits for a Collection",
         "description": "Returns a list of Exhibits based on the user and collection ID",
         "operationId": "getMyCollectionExhibits",
@@ -1449,7 +1501,9 @@
     },
     "/api/exhibits/{id}": {
       "get": {
-        "tags": ["Exhibit"],
+        "tags": [
+          "Exhibit"
+        ],
         "summary": "Gets a specific Exhibit by id",
         "description": "Returns the Exhibit with the id specified",
         "operationId": "getExhibit",
@@ -1499,7 +1553,9 @@
         }
       },
       "put": {
-        "tags": ["Exhibit"],
+        "tags": [
+          "Exhibit"
+        ],
         "summary": "Updates an Exhibit",
         "description": "Updates an Exhibit with the attributes specified.\r\nThe ID from the route MUST MATCH the ID contained in the exhibit parameter\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "updateExhibit",
@@ -1569,7 +1625,9 @@
         }
       },
       "delete": {
-        "tags": ["Exhibit"],
+        "tags": [
+          "Exhibit"
+        ],
         "summary": "Deletes an Exhibit",
         "description": "Deletes an Exhibit with the specified id\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "deleteExhibit",
@@ -1604,7 +1662,9 @@
     },
     "/api/exhibits/{id}/move/{move}/inject/{inject}": {
       "put": {
-        "tags": ["Exhibit"],
+        "tags": [
+          "Exhibit"
+        ],
         "summary": "Updates an Exhibit's current move and inject",
         "description": "Updates an Exhibit with the move and inject numbers specified.",
         "operationId": "setExhibitMoveAndInject",
@@ -1676,7 +1736,9 @@
     },
     "/api/exhibitteams": {
       "get": {
-        "tags": ["ExhibitTeam"],
+        "tags": [
+          "ExhibitTeam"
+        ],
         "summary": "Gets all ExhibitTeams in the system",
         "description": "Returns a list of all of the ExhibitTeams in the system.\r\n<para />\r\nOnly accessible to a SuperTeam",
         "operationId": "getExhibitTeams",
@@ -1723,7 +1785,9 @@
         }
       },
       "post": {
-        "tags": ["ExhibitTeam"],
+        "tags": [
+          "ExhibitTeam"
+        ],
         "summary": "Creates a new ExhibitTeam",
         "description": "Creates a new ExhibitTeam with the attributes specified\r\n<para />\r\nAccessible only to a SuperTeam",
         "operationId": "createExhibitTeam",
@@ -1783,7 +1847,9 @@
     },
     "/api/exhibitteams/{id}": {
       "get": {
-        "tags": ["ExhibitTeam"],
+        "tags": [
+          "ExhibitTeam"
+        ],
         "summary": "Gets a specific ExhibitTeam by id",
         "description": "Returns the ExhibitTeam with the id specified\r\n<para />\r\nOnly accessible to a SuperTeam",
         "operationId": "getExhibitTeam",
@@ -1833,7 +1899,9 @@
         }
       },
       "delete": {
-        "tags": ["ExhibitTeam"],
+        "tags": [
+          "ExhibitTeam"
+        ],
         "summary": "Deletes a ExhibitTeam",
         "description": "Deletes a ExhibitTeam with the specified id\r\n<para />\r\nAccessible only to a SuperTeam",
         "operationId": "deleteExhibitTeam",
@@ -1868,7 +1936,9 @@
     },
     "/api/exhibits/{exhibitId}/exhibitteams": {
       "get": {
-        "tags": ["ExhibitTeam"],
+        "tags": [
+          "ExhibitTeam"
+        ],
         "summary": "Gets all ExhibitTeams for an exhibit",
         "description": "Returns a list of all of the ExhibitTeams for the exhibit.",
         "operationId": "getExhibitExhibitTeams",
@@ -1929,7 +1999,9 @@
     },
     "/api/exhibits/{exhibitId}/teams/{teamId}": {
       "delete": {
-        "tags": ["ExhibitTeam"],
+        "tags": [
+          "ExhibitTeam"
+        ],
         "summary": "Deletes a ExhibitTeam by team ID and exhibit ID",
         "description": "Deletes a ExhibitTeam with the specified team ID and exhibit ID\r\n<para />\r\nAccessible only to a SuperTeam",
         "operationId": "deleteExhibitTeamByIds",
@@ -1974,7 +2046,9 @@
     },
     "/api/health/live": {
       "get": {
-        "tags": ["HealthCheck"],
+        "tags": [
+          "HealthCheck"
+        ],
         "summary": "Checks the liveliness health endpoint",
         "description": "Returns a HealthReport of the liveliness health check",
         "operationId": "getLiveliness",
@@ -2014,7 +2088,9 @@
     },
     "/api/health/ready": {
       "get": {
-        "tags": ["HealthCheck"],
+        "tags": [
+          "HealthCheck"
+        ],
         "summary": "Checks the readiness health endpoint",
         "description": "Returns a HealthReport of the readiness health check",
         "operationId": "getReadiness",
@@ -2054,7 +2130,9 @@
     },
     "/api/version": {
       "get": {
-        "tags": ["HealthCheck"],
+        "tags": [
+          "HealthCheck"
+        ],
         "summary": "Returns the current version of the API",
         "description": "Returns the version.",
         "operationId": "getVersion",
@@ -2094,7 +2172,9 @@
     },
     "/api/permissions": {
       "get": {
-        "tags": ["Permission"],
+        "tags": [
+          "Permission"
+        ],
         "summary": "Gets all Permission in the system",
         "description": "Returns a list of all of the Permissions in the system.\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getPermissions",
@@ -2141,7 +2221,9 @@
         }
       },
       "post": {
-        "tags": ["Permission"],
+        "tags": [
+          "Permission"
+        ],
         "summary": "Creates a new Permission",
         "description": "Creates a new Permission with the attributes specified\r\n<para />\r\nAccessible only to a SuperUser or an Administrator",
         "operationId": "createPermission",
@@ -2201,7 +2283,9 @@
     },
     "/api/my-permissions": {
       "get": {
-        "tags": ["Permission"],
+        "tags": [
+          "Permission"
+        ],
         "summary": "Gets Permissions for the current user",
         "description": "Returns a list of the current user's Permissions.",
         "operationId": "getMyPermissions",
@@ -2250,7 +2334,9 @@
     },
     "/api/users/{userId}/permissions": {
       "get": {
-        "tags": ["Permission"],
+        "tags": [
+          "Permission"
+        ],
         "summary": "Gets Permissions for the specified user",
         "description": "Returns a list of the specified user's Permissions.\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getPermissionsByUser",
@@ -2310,7 +2396,9 @@
     },
     "/api/permissions/{id}": {
       "get": {
-        "tags": ["Permission"],
+        "tags": [
+          "Permission"
+        ],
         "summary": "Gets a specific Permission by id",
         "description": "Returns the Permission with the id specified\r\n<para />\r\nAccessible to a SuperUser or a User that is a member of a Team within the specified Permission",
         "operationId": "getPermission",
@@ -2360,7 +2448,9 @@
         }
       },
       "put": {
-        "tags": ["Permission"],
+        "tags": [
+          "Permission"
+        ],
         "summary": "Updates a Permission",
         "description": "Updates a Permission with the attributes specified\r\n<para />\r\nAccessible only to a SuperUser or a User on an Admin Team within the specified Permission",
         "operationId": "updatePermission",
@@ -2430,7 +2520,9 @@
         }
       },
       "delete": {
-        "tags": ["Permission"],
+        "tags": [
+          "Permission"
+        ],
         "summary": "Deletes a Permission",
         "description": "Deletes a Permission with the specified id\r\n<para />\r\nAccessible only to a SuperUser or a User on an Admin Team within the specified Permission",
         "operationId": "deletePermission",
@@ -2465,7 +2557,9 @@
     },
     "/api/teams": {
       "get": {
-        "tags": ["Team"],
+        "tags": [
+          "Team"
+        ],
         "summary": "Gets all Team in the system",
         "description": "Returns a list of all of the Teams in the system.\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getTeams",
@@ -2512,7 +2606,9 @@
         }
       },
       "post": {
-        "tags": ["Team"],
+        "tags": [
+          "Team"
+        ],
         "summary": "Creates a new Team",
         "description": "Creates a new Team with the attributes specified\r\n<para />\r\nAccessible only to a SuperUser or an Administrator",
         "operationId": "createTeam",
@@ -2572,7 +2668,9 @@
     },
     "/api/exhibits/{exhibitId}/my-teams": {
       "get": {
-        "tags": ["Team"],
+        "tags": [
+          "Team"
+        ],
         "summary": "Gets Exhibit Teams for the current user",
         "description": "Returns a list of the current user's Exhibit Teams.",
         "operationId": "getMyExhibitTeams",
@@ -2632,7 +2730,9 @@
     },
     "/api/users/{userId}/teams": {
       "get": {
-        "tags": ["Team"],
+        "tags": [
+          "Team"
+        ],
         "summary": "Gets Teams for the specified user",
         "description": "Returns a list of the specified user's Teams.\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getTeamsByUser",
@@ -2692,7 +2792,9 @@
     },
     "/api/cards/{cardId}/teams": {
       "get": {
-        "tags": ["Team"],
+        "tags": [
+          "Team"
+        ],
         "summary": "Gets Teams for the specified card",
         "description": "Returns a list of the specified card's Teams.",
         "operationId": "getTeamsByCard",
@@ -2752,7 +2854,9 @@
     },
     "/api/exhibits/{exhibitId}/teams": {
       "get": {
-        "tags": ["Team"],
+        "tags": [
+          "Team"
+        ],
         "summary": "Gets Teams for the specified exhibit",
         "description": "Returns a list of the specified exhibit's Teams.",
         "operationId": "getTeamsByExhibit",
@@ -2812,7 +2916,9 @@
     },
     "/api/teams/{id}": {
       "get": {
-        "tags": ["Team"],
+        "tags": [
+          "Team"
+        ],
         "summary": "Gets a specific Team by id",
         "description": "Returns the Team with the id specified\r\n<para />\r\nAccessible to a SuperUser or a User that is a member of a Team within the specified Team",
         "operationId": "getTeam",
@@ -2862,7 +2968,9 @@
         }
       },
       "put": {
-        "tags": ["Team"],
+        "tags": [
+          "Team"
+        ],
         "summary": "Updates a Team",
         "description": "Updates a Team with the attributes specified\r\n<para />\r\nAccessible only to a SuperUser or a User on an Admin Team within the specified Team",
         "operationId": "updateTeam",
@@ -2932,7 +3040,9 @@
         }
       },
       "delete": {
-        "tags": ["Team"],
+        "tags": [
+          "Team"
+        ],
         "summary": "Deletes a Team",
         "description": "Deletes a Team with the specified id\r\n<para />\r\nAccessible only to a SuperUser or a User on an Admin Team within the specified Team",
         "operationId": "deleteTeam",
@@ -2967,7 +3077,9 @@
     },
     "/api/exhibits/{exhibitId}/teamarticles": {
       "get": {
-        "tags": ["TeamArticle"],
+        "tags": [
+          "TeamArticle"
+        ],
         "summary": "Gets all TeamArticles for a exhibit",
         "description": "Returns a list of all of the TeamArticles for the exhibit.",
         "operationId": "getExhibitTeamArticles",
@@ -3028,7 +3140,9 @@
     },
     "/api/teams/{teamId}/teamarticles": {
       "get": {
-        "tags": ["TeamArticle"],
+        "tags": [
+          "TeamArticle"
+        ],
         "summary": "Gets all TeamArticles for a team",
         "description": "Returns a list of all of the TeamArticles for the team.",
         "operationId": "getTeamTeamArticles",
@@ -3089,7 +3203,9 @@
     },
     "/api/teamarticles/{id}": {
       "get": {
-        "tags": ["TeamArticle"],
+        "tags": [
+          "TeamArticle"
+        ],
         "summary": "Gets a specific TeamArticle by id",
         "description": "Returns the TeamArticle with the id specified\r\n<para />\r\nOnly accessible to a SuperArticle",
         "operationId": "getTeamArticle",
@@ -3139,7 +3255,9 @@
         }
       },
       "put": {
-        "tags": ["TeamArticle"],
+        "tags": [
+          "TeamArticle"
+        ],
         "summary": "Updates an TeamArticle",
         "description": "Updates a TeamArticle with the attributes specified.\r\nThe ID from the route MUST MATCH the ID contained in the teamArticle parameter\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "updateTeamArticle",
@@ -3209,7 +3327,9 @@
         }
       },
       "delete": {
-        "tags": ["TeamArticle"],
+        "tags": [
+          "TeamArticle"
+        ],
         "summary": "Deletes a TeamArticle",
         "description": "Deletes a TeamArticle with the specified id\r\n<para />\r\nAccessible only to a SuperArticle",
         "operationId": "deleteTeamArticle",
@@ -3244,7 +3364,9 @@
     },
     "/api/teamarticles": {
       "post": {
-        "tags": ["TeamArticle"],
+        "tags": [
+          "TeamArticle"
+        ],
         "summary": "Creates a new TeamArticle",
         "description": "Creates a new TeamArticle with the attributes specified\r\n<para />\r\nAccessible only to a SuperArticle",
         "operationId": "createTeamArticle",
@@ -3304,7 +3426,9 @@
     },
     "/api/teams/{teamId}/articles/{articleId}": {
       "delete": {
-        "tags": ["TeamArticle"],
+        "tags": [
+          "TeamArticle"
+        ],
         "summary": "Deletes a TeamArticle by article ID and team ID",
         "description": "Deletes a TeamArticle with the specified article ID and team ID\r\n<para />\r\nAccessible only to a SuperArticle",
         "operationId": "deleteTeamArticleByIds",
@@ -3349,7 +3473,9 @@
     },
     "/api/teamcards": {
       "get": {
-        "tags": ["TeamCard"],
+        "tags": [
+          "TeamCard"
+        ],
         "summary": "Gets all TeamCards in the system",
         "description": "Returns a list of all of the TeamCards in the system.\r\n<para />\r\nOnly accessible to a SuperCard",
         "operationId": "getTeamCards",
@@ -3396,7 +3522,9 @@
         }
       },
       "post": {
-        "tags": ["TeamCard"],
+        "tags": [
+          "TeamCard"
+        ],
         "summary": "Creates a new TeamCard",
         "description": "Creates a new TeamCard with the attributes specified\r\n<para />\r\nAccessible only to a SuperCard",
         "operationId": "createTeamCard",
@@ -3456,7 +3584,9 @@
     },
     "/api/exhibits/{exhibitId}/teamcards": {
       "get": {
-        "tags": ["TeamCard"],
+        "tags": [
+          "TeamCard"
+        ],
         "summary": "Gets all TeamCards for an exhibit",
         "description": "Returns a list of all of the TeamCards for the exhibit.",
         "operationId": "getExhibitTeamCards",
@@ -3517,7 +3647,9 @@
     },
     "/api/cards/{cardId}/teamcards": {
       "get": {
-        "tags": ["TeamCard"],
+        "tags": [
+          "TeamCard"
+        ],
         "summary": "Gets all TeamCards for a card",
         "description": "Returns a list of all of the TeamCards for the card.",
         "operationId": "getCardTeamCards",
@@ -3578,7 +3710,9 @@
     },
     "/api/exhibits/{exhibitId}/teams/{teamId}/teamcards": {
       "get": {
-        "tags": ["TeamCard"],
+        "tags": [
+          "TeamCard"
+        ],
         "summary": "Gets all TeamCards for an exhibit team",
         "description": "Returns a list of all of the TeamCards for the exhibit team.",
         "operationId": "getByExhibitTeam",
@@ -3649,7 +3783,9 @@
     },
     "/api/teamcards/{id}": {
       "get": {
-        "tags": ["TeamCard"],
+        "tags": [
+          "TeamCard"
+        ],
         "summary": "Gets a specific TeamCard by id",
         "description": "Returns the TeamCard with the id specified\r\n<para />\r\nOnly accessible to a SuperCard",
         "operationId": "getTeamCard",
@@ -3699,7 +3835,9 @@
         }
       },
       "put": {
-        "tags": ["TeamCard"],
+        "tags": [
+          "TeamCard"
+        ],
         "summary": "Updates an TeamCard",
         "description": "Updates a TeamCard with the attributes specified.\r\nThe ID from the route MUST MATCH the ID contained in the teamCard parameter\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "updateTeamCard",
@@ -3769,7 +3907,9 @@
         }
       },
       "delete": {
-        "tags": ["TeamCard"],
+        "tags": [
+          "TeamCard"
+        ],
         "summary": "Deletes a TeamCard",
         "description": "Deletes a TeamCard with the specified id\r\n<para />\r\nAccessible only to a SuperCard",
         "operationId": "deleteTeamCard",
@@ -3804,7 +3944,9 @@
     },
     "/api/teams/{teamId}/cards/{cardId}": {
       "delete": {
-        "tags": ["TeamCard"],
+        "tags": [
+          "TeamCard"
+        ],
         "summary": "Deletes a TeamCard by card ID and team ID",
         "description": "Deletes a TeamCard with the specified card ID and team ID\r\n<para />\r\nAccessible only to a SuperCard",
         "operationId": "deleteTeamCardByIds",
@@ -3849,7 +3991,9 @@
     },
     "/api/exhibits/{exhibitId}/teamusers": {
       "get": {
-        "tags": ["TeamUser"],
+        "tags": [
+          "TeamUser"
+        ],
         "summary": "Gets TeamUsers for the specified exhibit",
         "description": "Returns a list of the specified exhibit's TeamUsers.\r\n<para />\r\nOnly accessible to an exhibit user",
         "operationId": "getExhibitTeamUsers",
@@ -3909,7 +4053,9 @@
     },
     "/api/teams/{teamId}/teamusers": {
       "get": {
-        "tags": ["TeamUser"],
+        "tags": [
+          "TeamUser"
+        ],
         "summary": "Gets TeamUsers for the specified team",
         "description": "Returns a list of the specified team's TeamUsers.\r\n<para />\r\nOnly accessible to an exhibit user",
         "operationId": "getTeamTeamUsers",
@@ -3969,7 +4115,9 @@
     },
     "/api/teamusers/{id}": {
       "get": {
-        "tags": ["TeamUser"],
+        "tags": [
+          "TeamUser"
+        ],
         "summary": "Gets a specific TeamUser by id",
         "description": "Returns the TeamUser with the id specified\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getTeamUser",
@@ -4019,7 +4167,9 @@
         }
       },
       "delete": {
-        "tags": ["TeamUser"],
+        "tags": [
+          "TeamUser"
+        ],
         "summary": "Deletes a TeamUser",
         "description": "Deletes a TeamUser with the specified id\r\n<para />\r\nAccessible only to a SuperUser",
         "operationId": "deleteTeamUser",
@@ -4054,7 +4204,9 @@
     },
     "/api/teamusers": {
       "post": {
-        "tags": ["TeamUser"],
+        "tags": [
+          "TeamUser"
+        ],
         "summary": "Creates a new TeamUser",
         "description": "Creates a new TeamUser with the attributes specified\r\n<para />\r\nAccessible only to a SuperUser",
         "operationId": "createTeamUser",
@@ -4114,7 +4266,9 @@
     },
     "/api/teamusers/{id}/observer/set": {
       "put": {
-        "tags": ["TeamUser"],
+        "tags": [
+          "TeamUser"
+        ],
         "summary": "Sets the selected TeamUser observer flag",
         "description": "Sets the TeamUser to an observer.",
         "operationId": "setObserver",
@@ -4166,7 +4320,9 @@
     },
     "/api/teamusers/{id}/observer/clear": {
       "put": {
-        "tags": ["TeamUser"],
+        "tags": [
+          "TeamUser"
+        ],
         "summary": "Clears the selected TeamUser observer flag",
         "description": "Clears the TeamUser from being an observer.",
         "operationId": "clearObserver",
@@ -4218,7 +4374,9 @@
     },
     "/api/teams/{teamId}/users/{userId}": {
       "delete": {
-        "tags": ["TeamUser"],
+        "tags": [
+          "TeamUser"
+        ],
         "summary": "Deletes a TeamUser by user ID and team ID",
         "description": "Deletes a TeamUser with the specified user ID and team ID\r\n<para />\r\nAccessible only to a SuperUser",
         "operationId": "deleteTeamUserByIds",
@@ -4263,7 +4421,9 @@
     },
     "/api/users": {
       "get": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "Gets all Users in the system",
         "description": "Returns a list of all of the Users in the system.\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getUsers",
@@ -4310,7 +4470,9 @@
         }
       },
       "post": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "Creates a new User",
         "description": "Creates a new User with the attributes specified\r\n<para />\r\nAccessible only to a SuperUser",
         "operationId": "createUser",
@@ -4370,7 +4532,9 @@
     },
     "/api/users/{id}": {
       "get": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "Gets a specific User by id",
         "description": "Returns the User with the id specified\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getUser",
@@ -4420,7 +4584,9 @@
         }
       },
       "put": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "Updates a  User",
         "description": "Updates a User with the attributes specified.\r\nThe ID from the route MUST MATCH the ID contained in the user parameter\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "updateUser",
@@ -4490,7 +4656,9 @@
         }
       },
       "delete": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "Deletes a User",
         "description": "Deletes a User with the specified id\r\n<para />\r\nAccessible only to a SuperUser",
         "operationId": "deleteUser",
@@ -4525,7 +4693,9 @@
     },
     "/api/teams/{teamId}/users": {
       "get": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "Gets all Users for a team",
         "description": "Returns a list of all of the Users on the team.\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getTeamUsers",
@@ -4586,7 +4756,9 @@
     },
     "/api/exhibits/{exhibitId}/userarticles": {
       "get": {
-        "tags": ["UserArticle"],
+        "tags": [
+          "UserArticle"
+        ],
         "summary": "Gets UserArticles for an Exhibit",
         "description": "Returns a list of UserArticles based on the exhibit's current move and current inject.",
         "operationId": "getExhibitUserArticles",
@@ -4647,7 +4819,9 @@
     },
     "/api/exhibits/{exhibitId}/teams/{teamId}/userarticles": {
       "get": {
-        "tags": ["UserArticle"],
+        "tags": [
+          "UserArticle"
+        ],
         "summary": "Gets UserArticles for an exhibit team",
         "description": "Returns a list of UserArticles based on the exhibit's current move and current inject for the team.",
         "operationId": "getExhibitTeamUserArticles",
@@ -4718,7 +4892,9 @@
     },
     "/api/exhibits/{exhibitId}/users/{userId}/articles/unread": {
       "get": {
-        "tags": ["UserArticle"],
+        "tags": [
+          "UserArticle"
+        ],
         "summary": "Gets the count of unread UserArticles for an exhibit for the user",
         "description": "Returns the count of unread UserArticles for an exhibit for the user.",
         "operationId": "getUnreadCount",
@@ -4780,7 +4956,9 @@
     },
     "/api/userarticles": {
       "post": {
-        "tags": ["UserArticle"],
+        "tags": [
+          "UserArticle"
+        ],
         "summary": "Creates a new UserArticle",
         "description": "Creates a new UserArticle with the attributes specified\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "createUserArticle",
@@ -4840,7 +5018,9 @@
     },
     "/api/userarticles/{id}/share": {
       "put": {
-        "tags": ["UserArticle"],
+        "tags": [
+          "UserArticle"
+        ],
         "summary": "Shares a UserArticle",
         "description": "Shares a UserArticle with another team.",
         "operationId": "shareUserArticle",
@@ -4912,7 +5092,9 @@
     },
     "/api/userarticles/{id}/isread": {
       "put": {
-        "tags": ["UserArticle"],
+        "tags": [
+          "UserArticle"
+        ],
         "summary": "Sets the IsRead status of a UserArticle",
         "description": "Sets the IsRead status of a UserArticle",
         "operationId": "setIsRead",
@@ -4984,7 +5166,9 @@
     },
     "/api/userarticles/{id}": {
       "delete": {
-        "tags": ["UserArticle"],
+        "tags": [
+          "UserArticle"
+        ],
         "summary": "Deletes a UserArticle",
         "description": "Deletes a UserArticle with the specified id\r\n<para />\r\nAccessible only to a ContentDeveloper or an Administrator",
         "operationId": "deleteUserArticle",
@@ -5019,7 +5203,9 @@
     },
     "/api/userpermissions": {
       "get": {
-        "tags": ["UserPermission"],
+        "tags": [
+          "UserPermission"
+        ],
         "summary": "Gets all UserPermissions in the system",
         "description": "Returns a list of all of the UserPermissions in the system.\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getUserPermissions",
@@ -5066,7 +5252,9 @@
         }
       },
       "post": {
-        "tags": ["UserPermission"],
+        "tags": [
+          "UserPermission"
+        ],
         "summary": "Creates a new UserPermission",
         "description": "Creates a new UserPermission with the attributes specified\r\n<para />\r\nAccessible only to a SuperUser",
         "operationId": "createUserPermission",
@@ -5126,7 +5314,9 @@
     },
     "/api/userpermissions/{id}": {
       "get": {
-        "tags": ["UserPermission"],
+        "tags": [
+          "UserPermission"
+        ],
         "summary": "Gets a specific UserPermission by id",
         "description": "Returns the UserPermission with the id specified\r\n<para />\r\nOnly accessible to a SuperUser",
         "operationId": "getUserPermission",
@@ -5176,7 +5366,9 @@
         }
       },
       "delete": {
-        "tags": ["UserPermission"],
+        "tags": [
+          "UserPermission"
+        ],
         "summary": "Deletes a UserPermission",
         "description": "Deletes a UserPermission with the specified id\r\n<para />\r\nAccessible only to a SuperUser",
         "operationId": "deleteUserPermission",
@@ -5211,7 +5403,9 @@
     },
     "/api/users/{userId}/permissions/{permissionId}": {
       "delete": {
-        "tags": ["UserPermission"],
+        "tags": [
+          "UserPermission"
+        ],
         "summary": "Deletes a UserPermission by user ID and permission ID",
         "description": "Deletes a UserPermission with the specified user ID and permission ID\r\n<para />\r\nAccessible only to a SuperUser",
         "operationId": "deleteUserPermissionByIds",
@@ -5256,7 +5450,9 @@
     },
     "/api/xapi/viewed/exhibit/{exhibitId}/card/{cardId}": {
       "get": {
-        "tags": ["XApi"],
+        "tags": [
+          "XApi"
+        ],
         "summary": "Logs xAPI viewed statement for Card by id",
         "description": "Returns status",
         "operationId": "viewedCard",
@@ -5301,7 +5497,9 @@
     },
     "/api/xapi/viewed/exhibit/{exhibitId}/wall": {
       "get": {
-        "tags": ["XApi"],
+        "tags": [
+          "XApi"
+        ],
         "summary": "Logs xAPI viewed statement for Wall by Exhibit id",
         "description": "Returns status",
         "operationId": "viewedExhibitWall",
@@ -5336,7 +5534,9 @@
     },
     "/api/xapi/viewed/exhibit/{exhibitId}/archive": {
       "get": {
-        "tags": ["XApi"],
+        "tags": [
+          "XApi"
+        ],
         "summary": "Logs xAPI viewed statement for Archive by Exhibit id",
         "description": "Returns status",
         "operationId": "viewedExhibitArchive",
@@ -5371,7 +5571,9 @@
     },
     "/api/xapi/viewed/exhibit/{exhibitId}/article/{articleId}": {
       "get": {
-        "tags": ["XApi"],
+        "tags": [
+          "XApi"
+        ],
         "summary": "Logs xAPI viewed statement for Article by id",
         "description": "Returns status",
         "operationId": "viewedArticle",
@@ -5416,7 +5618,9 @@
     },
     "/api/xapi/previewed/exhibit/{exhibitId}/article/{articleId}": {
       "get": {
-        "tags": ["XApi"],
+        "tags": [
+          "XApi"
+        ],
         "summary": "Logs xAPI previewed statement for Article by id",
         "description": "Returns status",
         "operationId": "previewedArticle",
@@ -5461,7 +5665,9 @@
     },
     "/api/xapi/observed/exhibit/{exhibitId}/team/{teamId}/wall": {
       "get": {
-        "tags": ["XApi"],
+        "tags": [
+          "XApi"
+        ],
         "summary": "Logs xAPI observed statement for Wall by Exhibit id and Team  id",
         "description": "Returns status",
         "operationId": "observedExhibitWall",
@@ -5506,7 +5712,9 @@
     },
     "/api/xapi/observed/exhibit/{exhibitId}/team/{teamId}/archive": {
       "get": {
-        "tags": ["XApi"],
+        "tags": [
+          "XApi"
+        ],
         "summary": "Logs xAPI observed statement for Archive by Exhibit id and Team id",
         "description": "Returns status",
         "operationId": "observedExhibitArchive",
@@ -5741,7 +5949,13 @@
         "additionalProperties": false
       },
       "CallingConventions": {
-        "enum": ["Standard", "VarArgs", "Any", "HasThis", "ExplicitThis"],
+        "enum": [
+          "Standard",
+          "VarArgs",
+          "Any",
+          "HasThis",
+          "ExplicitThis"
+        ],
         "type": "string"
       },
       "Card": {
@@ -6022,7 +6236,11 @@
         "additionalProperties": false
       },
       "EventAttributes": {
-        "enum": ["None", "SpecialName", "RTSpecialName"],
+        "enum": [
+          "None",
+          "SpecialName",
+          "RTSpecialName"
+        ],
         "type": "string"
       },
       "EventInfo": {
@@ -6100,7 +6318,7 @@
           },
           "data": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": { },
             "nullable": true,
             "readOnly": true
           },
@@ -6384,7 +6602,7 @@
         "properties": {
           "data": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": { },
             "nullable": true
           },
           "description": {
@@ -6411,7 +6629,11 @@
         "additionalProperties": false
       },
       "HealthStatus": {
-        "enum": ["Unhealthy", "Degraded", "Healthy"],
+        "enum": [
+          "Unhealthy",
+          "Degraded",
+          "Healthy"
+        ],
         "type": "string"
       },
       "ICustomAttributeProvider": {
@@ -6423,11 +6645,21 @@
         "additionalProperties": false
       },
       "ItemStatus": {
-        "enum": ["Gray", "Red", "Orange", "Yellow", "Green"],
+        "enum": [
+          "Gray",
+          "Red",
+          "Orange",
+          "Yellow",
+          "Green"
+        ],
         "type": "string"
       },
       "LayoutKind": {
-        "enum": ["Sequential", "Explicit", "Auto"],
+        "enum": [
+          "Sequential",
+          "Explicit",
+          "Auto"
+        ],
         "type": "string"
       },
       "MemberInfo": {
@@ -7018,7 +7250,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "PropertyAttributes": {
         "enum": [
@@ -7125,7 +7357,11 @@
         "additionalProperties": false
       },
       "SecurityRuleSet": {
-        "enum": ["None", "Level1", "Level2"],
+        "enum": [
+          "None",
+          "Level1",
+          "Level2"
+        ],
         "type": "string"
       },
       "ShareDetails": {
@@ -8283,7 +8519,9 @@
   },
   "security": [
     {
-      "oauth2": ["gallery-api"]
+      "oauth2": [
+        "gallery-api"
+      ]
     }
   ]
 }
