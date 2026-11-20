@@ -19,6 +19,7 @@ import {
   ITEM_STATUS_ORDER,
   itemStatusClass,
 } from 'src/app/utilities/item-status';
+import { articleUrlValidator } from 'src/app/utilities/article-url';
 import {
   AngularEditorConfig,
   AngularEditorModule,
@@ -129,7 +130,9 @@ export class ArticleEditDialogComponent {
     this.data.article.sourceName,
     [],
   );
-  public urlFormControl = new UntypedFormControl(this.data.article.url, []);
+  public urlFormControl = new UntypedFormControl(this.data.article.url, [
+    articleUrlValidator,
+  ]);
   public datePostedFormControl = new UntypedFormControl(
     this.data.article.datePosted,
     [],
@@ -177,6 +180,7 @@ export class ArticleEditDialogComponent {
       this.articleNameFormControl.hasError('required') ||
       this.summaryFormControl.hasError('required') ||
       this.descriptionFormControl.hasError('required') ||
+      this.urlFormControl.hasError('httpUrl') ||
       !this.cardIdFormControl.value
     );
   }

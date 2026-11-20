@@ -128,6 +128,34 @@ describe('AdminArticleEditDialogComponent', () => {
   });
 
   /**
+   * Verifies: a stored URL that is not http or https shows its error at once, and Save stays disabled after an edit until it is cleared.
+   * Interacts with: articleUrlValidator, errorFree, mat-error, crucible-dialog submitDisabled; user-event.
+   * Data: article a1 with a javascript: URL, its name edited, then the URL cleared.
+   */
+  it('refuses a stored URL that is not http or https until it is cleared', async () => {
+    const { container } = await renderArticleDialog({
+      ...structuredClone(ARTICLE),
+      url: 'javascript:alert(1)',
+    });
+    const user = userEvent.setup();
+
+    expect(container.querySelector('mat-error')?.textContent?.trim()).toBe(
+      'URL must start with http:// or https://',
+    );
+    const name = screen.getByLabelText('Name');
+    name.focus();
+    await user.type(name, '2', { skipClick: true });
+    expect(actions().getByRole('button', { name: 'Save' })).toBeDisabled();
+
+    const url = screen.getByLabelText('URL');
+    url.focus();
+    await user.clear(url);
+
+    expect(container.querySelector('mat-error')).toBeNull();
+    expect(actions().getByRole('button', { name: 'Save' })).toBeEnabled();
+  });
+
+  /**
    * Verifies: a new article opens as "Add Article" with Save disabled; only the description error shows before the user edits (the name and summary errors wait for a dirty control).
    * Interacts with: the required validators, UserErrorStateMatcher, mat-error.
    * Data: an empty article.

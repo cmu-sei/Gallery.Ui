@@ -19,6 +19,7 @@ import {
   ITEM_STATUS_ORDER,
   itemStatusClass,
 } from 'src/app/utilities/item-status';
+import { articleUrlValidator } from 'src/app/utilities/article-url';
 import {
   AngularEditorConfig,
   AngularEditorModule,
@@ -197,10 +198,9 @@ export class AdminArticleEditDialogComponent implements OnInit {
       this.data.article.sourceName || '',
       [],
     );
-    this.urlFormControl = new UntypedFormControl(
-      this.data.article.url || '',
-      [],
-    );
+    this.urlFormControl = new UntypedFormControl(this.data.article.url || '', [
+      articleUrlValidator,
+    ]);
     this.datePostedFormControl = new UntypedFormControl(
       this.data.article.datePosted || new Date(),
       [],
@@ -226,13 +226,16 @@ export class AdminArticleEditDialogComponent implements OnInit {
     this.articleNameFormControl.markAsTouched();
     this.summaryFormControl.markAllAsTouched();
     this.descriptionFormControl.markAllAsTouched();
+    // a url stored before urls were checked shows its error at once
+    this.urlFormControl.markAsTouched();
   }
 
   errorFree() {
     return !(
       this.articleNameFormControl.hasError('required') ||
       this.summaryFormControl.hasError('required') ||
-      this.descriptionFormControl.hasError('required')
+      this.descriptionFormControl.hasError('required') ||
+      this.urlFormControl.hasError('httpUrl')
     );
   }
 

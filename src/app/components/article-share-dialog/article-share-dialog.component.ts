@@ -21,6 +21,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
 import { MatInput } from '@angular/material/input';
+import { httpUrl } from 'src/app/utilities/article-url';
 
 @Component({
   selector: 'app-article-share-dialog',
@@ -98,11 +99,13 @@ export class ArticleShareDialogComponent {
   };
 
   constructor() {
-    if (this.data.article.url) {
+    // only an http or https url is linked; its parsed form percent-encodes quotes, so it cannot end the attribute
+    const url = httpUrl(this.data.article.url as string);
+    if (url) {
       this.messageFormControl.setValue(
         this.messageFormControl.value +
           '<a href="' +
-          this.data.article.url +
+          url +
           '" rel="noopener noreferrer" target="_blank">More Information</a>',
       );
     }

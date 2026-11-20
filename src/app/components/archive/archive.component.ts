@@ -37,6 +37,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Section } from 'src/app/utilities/enumerations';
+import { httpUrl } from 'src/app/utilities/article-url';
 import { ArticleMoreDialogComponent } from '../article-more-dialog/article-more-dialog.component';
 import { ArticleShareDialogComponent } from 'src/app/components/article-share-dialog/article-share-dialog.component';
 import { ArticleEditDialogComponent } from 'src/app/components/article-edit-dialog/article-edit-dialog.component';
@@ -349,9 +350,20 @@ export class ArchiveComponent implements OnDestroy {
     return this.filteredUserArticleList.filter((a) => a.article.move === move);
   }
 
+  /** The article's url when it is an http or https url, which is the only kind More offers or opens. */
+  readonly httpUrl = httpUrl;
+
+  /** Opens an article's http or https url in a new tab that cannot reach back to Gallery; any other url is not opened. */
+  private openArticleUrl(article: Article) {
+    const url = httpUrl(article.url);
+    if (url) {
+      window.open(url, '_blank', 'noopener');
+    }
+  }
+
   openMoreDialog(userArticle: UserArticle, useUrl: boolean) {
     if (useUrl && userArticle.article.openInNewTab) {
-      window.open(userArticle.article.url);
+      this.openArticleUrl(userArticle.article);
     } else {
       this.xApiService
         .previewedArticle(this.exhibitId, userArticle.articleId)
@@ -371,7 +383,7 @@ export class ArchiveComponent implements OnDestroy {
         dialogRef.close();
         if (result.openNewTab) {
           if (result.useUrl) {
-            window.open(userArticle.article.url);
+            this.openArticleUrl(userArticle.article);
           } else {
             const url =
               document.baseURI +

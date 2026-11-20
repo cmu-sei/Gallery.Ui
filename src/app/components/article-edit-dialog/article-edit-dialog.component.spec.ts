@@ -146,6 +146,33 @@ describe('ArticleEditDialogComponent', () => {
   });
 
   /**
+   * Verifies: a URL that is not http or https shows an error and keeps Save disabled; an https URL clears it.
+   * Interacts with: articleUrlValidator, errorFree, mat-error, crucible-dialog submitDisabled; user-event.
+   * Data: article a1, a javascript: URL typed, then replaced by an https URL.
+   */
+  it('refuses a URL that is not http or https', async () => {
+    const { container } = await renderArticleDialog(structuredClone(ARTICLE));
+    const user = userEvent.setup();
+
+    const url = screen.getByLabelText('URL');
+    url.focus();
+    await user.type(url, 'javascript:alert(1)', { skipClick: true });
+    await user.tab();
+
+    expect(container.querySelector('mat-error')?.textContent?.trim()).toBe(
+      'URL must start with http:// or https://',
+    );
+    expect(actions().getByRole('button', { name: 'Save' })).toBeDisabled();
+
+    url.focus();
+    await user.clear(url);
+    await user.type(url, 'https://news.example/outage', { skipClick: true });
+
+    expect(container.querySelector('mat-error')).toBeNull();
+    expect(actions().getByRole('button', { name: 'Save' })).toBeEnabled();
+  });
+
+  /**
    * Verifies: Cancel reports saveChanges false with no article.
    * Interacts with: crucible-dialog Cancel, editComplete output.
    * Data: article a1.

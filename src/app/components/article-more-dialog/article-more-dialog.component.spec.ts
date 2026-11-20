@@ -13,7 +13,10 @@ import { renderComponent } from 'src/app/test-utils/render-component';
 import { dialogRefStub } from 'src/app/test-utils/dialog-refs';
 import { ArticleMoreDialogComponent } from './article-more-dialog.component';
 
-async function renderMore(useUrl: boolean) {
+async function renderMore(
+  useUrl: boolean,
+  url = 'https://news.example/outage',
+) {
   const ref = dialogRefStub<ArticleMoreDialogComponent>();
   const rendered = await renderComponent(ArticleMoreDialogComponent, {
     imports: [...CRUCIBLE_DIALOG_IMPORTS, AngularEditorModule],
@@ -29,7 +32,7 @@ async function renderMore(useUrl: boolean) {
           useUrl,
           article: {
             name: 'Outage report',
-            url: 'https://news.example/outage',
+            url,
             description: '<p>Power is out downtown.</p>',
           },
         },
@@ -52,15 +55,44 @@ describe('ArticleMoreDialogComponent', () => {
   it('shows the URL in a frame and asks to open it in a new tab', async () => {
     const { container, completions } = await renderMore(true);
 
-    expect(container.querySelector('iframe')).toHaveAttribute(
-      'src',
-      'https://news.example/outage',
-    );
+    const frame = container.querySelector('iframe');
+    expect(frame).toHaveAttribute('src', 'https://news.example/outage');
+    // the page runs its own scripts, forms and popups, but cannot navigate the Gallery tab
+    expect(frame?.getAttribute('sandbox')?.split(' ').sort()).toEqual([
+      'allow-forms',
+      'allow-popups',
+      'allow-popups-to-escape-sandbox',
+      'allow-same-origin',
+      'allow-scripts',
+    ]);
     await userEvent
       .setup()
       .click(screen.getByRole('button', { name: 'Open in New Tab' }));
 
     expect(completions).toEqual([{ openNewTab: true, useUrl: true }]);
+  });
+
+  /**
+   * Verifies: a URL that is not http or https, such as one stored before URLs were checked, is not loaded in a frame, and Open in New Tab is disabled.
+   * Interacts with: httpUrl, crucible-dialog submitDisabled.
+   * Data: useUrl true with javascript:, data: and relative URLs.
+   */
+  it.each([
+    'javascript:alert(document.domain)',
+    'data:text/html,<script>alert(1)</script>',
+    '/assets/page.html',
+  ])('shows no frame for %j', async (url) => {
+    const { container } = await renderMore(true, url);
+
+    expect(container.querySelector('iframe')).toBeNull();
+    expect(
+      screen.getByText(
+        "This article's URL is not an http or https address, so it cannot be shown.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Open in New Tab' }),
+    ).toBeDisabled();
   });
 
   /**

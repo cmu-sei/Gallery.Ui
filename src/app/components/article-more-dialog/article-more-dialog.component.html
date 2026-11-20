@@ -6,14 +6,31 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 <crucible-dialog
   [dialogTitle]="data.article.name"
   submitLabel="Open in New Tab"
+  [submitDisabled]="data.useUrl && !safeUrl"
   (cancel)="handleMoreIsComplete(false)"
   (submit)="handleMoreIsComplete(true)"
 >
   <div crucibleDialogContent>
     @if (data.useUrl && safeUrl) {
       <div class="container">
-        <iframe [src]="safeUrl" class="responsive-iframe"></iframe>
+        <!--
+          The page is another site's and needs its scripts, forms and popups. allow-same-origin keeps that
+          site's own origin (its cookies and storage); being cross-origin, it still cannot reach this page.
+          Without allow-top-navigation it cannot navigate the Gallery tab.
+        -->
+        <iframe
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+          [src]="safeUrl"
+          class="responsive-iframe"
+        ></iframe>
       </div>
+    }
+
+    @if (data.useUrl && !safeUrl) {
+      <p>
+        This article's URL is not an http or https address, so it cannot be
+        shown.
+      </p>
     }
 
     @if (!data.useUrl && data.article && data.article.description) {
