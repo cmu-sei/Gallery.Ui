@@ -175,6 +175,13 @@ export class ArticleEditDialogComponent {
     overflow: 'auto',
   };
 
+  constructor() {
+    // a url stored before urls were checked shows its error at once, so a disabled Save has a reason
+    if (this.urlFormControl.value) {
+      this.urlFormControl.markAsTouched();
+    }
+  }
+
   errorFree() {
     return !(
       this.articleNameFormControl.hasError('required') ||
@@ -213,7 +220,7 @@ export class ArticleEditDialogComponent {
         .toString()
         .trim();
       this.data.article.openInNewTab = this.openInNewTabFormControl.value;
-      if (this.errorFree) {
+      if (this.errorFree()) {
         this.editComplete.emit({
           saveChanges: saveChanges,
           article: this.data.article,

@@ -37,6 +37,8 @@ export class ArticleMoreDialogComponent {
   readonly editComplete = output<any>();
   /** Only an http or https url is trusted for the frame; any other leaves it null, and no frame is shown. */
   safeUrl: SafeResourceUrl | null = null;
+  /** Whether the url is on Gallery's own origin, which gets the stricter sandbox. */
+  sameOrigin = false;
   safeContent: SafeHtml = '';
   editorConfig: AngularEditorConfig = {
     editable: false,
@@ -59,6 +61,7 @@ export class ArticleMoreDialogComponent {
       const url = httpUrl(this.data.article.url);
       if (url) {
         this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        this.sameOrigin = new URL(url).origin === window.location.origin;
       }
     } else {
       const parser = new DOMParser();

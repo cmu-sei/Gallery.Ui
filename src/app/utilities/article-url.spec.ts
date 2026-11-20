@@ -34,7 +34,8 @@ describe('httpUrl', () => {
 
   /**
    * Verifies: no url, a script-bearing url, another scheme and a relative url all give null.
-   * Data: javascript: (with case, padding and a tab the browser strips), data:, vbscript:, blob:, file:, ftp:, relative and scheme-relative urls.
+   * Data: javascript: (with case, padding and a tab the browser strips), data:, vbscript:, blob:, file:, ftp:, relative and scheme-relative urls,
+   * http(s) urls without "//" that the browser would read but the API refuses, and http(s) urls with no host.
    */
   it.each([
     null,
@@ -53,6 +54,12 @@ describe('httpUrl', () => {
     '/assets/page.html',
     'news.example/outage',
     '//news.example/outage',
+    'https:news.example',
+    'https:/news.example',
+    'https:\\\\news.example',
+    'http:\\\\news.example/a',
+    'http://',
+    'https://',
   ])('refuses %j', (url) => {
     expect(httpUrl(url)).toBeNull();
   });

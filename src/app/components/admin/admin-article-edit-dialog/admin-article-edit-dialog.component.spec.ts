@@ -230,11 +230,11 @@ describe('AdminArticleEditDialogComponent', () => {
   );
 
   /**
-   * Verifies: a direct save emits an article even when its required name is empty (current behavior).
-   * Interacts with: the real validators, handleEditComplete and editComplete output.
+   * Verifies: a direct save of an article with an empty required name emits nothing, as the disabled Save would.
+   * Interacts with: the real validators, errorFree, handleEditComplete and editComplete output.
    * Data: article a1 with an empty name; Save is disabled in the rendered dialog.
    */
-  it('emits an invalid article when the save handler is called directly', async () => {
+  it('emits nothing when the save handler is called directly on an invalid article', async () => {
     const { fixture, completions } = await renderArticleDialog({
       ...structuredClone(ARTICLE),
       name: '',
@@ -244,11 +244,6 @@ describe('AdminArticleEditDialogComponent', () => {
 
     fixture.componentInstance.handleEditComplete(true);
 
-    expect(completions).toEqual([
-      {
-        saveChanges: true,
-        article: expect.objectContaining({ id: 'a1', name: '' }),
-      },
-    ]);
+    expect(completions).toEqual([]);
   });
 });

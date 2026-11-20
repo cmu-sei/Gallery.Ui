@@ -267,7 +267,7 @@ export class AdminArticleEditDialogComponent implements OnInit {
         .toString()
         .trim();
       this.data.article.openInNewTab = this.openInNewTabFormControl.value;
-      if (this.errorFree) {
+      if (this.errorFree()) {
         this.editComplete.emit({
           saveChanges: saveChanges,
           article: this.data.article,

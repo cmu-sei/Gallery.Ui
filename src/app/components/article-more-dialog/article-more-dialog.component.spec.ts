@@ -57,19 +57,50 @@ describe('ArticleMoreDialogComponent', () => {
 
     const frame = container.querySelector('iframe');
     expect(frame).toHaveAttribute('src', 'https://news.example/outage');
-    // the page runs its own scripts, forms and popups, but cannot navigate the Gallery tab
-    expect(frame?.getAttribute('sandbox')?.split(' ').sort()).toEqual([
-      'allow-forms',
-      'allow-popups',
-      'allow-popups-to-escape-sandbox',
-      'allow-same-origin',
-      'allow-scripts',
-    ]);
     await userEvent
       .setup()
       .click(screen.getByRole('button', { name: 'Open in New Tab' }));
 
     expect(completions).toEqual([{ openNewTab: true, useUrl: true }]);
+  });
+
+  /**
+   * Verifies: another site's page keeps its own origin and gets ordinary popups, but cannot navigate the Gallery tab.
+   * Interacts with: the cross-origin iframe's static sandbox.
+   * Data: useUrl true, article url https://news.example/outage.
+   */
+  it("sandboxes another site's page with its own origin", async () => {
+    const { container } = await renderMore(true);
+
+    const frames = container.querySelectorAll('iframe');
+    expect(frames).toHaveLength(1);
+    expect(frames[0].getAttribute('sandbox')?.split(' ').sort()).toEqual([
+      'allow-forms',
+      'allow-popups',
+      'allow-popups-to-escape-sandbox',
+      'allow-same-origin',
+      'allow-scripts',
+      'allow-storage-access-by-user-activation',
+    ]);
+  });
+
+  /**
+   * Verifies: a page on Gallery's own origin still loads, but without allow-same-origin or popups escaping the sandbox, so it cannot reach Gallery or lift its sandbox.
+   * Interacts with: the same-origin iframe's static sandbox, window.location.origin.
+   * Data: useUrl true, an article url on the test page's origin.
+   */
+  it("sandboxes a page on Gallery's own origin more strictly", async () => {
+    const url = `${window.location.origin}/exhibit/e1/article/a1`;
+    const { container } = await renderMore(true, url);
+
+    const frames = container.querySelectorAll('iframe');
+    expect(frames).toHaveLength(1);
+    expect(frames[0]).toHaveAttribute('src', url);
+    expect(frames[0].getAttribute('sandbox')?.split(' ').sort()).toEqual([
+      'allow-forms',
+      'allow-popups',
+      'allow-scripts',
+    ]);
   });
 
   /**
