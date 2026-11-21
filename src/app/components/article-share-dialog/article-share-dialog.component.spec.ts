@@ -27,7 +27,7 @@ const ARTICLE = {
   url: '',
 };
 
-async function renderShare(isEmailActive: boolean) {
+async function renderShare(isEmailActive: boolean, url = '') {
   const ref = dialogRefStub<ArticleShareDialogComponent>();
   const rendered = await renderComponent(ArticleShareDialogComponent, {
     imports: [
@@ -46,7 +46,7 @@ async function renderShare(isEmailActive: boolean) {
       {
         provide: MAT_DIALOG_DATA,
         useValue: {
-          article: ARTICLE,
+          article: { ...ARTICLE, url },
           isEmailActive,
           teamList: [
             { id: 't1', name: 'Blue' },
@@ -109,6 +109,36 @@ describe('ArticleShareDialogComponent', () => {
     const subject = screen.queryAllByRole('textbox', { name: 'Email Subject' });
     expect(subject).toHaveLength(count);
     if (active) expect(subject[0]).toHaveValue('Daily News: Outage');
+  });
+
+  /**
+   * Verifies: the message links an http or https article URL as More Information, in its parsed form.
+   * Interacts with: the constructor's message, httpUrl.
+   * Data: an https URL with a quote in its query.
+   */
+  it('links an https URL in the message', async () => {
+    const { fixture } = await renderShare(false, 'https://news.example/?q="');
+
+    expect(fixture.componentInstance.messageFormControl.value).toContain(
+      '<a href="https://news.example/?q=%22" rel="noopener noreferrer" target="_blank">More Information</a>',
+    );
+  });
+
+  /**
+   * Verifies: a URL that is not http or https is not linked in the message.
+   * Interacts with: the constructor's message, httpUrl.
+   * Data: javascript: and data: URLs.
+   */
+  it.each([
+    'javascript:alert(document.domain)',
+    'data:text/html,<script>alert(1)</script>',
+  ])('does not link %j in the message', async (url) => {
+    const { fixture } = await renderShare(false, url);
+
+    const message = fixture.componentInstance.messageFormControl
+      .value as string;
+    expect(message).not.toContain('More Information');
+    expect(message).not.toContain(url);
   });
 
   /**

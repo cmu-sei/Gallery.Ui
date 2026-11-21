@@ -90,6 +90,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
               (blur)="saveArticle('url')"
               value="{{ data.article.url }}"
             />
+            @if (urlFormControl.hasError('httpUrl')) {
+              <mat-error>
+                URL must start with <strong>http://</strong> or
+                <strong>https://</strong>
+              </mat-error>
+            }
           </mat-form-field>
         </div>
       </div>
