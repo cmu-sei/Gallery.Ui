@@ -59,6 +59,9 @@ describe('httpUrl', () => {
     'https:\\\\news.example',
     'http:\\\\news.example/a',
     'http://',
+    'https:///news.example',
+    'https:////news.example/a',
+    'https://\\news.example',
     'https://',
   ])('refuses %j', (url) => {
     expect(httpUrl(url)).toBeNull();

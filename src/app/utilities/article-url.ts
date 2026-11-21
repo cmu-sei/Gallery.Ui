@@ -8,12 +8,13 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 /**
  * The article url to load in a frame or open in a new tab: the browser's own reading of the url, when it is an
  * absolute http or https url. Anything else, such as a javascript: or data: url or a relative path, gives null.
- * The url must spell out "http://" or "https://", as the API requires: the browser would also read forms such as
- * "https:news.example" or "https:\\news.example" as https urls, but the API refuses them.
+ * The url must spell out "http://" or "https://" followed by the host, as the API requires: the browser would also
+ * read forms such as "https:news.example", "https:\\news.example", "https:///news.example" or
+ * "https://\\news.example" as https urls, but the API refuses them.
  */
 export function httpUrl(url: string | null | undefined): string | null {
   const trimmed = url?.trim();
-  if (!trimmed || !/^https?:\/\//i.test(trimmed)) {
+  if (!trimmed || !/^https?:\/\/[^/\\]/i.test(trimmed)) {
     return null;
   }
   let parsed: URL;
