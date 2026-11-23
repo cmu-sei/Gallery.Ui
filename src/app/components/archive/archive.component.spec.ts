@@ -504,6 +504,55 @@ describe('ArchiveComponent', () => {
   });
 
   /**
+   * Verifies: More is not offered for a URL that is not http or https, such as one stored before URLs were checked.
+   * Interacts with: httpUrl in the card footer.
+   * Data: ua1 with a javascript: URL, ua2 with a data: URL.
+   */
+  it('offers no More for a URL that is not http or https', async () => {
+    await renderArchive({
+      userArticles: [
+        userArticle('ua1', { url: 'javascript:alert(document.domain)' }),
+        userArticle('ua2', { url: 'data:text/html,<script>alert(1)</script>' }),
+      ],
+    });
+
+    for (const title of ['Article ua1', 'Article ua2']) {
+      expect(
+        within(card(title)).queryByRole('button', { name: 'More' }),
+      ).not.toBeInTheDocument();
+    }
+  });
+
+  /**
+   * Verifies: More on an article set to open in a new tab opens its URL in a tab without an opener, and no dialog.
+   * Interacts with: openMoreDialog through the More button; window.open spy, MatDialog.open stub; user-event.
+   * Data: ua1 with an https URL and openInNewTab true.
+   */
+  it('opens a new-tab article in a tab that cannot reach Gallery', async () => {
+    const windowOpen = vi.spyOn(window, 'open').mockReturnValue(null);
+    onTestFinished(() => windowOpen.mockRestore());
+    const { open } = await renderArchive({
+      userArticles: [
+        userArticle('ua1', {
+          url: 'https://example.com/a',
+          openInNewTab: true,
+        }),
+      ],
+    });
+
+    await userEvent
+      .setup()
+      .click(within(card('Article ua1')).getByRole('button', { name: 'More' }));
+
+    expect(windowOpen).toHaveBeenCalledExactlyOnceWith(
+      'https://example.com/a',
+      '_blank',
+      'noopener',
+    );
+    expect(open).not.toHaveBeenCalled();
+  });
+
+  /**
    * Verifies: viewing the user's own team, Read, Share, Edit and Delete of the team's own exhibit article are enabled.
    * Interacts with: myTeamIsSelected, sourceIsMe.
    * Data: Blue selected and the user's team; ua2 posted by Blue in e1.

@@ -6,14 +6,48 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 <crucible-dialog
   [dialogTitle]="data.article.name"
   submitLabel="Open in New Tab"
+  [submitDisabled]="data.useUrl && !safeUrl"
   (cancel)="handleMoreIsComplete(false)"
   (submit)="handleMoreIsComplete(true)"
 >
   <div crucibleDialogContent>
     @if (data.useUrl && safeUrl) {
       <div class="container">
-        <iframe [src]="safeUrl" class="responsive-iframe"></iframe>
+        <!--
+          Angular refuses a bound sandbox attribute, so each sandbox is its own static iframe. Neither has
+          allow-top-navigation, so the page cannot navigate the Gallery tab.
+        -->
+        @if (sameOrigin) {
+          <!--
+            A page on Gallery's own origin runs its scripts, forms and popups, but without allow-same-origin
+            it gets an opaque origin, so it cannot reach Gallery or lift its own sandbox, and its popups stay
+            sandboxed.
+          -->
+          <iframe
+            sandbox="allow-scripts allow-forms allow-popups"
+            [src]="safeUrl"
+            class="responsive-iframe"
+          ></iframe>
+        } @else {
+          <!--
+            Another site's page needs its scripts, forms and popups. allow-same-origin keeps that site's own
+            origin (its cookies and storage, which it may ask to use on a click); being cross-origin, it still
+            cannot reach this page. Its popups open as ordinary tabs.
+          -->
+          <iframe
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation"
+            [src]="safeUrl"
+            class="responsive-iframe"
+          ></iframe>
+        }
       </div>
+    }
+
+    @if (data.useUrl && !safeUrl) {
+      <p>
+        This article's URL is not an http or https address, so it cannot be
+        shown.
+      </p>
     }
 
     @if (!data.useUrl && data.article && data.article.description) {

@@ -146,6 +146,33 @@ describe('ArticleEditDialogComponent', () => {
   });
 
   /**
+   * Verifies: a URL that is not http or https shows an error and keeps Save disabled; an https URL clears it.
+   * Interacts with: articleUrlValidator, errorFree, mat-error, crucible-dialog submitDisabled; user-event.
+   * Data: article a1, a javascript: URL typed, then replaced by an https URL.
+   */
+  it('refuses a URL that is not http or https', async () => {
+    const { container } = await renderArticleDialog(structuredClone(ARTICLE));
+    const user = userEvent.setup();
+
+    const url = screen.getByLabelText('URL');
+    url.focus();
+    await user.type(url, 'javascript:alert(1)', { skipClick: true });
+    await user.tab();
+
+    expect(container.querySelector('mat-error')?.textContent?.trim()).toBe(
+      'URL must start with http:// or https://',
+    );
+    expect(actions().getByRole('button', { name: 'Save' })).toBeDisabled();
+
+    url.focus();
+    await user.clear(url);
+    await user.type(url, 'https://news.example/outage', { skipClick: true });
+
+    expect(container.querySelector('mat-error')).toBeNull();
+    expect(actions().getByRole('button', { name: 'Save' })).toBeEnabled();
+  });
+
+  /**
    * Verifies: Cancel reports saveChanges false with no article.
    * Interacts with: crucible-dialog Cancel, editComplete output.
    * Data: article a1.
@@ -161,11 +188,44 @@ describe('ArticleEditDialogComponent', () => {
   });
 
   /**
-   * Verifies: a direct save emits an article even when no card is selected (current behavior).
+   * Verifies: a stored URL that is not http or https shows its error at once, so the disabled Save has a reason.
+   * Interacts with: the constructor marking the URL touched, articleUrlValidator, errorFree, mat-error.
+   * Data: article a1 with a javascript: URL.
+   */
+  it('shows the error of a stored URL that is not http or https at once', async () => {
+    const { container } = await renderArticleDialog({
+      ...structuredClone(ARTICLE),
+      url: 'javascript:alert(1)',
+    });
+
+    expect(
+      Array.from(container.querySelectorAll('mat-error')).map((e) =>
+        e.textContent?.trim(),
+      ),
+    ).toEqual(['URL must start with http:// or https://']);
+    expect(actions().getByRole('button', { name: 'Save' })).toBeDisabled();
+  });
+
+  /**
+   * Verifies: a stored https URL shows no error.
+   * Interacts with: the constructor marking the URL touched, articleUrlValidator.
+   * Data: article a1 with an https URL.
+   */
+  it('shows no error for a stored https URL', async () => {
+    const { container } = await renderArticleDialog({
+      ...structuredClone(ARTICLE),
+      url: 'https://news.example/outage',
+    });
+
+    expect(container.querySelector('mat-error')).toBeNull();
+  });
+
+  /**
+   * Verifies: a direct save of an article with no card emits nothing, as the disabled Save would.
    * Interacts with: errorFree, handleEditComplete and editComplete output.
    * Data: article a1 with cardId empty; Save is disabled in the rendered dialog.
    */
-  it('emits an invalid article when the save handler is called directly', async () => {
+  it('emits nothing when the save handler is called directly on an invalid article', async () => {
     const { fixture, completions } = await renderArticleDialog({
       ...structuredClone(ARTICLE),
       cardId: '',
@@ -175,11 +235,6 @@ describe('ArticleEditDialogComponent', () => {
 
     fixture.componentInstance.handleEditComplete(true);
 
-    expect(completions).toEqual([
-      {
-        saveChanges: true,
-        article: expect.objectContaining({ id: 'a1', cardId: '' }),
-      },
-    ]);
+    expect(completions).toEqual([]);
   });
 });

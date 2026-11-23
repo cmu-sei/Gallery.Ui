@@ -19,6 +19,7 @@ import {
   ITEM_STATUS_ORDER,
   itemStatusClass,
 } from 'src/app/utilities/item-status';
+import { articleUrlValidator } from 'src/app/utilities/article-url';
 import {
   AngularEditorConfig,
   AngularEditorModule,
@@ -129,7 +130,9 @@ export class ArticleEditDialogComponent {
     this.data.article.sourceName,
     [],
   );
-  public urlFormControl = new UntypedFormControl(this.data.article.url, []);
+  public urlFormControl = new UntypedFormControl(this.data.article.url, [
+    articleUrlValidator,
+  ]);
   public datePostedFormControl = new UntypedFormControl(
     this.data.article.datePosted,
     [],
@@ -172,11 +175,19 @@ export class ArticleEditDialogComponent {
     overflow: 'auto',
   };
 
+  constructor() {
+    // a url stored before urls were checked shows its error at once, so a disabled Save has a reason
+    if (this.urlFormControl.value) {
+      this.urlFormControl.markAsTouched();
+    }
+  }
+
   errorFree() {
     return !(
       this.articleNameFormControl.hasError('required') ||
       this.summaryFormControl.hasError('required') ||
       this.descriptionFormControl.hasError('required') ||
+      this.urlFormControl.hasError('httpUrl') ||
       !this.cardIdFormControl.value
     );
   }
@@ -209,7 +220,7 @@ export class ArticleEditDialogComponent {
         .toString()
         .trim();
       this.data.article.openInNewTab = this.openInNewTabFormControl.value;
-      if (this.errorFree) {
+      if (this.errorFree()) {
         this.editComplete.emit({
           saveChanges: saveChanges,
           article: this.data.article,
