@@ -69,7 +69,7 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
+      "count": 1
     }
   },
   "src/app/components/admin/admin-article-edit-dialog/admin-article-edit-dialog.component.ts": {
@@ -762,7 +762,7 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
+      "count": 1
     }
   },
   "src/app/components/article-edit-dialog/article-edit-dialog.component.ts": {
@@ -798,13 +798,13 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-argument": {
-      "count": 3
+      "count": 2
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 2
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 5
+      "count": 4
     }
   },
   "src/app/components/article-share-dialog/article-share-dialog.component.spec.ts": {
@@ -820,7 +820,7 @@
       "count": 4
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 9
+      "count": 8
     },
     "no-restricted-globals": {
       "count": 1
