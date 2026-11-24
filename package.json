@@ -48,7 +48,7 @@
     "glob-parent": "^6.0.1",
     "ini": "^3.0.1",
     "lodash": "^4.17.21",
-    "luxon": "^1.28.1",
+    "luxon": "^3.7.2",
     "material-design-icons": "^3.0.1",
     "ngx-clipboard": "^15.1.0",
     "node-forge": "^1.4.3",
