@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@angular/build": "^21.2.10",
-    "@angular/cli": "^21.2.10",
+    "@angular/cli": "^21.2.31",
     "@angular/compiler-cli": "^21.2.10",
     "@angular/language-service": "^21.2.10",
     "@cmusei/eslint-config-crucible": "^0.1.1",
