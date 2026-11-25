@@ -501,21 +501,31 @@ describe('SignalRService', () => {
     });
 
     /**
-     * Verifies: UserCreated adds a user and UserDeleted removes it, but UserUpdated does not change an existing user.
+     * Verifies: UserCreated adds a user, UserUpdated merges into it, and UserDeleted removes it.
      * Interacts with: real UserDataService/UserStore/UserQuery.
      * Data: u1 created as 'Alice', updated to 'Alicia', then deleted.
      */
-    it('adds and removes users, but ignores updates to known users', async () => {
+    it('adds, updates and removes users', async () => {
       const { hub } = await connect(ApplicationArea.admin);
       const users = TestBed.inject(UserQuery);
 
       hub.trigger('UserCreated', { id: 'u1', name: 'Alice' } as User);
       hub.trigger('UserUpdated', { id: 'u1', name: 'Alicia' } as User);
-      // UserUpdated goes through UserDataService.updateStore(), which uses
-      // add(), and add() skips ids already in the store. The same path is
-      // covered in user-data.service.spec.ts, 'update() does not change a
-      // user that is already in the store'.
-      expect(users.getEntity('u1')?.name).toBe('Alice');
+      expect(users.getEntity('u1')?.name).toBe('Alicia');
+
+      // a role set and then removed by another admin shows as removed
+      hub.trigger('UserUpdated', {
+        id: 'u1',
+        name: 'Alicia',
+        roleId: 'role-a',
+      });
+      expect(users.getEntity('u1')?.roleId).toBe('role-a');
+      hub.trigger('UserUpdated', {
+        id: 'u1',
+        name: 'Alicia',
+        roleId: null,
+      });
+      expect(users.getEntity('u1')?.roleId).toBeNull();
 
       hub.trigger('UserDeleted', 'u1');
       expect(users.hasEntity('u1')).toBe(false);

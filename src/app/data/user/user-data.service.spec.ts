@@ -113,22 +113,57 @@ describe('UserDataService', () => {
   });
 
   /**
-   * Verifies: update() sends the user to the API, but the store keeps the old values for an existing user.
+   * Verifies: update() sends the user to the API and the stored user takes the answer, a new role included.
    * Interacts with: UserService.updateUser, UserDataService.updateStore, real UserQuery.
-   * Data: u1 'Alice' in the store; the API returns u1 renamed 'Alicia'.
+   * Data: u1 'Alice' with no role in the store; the API returns u1 renamed 'Alicia' with role r1.
    */
-  it('update() does not change a user that is already in the store', () => {
-    const updateUser = vi.fn(() => of(makeUser({ name: 'Alicia' })));
+  it('update() merges a saved user into the one already in the store', () => {
+    const updateUser = vi.fn(() =>
+      of(makeUser({ name: 'Alicia', roleId: 'r1' })),
+    );
     const { service, store, query } = setup({ api: { updateUser } });
     store.set([makeUser()]);
 
-    service.update(makeUser({ name: 'Alicia' }));
+    service.update(makeUser({ name: 'Alicia', roleId: 'r1' }));
 
     expect(updateUser).toHaveBeenCalledWith(
       'u1',
-      expect.objectContaining({ name: 'Alicia' }),
+      expect.objectContaining({ name: 'Alicia', roleId: 'r1' }),
     );
-    expect(query.getEntity('u1')?.name).toBe('Alice');
+    expect(query.getEntity('u1')?.name).toBe('Alicia');
+    expect(query.getEntity('u1')?.roleId).toBe('r1');
+  });
+
+  /**
+   * Verifies: a saved user whose answer has no role leaves the stored user with no role: the API answers a removed role as an explicit null.
+   * Interacts with: UserService.updateUser, UserDataService.updateStore, real UserQuery.
+   * Data: u1 holds role r1 in the store; the API answers u1 with a null role id.
+   */
+  it('update() removes a role the answer sets to null', () => {
+    const updateUser = vi.fn(() => of(makeUser({ roleId: null })));
+    const { service, store, query } = setup({ api: { updateUser } });
+    store.set([makeUser({ roleId: 'r1' })]);
+
+    service.update(makeUser({ roleId: null }));
+
+    expect(query.getEntity('u1')?.roleId).toBeNull();
+  });
+
+  /**
+   * Verifies: updateStore() adds a user that is not in the store yet, with its initial UI state.
+   * Interacts with: UserDataService.updateStore, real UserStore/Query (entity + UI).
+   * Data: an empty store and user u9.
+   */
+  it('updateStore() adds a user that is not stored yet', () => {
+    const { service, query } = setup();
+
+    service.updateStore(makeUser({ id: 'u9', name: 'Zed' }));
+
+    expect(query.getEntity('u9')?.name).toBe('Zed');
+    expect(query.ui.getEntity('u9')).toEqual({
+      id: 'u9',
+      ...initialUserUiState,
+    });
   });
 
   /**
